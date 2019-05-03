@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        
+        <!-- Font Awesome-->
+        
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/solid.css" integrity="sha384-VGP9aw4WtGH/uPAOseYxZ+Vz/vaTb1ehm1bwx92Fm8dTrE+3boLfF1SpAtB1z7HW" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/fontawesome.css" integrity="sha384-1rquJLNOM3ijoueaaeS5m+McXPJCGdr5HcA03/VHXxcp2kX2sUrQDmFc3jR5i/C7" crossorigin="anonymous">  
+        
+        <link rel="stylesheet" href="BS-DDL-checkbox/bootstrap-dropdown-checkbox.css">
+        
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css">
+        
+        
+        <!-- My styles-->
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <link rel="stylesheet" type="text/css" href="sidebar.css">
+        <link rel="stylesheet" type="text/css" href="tabs.css">
+        <link rel="stylesheet" type ="text/css" href="dataPicker/jquery.datetimepicker.css">
+        
+        <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+
+        <title>Recursos Humanos HEAD</title>   
+        
+    </head>
+    
+    <body class = "hidden">
+        <div class="modal fade" id="contraseñaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Cambia tu contraseña</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form onsubmit="return false;">
+                                <div class="form-group">
+                                    <label for="">Ingresa la nueva contraseña</label>
+                                    <input type="password" name="" id="newpass" class="form-control" placeholder="" aria-describedby="helpId">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="">Confirma la nueva contraseña</label>
+                                    <input type="password" name="" id="confirm" class="form-control" placeholder="" aria-describedby="helpId">
+                                </div>
+                                <div class="form-row align-items-center">
+                                    <div class="col-md-6 col-sm-12">
+                                        <button id="button_cambio_contraseña" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12">
+                                        <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cerrar</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <!-- Sidebar -->
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <h3>Panel de Control</h3>
+                </div>
+            <!-- Sidebar Links -->
+                <ul class="list-unstyled components">
+                    <div class="text-center">
+                        <div class="form-group">
+                            <img id ="img_foto" src="img/pp.png" alt="..." class="rounded-circle" height="150" width="150">
+                        </div>
+                        <div class="form-group" id = "seleccionarFotoPersonal">
+                            <div class="upload-btn-wrapper">
+                                <button type="button" name="" id="" class="btn btn-outline-warning btn-lg btn-block">Selecciona imagen</button> 
+                                <input type="file" name="myfile"  id = "fotoPersonal_input" accept="image/*"/>
+                            </div>
+                        </div>
+                        
+                        <div class= "form-group hidden" id = "subirFotoPersonal">
+                            <div class="upload-btn-wrapper">
+                                <button type="button" name="" id="" class="btn btn-outline-success btn-lg btn-block" onclick="subirFotoPersonal()">Sube tu imagen</button> 
+                            </div>
+                        </div>
+                    </div>
+                </ul>
+                <ul class="list-unstyled components">
+                    <div class="text-center">
+                        <h6 class="card-title" id="usuarioConectado"></h6>
+                    </div>
+                </ul>
+                <ul class="list-unstyled components">
+
+                    <li>
+                        <a href="#pageSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Dashboard</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu1">
+                            <li class="tab" id="tabDashboard1"><a href="#" onclick="openTabs('tabDashboard1','dash1')">Dashboard1</a></li>
+                            <li class="tab" id="tabDashboard2"><a href="#" onclick="openTabs('tabDashboard2','dash2')">Dashboard2</a></li>
+                        </ul>
+                    </li>                  
+                    <li>
+                        <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Obras</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu2">
+                            <li class="tab tabCatalogoProceso" id="tabCatalogoProceso"><a href="#" onclick="openTabs('tabCatalogoProceso','catalogoProceso')">Catálogo de procesos</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="#pageSubmenu4" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Asistencias</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu4">
+                            <li class="tab" id="tabAsistencia"><a href="#" onclick="openTabs('tabAsistencia','asistencias')">Asistencias</a></li>
+                            <li class="tab" id="tabHorasExtra"><a href="#" onclick="openTabs('tabHorasExtra','horasExtras')">Horas Extras</a></li>
+                            <li class="tab" id="tabDiversos"><a href="#" onclick="openTabs('tabDiversos','diversos')">Diversos</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="#pageSubmenu5" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Trabajadores/Destajistas</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu5">
+                            <li class="tab" id="tabTrabajadores"><a href="#" onclick="openTabs('tabTrabajadores','altaTrabajadores')">Alta de Trabajadores</a></li>
+                            <li class="tab" id="tabDestajistas"><a href="#" onclick="openTabs('tabDestajistas','altaDestajistas')">Alta de Destajistas</a></li>
+                            <li class="tab" id="tabImportarTrabajadores"><a href="#" onclick="openTabs('tabImportarTrabajadores','importarTrabajadores')">Importar Trabajadores</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="#pageSubmenu6" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pagos</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu6">
+                            <li class="tab" id="tabPagoNomina"><a href="#" onclick="openTabs('tabPagoNomina','pagoNomina')">Pagos Semanales por parte de la Pagadora</a></li>
+                        </ul>
+                    </li>
+                    
+
+                    <li class="tab"><a href="#" data-toggle="modal" data-target="#contraseñaModal">Cambiar contraseña</a></li>
+                    <!-- <li class="tab" id="tabPermisos"><a href="#" onclick="openTabs('tabPermisos','permisos')">Permisos de usuario</a></li> -->
+                </ul>
+                
+                
+                <ul class="list-unstyled components">
+                    <div class="text-center">
+                        <button type="button" class="btn btn-danger" id="cerrarSesion">Cerrar sesión</button>
+                    </div>
+                </ul>
+            </nav>
+                <!-- Page Content -->
+            <div id="content" class="container-fluid">
+                <div class="row">
+                    <button type="button" id="sidebarCollapse" class="navbar-btn">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-dark btn-xs" id="fullScreen"><i class="fas fa-expand"></i></button>
+                    <button type="button" class="btn btn-outline-dark btn-xs hidden" id="notFullScreen"><i class="fas fa-compress"></i></button>
+                    <br/>       
+                </div>               
+                <div class="row">
+                    <div class="container-fluid">
+
+                        <!-- Kaizen-->
+                        <div id="dash1" class="tabcontent kaizen">
+                            <div class="container-fluid">
+                                <h3>Dashboard</h3>
+                            </div>                          
+                        </div>
+
+                        
+                        <!--Obras-->                       
+                        <div id= "catalogoProceso" class="tabcontent hidden dataTables_wrapper catalogoProceso">
+                                <div class="container-fluid">
+                                    <h1>Catálogo de Procesos</h1>
+                                    <p>Aquí puedes revisar todos los procesos por obra </p>
+                                    
+                                    <div class="row mt-3">
+                                        <div class="container-fluid">
+                                            <table id="dataDesplegarProcesos" class="display dataDesplegarProcesos" style="width:100%"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <!-- Trabajadores-->
+
+                        <div id="altaTrabajadores" class="tabcontent hidden">
+                            <h1>Alta de trabajadores</h1>
+                            <p>Página para dar de alta a los trabajadores de obra</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">
+                                            <div class="form-group">
+                                                <label for="trabajadorNombre">*Nombre:</label>
+                                                <input type="text" name="" id="trabajadorNombre"class="form-control" placeholder="Nombre del trabajador">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="trabajadorPuesto">*Puesto:</label>
+                                                <select id="trabajadorPuesto" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="trabajadorObra">*Obra:</label>
+                                                <select id="trabajadorObra" class="form-control"></select>
+                                            </div>
+
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="trabajadorGenerarId">
+                                                <label class="custom-control-label" for="trabajadorGenerarId">¿Generar Id?</label>
+                                            </div>
+                                            <div class="form-group" id = "groupIdTrabajador">
+                                                <label for="trabajadorId">Id:</label>
+                                                <input type="text" name="" id="trabajadorId" class="form-control" placeholder="Id">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="trabajadorSueldoBase">*Sueldo Base</label>
+                                                <input type="text" name="" id="trabajadorSueldoBase" class="form-control" placeholder="Sueldo Base">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="trabajadorDestajista">*Destajista:</label>
+                                                <select id="trabajadorDestajista" class="form-control"></select>
+                                            </div>
+
+
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-6 col-sm-12">
+                                                    <label for="trabajadorFechaAntiguedad">Antigüedad del trabajador:</label>
+                                                </div>
+                                                <div class="col-lg-6 col-sm-12">
+                                                    <input class="form-control" type="text" id="trabajadorFechaAntiguedad" placeholder="" readonly="readonly">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="trabajadorEspecialidad">*Especialidad:</label>
+                                                <select id="trabajadorEspecialidad" class="form-control"></select>
+                                            </div>
+
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="trabajadorActivo">
+                                                <label class="custom-control-label" for="trabajadorActivo">¿Trabajador Activo?</label>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="trabajadorClavePagadora">*Clave Pagadora</label>
+                                                <input type="text" name="" id="trabajadorClavePagadora" class="form-control" placeholder="Clave Pagadora">
+                                            </div>
+
+                                            <br/>
+                                            <h5>Claves</h5>
+
+                                            <div class="form-group">
+                                                <label for="trabajadorRFC">*RFC</label>
+                                                <input type="text" name="" id="trabajadorRFC" class="form-control" placeholder="RFC">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="trabajadorIMSS">*IMSS</label>
+                                                <input type="text" name="" id="trabajadorIMSS" class="form-control" placeholder="IMSS">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="trabajadorCURP">*CURP</label>
+                                                <input type="text" name="" id="trabajadorCURP" class="form-control" placeholder="CURP">
+                                            </div>
+
+                                            <br/>
+                                            <h5>Información Personal</h5>
+
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-6 col-sm-12">
+                                                    <label for="trabajadorFechaNacimiento">Fecha de nacimiento:</label>
+                                                </div>
+                                                <div class="col-lg-6 col-sm-12">
+                                                    <input class="form-control" type="text" id="trabajadorFechaNacimiento" placeholder="" readonly="readonly">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="trabajadorEstadoCivil">Estado Civil:</label>
+                                                <select id="trabajadorEstadoCivil" class="form-control"></select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="trabajadorSexo">Sexo</label>
+                                                <input type="text" name="" id="trabajadorSexo" class="form-control" placeholder="Sexo">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="trabajadorDomicilio">Domicilio</label>
+                                                <input type="text" name="" id="trabajadorDomicilio" class="form-control" placeholder="Domicilio">
+                                            </div>
+
+                                            <br/>
+                                            <h5>Información Bancaria</h5>
+
+
+                                            <div class="form-group">
+                                                <label for="trabajadorBanco">*Banco</label>
+                                                <input type="text" name="" id="trabajadorBanco" class="form-control" placeholder="Banco">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="trabajadorCuenta">*Cuenta</label>
+                                                <input type="text" name="" id="trabajadorCuenta" class="form-control" placeholder="Cuenta">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="trabajadorClabe">*CLABE</label>
+                                                <input type="text" name="" id="trabajadorClabe" class="form-control" placeholder="Clabe">
+                                            </div>
+
+                                            <br/>
+                                            <h5>Tallas</h5>
+
+
+                                            <div class="form-group">
+                                                <label for="trabajadorCamisa">Camisa</label>
+                                                <input type="text" name="" id="trabajadorCamisa" class="form-control" placeholder="Camisa">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="trabajadorPantalon">Pantalón</label>
+                                                <input type="text" name="" id="trabajadorPantalon" class="form-control" placeholder="Pantalon">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="trabajadorZapatos">Zapatos</label>
+                                                <input type="text" name="" id="trabajadorZapatos" class="form-control" placeholder="Zapatos">
+                                            </div>
+
+                                            <div class="form-row">
+                                                <div class= "col-lg-6">
+                                                    <button id="registrarTrabajador" type="button" class="btn btn-outline-success btn-block">Registrar</button>
+                                                </div>
+                                                <div class= "col-lg-6">
+                                                    <button type="reset" id = "" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class="col-lg-3"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Destajistas-->
+
+                        <div id="altaDestajistas" class="tabcontent hidden">
+                            <h1>Alta de Destajistas</h1>
+                            <p>Página para dar de alta a los destajistas</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">
+                                            <div class="form-group">
+                                                <label for="destajistaNombre">*Nombre:</label>
+                                                <input type="text" name="" id="destajistaNombre"class="form-control" placeholder="Nombre del destajista">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="destajistaTelefono">Teléfono: </label>
+                                                <input type="text" name="" id="destajistaTelefono" class="form-control" placeholder="Telefono">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="destajistaCuentaBancaria">Cuenta Bancaria: </label>
+                                                <input type="text" name="" id="destajistaCuentaBancaria" class="form-control" placeholder="Cuenta Bancaria">
+                                            </div>
+
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="destajistaCbIE">
+                                                <label class="custom-control-label" for="destajistaCbIE">IE</label>
+                                            </div>
+
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="destajistaCbIHS">
+                                                <label class="custom-control-label" for="destajistaCbIHS">IHS</label>
+                                            </div>
+
+                                            <div class="form-row">
+                                                <div class= "col-lg-6">
+                                                    <button id="registrarDestajista" type="button" class="btn btn-outline-success btn-block">Registrar</button>
+                                                </div>
+                                                <div class= "col-lg-6">
+                                                    <button type="reset" id = "" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class="col-lg-3"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="importarTrabajadores" class="tabcontent hidden">
+                            <h1>Importar Trabajadores</h1>
+                            <p>Pestaña para dar de alta trabajadores</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">
+
+                                            <div class="form-group">
+                                                <label for="DDL_obra">Selecciona archivo de Excel en el formato deseado</label>
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="importarTrabajadoresFile" accept=".xlsx, .xls, .csv">
+                                                    <label class = "custom-file-label" id="importarTrabajadoresLabelFile"> Archivo no seleccionado</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-row">
+                                                <button id="importarTrabajadoresButton" type="button" class="btn btn-outline-success btn-block">Aceptar</button>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class="col-lg-3"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="asistencias" class="tabcontent hidden">
+                            <h1>Alta de Asistencias</h1>
+                            <p>Pestaña para dar de alta asistencias, se pueden dar de alta de manera diaria.</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">
+
+                                            <div class="form-row">
+                                                <div class= "col-lg-4">
+                                                    <button id="guardarButtonAsistencia" type="button" class="btn btn-outline-success btn-block">Guardar</button>
+                                                </div>
+                                                <div class= "col-lg-4">
+                                                    <button id="semanaAnteriorButtonAsistencia" type="button" class="btn btn-outline-warning btn-block hidden">Cargar Semana Previa</button>
+                                                </div>
+                                                <div class= "col-lg-4">
+                                                    <button id="terminarButtonAsistencia" type="button" class="btn btn-outline-danger btn-block">Terminar</button>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="yearDdlAsistencia">Año:</label>
+                                                <select id="yearDdlAsistencia" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="semanaDdlAsistencia">Semana:</label>
+                                                <select id="semanaDdlAsistencia" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="obraDdlAsistencia">Obra:</label>
+                                                <select id="obraDdlAsistencia" class="form-control"></select>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        
+                                    </div>
+                                    <div class="container-fluid">
+                                        <table id="dataTableAsistencia" class="display" style="width:100%"></table>
+                                    </div>   
+                                    <br/>
+                                    <div class="container-table100">
+                                        <div class="table100 ver2 m-b-110">
+                                            <table id="divAsistencia" class="display"></table>
+                                        </div>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="horasExtras" class="tabcontent hidden">
+                            <h1>Horas Extras</h1>
+                            <p>Pestaña para dar ingresar horas extras generadas semanalmente</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">
+                                            <div class="form-group">
+                                                    <label for="yearDdlHorasExtra">Año:</label>
+                                                    <select id="yearDdlHorasExtra" class="form-control"></select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="semanaDdlHorasExtra">Semana:</label>
+                                                    <select id="semanaDdlHorasExtra" class="form-control"></select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="obraDdlHorasExtra">Obra:</label>
+                                                    <select id="obraDdlHorasExtra" class="form-control" ></select>
+                                                </div>
+                                            <div class="row">
+                                                <button id="guardarButtonHorasExtra" type="button" class="btn btn-outline-success btn-block">Guardar</button>
+                                            </div>
+                                            <div class="row">
+                                                <button id="terminarButtonHorasExtra" type="button" class="btn btn-outline-danger btn-block">Terminar</button>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class="col-lg-3"></div>
+                                    <div class="container-fluid" id= "dataTableDivHorasExtra">
+                                        <table id="dataTableHorasExtra" class="display"></table>
+                                    </div>
+                                    <div class="container-table100">
+                                        <div class="table100 ver2 m-b-110">
+                                            <table id="tableHorasExtra" class="display"></table>
+                                        </div>
+                                    </div>       
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="diversos" class="tabcontent hidden">
+                                <h1>Pagos Diversos (viáticos, transporte, etc)</h1>
+                                <p>Pestaña para dar ingresar pagos diversos generadas semanalmente</p>
+                                <div class="container-fluid">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-3"></div>
+                                        <div class="col-lg-6">
+                                            <form action="#" onsubmit="return false;">
+                                                <div class="form-group">
+                                                        <label for="yearDdlDiversos">Año:</label>
+                                                        <select id="yearDdlDiversos" class="form-control"></select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="semanaDdlDiversos">Semana:</label>
+                                                        <select id="semanaDdlDiversos" class="form-control"></select>
+                                                    </div>
+                                                    <div class="form-group" id="diversoGroupDiversos">
+                                                        <label for="diversoDdlDiversos">Diversos:</label>
+                                                        <select id="diversoDdlDiversos" class="form-control"></select>
+                                                    </div>
+                                                <div class="row">
+                                                    <button id="guardarButtonDiversos" type="button" class="btn btn-outline-success btn-block">Guardar</button>
+                                                </div>
+                                                <div class="row">
+                                                    <button id="terminarButtonDiversos" type="button" class="btn btn-outline-danger btn-block">Terminar</button>
+                                                </div>
+                                            </form>
+                                            <br/>
+                                        </div>
+                                        <div class="col-lg-3"></div>
+                                        <div class="container-fluid" id = "dataTableGroup1">
+                                            <table id="dataTableDiversos" class="display" style="width:100%"></table>
+                                        </div>
+                                        <div class="container-table100" id="">
+                                            <div class="table100 ver2 m-b-110">
+                                                <table id="tableDiversos" class="display"></table>
+                                            </div>
+                                        </div>       
+                                    </div>
+                                </div>
+                        </div>
+
+                        <div id="pagoNomina" class="tabcontent hidden">
+                            <h1>Pagos de Nómina</h1>
+                            <p>Pestaña para ingresar los pagos de nómina semanalmente</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">
+                                            <div class="form-group">
+                                                    <label for="yearDdlPagoNomina">Año:</label>
+                                                    <select id="yearDdlPagoNomina" class="form-control"></select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="semanaDdlPagoNomina">Semana:</label>
+                                                    <select id="semanaDdlPagoNomina" class="form-control"></select>
+                                                </div>
+                                            <div class="row">
+                                                <button id="terminarButtonPagoNomina" type="button" class="btn btn-outline-danger btn-block">Terminar</button>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class="col-lg-3"></div>
+                                    <div class="container-fluid">
+                                        <table id="dataTablePagoNomina" class="display" style="width:100%"></table>
+                                    </div>
+                                    <div class="container-table100">
+                                        <div class="table100 ver2 m-b-110">
+                                            <table id="tablePagoNomina" class="display"></table>
+                                        </div>
+                                    </div>       
+                                </div>
+                            </div>
+                    </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+                    
+        <!-- Jquery scripts-->
+                    
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        
+        <!-- DataTable-->
+        
+        <script src= "https://code.jquery.com/jquery-3.3.1.js"></script>
+        <script src = "https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
+        
+        
+        
+        <!-- DDL CHECKBOX JS -->
+        
+        <script src="BS-DDL-checkbox/bootstrap-dropdown-checkbox.js"></script>
+        
+        <!-- Chart JS-->
+        
+        <script src = "Chart/Chart.bundle.js"></script>
+        <script src = "Chart/Chart.bundle.min.js"></script>
+        <script src = "Chart/utils.js"></script>
+        
+        <!--DataPicker JS-->
+        <script src="dataPicker/jquery.datetimepicker.full.min.js"></script>
+        
+        
+        <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
+        <script>
+            
+            // Initialize Firebase
+            var config = {
+                apiKey: "AIzaSyBJ8dJ8G-B6SldpKwHSe085VYRrzBZC0dA",
+                authDomain: "ingenieriahead.firebaseapp.com",
+                databaseURL: "https://ingenieriahead.firebaseio.com",
+                projectId: "ingenieriahead",
+                storageBucket: "ingenieriahead.appspot.com",
+                messagingSenderId: "893795596481"
+            };
+            firebase.initializeApp(config);
+            
+            var secondaryApp = firebase.initializeApp(config, "Secondary");
+            
+            </script>
+
+<!--My scripts-->
+<script src="app_principal.js"></script>        
+<script src="app_desplegar_procesos.js"></script>
+<script src= "app_funciones.js"></script>
+
+
+<script src="rrhh/app_asistencia.js"></script>
+<!-- <script src="rrhh/app_rrhh_importar_trabajadores.js"></script>
+<script src="rrhh/app_rrhh_trabajadores.js"></script>
+<script src="rrhh/app_rrhh_horas_extra.js"></script>
+<script src="rrhh/app_rrhh_pagos_diversos.js"></script>
+<script src="rrhh/app_rrhh_pago_nomina.js"></script>
+<script src="produccion/app_destajista.js"></script> -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
+
+
+
+<!-- Excel to Json-->
+<script src="xlsx.full.min.js"></script>
+
+<!-- PdfMaker-->
+
+<script src="pdfMake/pdfmake.min.js"></script>
+<script src="pdfMake/vfs_fonts.js" ></script>
+
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        
+        <!-- Font Awesome-->
+        
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/solid.css" integrity="sha384-VGP9aw4WtGH/uPAOseYxZ+Vz/vaTb1ehm1bwx92Fm8dTrE+3boLfF1SpAtB1z7HW" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/fontawesome.css" integrity="sha384-1rquJLNOM3ijoueaaeS5m+McXPJCGdr5HcA03/VHXxcp2kX2sUrQDmFc3jR5i/C7" crossorigin="anonymous">  
+        
+        <link rel="stylesheet" href="BS-DDL-checkbox/bootstrap-dropdown-checkbox.css">
+        
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css">
+        
+        
+        <!-- My styles-->
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <link rel="stylesheet" type="text/css" href="sidebar.css">
+        <link rel="stylesheet" type="text/css" href="tabs.css">
+        <link rel="stylesheet" type ="text/css" href="dataPicker/jquery.datetimepicker.css">
+        
+        <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+
+        <title>Compras HEAD</title>   
+        
+    </head>
+    
+    <body class = "hidden">
+        <div class="modal fade" id="contraseñaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Cambia tu contraseña</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form onsubmit="return false;">
+                                <div class="form-group">
+                                    <label for="">Ingresa la nueva contraseña</label>
+                                    <input type="password" name="" id="newpass" class="form-control" placeholder="" aria-describedby="helpId">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="">Confirma la nueva contraseña</label>
+                                    <input type="password" name="" id="confirm" class="form-control" placeholder="" aria-describedby="helpId">
+                                </div>
+                                <div class="form-row align-items-center">
+                                    <div class="col-md-6 col-sm-12">
+                                        <button id="button_cambio_contraseña" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12">
+                                        <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cerrar</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <!-- Sidebar -->
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <h3>Panel de Control</h3>
+                </div>
+            <!-- Sidebar Links -->
+                <ul class="list-unstyled components">
+                    <div class="text-center">
+                        <div class="form-group">
+                            <img id ="img_foto" src="img/pp.png" alt="..." class="rounded-circle" height="150" width="150">
+                        </div>
+                        <div class="form-group" id = "seleccionarFotoPersonal">
+                            <div class="upload-btn-wrapper">
+                                <button type="button" name="" id="" class="btn btn-outline-warning btn-lg btn-block">Selecciona imagen</button> 
+                                <input type="file" name="myfile"  id = "fotoPersonal_input" accept="image/*"/>
+                            </div>
+                        </div>
+                        
+                        <div class= "form-group hidden" id = "subirFotoPersonal">
+                            <div class="upload-btn-wrapper">
+                                <button type="button" name="" id="" class="btn btn-outline-success btn-lg btn-block" onclick="subirFotoPersonal()">Sube tu imagen</button> 
+                            </div>
+                        </div>
+                    </div>
+                </ul>
+                <ul class="list-unstyled components">
+                    <div class="text-center">
+                        <h6 class="card-title" id="usuarioConectado"></h6>
+                    </div>
+                </ul>
+                <ul class="list-unstyled components">
+
+                    <li>
+                        <a href="#pageSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Compras</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu1">
+                            <li class="tab" id="tabOdeC"><a href="#" onclick="openTabs('tabOdeC','OdeC')">Ordenes de Compra</a></li>
+                            <li class="tab" id="tabPagSum"><a href="#" onclick="openTabs('tabPagSum','pagos')">Pagos de OdeC</a></li>
+                        </ul>
+                    </li>                  
+                    <li>
+                        <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Obras</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu2">
+                            <li class="tab tabCatalogoProceso" id="tabCatalogoProceso"><a href="#" onclick="openTabs('tabCatalogoProceso','catalogoProceso')">Catálogo de procesos</a></li>
+                            <li class="tab tabAsignaContrato" id="tabAsignaContrato"><a href="#" onclick="openTabs('tabAsignaContrato','asignaContrato')">Asigna contrato a proceso</a></li>
+                        </ul>
+                    </li>
+                    <li class="tab"><a href="#" data-toggle="modal" data-target="#contraseñaModal">Cambiar contraseña</a></li>
+                    <!-- <li class="tab" id="tabPermisos"><a href="#" onclick="openTabs('tabPermisos','permisos')">Permisos de usuario</a></li> -->
+                </ul>
+                
+                
+                <ul class="list-unstyled components">
+                    <div class="text-center">
+                        <button type="button" class="btn btn-danger" id="cerrarSesion">Cerrar sesión</button>
+                    </div>
+                </ul>
+            </nav>
+                <!-- Page Content -->
+            <div id="content" class="container-fluid">
+                <div class="row">
+                    <button type="button" id="sidebarCollapse" class="navbar-btn">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-dark btn-xs" id="fullScreen"><i class="fas fa-expand"></i></button>
+                    <button type="button" class="btn btn-outline-dark btn-xs hidden" id="notFullScreen"><i class="fas fa-compress"></i></button>
+                    <br/>       
+                </div>               
+                <div class="row">
+                    <div class="container-fluid">
+
+                        <!-- Kaizen-->
+                        <div id="dash1" class="tabcontent kaizen">
+                            <div class="container-fluid">
+                                <h3>Dashboard</h3>
+                            </div>                          
+                        </div>
+
+                        <div id="OdeC" class="tabcontent hidden">
+                            <h1>Dar de altas Ordenes de Compras</h1>
+                            <p>Página para dar de alta ordenes de compras por Obra y Proceso</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">                   
+                                                <div class="form-group">
+                                                    <label for="obraDdlOdeC">Obra:</label>
+                                                    <select id="obraDdlOdeC" class="form-control" onChange=""></select>
+                                                </div>
+                                                <div class="form-group hidden" id ="groupProcOdec">
+                                                    <label for="procDdlOdeC">Proceso:</label>
+                                                    <select id ="procDdlOdeC" class="form-control"></select>
+
+                                                    <div class="form-group hidden" id = "groupSubpOdec">
+                                                        <label for="subpDdlOdeC">Subproceso:</label>
+                                                        <select id ="subpDdlOdeC" class="form-control"></select>
+                                                    </div>
+                                                </div>
+
+                                                    
+                                                <div class="form-group">
+                                                    <label for="claveOdeC">Orden de Compra</label>
+                                                    <input type="text" id="claveOdeC"class="form-control" placeholder= "Clave">
+                                                </div> 
+                                                <div class="form-group">
+                                                    <label for="proveedorOdeC">Proveedor</label>
+                                                    <input type="text" id="proveedorOdeC"class="form-control" placeholder= "Ingresa la clave del proveedor">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="cantidadOdeC">$ Costo</label>
+                                                    <input type="text" id="cantidadOdeC"class="form-control" placeholder= "Ingresa la cantidad nueva">
+                                                </div>
+                                                <br/>
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-lg-6 col-sm-12">
+                                                        <label for="fechaOdeC">Fecha de Generación de Orden de Compra:</label>
+                                                    </div>
+                                                    <div class="col-lg-6 col-sm-12">
+                                                        <input class="form-control" type="text" id="fechaOdeC" placeholder="" readonly="readonly">
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class= "col-lg-6">
+                                                        <button id="actualizarOdeC" type="button" class="btn btn-outline-success btn-block">Generar</button>
+                                                    </div>
+                                                    <div class= "col-lg-6">
+                                                        <button type="reset" id = ""class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <br/>
+                                        </div>
+                                        <div class="col-lg-3"></div>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <div id="pagos" class="tabcontent hidden">
+                                <h1>Pagos de Ordenes de Compra</h1>
+                                <p>Página para realizar registros de pagos</p>
+                                <div class="container-fluid">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-3"></div>
+                                        <div class="col-lg-6">
+                                            <form action="#" onsubmit="return false;">                   
+                                                    <div class="form-group">
+                                                        <label for="obraDdlPagSum">Obra:</label>
+                                                        <select id="obraDdlPagSum" class="form-control" onChange=""></select>
+                                                    </div>
+                                                    <div class="form-group hidden" id ="groupProcPagSum">
+                                                        <label for="procDdlPagSum">Proceso:</label>
+                                                        <select id ="procDdlPagSum" class="form-control"></select>
+    
+                                                        <div class="form-group hidden" id = "groupSubpPagSum">
+                                                            <label for="subpDdlPagSum">Subproceso:</label>
+                                                            <select id ="subpDdlPagSum" class="form-control"></select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="clavePagSum">Orden de Compra:</label>
+                                                        <select id="clavePagSum" class="form-control" onChange=""></select>
+                                                    </div>
+    
+                                                    <div class="form-group">
+                                                        <label for="cantidadPagSum">$ Cantidad Pagada</label>
+                                                        <input type="text" id="cantidadPagSum"class="form-control" placeholder= "Ingresa la cantidad nueva">
+                                                    </div>
+                                                    <br/>
+                                                    <div class="form-row align-items-center">
+                                                        <div class="col-lg-6 col-sm-12">
+                                                            <label for="fechaPagSum">Fecha de Generación de Pago:</label>
+                                                        </div>
+                                                        <div class="col-lg-6 col-sm-12">
+                                                            <input class="form-control" type="text" id="fechaPagSum" placeholder="" readonly="readonly">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class= "col-lg-6">
+                                                            <button id="actualizarPagSum" type="button" class="btn btn-outline-success btn-block">Realizar Pago</button>
+                                                        </div>
+                                                        <div class= "col-lg-6">
+                                                            <button type="reset" id = ""class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <br/>
+                                            </div>
+                                            <div class="col-lg-3"></div>
+                                        </div>
+                                    </div>
+                        </div>
+
+                        
+                        <!--Obras-->                       
+                        <div id= "catalogoProceso" class="tabcontent hidden dataTables_wrapper catalogoProceso">
+                                <div class="container-fluid">
+                                    <h1>Catálogo de Procesos</h1>
+                                    <p>Aquí puedes revisar todos los procesos por obra </p>
+                                    
+                                    <div class="row mt-3">
+                                        <div class="container-fluid">
+                                            <table id="dataDesplegarProcesos" class="display dataDesplegarProcesos" style="width:100%"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <!-- Asigna Contrato-->
+
+                        <div id="asignaContrato" class="tabcontent hidden">
+                                <h1>Asigna contrato a proceso</h1>
+                                <p>Página para asignar contratos a procesos de obra</p>
+                                <div class="container-fluid">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-3"></div>
+                                        <div class="col-lg-6">
+                                            <form action="#" onsubmit="return false;">
+
+                                                <div class="form-group">
+                                                    <label for="obraDdlAsignaContrato">Obra:</label>
+                                                    <select id="obraDdlAsignaContrato" class="form-control" onChange=""></select>
+                                                </div>
+                                                <div class="form-group" id="procGroupAsignaContrato">
+                                                    <label for="procDdlAsignaContrato">Proceso:</label>
+                                                    <select id ="procDdlAsignaContrato" class="form-control"></select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="colaboradorNombreCompras">*Contrato:</label>
+                                                    <input type="text" name="" id="contratoAsignaContrato" class="form-control" placeholder="contrato">
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class= "col-lg-6">
+                                                        <button id="guardarButtonAsignaContrato" type="button" class="btn btn-outline-success btn-block">Guardar</button>
+                                                    </div>
+                                                    <div class= "col-lg-6">
+                                                        <button type="reset" id = "" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <br/>
+                                        </div>
+                                        <div class="col-lg-3"></div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                    
+        <!-- Jquery scripts-->
+                    
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        
+        <!-- DataTable-->
+        
+        <script src= "https://code.jquery.com/jquery-3.3.1.js"></script>
+        <script src = "https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
+        
+        
+        
+        <!-- DDL CHECKBOX JS -->
+        
+        <script src="BS-DDL-checkbox/bootstrap-dropdown-checkbox.js"></script>
+        
+        <!-- Chart JS-->
+        
+        <script src = "Chart/Chart.bundle.js"></script>
+        <script src = "Chart/Chart.bundle.min.js"></script>
+        <script src = "Chart/utils.js"></script>
+        
+        <!--DataPicker JS-->
+        <script src="dataPicker/jquery.datetimepicker.full.min.js"></script>
+        
+        
+        <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
+        <script>
+            
+            // Initialize Firebase
+            var config = {
+                apiKey: "AIzaSyBJ8dJ8G-B6SldpKwHSe085VYRrzBZC0dA",
+                authDomain: "ingenieriahead.firebaseapp.com",
+                databaseURL: "https://ingenieriahead.firebaseio.com",
+                projectId: "ingenieriahead",
+                storageBucket: "ingenieriahead.appspot.com",
+                messagingSenderId: "893795596481"
+            };
+            firebase.initializeApp(config);
+            
+            var secondaryApp = firebase.initializeApp(config, "Secondary");
+            
+            </script>
+
+<!--My scripts-->
+<script src="app_principal.js"></script>        
+<script src="app_desplegar_procesos.js"></script>
+<script src="compras/app_compras_asigna_contrato.js"></script>
+<script src="compras/app_compras_odec_kaizen.js"></script>
+<script src="compras/app_compras_pag_kaizen.js"></script>
+<script src="app_funciones.js"></script>
+<!-- PdfMaker-->
+
+<script src="pdfMake/pdfmake.min.js"></script>
+<script src="pdfMake/vfs_fonts.js" ></script>
+
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+</body>
+</html>

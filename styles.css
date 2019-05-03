@@ -1,0 +1,226 @@
+tr.groupDesplegarProcesos,
+tr.groupDesplegarProcesos:hover {
+    background-color: #ddd !important;
+}
+
+tr.subgroupDesplegarProcesos,
+tr.subgroupDesplegarProcesos {
+   background-color: cornsilk !important;
+}
+
+
+
+
+#gridWrapper {
+  text-align: center;
+}
+#divDashgrid {
+  display: inline-block;
+}
+
+#dashboardWrapper {
+  background-color: green; /* for visualization purposes */
+  text-align: center;
+}
+#dashCardsWrapper {
+  background-color: red; /* for visualization purposes */
+  display: inline-block;
+}
+
+
+/* div.dataTables_wrapper {
+  width: 1500px;
+  margin: 0 auto;
+} */
+
+/* Chrome, Safari and Opera syntax */
+.card_dash {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  width: 40%;
+  border-radius: 5px;
+  margin: 0 auto; /* Added */
+  float: none; /* Added */
+  margin-bottom: 10px; /* Added */
+}
+
+.card_graph {
+  width: 100%;
+  height: 300px;
+  display: inline-flex;
+  background: #fafafa;
+}
+
+.subDash {
+  margin-bottom: 20px;
+  margin-top: 20px;
+  display: inline-block;
+}
+
+.dashboard{
+  width: 90%;
+  margin-left: 50px;
+  margin-right: 0px;
+}
+
+
+.card_dash:hover {
+  box-shadow: 0 16px 32px 0 rgba(0,0,0,0.2);
+}
+
+
+
+:-webkit-full-screen {
+  background-color: #fafafa;
+}
+
+/* Firefox syntax */
+:-moz-full-screen {
+  background-color: #fafafa;
+}
+
+/* IE/Edge syntax */
+:-ms-fullscreen {
+  background-color: #fafafa;
+}
+
+/* Standard syntax */
+:fullscreen {
+  background-color: #fafafa;
+}
+
+
+.toggle-off {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+}
+.toggle.off {
+  border-color: rgba(0, 0, 0, .25);
+}
+
+.toggle-handle {
+  background-color: white;
+  border: thin rgba(0, 0, 0, .25) solid;
+}
+.jumbotron{
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+.hidden {
+    display: none;
+    visibility: hidden;
+}
+
+.scrollbar {
+    margin-left: 30px;
+    float: left;
+    height: 300px;
+    width: 65px;
+    background: #fff;
+    overflow-y: scroll;
+    margin-bottom: 25px;
+}
+.force-overflow {
+    min-height: 450px;
+}
+
+hr.style2 {
+	border-top: 3px double #e00d1f;
+}
+
+.scrollbar-primary::-webkit-scrollbar {
+  width: 12px;
+  background-color: #F5F5F5; }
+
+.scrollbar-primary::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: #4285F4; }
+
+.scrollbar-danger::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: #F5F5F5;
+  border-radius: 10px; }
+
+.scrollbar-danger::-webkit-scrollbar {
+  width: 12px;
+  background-color: #F5F5F5; }
+
+.scrollbar-danger::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: #ff3547; }
+
+.scrollbar-warning::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: #F5F5F5;
+  border-radius: 10px; }
+
+.scrollbar-warning::-webkit-scrollbar {
+  width: 12px;
+  background-color: #F5F5F5; }
+
+.scrollbar-warning::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: #FF8800; }
+
+.scrollbar-success::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: #F5F5F5;
+  border-radius: 10px; }
+
+.scrollbar-success::-webkit-scrollbar {
+  width: 12px;
+  background-color: #F5F5F5; }
+
+.scrollbar-success::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: #00C851; }
+
+.scrollbar-info::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: #F5F5F5;
+  border-radius: 10px; }
+
+.scrollbar-info::-webkit-scrollbar {
+  width: 12px;
+  background-color: #F5F5F5; }
+
+.scrollbar-info::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: #33b5e5; }
+
+.scrollbar-default::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: #F5F5F5;
+  border-radius: 10px; }
+
+.scrollbar-default::-webkit-scrollbar {
+  width: 12px;
+  background-color: #F5F5F5; }
+
+.scrollbar-default::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: #2BBBAD; }
+
+.scrollbar-secondary::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: #F5F5F5;
+  border-radius: 10px; }
+
+.scrollbar-secondary::-webkit-scrollbar {
+  width: 12px;
+  background-color: #F5F5F5; }
+
+.scrollbar-secondary::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: #aa66cc; }
+
+  .margin {
+    margin-bottom: 20px;
+}

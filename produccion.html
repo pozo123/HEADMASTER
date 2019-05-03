@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        
+        <!-- Font Awesome-->
+        
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/solid.css" integrity="sha384-VGP9aw4WtGH/uPAOseYxZ+Vz/vaTb1ehm1bwx92Fm8dTrE+3boLfF1SpAtB1z7HW" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/fontawesome.css" integrity="sha384-1rquJLNOM3ijoueaaeS5m+McXPJCGdr5HcA03/VHXxcp2kX2sUrQDmFc3jR5i/C7" crossorigin="anonymous">  
+        
+        <link rel="stylesheet" href="BS-DDL-checkbox/bootstrap-dropdown-checkbox.css">
+        
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/colvis/1.1.2/css/dataTables.colVis.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/colvis/1.1.2/css/dataTables.colvis.jqueryui.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/colvis/1.1.2/css/dataTables.colVis.min.css">
+        
+        
+        <!-- My styles-->
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <link rel="stylesheet" type="text/css" href="sidebar.css">
+        <link rel="stylesheet" type="text/css" href="tabs.css">
+        <link rel="stylesheet" type="text/css" href="tabla_kaizen.css">
+        <link rel="stylesheet" type ="text/css" href="dataPicker/jquery.datetimepicker.css">
+
+        <!-- Gantt-->
+        <link rel="stylesheet" type ="text/css" href="jsGantt/jsgantt.css">
+        <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+
+
+        <title>Producción HEAD</title>   
+        
+    </head>
+    
+    <body class = "hidden">
+        <div class="modal fade" id="contraseñaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Cambia tu contraseña</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form onsubmit="return false;">
+                                <div class="form-group">
+                                    <label for="">Ingresa la nueva contraseña</label>
+                                    <input type="password" name="" id="newpass" class="form-control" placeholder="" aria-describedby="helpId">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="">Confirma la nueva contraseña</label>
+                                    <input type="password" name="" id="confirm" class="form-control" placeholder="" aria-describedby="helpId">
+                                </div>
+                                <div class="form-row align-items-center">
+                                    <div class="col-md-6 col-sm-12">
+                                        <button id="button_cambio_contraseña" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12">
+                                        <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cerrar</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <!-- Sidebar -->
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <h3>Panel de Control</h3>
+                </div>
+            <!-- Sidebar Links -->
+                <ul class="list-unstyled components">
+                    <div class="text-center">
+                        <div class="form-group">
+                            <img id ="img_foto" src="img/pp.png" alt="..." class="rounded-circle" height="150" width="150">
+                        </div>
+                        <div class="form-group" id = "seleccionarFotoPersonal">
+                            <div class="upload-btn-wrapper">
+                                <button type="button" name="" id="" class="btn btn-outline-warning btn-lg btn-block">Selecciona imagen</button> 
+                                <input type="file" name="myfile"  id = "fotoPersonal_input" accept="image/*"/>
+                            </div>
+                        </div>
+                        
+                        <div class= "form-group hidden" id = "subirFotoPersonal">
+                            <div class="upload-btn-wrapper">
+                                <button type="button" name="" id="" class="btn btn-outline-success btn-lg btn-block" onclick="subirFotoPersonal()">Sube tu imagen</button> 
+                            </div>
+                        </div>
+                    </div>
+                </ul>
+                <ul class="list-unstyled components">
+                    <div class="text-center">
+                        <h6 class="card-title" id="usuarioConectado"></h6>
+                    </div>
+                </ul>
+                <ul class="list-unstyled components">
+
+                    <li>
+                        <a href="#pageSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Kaizen</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu1">
+                            <li class="tab" id="tabKaizen"><a href="#" onclick="openTabs('tabKaizen','kaizen')">Kaizen</a></li>
+                        </ul>
+                    </li>                  
+                    <li>
+                        <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Obras</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu2">
+                            <li class="tab" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Alta de obra</a></li>
+                            <li class="tab" id="tabAltaProceso"><a href="#" onclick="openTabs('tabAltaProceso','altaProceso')">Alta de procesos</a></li>
+                            <li class="tab tabEditarProceso" id="tabEditarProceso"><a href="#" onclick="openTabs('tabEditarProceso','editarProceso')">Editar Procesos</a></li>
+                            <li class="tab tabCatalogoProceso" id="tabCatalogoProceso"><a href="#" onclick="openTabs('tabCatalogoProceso','catalogoProceso')">Catálogo de procesos</a></li>
+                            <li class="tab tabUtilidad" id="tabUtilidad"><a href="#" onclick="openTabs('tabUtilidad','utilidad')">Generador de Precios</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Colaboradores</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu3">
+                                <li class="tab" id="tabAltaColaborador"><a href="#" onclick="openTabs('tabAltaColaborador','altaColaborador')">Alta de colaborador</a></li>
+                                <!-- <li class="tab" id="tabGestionarSup"><a href="#" onclick="openTabs('tabGestionarSup','gestionarSup')">Gestionar supervisores</a></li> -->
+                        </ul>
+                    </li>
+                    <li class="tab"><a href="#" data-toggle="modal" data-target="#contraseñaModal">Cambiar contraseña</a></li>
+                    <!-- <li class="tab" id="tabPermisos"><a href="#" onclick="openTabs('tabPermisos','permisos')">Permisos de usuario</a></li> -->
+                </ul>
+                
+                
+                <ul class="list-unstyled components">
+                    <div class="text-center">
+                        <button type="button" class="btn btn-danger" id="cerrarSesion">Cerrar sesión</button>
+                    </div>
+                </ul>
+            </nav>
+                <!-- Page Content -->
+            <div id="content" class="container-fluid">
+                <div class="row">
+                    <button type="button" id="sidebarCollapse" class="navbar-btn">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-dark btn-xs" id="fullScreen"><i class="fas fa-expand"></i></button>
+                    <button type="button" class="btn btn-outline-dark btn-xs hidden" id="notFullScreen"><i class="fas fa-compress"></i></button>
+                    <br/>       
+                </div>               
+                <div class="row">
+                    <div class="container-fluid">
+
+                        <!-- Kaizen-->
+                        <div id="kaizen" class="tabcontent kaizen">
+                            <div class="container-fluid hidden">
+                                <h3>Diagrama de Gantt</h3>
+                                <div class="row">
+                                    <div style="position:relative" class="gantt" id="kaizenGlobalDiv"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <span>Profit presupuestado global Bruto: </span>
+                                        <label id="totalProfitProgGlobal"></label>
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <span>Profit real global Bruto: </span>
+                                        <label id="totalProfitRealGlobal"></label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <span>Profit presupuestado global Neto: </span>
+                                        <label id="totalProfitNetoProgGlobal"></label>
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <span>Profit real global Neto: </span>
+                                        <label id="totalProfitNetoRealGlobal"></label>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="container-fluid">
+                                <h3>Kaizen</h3>
+                                <p>Al hacer click en las celdas, se pueden editar valores</p>
+                                <div class="row">
+                                    <div style="position:relative" class="gantt" id="kaizenGlobalDiv"></div>
+                                </div>
+                                <div class = "row">
+                                    <form action="#" onsubmit="return false;">                                 
+                                        <div class="form-group">
+                                            <label for="obrasDdlDesplegarKaizen">Obra:</label>
+                                            <select id="obrasDdlDesplegarKaizen" class="form-control" style="width:400px"></select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="precioScoreDesplegarKaizen">Precio por hora SCORE:</label>
+                                            <input type="text" id="precioScoreDesplegarKaizen" class="form-control"  style="width:400px" placeholder="Precio/Hora SCORE">
+                                        </div>
+                                        <div class="form-group dataTables_wrapper">
+                                            <button type="button" class="btn btn-warning" id="desplegarSubButtonDesplegarKaizen">Desplegar</button>
+                                            <button type="button" class="btn btn-danger" id="colapsarSubButtonDesplegarKaizen">Colapsar</button>
+                                        </div>
+                                        <div class="form-group">
+                                            <button id="actualizarKaizenButton" type="button"style="width:400px" class="btn btn-outline-success btn-block">Actualizar Datos</button>
+                                        </div>
+                                        <div class = "container-table100">
+                                                <div class="tableKaizen ver2">
+                                                        <table id="" class = "display">
+                                                            <thead>
+                                                                <tr class="row100 head">
+                                                                    <th class="header_obra" colspan="2" rowspan="2">OBRA</th>
+                                                                    <th class="header_proyectos" colspan="2" rowspan="2">PROYECTOS</th>
+                                                                    <th class="header_produccion" colspan="6" colspan="2">PRODUCCION</th>
+                                                                    <th class="header_avance" colspan="2" rowspan="2">AVANCE</th>
+                                                                    <th class="header_admin" colspan="5">ADMINISTRACION</th>
+                                                                    <th class="header_profit" colspan="2" rowspan="2">PROFIT</th>
+                                                                    <tr class="row100 head">
+                                                                        <th class="header_produccion column100" colspan="3">SUMINISTROS</th>
+                                                                        <th class="header_produccion column100" colspan="3">COPEO</th>
+                                                                        <th class="header_admin column100" colspan="3">ESTIMACIONES</th>
+                                                                        <th class="header_admin column100" colspan="2">ANTICIPOS</th>
+                                                                    </tr>
+                                                                    <tr class="row100 head">
+                                                                        <th class="header_obra column100">CLAVE</th>
+                                                                        <th class="header_obra column100">PROCESO</th>
+                                                                        <th class="header_proyectos column100">PPTO</th>
+                                                                        <th class="header_proyectos column100">PAG</th>
+                                                                        <th class="header_produccion column100">CUANT</th>
+                                                                        <th class="header_produccion column100">OdeC</th>
+                                                                        <th class="header_produccion column100">PAG</th>
+                                                                        <th class="header_produccion column100">PREC</th>
+                                                                        <th class="header_produccion column100">COPEO</th>
+                                                                        <th class="header_produccion column100">PAG</th>
+                                                                        <th class="header_avance column100">PAG</th>
+                                                                        <th class="header_avance column100">REAL</th>
+                                                                        <th class="header_admin column100">PPTO</th>
+                                                                        <th class="header_admin column100">EST</th>
+                                                                        <th class="header_admin column100">PAG</th>
+                                                                        <th class="header_admin column100">PPTO</th>
+                                                                        <th class="header_admin column100">PAG</th>
+                                                                        <th class="header_profit column100">PPTO</th>
+                                                                        <th class="header_profit column100">REAL</th>
+                                                                    </tr>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id = "dataTableDesplegarKaizen">
+            
+                                                            </tbody>
+                                                            
+                                                        </table>
+                                                    </div>
+                                        </div>
+                                    </form>
+                                    <br/>
+                                </div>
+                            </div>                            
+                        </div>
+                        <!--Obras-->
+                        <div id="altaObra" class="tabcontent hidden">
+                            <h1>Alta de Obra</h1>
+                            <p>Página para dar de alta obras en el sistema</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">                   
+                                                <div class="form-group">
+                                                    <label for="obraNombreProd">Nombre:</label>
+                                                    <input type="text" name="obraNombreProd" id="obraNombreProd" class="form-control" placeholder="Nombre">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="claveObraProd">Clave:</label>
+                                                    <input type="text" name="claveObraProd" id="claveObraProd"class="form-control" placeholder="Clave (Máximo 6 caracteres)">
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="clienteProd">Cliente:</label>
+                                                    <select id="clienteProd" class="form-control" onChange=""></select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="supervisorDdlObraProd">Supervisor:</label>
+                                                    <select id ="supervisorDdlObraProd" class="form-control"></select>
+                                                </div>
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-lg-6 col-sm-12">
+                                                        <label for="fechaInicioObraProd">Fecha programada de inicio de Obra:</label>
+                                                    </div>
+                                                    <div class="col-lg-6 col-sm-12">
+                                                        <input class="form-control" type="text" id="fechaInicioObraProd" placeholder="" readonly="readonly">
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-lg-6 col-sm-12">
+                                                        <label for="fechaFinalObraProd">Fecha programada de terminación de Obra:</label>
+                                                    </div>
+                                                    <div class="col-lg-6 col-sm-12">
+                                                        <input class="form-control" type="text" id="fechaFinalObraProd" placeholder="" readonly="readonly">
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <div class="form-row">
+                                                    <div class= "col-lg-6">
+                                                        <button id="registrarObraProd" type="button" class="btn btn-outline-success btn-block">Agregar Obra</button>
+                                                    </div>
+                                                    <div class= "col-lg-6">
+                                                        <button type="reset" id = ""class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <br/>
+                                        </div>
+                                        <div class="col-lg-3"></div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div id="altaProceso" class="tabcontent hidden">
+                                <h1>Alta de Proceso Continuo</h1>
+                                <p>Página para dar de alta procesos continuos en el sistema</p>
+                                <div class="container-fluid">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-3"></div>
+                                        <div class="col-lg-6">
+                                            <form action="#" onsubmit="return false;">
+                                                    
+                                                    <div class="form-group">
+                                                        <label for="obraDdlProcesos">Obra:</label>
+                                                        <select id="obraDdlProcesos" class="form-control"></select>
+                                                    </div>
+                                                    
+                                                    <div class="form-group">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="checkbox" id="checkboxSubproceso" value="">
+                                                            <label class="form-check-label" for="checkboxSubproceso">Subproceso</label>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="form-group hidden" id="grupoSubproceso">
+                                                        <label for="procesoDdlProcesos">Proceso:</label>
+                                                        <select id="procesoDdlProcesos" class="form-control"></select>
+                                                    </div>
+                                                    
+                                                    <div class="form-group hidden" id="grupoCategoria">
+                                                        <label for="categoriaDdlProcesos">Categoría:</label>
+                                                        <select id="categoriaDdlProcesos" class="form-control"></select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="nombreProcesos">Nombre:</label>
+                                                        <input type="text" name="obraNombreProd" id="nombreProcesos" class="form-control" placeholder="Nombre">
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="otros">Alcance:</label>
+                                                        <textarea class="form-control" id="alcanceProcesoProcesos" rows="10"></textarea>
+                                                    </div>
+                                                    
+                                                    <div class="form-row align-items-center">
+                                                        <div class="col-lg-6 col-sm-12">
+                                                            <label for="fechaInicioProcesos">Fecha programada de inicio de proceso:</label>
+                                                        </div>
+                                                        <div class="col-lg-6 col-sm-12">
+                                                            <input class="form-control" type="text" id="fechaInicioProcesos" placeholder="" readonly="readonly">
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                    <div class="form-row align-items-center">
+                                                        <div class="col-lg-6 col-sm-12">
+                                                            <label for="fechaFinalProcesos">Fecha programada de terminación de proceso:</label>
+                                                        </div>
+                                                        <div class="col-lg-6 col-sm-12">
+                                                            <input class="form-control" type="text" id="fechaFinalProcesos" placeholder="" readonly="readonly">
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                    <div class="form-row">
+                                                        <div class= "col-lg-6">
+                                                            <button id="agregarProcesoProcesos" type="button" class="btn btn-outline-success btn-block">Registrar Proceso</button>
+                                                        </div>
+                                                        <div class= "col-lg-6">
+                                                            <button type="reset" id = ""class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <br/>
+                                            </div>
+                                            <div class="col-lg-3"></div>
+                                        </div>
+                                    </div>
+                        </div>                         
+                        <div id= "catalogoProceso" class="tabcontent hidden dataTables_wrapper catalogoProceso">
+                                <div class="container-fluid">
+                                    <h1>Catálogo de Procesos</h1>
+                                    <p>Aquí puedes revisar todos los procesos por obra </p>
+                                    
+                                    <div class="row mt-3">
+                                        <div class="container-fluid">
+                                            <table id="dataDesplegarProcesos" class="display dataDesplegarProcesos" style="width:100%"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div id="editarProceso" class="tabcontent hidden">
+                            <h1>Edición de Procesos</h1>
+                            <p>Página para editar información de procesos existentes</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">                   
+                                            
+                                            <div class="form-group">
+                                                <label for="obraDdlEditarProceso">Obra:</label>
+                                                <select id="obraDdlEditarProceso" class="form-control" onChange=""></select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="procesoDdlEditarProceso">Proceso:</label>
+                                                <select id ="procesoDdlEditarProceso" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group hidden" id = "groupSubEditarProceso">
+                                                <label for="subprocesoDdlEditarProceso">Subproceso:</label>
+                                                <select id ="subprocesoDdlEditarProceso" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group hidden" id="groupDatosEditarProceso">
+                                                <label for="nombreEditarProceso">Nombre:</label>
+                                                <input type="text" name="" id="nombreEditarProceso" class="form-control" placeholder="Nombre">
+                                                <label for="alcanceEditarProceso">Alcance:</label>
+                                                <textarea id="alcanceEditarProceso" class="form-control" rows = 10></textarea>
+                                            </div>
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-lg-6 col-sm-12">
+                                                        <label for="fechaInicioEditarProceso">Fecha programada de inicio de Proceso:</label>
+                                                    </div>
+                                                    <div class="col-lg-6 col-sm-12">
+                                                        <input class="form-control" type="text" id="fechaInicioEditarProceso" placeholder="" readonly="readonly">
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-lg-6 col-sm-12">
+                                                        <label for="fechaFinalEditarProceso">Fecha programada de terminación de Proceso:</label>
+                                                    </div>
+                                                    <div class="col-lg-6 col-sm-12">
+                                                        <input class="form-control" type="text" id="fechaFinalEditarProceso" placeholder="" readonly="readonly">
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <div class="form-row">
+                                                    <div class= "col-lg-6">
+                                                        <button id="buttonEditarProceso" type="button" class="btn btn-outline-success btn-block">Aceptar</button>
+                                                    </div>
+                                                    <div class= "col-lg-6">
+                                                        <button type="reset" id = ""class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                    </div>
+                                                </div>
+                                        </form>
+                                        <br/>
+                                        </div>
+                                        <div class="col-lg-3"></div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div id="utilidad" class="tabcontent hidden">
+                                <h1>Generador de Precios</h1>
+                                <p>Página auxiliar que te ayuda a calcular precios de venta de procesos u obras</p>
+                                <div class="container-fluid">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-3"></div>
+                                        <div class="col-lg-6">
+                                            <form action="#" onsubmit="return false;">                                      
+                                                <div class="form-group">
+                                                    <label for="obraDdlUtilidad">Obra:</label>
+                                                    <select id="obraDdlUtilidad" class="form-control"></select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="procesoDdlUtilidad">Proceso:</label>
+                                                    <select id="procesoDdlUtilidad" class="form-control"></select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="proyectosUtilidad">Costo de proyecto ($):</label>
+                                                    <input type="text" id="proyectosUtilidad" class="form-control" placeholder="Costo del proyecto">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="suministrosUtilidad">Costo de suministros ($):</label>
+                                                    <input type="text" id="suministrosUtilidad" class="form-control" placeholder="Costo de suministros">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="copeoUtilidad">Costo de copeo ($):</label>
+                                                    <input type="text" id="copeoUtilidad" class="form-control" placeholder="Costo de copeo">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="precioVentaUtilidad">Precio de venta ($):</label>
+                                                    <input type="text" id="precioVentaUtilidad" class="form-control" placeholder="Precio de venta">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="profitCantidadUtilidad">Profit ($):</label>
+                                                    <input type="text" id="profitCantidadUtilidad" class="form-control" placeholder="Profit($)">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="profitPorcentajeUtilidad">Profit (%):</label>
+                                                    <input type="text" id="profitPorcentajeUtilidad" class="form-control" placeholder="Profit (%)">
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class= "col-lg-6">
+                                                        <button type="button" id = "loadButtonUtilidad"class="btn btn-outline-danger btn-block">Resetear Todo</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <br/>
+                                        </div>
+                                        <div class="col-lg-3"></div>
+                                    </div>
+                                </div>
+                        </div>  
+                                    
+                        <!-- Colaboradores-->
+                        <div id="altaColaborador" class="tabcontent hidden">
+                                <h1>Alta de colaboradores</h1>
+                                <p>Página para dar de alta a los ingenieros del área de producción</p>
+                                <div class="container-fluid">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-3"></div>
+                                        <div class="col-lg-6">
+                                            <form action="#" onsubmit="return false;">
+                                                <div class="form-group">
+                                                    <label for="montoPagos">*Email:</label>
+                                                    <input type="text" name="colaboradorEmail" id="colaboradorEmail"class="form-control" placeholder="Email">
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="montoPagos">*Nombre:</label>
+                                                    <input type="text" name="colaboradorNombre" id="colaboradorNombre"class="form-control" placeholder="Nombre del colaborador">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="montoPagos">*Nickname:</label>
+                                                    <input type="text" name="colaboradorNickname" id="colaboradorNickname"class="form-control" placeholder="Nickname">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="montoPagos">*Password:</label>
+                                                    <input type="password" name="" id="colaboradorPwd" class="form-control" placeholder="" aria-describedby="helpId">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="montoPagos">Teléfono:</label>
+                                                    <input type="text" name="colaboradorTelefono" id="colaboradorTelefono"class="form-control" placeholder="Ingresa la cantidad pagada">
+                                                </div>
+        
+                                                <div class="form-group">
+                                                    <label for="">Puesto:</label>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="tipo" id="checkboxSupervisor" value="option1">
+                                                        <label class="form-check-label" for="checkboxSupervisor">Supervisor de Obra</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="tipo" id="checkboxGerente" value="option2">
+                                                        <label class="form-check-label" for="checkboxGerente">Gerente</label>
+                                                    </div>
+                                                </div>
+                                                        
+                                                <div class="form-row">
+                                                    <div class= "col-lg-6">
+                                                        <button id="registrarColaborador" type="button" class="btn btn-outline-success btn-block">Aceptar</button>
+                                                    </div>
+                                                    <div class= "col-lg-6">
+                                                        <button type="reset" id = "" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <br/>
+                                        </div>
+                                        <div class="col-lg-3"></div>
+                                    </div>
+                                </div>
+                        </div>
+                        
+                        <div id="gestionarSup" class="tabcontent hidden">
+                                <h1>Gestionar supervisores</h1>
+                                <p>Página para gestionar a los supervisores y sus obras asignadas</p>
+                                <div class="container-fluid">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-3"></div>
+                                        <div class="col-lg-6">
+                                            <form action="#" onsubmit="return false;">
+                                                <div class="form-group">
+                                                    <label for="obraDdlSupervisores">Obra:</label>
+                                                    <select id="obraDdlSupervisores" class="form-control" style="width:400px"></select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="supervisoresDdlSupervisores">Supervisor:</label>
+                                                    <select id="supervisoresDdlSupervisores" class="form-control" style="width:400px"></select>
+                                                </div>
+                                                <div id="divObraSupervisores"></div>
+                                                <div id="divSupervisorSupervisores"></div>
+                                            </form>
+                                            <br/>
+                                        </div>
+                                        <div class="col-lg-3"></div>
+                                    </div>
+                                </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+                    
+        <!-- Jquery scripts-->
+                    
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script src="SimpleTableCellEditor.js"></script>
+        <script src="Table_Highlight_Vertical_Horizontal/vendor/select2/select2.min.js"></script>
+
+        
+        <!-- DataTable-->
+        
+        <script src= "https://code.jquery.com/jquery-3.3.1.js"></script>
+        <script src = "https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
+        
+        
+        <!-- DDL CHECKBOX JS -->
+        
+        <script src="BS-DDL-checkbox/bootstrap-dropdown-checkbox.js"></script>
+        
+        <!-- Chart JS-->
+        
+        <script src = "Chart/Chart.bundle.js"></script>
+        <script src = "Chart/Chart.bundle.min.js"></script>
+        <script src = "Chart/utils.js"></script>
+        
+        <!--DataPicker JS-->
+        <script src="dataPicker/jquery.datetimepicker.full.min.js"></script>
+        
+        
+        <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
+        <script>
+            
+            // Initialize Firebase
+            var config = {
+                apiKey: "AIzaSyBJ8dJ8G-B6SldpKwHSe085VYRrzBZC0dA",
+                authDomain: "ingenieriahead.firebaseapp.com",
+                databaseURL: "https://ingenieriahead.firebaseio.com",
+                projectId: "ingenieriahead",
+                storageBucket: "ingenieriahead.appspot.com",
+                messagingSenderId: "893795596481"
+            };
+            firebase.initializeApp(config);
+            
+            var secondaryApp = firebase.initializeApp(config, "Secondary");
+            
+            </script>
+
+<!--My scripts-->
+<script src="app_principal.js"></script>        
+<script src="numeroLetras.js"></script>
+<script src="app_funciones.js"></script>
+<script src="produccion/produccion.js"></script>
+<script src="produccion/app_colaboradores_produccion.js"></script>
+<script src="produccion/app_obra_prod.js"></script>
+<script src="produccion/app_procesos.js"></script>
+<script src="app_desplegar_procesos.js"></script>
+<script src="produccion/app_kaizen_global.js"></script>
+<script src="produccion/app_editar_proceso.js"></script>
+<script src="produccion/app_utilidad.js"></script>
+<!-- <script src="produccion/app_datos_kaizen.js"></script> -->
+<script src="produccion/app_desplegar_kaizen.js"></script>
+<script src="produccion/app_gestionar_supervisores.js"></script>
+<!-- Gantt-->
+
+<script src="jsGantt/jsgantt.js"></script>
+
+<!-- PdfMaker-->
+
+<script src="pdfMake/pdfmake.min.js"></script>
+<script src="pdfMake/vfs_fonts.js" ></script>
+
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+</body>
+</html>

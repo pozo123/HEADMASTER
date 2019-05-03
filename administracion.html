@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        
+        <!-- Font Awesome-->
+        
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/solid.css" integrity="sha384-VGP9aw4WtGH/uPAOseYxZ+Vz/vaTb1ehm1bwx92Fm8dTrE+3boLfF1SpAtB1z7HW" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/fontawesome.css" integrity="sha384-1rquJLNOM3ijoueaaeS5m+McXPJCGdr5HcA03/VHXxcp2kX2sUrQDmFc3jR5i/C7" crossorigin="anonymous">  
+        
+        <link rel="stylesheet" href="BS-DDL-checkbox/bootstrap-dropdown-checkbox.css">
+        
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css">
+        
+        
+        <!-- My styles-->
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <link rel="stylesheet" type="text/css" href="sidebar.css">
+        <link rel="stylesheet" type="text/css" href="tabs.css">
+        <link rel="stylesheet" type ="text/css" href="dataPicker/jquery.datetimepicker.css">
+        
+        <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+
+        <title>Administración HEAD</title>   
+        
+    </head>
+    
+    <body class = "hidden">
+        <div class="modal fade" id="contraseñaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Cambia tu contraseña</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form onsubmit="return false;">
+                                <div class="form-group">
+                                    <label for="">Ingresa la nueva contraseña</label>
+                                    <input type="password" name="" id="newpass" class="form-control" placeholder="" aria-describedby="helpId">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="">Confirma la nueva contraseña</label>
+                                    <input type="password" name="" id="confirm" class="form-control" placeholder="" aria-describedby="helpId">
+                                </div>
+                                <div class="form-row align-items-center">
+                                    <div class="col-md-6 col-sm-12">
+                                        <button id="button_cambio_contraseña" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12">
+                                        <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cerrar</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <!-- Sidebar -->
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <h3>Panel de Control</h3>
+                </div>
+            <!-- Sidebar Links -->
+                <ul class="list-unstyled components">
+                    <div class="text-center">
+                        <div class="form-group">
+                            <img id ="img_foto" src="img/pp.png" alt="..." class="rounded-circle" height="150" width="150">
+                        </div>
+                        <div class="form-group" id = "seleccionarFotoPersonal">
+                            <div class="upload-btn-wrapper">
+                                <button type="button" name="" id="" class="btn btn-outline-warning btn-lg btn-block">Selecciona imagen</button> 
+                                <input type="file" name="myfile"  id = "fotoPersonal_input" accept="image/*"/>
+                            </div>
+                        </div>
+                        
+                        <div class= "form-group hidden" id = "subirFotoPersonal">
+                            <div class="upload-btn-wrapper">
+                                <button type="button" name="" id="" class="btn btn-outline-success btn-lg btn-block" onclick="subirFotoPersonal()">Sube tu imagen</button> 
+                            </div>
+                        </div>
+                    </div>
+                </ul>
+                <ul class="list-unstyled components">
+                    <div class="text-center">
+                        <h6 class="card-title" id="usuarioConectado"></h6>
+                    </div>
+                </ul>
+                <ul class="list-unstyled components">
+
+                    <li>
+                        <a href="#pageSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Dashboard</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu1">
+                            <li class="tab" id="tabDashboard1"><a href="#" onclick="openTabs('tabDashboard1','dash1')">Dashboard1</a></li>
+                            <li class="tab" id="tabDashboard2"><a href="#" onclick="openTabs('tabDashboard2','dash2')">Dashboard2</a></li>
+                        </ul>
+                    </li>                  
+                    <li>
+                        <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Obras</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu2">
+                            <li class="tab tabCatalogoProceso" id="tabCatalogoProceso"><a href="#" onclick="openTabs('tabCatalogoProceso','catalogoProceso')">Catálogo de procesos</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Colaboradores</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu3">
+                            <li class="tab" id="tabAltaColaborador"><a href="#" onclick="openTabs('tabAltaColaborador','altaColaborador')">Alta de colaborador</a></li>
+                            <li class="tab" id="tabAreas"><a href="#" onclick="openTabs('tabAreas','areas')">Areas</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#pageSubmenu4" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Centro de Costos</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu4">
+                            <li class="tab" id="tabAltaCuentas"><a href="#" onclick="openTabs('tabAltaCuentas','altaCuentas')">Alta de Cuentas</a></li>
+                        </ul>
+                    </li>
+                    <li class="tab"><a href="#" data-toggle="modal" data-target="#contraseñaModal">Cambiar contraseña</a></li>
+                    <!-- <li class="tab" id="tabPermisos"><a href="#" onclick="openTabs('tabPermisos','permisos')">Permisos de usuario</a></li> -->
+                </ul>
+                
+                
+                <ul class="list-unstyled components">
+                    <div class="text-center">
+                        <button type="button" class="btn btn-danger" id="cerrarSesion">Cerrar sesión</button>
+                    </div>
+                </ul>
+            </nav>
+                <!-- Page Content -->
+            <div id="content" class="container-fluid">
+                <div class="row">
+                    <button type="button" id="sidebarCollapse" class="navbar-btn">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    
+                    <button type="button" class="btn btn-outline-dark btn-xs" id="fullScreen"><i class="fas fa-expand"></i></button>
+                    <button type="button" class="btn btn-outline-dark btn-xs hidden" id="notFullScreen"><i class="fas fa-compress"></i></button>
+                    <br/>       
+                </div>               
+                <div class="row">
+                    <div class="container-fluid">
+
+                        <!-- Kaizen-->
+                        <div id="dash1" class="tabcontent kaizen">
+                            <div class="container-fluid">
+                                <h3>Dashboard</h3>
+                            </div>                          
+                        </div>
+
+                        
+                        <!--Obras-->                       
+                        <div id= "catalogoProceso" class="tabcontent hidden dataTables_wrapper catalogoProceso">
+                                <div class="container-fluid">
+                                    <h1>Catálogo de Procesos</h1>
+                                    <p>Aquí puedes revisar todos los procesos por obra </p>
+                                    
+                                    <div class="row mt-3">
+                                        <div class="container-fluid">
+                                            <table id="dataDesplegarProcesos" class="display dataDesplegarProcesos" style="width:100%"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <!-- Alta Cuentas-->
+                        <div id="altaCuentas" class="tabcontent hidden">
+                            <h1>Alta de Cuentas para el Centro de Costos</h1>
+                            <p>Alta de Cuentas para el Centro de Costos</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">
+
+                                            <div class="form-group">
+                                                <label for="familiaDdlCC">Familia:</label>
+                                                <select id="familiaDdlCC" class="form-control" style="width:400px"></select>
+                                            </div>
+
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="nodoCheckBoxCC">
+                                                <label class="custom-control-label" for="nodoCheckBoxCC">¿Tiene hijos?</label>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="nombreCC">*Nombre CC:</label>
+                                                <input type="text" name="" id="nombreCC"class="form-control" placeholder="Nombre del colaborador">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="nombreCC">*Clave CC:</label>
+                                                <input type="text" name="" id="nombreCC"class="form-control" placeholder="Nombre del colaborador">
+                                            </div>
+
+                                            <div class="form-row">
+                                                <div class= "col-lg-6">
+                                                    <button id="registrarCC" type="button" class="btn btn-outline-success btn-block">Terminar</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <div id ="divCC">
+                                        </div>
+
+
+                                        <br/>
+                                    </div>
+                                    <div class="col-lg-3"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Colaboradores-->
+        
+                        <div id="altaColaborador" class="tabcontent hidden">
+                                <h1>Alta de colaboradores</h1>
+                                <p>Página para dar de alta a los ingenieros del área de producción</p>
+                                <div class="container-fluid">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-3"></div>
+                                        <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="colaboradorEmailAdmin">*Email:</label>
+                                                    <input type="text" name="" id="colaboradorEmailAdmin"class="form-control" placeholder="Email">
+                                                </div>
+                                                <form id= "formColAdmin"action="#" onsubmit="return false;">
+                                                    <div class="form-group">
+                                                        <label for="colaboradorPwdAdmin">*Password:</label>
+                                                        <input type="password" name="" id="colaboradorPwdAdmin" class="form-control" placeholder="" aria-describedby="helpId">
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="colaboradorNombreAdmin">*Nombre:</label>
+                                                        <input type="text" name="" id="colaboradorNombreAdmin"class="form-control" placeholder="Nombre del colaborador">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="colaboradorNicknameAdmin">*Nickname:</label>
+                                                        <input type="text" name="" id="colaboradorNicknameAdmin"class="form-control" placeholder="Nickname">
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="" id="liderCheckboxColAdmin">
+                                                        <label class="form-check-label" for="liderCheckboxColAdmin">
+                                                        ¿Lider de área?
+                                                        </label>
+                                                    </div>
+
+                                                    <div class="form-check hidden" id ="groupActivoAdmin">
+                                                        <input class="form-check-input" type="checkbox" value="" id="activoCheckboxAdmin">
+                                                        <label class="form-check-label" for="activoCheckboxAdmin">
+                                                        ¿Activo?
+                                                        </label>
+                                                    </div>
+                    
+
+                                                    <div class="form-check-inline">
+                                                        <input class="form-check-input" type="checkbox" value="" id="adminAreasCheckboxColAdmin">
+                                                        <label class="form-check-label" for="adminAreasCheckboxColAdmin">
+                                                        Administración
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check-inline">
+                                                        <input class="form-check-input" type="checkbox" value="" id="prodAreasCheckboxColAdmin">
+                                                        <label class="form-check-label" for="prodAreasCheckboxColAdmin">
+                                                        Producción
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check-inline">
+                                                        <input class="form-check-input" type="checkbox" value="" id="proyAreasCheckboxColAdmin">
+                                                        <label class="form-check-label" for="proyAreasCheckboxColAdmin">
+                                                        Proyectos
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check-inline">
+                                                        <input class="form-check-input" type="checkbox" value="" id="comprasAreasCheckboxColAdmin">
+                                                        <label class="form-check-label" for="comprasAreasCheckboxColAdmin">
+                                                        Compras
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check-inline">
+                                                        <input class="form-check-input" type="checkbox" value="" id="rrhhAreasCheckboxColAdmin">
+                                                        <label class="form-check-label" for="rrhhAreasCheckboxColAdmin">
+                                                        RRHH
+                                                        </label>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="form-check-inline hidden" id="groupIeAdmin">
+                                                            <input class="form-check-input" type="radio" name="especialidad" id="ieRbColAdmin" value="option1" checked>
+                                                            <label class="form-check-label" for="ieRbColAdmin">
+                                                                IE
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check-inline hidden" id="groupIhsAdmin">
+                                                            <input class="form-check-input" type="radio" name="especialidad" id="ihsRbColAdmin" value="option2">
+                                                            <label class="form-check-label" for="ihsRbColAdmin">
+                                                                IHS
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                        
+                                                <div class="form-row">
+                                                    <div class= "col-lg-4">
+                                                        <button id="registrarColaboradorAdmin" type="button" class="btn btn-outline-success btn-block">Registrar</button>
+                                                    </div>
+                                                    <div class= "col-lg-4">
+                                                        <button id="editarButtonColAdmin" type="button" class="btn btn-outline-warning btn-block hidden">Editar</button>
+                                                    </div>
+                                                    <div class= "col-lg-4">
+                                                        <button id="borrarButtonColAdmin" type="reset" id = "" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                    </div>
+                                                </div>
+                                            <br/>
+                                        </div>
+                                        <div class="col-lg-3"></div>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <!-- Areas-->
+                        <div id="areas" class="tabcontent hidden">
+                            <h1>Asignar Areas de Usuario</h1>
+                            <p>Otorga acceso de areas a el usuario seleccionado</p>
+                            <div class="container-fluid">
+                                <form action="#" onsubmit="return false;">
+                                    <div class="form-row align-items-center">
+                                        <div class = "col-lg-3">
+
+                                        </div>
+                                        <div class = "col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="colaboradorDdlAreas">Selecciona el Colaborador</label>
+                                                    <select class="form-control" name="" id="colaboradorDdlAreas"></select>
+                                                </div>
+
+                                                <div class="form-group align-items-center">
+                                                    <label class="checkbox-inline">
+                                                        <input id="checkProyectosArea" type="checkbox" checked  data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"><span>Proyectos</span>
+                                                    </label>
+                                                </div>
+                                                <div class="form-group align-items-center">
+                                                    <label class="checkbox-inline">
+                                                        <input id="checkProduccionArea" type="checkbox" checked data-toggle="toggle" data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"><span>Producción</span>
+                                                    </label>
+                                                </div>
+                                                <div class="form-group align-items-center">
+                                                    <label class="checkbox-inline">
+                                                        <input id="checkComprasArea" type="checkbox" checked data-toggle="toggle" data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"><span>Compras</span>
+                                                    </label>
+                                                </div>
+                                                <div class="form-group align-items-center">
+                                                    <label class="checkbox-inline">
+                                                        <input id= "checkAdminArea" type="checkbox" checked data-toggle="toggle" data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"><span>Administración</span>
+                                                    </label>
+                                                </div>
+                                                <div class="form-group align-items-center">
+                                                    <label class="checkbox-inline">
+                                                        <input id= "checkRRHHArea" type="checkbox" checked data-toggle="toggle" data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"><span>RRHH</span>
+                                                    </label>
+                                                </div>
+
+                                                <button id="guardarAreas" type="button" class="btn btn-outline-success btn-block">Actualizar</button>
+                                        </div>
+                                        <div class = "col-lg-3">
+
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                    
+        <!-- Jquery scripts-->
+                    
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        
+        <!-- DataTable-->
+        
+        <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+        <script src ="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
+        
+        
+        
+        <!-- DDL CHECKBOX JS -->
+        
+        <script src="BS-DDL-checkbox/bootstrap-dropdown-checkbox.js"></script>
+        
+        <!-- Chart JS-->
+        
+        <script src = "Chart/Chart.bundle.js"></script>
+        <script src = "Chart/Chart.bundle.min.js"></script>
+        <script src = "Chart/utils.js"></script>
+        
+        <!--DataPicker JS-->
+        <script src="dataPicker/jquery.datetimepicker.full.min.js"></script>
+        
+        
+        <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
+        <script>
+            
+            // Initialize Firebase
+            var config = {
+                apiKey: "AIzaSyBJ8dJ8G-B6SldpKwHSe085VYRrzBZC0dA",
+                authDomain: "ingenieriahead.firebaseapp.com",
+                databaseURL: "https://ingenieriahead.firebaseio.com",
+                projectId: "ingenieriahead",
+                storageBucket: "ingenieriahead.appspot.com",
+                messagingSenderId: "893795596481"
+            };
+            firebase.initializeApp(config);
+            
+            var secondaryApp = firebase.initializeApp(config, "Secondary");
+            
+            </script>
+
+<!--My scripts-->
+<script src="app_principal.js"></script>        
+<script src="app_desplegar_procesos.js"></script>
+<script src="app_funciones.js"></script>
+<script src="administracion/app_admon_colaborador.js"></script>
+<!--<script src="administracion/app_cuenta_cc.js"></script> -->
+<script src="administracion/app_admon_areas.js"></script>
+
+<!-- PdfMaker-->
+
+<script src="pdfMake/pdfmake.min.js"></script>
+<script src="pdfMake/vfs_fonts.js" ></script>
+
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+</body>
+</html>
