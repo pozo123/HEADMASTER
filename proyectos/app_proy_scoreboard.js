@@ -1,6 +1,9 @@
 var id_fullscreen_scoreboard = "fullScreen";
 var id_notFullscreen_scoreboard = "notFullScreen";
-var id_div_graphs_scoreboard = "graphs";
+
+var id_div_graphs_scoreboard = "divGraphsScoreboard";
+var id_div_cards_grupales_scoreboard = "divCardsGrupalesScoreboard";
+var id_div_cards_ind_scoreboard = "divCardsIndScoreboard";
 
 var rama_bd_obras = "test/obras";
 var rama_bd_personal = "test/personal";
@@ -17,6 +20,9 @@ var myInterval;
 var modo_display = false; //true si en pantalla completa (con el botón), false si no. Ponerle un listener para si cambia
 
 $('#' + id_fullscreen_scoreboard).click(function(){
+    $('#' + id_div_graphs_scoreboard).empty();
+    $('#' + id_div_cards_ind_scoreboard).empty();
+    $('#' + id_div_cards_grupales_scoreboard).empty();
     firebase.database().ref(rama_bd_personal).once('value').then(function(snapshot){
         inges[0] = "Todos";
         snapshot.forEach(function(childSnap){
@@ -64,30 +70,35 @@ function cyclePresentation(){
 }
 
 function scoreboardGrupal(){
+    $('#' + id_div_graphs_scoreboard).emtpy();
+    $('#' + id_div_cards_ind_scoreboard).emtpy();
+    $('#' + id_div_cards_grupales_scoreboard).empty();
     console.log("TODOS");
     for(var i=1;i<inges.length;i++){
         var inge = inges[i].val();
         if(inge.activo){
-            getRegScoreboard(inges[i]);
+            getRegScoreboard(inges[i],id_div_cards_grupales_scoreboard);
         } else {
-            loadDashcard(inges[i].child("nickname").val(), false);
+            loadDashcard(inges[i].child("nickname").val(), false,id_div_cards_grupales_scoreboard);
         }
     }
     console.log("FIN TODOS");
 }
 
 function scoreboardIndividual(ingeSnap){
+    $('#' + id_div_graphs_scoreboard).emtpy();
+    $('#' + id_div_cards_ind_scoreboard).emtpy();
+    $('#' + id_div_cards_grupales_scoreboard).empty();
     var inge = ingeSnap.val();
     if(inge.status){
-        getRegScoreboard(ingeSnap);
+        getRegScoreboard(ingeSnap,id_div_cards_ind_scoreboard);
     } else {
-        loadDashcard(ingeSnap.child("nickname").val(), false);
-        $('#' + id_div_graphs_scoreboard).empty();
+        loadDashcard(ingeSnap.child("nickname").val(), false,id_div_cards_ind_scoreboard);
         console.log(inge.nickname + ", No Activo");
     }
 }
 
-function getRegScoreboard(ingeSnap){
+function getRegScoreboard(ingeSnap, div_cards){
     var hoy = getWeek(new Date().getTime());
     firebase.database().ref(rama_bd_registros + "/" + hoy[1] + "/" + hoy[0]).once('value').then(function(snapshot){
         snapshot.forEach(function(regSnap){
@@ -107,7 +118,7 @@ function getRegScoreboard(ingeSnap){
                     var horas_reg = new Date().getTime() - parseFloat(reg.checkin);
                     horas_trabajadas += horas_reg;
                     
-                    loadDashcard(ingeSnap.child("nickname").val(), true, reg, horas_programadas, horas_trabajadas / 3600000);
+                    loadDashcard(ingeSnap.child("nickname").val(), true, reg, horas_programadas, horas_trabajadas / 3600000, div_cards);
                     loadGraph(reg, horas_programadas, horas_trabajadas);
                 });
 
@@ -177,10 +188,12 @@ function loadGraph(reg, horas_programadas, horas_trabajadas){
 }
 
                 
-function loadDashcard(nickname, activo, reg, horas_programadas, horas_trabajadas){
+function loadDashcard(nickname, activo, reg, horas_programadas, horas_trabajadas, div_cards){
     if(activo){
         console.log(nickname + ": \nEsp: " + reg.esp + "\nObra: " + reg.obra + "\nProceso: " + reg.proceso + "\nHoras Programadas: " + horas_programadas + "\nHoras Trabajadas: " + horas_trabajadas);
+        //document.getElementById(div_cards).appendChild(card);
     } else {
         console.log(nickname + ": No activo");
+        //document.getElementById(div_cards).appendChild(card);
     }
 }

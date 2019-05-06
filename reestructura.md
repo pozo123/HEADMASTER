@@ -1,8 +1,5 @@
 Reestructuración de la base de datos.
 
-Cambiar en códigos y en la bd con los datos ya existentes.
-
-Falta funciones en SCORE
 Los labels en cuant_kaizen_proy
 
 CHECKLIST de KICK-OFF 
@@ -10,11 +7,6 @@ CHECKLIST de KICK-OFF
  -> asignar a proc (al dar de alta el proc, con ddcb)
  -> Palomear (con pad, necesita creden, subir archivo)
  -> liberar
-
-COMPRAS:
-Definir cómo terminar OdeC
-Desplegar Proveedores y OdeC, como bibliotecas
-En Odec revisar proveedor en on change (compararlo con la bd) 
 
 LISTA DE CAMBIOS:
 Obra simple manda todo a misc
@@ -79,3 +71,9 @@ Cambios en bd:
  - poner el PC00-MISC a los ya existentes
  - borrar todos los registros, pero guardarlos bien en los kaizens antes
  - Poner atributo SCORE en todas las hojas... ? No necesario
+
+
+ FALTA:
+ - obras
+ - proyectos
+ - rrhh -> trabajadores.activo, creo que nadie lo tiene

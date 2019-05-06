@@ -1,30 +1,3 @@
-- personal (magico)
-      - AFECTAN: app_personal, app_inges, app_colaboradores_produccion/admin/rrhh/compras
-      - SUSCRIBEN: 
-  - uid (como key):
-    - areas:   
-      - proyectos: boolean
-      - produccion: boolean
-      - compras: boolean
-      - administracion: boolean
-      - rrhh: bool
-    - credenciales: (0 sisadmin, 1 director, 2 lider de area, 3 los demas, 4 bajas/glitches)
-    - esp (si tienes area proy, "ie", "ihs")
-    - status (si tienes area proy, true si trabajando)
-    - uid: uid
-    - nombre: string
-    - nickname: ? string
-    - email: string
-    - activo
-    - buzon:
-       - mensaje (por uid, solo los no leidos)
-          - destinatario (uid)
-          - remitente (uid)
-          - mensaje
-          - leido
-          - timestamps
-             - enviado
-             - leido
 - administracion:
    - flujos
       - obra (por nombre)
@@ -110,6 +83,216 @@
    - categoria (por nombre)
       - nombre
       - clave
+- clientes
+   - cliente (por nombre)
+      - clave
+      - nombre
+      - telefono
+      - atencion
+         - numero (por push pero de array, 0,1,2)
+            - area
+            - celular
+            - email
+            - extension
+            - nombre
+      - direccion
+         - calle
+         - ciudad
+         - colonia
+         - cp
+         - delegacion
+         - numero
+- compras
+   - num_proveedores_id
+   - proveedores
+      - proveedor (por ref)
+         - razonSocial
+         - direccion
+         - telefono
+         - atiende
+         - RFC
+- info_web
+   - version
+- mensajes
+   - mensaje (por uid)
+      - destinatario (uid)
+      - remitente (uid)
+      - mensaje
+      - leido
+      - timestamps
+         - enviado
+         - leido
+- personal (magico) (supervisores son los que estan en prod, se ven en obra)- SUSCRIBEN: 
+  - uid (como key):
+    - areas:   
+      - proyectos: boolean
+      - produccion: boolean
+      - compras: boolean
+      - administracion: boolean
+      - rrhh: bool
+    - credenciales: (0 sisadmin, 1 director, 2 lider de area, 3 los demas, 4 bajas/glitches)
+    - esp (si tienes area proy, "ie", "ihs")
+    - status (si tienes area proy, true si trabajando)
+    - uid: uid
+    - nombre: string
+    - nickname: ? string
+    - email: string
+    - activo
+    - foto
+    - buzon:
+       - mensaje (por uid, solo los no leidos)
+          - destinatario (uid)
+          - remitente (uid)
+          - mensaje
+          - leido
+          - timestamps
+             - enviado
+             - leido
+- produccion
+   - destajistas: 
+      - AFECTAN: app_destajistas
+      - SUSCRIBEN:
+      - destajista: (por nombre)
+         - nombre
+         - telefono
+         - cuenta_bancaria
+         - especialidad: ("IE"/"IHS"/"Ambas")
+- rrhh
+   - diversos
+      - diverso (por nombre)
+         - nombre
+         - distribuible (generalmente, no forzoso)
+   - num_trabajadores_id: int (actualizado en app_rrhh_trabajadores y app_rrhh_importar_trabajadores)
+   - trabajadores:
+      - AFECTAN: app_trabajadores
+      - SUSCRIBEN: app_asistencia
+      - trabajador(por id):
+         - puesto
+         - sueldo_base
+         - jefe (nombre destajista o HEAD)
+         - nombre
+         - id_trabajador
+         - fecha_antiguedad
+         - obra_asignada:
+            - 0 (1,2,3, lista): nombre
+         - especialidad
+         - activo: bool
+         - claves:
+            - RFC
+            - IMSS
+            - CURP
+         - info_personal
+            - fecha_nacimiento
+            - estado_civil
+            - sexo
+            - domicilio
+         - datos_bancarios:
+            - banco
+            - cuenta
+            - clabe
+         - tallas:
+            - camisa
+            - pantalon
+            - zapatos
+         - clave_pagadora
+         - nomina
+            - year: (ej 2019)
+               - semana: (ej 1)
+                  - lunes:
+                     - obra (nombre) 
+                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
+                     - asistencia (bool)
+                  - martes:
+                     - obra (nombre) 
+                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
+                     - asistencia (bool)
+                  - miercoles:
+                     - obra (nombre) 
+                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
+                     - asistencia (bool)
+                  - jueves:
+                     - obra (nombre) 
+                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
+                     - asistencia (bool)
+                  - viernes:
+                     - obra (nombre) 
+                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
+                     - asistencia (bool)
+                  - horas_extra:
+                     - por push:
+                        - fecha (timestamp)
+                        - obra 
+                        - proceso (Si obra es "Atencion a Clientes" proc es cliente)
+                        - horas (en horas)
+                  - diversos
+                     - por push:
+                        - cantidad
+                        - distribuible: bool
+                        - obra: ("NA" si distribuilble == true) 
+                        - proceso: ("NA" si distribuilble == true) (Si obra es "Atencion a Clientes" proc es cliente)
+                        - diverso (nombre de un catálogo)
+                  - total_diversos (No incluyen impuestos)
+                  - total_horas_extra (en $ y sin impuestos)
+                  - total_asistencia (sueldo_base * asistencias)
+                  - impuestos:
+                     - impuestos_horas_extra
+                     - impuestos_diversos
+                     - impuestos_asistencia (pagadora_trabajador - 3 totales - impu_div - impu_HE)
+                  - total (pagadora)
+   - pagos_nomina: 
+      - AFECTAN: app_pagos_nomina, app_asistencia
+      - SUSCRIBEN: 
+      - year: (ej 2019)
+         - semana: (ej 1)
+            - terminada: bool
+            - asistencias_terminadas: bool
+            - horas_extra_terminadas: bool
+            - diversos_terminados: bool
+            - total
+            - obra: (por nombre) (Una es "Atencion a Clientes")
+               - total (refleja TOTAL de kaizen)
+               - supervisores:
+                  - supervisor (por uid)
+                     - porcentaje (ej 30)
+                     - cantidad (= % * sueldo_base o pago nomina)
+               - trabajadores:
+                  - trabajador: (por id)
+                     //- nombre NOSTA
+                     - dias 
+                        - lunes:
+                           - asistencia: bool
+                           - proceso: (clave) "NA" si asistencia es false
+                        - martes:
+                           - asistencia: bool
+                           - proceso: (clave) "NA" si asistencia es false
+                        - miercoles:
+                           - asistencia: bool
+                           - proceso: (clave) "NA" si asistencia es false
+                        - jueves:
+                           - asistencia: bool
+                           - proceso: (clave) "NA" si asistencia es false
+                        - viernes:
+                           - asistencia: bool
+                           - proceso: (clave) "NA" si asistencia es false
+                     - horas_extra:
+                        - push:
+                           - horas (EN $)
+                           - proceso (clave)
+                           - fecha (ms, de un datepicker, es de cuando se trabajaron, no de cuando se pagan)
+                     - diversos (SE GUARDAN HASTA EL TERMINAR, POR LOS DISTRIBUIBLES)
+                        - por push: (si es distribuido se hacen entradas separadas)
+                           - cantidad
+                           - proceso ("distribuible" si depende de las asistencias)
+                           - diverso (nombre de un catálogo)
+                     - total_horas_extra (en $ y No incluyen impuestos)
+                     - total_diversos (No incluyen impuestos)
+                     - total_asistencia
+                     - impuestos:
+                        - impuestos_horas_extra
+                        - impuestos_diversos
+                        - impuestos_asistencia (impuestos_asistencia_trabajador * asistencias_aqui/asistencias totales)
+                     - total (subtotal + impuestos)
+  
 - obras (magico)
    - AFECTAN: app_obra app_obras_prod app_procesos
    - SUSCRIBEN: app_procesos app_asistencia app_desplegar_procesos app_kaizen_global app_presupuesto
@@ -198,34 +381,6 @@
                            - registro_OdeC
                            - pago
                            - registro_pago
-- produccion
-   - destajistas: 
-      - AFECTAN: app_destajistas
-      - SUSCRIBEN:
-      - destajista: (por nombre)
-         - nombre
-         - telefono
-         - cuenta_bancaria
-         - especialidad: ("IE"/"IHS"/"Ambas")
-- clientes
-   - cliente (por nombre)
-      - clave
-      - nombre
-      - telefono
-      - atencion
-         - numero (por push pero de array, 0,1,2)
-            - area
-            - celular
-            - email
-            - extension
-            - nombre
-      - direccion
-         - calle
-         - ciudad
-         - colonia
-         - cp
-         - delegacion
-         - numero
 - proyectos
    - registros
       - year
@@ -247,161 +402,7 @@
                   - descripcion
                   - proceso (clave de proc, subp u obra)
                   - pad: pad*
-- info_web
-- mensajes
-   - mensaje (por uid)
-      - destinatario (uid)
-      - remitente (uid)
-      - mensaje
-      - leido
-      - timestamps
-         - enviado
-         - leido
-- rrhh
-   - diversos
-      - diverso (por nombre)
-         - nombre
-         - distribuible (generalmente, no forzoso)
-  - num_trabajadores_id: int (actualizado en app_rrhh_trabajadores y app_rrhh_importar_trabajadores)
-  - trabajadores:
-      - AFECTAN: app_trabajadores
-      - SUSCRIBEN: app_asistencia
-      - trabajador(por id):
-         - puesto
-         - sueldo_base
-         - jefe (nombre destajista o HEAD)
-         - nombre
-         - id_trabajador
-         - fecha_antiguedad
-         - obra_asignada:
-            - 0 (1,2,3, lista): nombre
-         - especialidad
-         - activo: bool
-         - claves:
-            - RFC
-            - IMSS
-            - CURP
-         - info_personal
-            - fecha_nacimiento
-            - estado_civil
-            - sexo
-            - domicilio
-         - datos_bancarios:
-            - banco
-            - cuenta
-            - clabe
-         - tallas:
-            - camisa
-            - pantalon
-            - zapatos
-         - clave_pagadora
-         - nomina
-            - year: (ej 2019)
-               - semana: (ej 1)
-                  - lunes:
-                     - obra (nombre) 
-                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
-                     - asistencia (bool)
-                  - martes:
-                     - obra (nombre) 
-                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
-                     - asistencia (bool)
-                  - miercoles:
-                     - obra (nombre) 
-                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
-                     - asistencia (bool)
-                   - jueves:
-                     - obra (nombre) 
-                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
-                     - asistencia (bool)
-                  - viernes:
-                     - obra (nombre) 
-                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
-                     - asistencia (bool)
-                  - horas_extra:
-                     - por push:
-                        - fecha (timestamp)
-                        - obra 
-                        - proceso (Si obra es "Atencion a Clientes" proc es cliente)
-                        - horas (en horas)
-                  - diversos
-                     - por push:
-                        - cantidad
-                        - distribuible: bool
-                        - obra: ("NA" si distribuilble == true) 
-                        - proceso: ("NA" si distribuilble == true) (Si obra es "Atencion a Clientes" proc es cliente)
-                        - diverso (nombre de un catálogo)
-                  - total_diversos (No incluyen impuestos)
-                  - total_horas_extra (en $ y sin impuestos)
-                  - total_asistencia (sueldo_base * asistencias)
-                  - impuestos:
-                     - impuestos_horas_extra
-                     - impuestos_diversos
-                     - impuestos_asistencia (pagadora_trabajador - 3 totales - impu_div - impu_HE)
-                  - total (pagadora)
-  - pagos_nomina: 
-      - AFECTAN: app_pagos_nomina, app_asistencia
-      - SUSCRIBEN: 
-      - year: (ej 2019)
-         - semana: (ej 1)
-            - terminada: bool
-            - asistencias_terminadas: bool
-            - horas_extra_terminadas: bool
-            - diversos_terminados: bool
-            - total
-            - obra: (por nombre) (Una es "Atencion a Clientes")
-               - total (refleja TOTAL de kaizen)
-               - supervisores:
-                  - supervisor (por uid)
-                     - porcentaje (ej 30)
-                     - cantidad (= % * sueldo_base o pago nomina)
-               - trabajadores:
-                  - trabajador: (por id)
-                     - nombre
-                     - dias 
-                        - lunes:
-                           - asistencia: bool
-                           - proceso: (clave) "NA" si asistencia es false
-                        - martes:
-                           - asistencia: bool
-                           - proceso: (clave) "NA" si asistencia es false
-                        - miercoles:
-                           - asistencia: bool
-                           - proceso: (clave) "NA" si asistencia es false
-                        - jueves:
-                           - asistencia: bool
-                           - proceso: (clave) "NA" si asistencia es false
-                        - viernes:
-                           - asistencia: bool
-                           - proceso: (clave) "NA" si asistencia es false
-                     - horas_extra:
-                        - push:
-                           - horas (EN $)
-                           - proceso (clave)
-                           - fecha (ms, de un datepicker, es de cuando se trabajaron, no de cuando se pagan)
-                     - diversos (SE GUARDAN HASTA EL TERMINAR, POR LOS DISTRIBUIBLES)
-                        - por push: (si es distribuido se hacen entradas separadas)
-                           - cantidad
-                           - proceso ("distribuible" si depende de las asistencias)
-                           - diverso (nombre de un catálogo)
-                     - total_horas_extra (en $ y No incluyen impuestos)
-                     - total_diversos (No incluyen impuestos)
-                     - total_asistencia
-                     - impuestos:
-                        - impuestos_horas_extra
-                        - impuestos_diversos
-                        - impuestos_asistencia (impuestos_asistencia_trabajador * asistencias_aqui/asistencias totales)
-                     - total (subtotal + impuestos)
-- compras
-   - num_proveedores_id
-   - proveedores
-      - proveedor (por ref)
-         - razonSocial
-         - direccion
-         - telefono
-         - atiende
-         - RFC
-      
+
 - pad:
   - uid
   - timestamp

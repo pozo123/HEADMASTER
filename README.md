@@ -70,14 +70,17 @@ ARTURO:
  - Poner filtros para pesta帽as en prod (gerente/supervisor)
     
 DIEGO:
+ - Definir c髆o terminar OdeC
+ - Desplegar Proveedores y OdeC, como bibliotecas
+ - En Odec revisar proveedor en on change (compararlo con la bd) 
  - Cierre maestro no creo que quite la modalidad de picar "salida"
  - Definir qui茅n llena las horas ppto de SCORE en los procs/pptos, y c贸mo (no s贸lo en kaizen)
  - desplegar kaizen lo del cambio de obra
  - app_prod_entrada_estimacion
- - app_presupuesto -> cargar datos a kaizen/proy/ppto (subp, proc y obra) y manejo correcto de ddls y hiddens (empty y hide proc y clase de ppto cuando cambio de obra). Simplificaci贸n de formato si clase == prod?
+ - app_presupuesto -> cargar datos a kaizen/proy/ppto (subp, proc y obra) y manejo correcto de ddls y hiddens (empty y hide proc y clase de ppto cuando cambio de obra). Simplificacion de formato si clase == prod?
  - Todo lo de Gantt
  - Desplegar CC
- - Bot贸n respaldo (aunque baje s贸lo el json)
+ - Bot贸n respaldo (aunque baje solo el json)
  - Manual de usuario
  - diversos en bd, alta, editar, etc, hacer todo en una tabla
  - app_cuenta_cc 
