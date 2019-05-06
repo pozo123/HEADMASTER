@@ -1,18 +1,17 @@
-var rama_bd_registros = "proyectos/registros";
-var rama_bd_inges = "proyectos/inges";
-var rama_bd_obras = "proyectos/obras";
-var id_imprime_button_reporte = "button_generar_reporte";
+//var id_imprime_button_reporte = "button_generar_reporte";
 var id_inge_ddl_reporte = "reporte_DDL_ingeniero";
 var id_obra_ddl_reporte = "reporte_DDL_proyecto";
 var id_pres_ddl_reporte = "reporte_DDL_presupuesto";
 var id_presupuestosgroup_reporte = "id_presupuestosgroup_reporte";
 var id_tabla_button_reporte = "llenarTabla";
 var id_fecha_inicio_reporte = "fechaInicio";
-var id_fecha_final_reporte = "fechaFinal";
+var id_fecha_final_reporte = "fichaFinal";
 var id_datatable_reporte =  "dataTableReporte"
 
-var regs = new Array();
-var hasBeenClicked = false;
+var rama_bd_registros = "proyectos/registros";
+var rama_bd_personal = "prersonal";
+var rama_bd_obras = "obras";
+
 var fecha_actual = new Date();
 var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
@@ -31,47 +30,41 @@ $('#tabReporte').click(function() {
 
     var select = document.getElementById(id_inge_ddl_reporte);
     var option = document.createElement('option');
-    /*option.style = "display:none";
-    option.text = option.value = "";*/
     option.text = option.value = 'Todos';
     select.appendChild(option);
 
     var select2 = document.getElementById(id_obra_ddl_reporte);
     var option2 = document.createElement('option');
-    /*option.style = "display:none";
-    option.text = option.value = "";*/
     option2.text = option2.value = 'Todos';
     select2.appendChild(option2);
     var option5 = document.createElement('option');
     option5.text = option5.value = "Otros";
     select2.appendChild(option5);
 
-    firebase.database().ref(rama_bd_inges).orderByChild('nombre').on('child_added',function(snapshot){
-        
+    firebase.database().ref(rama_bd_personal).once('value').then(function(snapshot){
         var inge = snapshot.val();
-        var option3 = document.createElement('option');
-        option3.text = option3.value = inge.nombre; 
-        select.appendChild(option3);
-
+        if(snapshot.child("areas/proyectos")){
+            var option3 = document.createElement('option');
+            option3.text = inge.nombre; 
+            option3.value = snapshot.key;
+            select.appendChild(option3);
+        }
     });
 
     firebase.database().ref(rama_bd_obras).orderByChild('nombre').on('child_added',function(snapshot){
-        
         var obra = snapshot.val();
         var option4 = document.createElement('option');
         option4.text = option4.value = obra.nombre; 
         select2.appendChild(option4);
-
     });
 });
 
-// Datapicker
-
-function loadDDLPresupuestosReporte(){
+//Aqui tenia una funcion en un ddl, ahora con jquery
+$('#' + id_obra_ddl_reporte).change(function(){
     $('#' + id_pres_ddl_reporte).empty();
+
     var select = document.getElementById(id_pres_ddl_reporte);
     var option = document.createElement('option');
-    //option.style = "display:none";
     option.text = option.value = "Todos";
     select.appendChild(option);
 
@@ -80,27 +73,56 @@ function loadDDLPresupuestosReporte(){
     }
     else{
         $('#' + id_presupuestosgroup_reporte).removeClass("hidden");
-        firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_reporte + " option:selected").val() + "/presupuestos").orderByKey().on('child_added',function(snapshot){
-            var presu = snapshot.key;
-            var option2 = document.createElement('option');
-            option2.text = option2.value = presu; 
-            select.appendChild(option2);
+        firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_reporte + " option:selected").val()).once('value').then(function(snapshot){
+            snapshot.child("presupuestos").forEach(function(childSnap){
+                var presu = childSnap.key;
+                var option2 = document.createElement('option');
+                option2.text = presu;
+                option2.value = "presupuesto"; 
+                select.appendChild(option2);
+            });
+            if(snapshot.child("num_procesos").val() > 1 || snapshot.child("procesos/ADIC/num_subprocesos").val() > 1){
+                snapshot.child("procesos").forEach(function(childSnap){
+                    var proc = childSnap.val();
+                    if(proc.num_subprocesos == 0){
+                        var option3 = document.createElement('option');
+                        option3.text = proc.clave + " (" + proc.nombre + ")";
+                        option3.value = proc.clave; 
+                        select.appendChild(option3);
+                    } else {
+                        childSnap.child("subprocesos").forEach(function(subpSnap){
+                            var subp = subpSnap.val();
+                            var option4 = document.createElement('option');
+                            option4.text = subp.clave + " (" + subp.nombre + ")";
+                            option4.value = subp.clave;
+                            select.appendChild(option4);
+                        });
+                    }
+                });    
+            }
         });
     }
     
-}
+})
 
 $('#' + id_tabla_button_reporte).click(function() {
     var datos_reporte = [];
     var selec_inge = $('#' + id_inge_ddl_reporte).val();
     var selec_obra = $('#' + id_obra_ddl_reporte).val();
-    var selec_pres = $('#' + id_pres_ddl_reporte).val();
-    var filtro_inges =  selec_inge === "Todos";
-    var filtro_obras =  selec_obra === "Todos";
-    var filtro_presu =  selec_pres === "Todos";
-    firebase.database().ref(rama_bd_registros).orderByKey().once('value',function(data){
+    var selec_pres;
+    var caso = "";
+    if($('#' + id_pres_ddl_reporte).val() == "presupuesto"){
+        selec_pres = $('#' + id_pres_ddl_reporte).text();
+        caso = "presupuesto";
+    } else { 
+        selec_pres = $('#' + id_pres_ddl_reporte).val();
+        caso = "proceso";
+    }
+    var filtro_inges = selec_inge === "Todos";
+    var filtro_obras = selec_obra === "Todos";
+    var filtro_presu = selec_pres === "Todos";
+    firebase.database().ref(rama_bd_registros).once('value').then(function(data){
         var registros_db = data.val();
-        var keys = Object.keys(registros_db);
         var fecha_i;// = new Date($('#' + id_fecha_inicio_reporte).val());
         var fecha_i_timestamp;// = fecha_i.getTime();
         var fecha_f;
@@ -126,24 +148,25 @@ $('#' + id_tabla_button_reporte).click(function() {
             fecha_f = new Date($('#' + id_fecha_final_reporte).val());
             fecha_f_timestamp = fecha_f.getTime() + (24*3600*1000); 
         }
-
-        for (var i = 0; i<keys.length; i++){
-            //filtros
-            if(filtro_inges || selec_inge === registros_db[keys[i]].inge){
-                if(filtro_obras || ((selec_obra === registros_db[keys[i]].obra) && (filtro_presu || selec_pres === registros_db[keys[i]].presupuesto))){
-                    if(fecha_i_timestamp < registros_db[keys[i]].checkin && registros_db[keys[i]].checkin < fecha_f_timestamp){
+        data.forEach(function(yearSnap){
+            yearSnap.forEach(function(weekSnap)){
+                weekSnap.forEach(function(regSnap){
+                    var reg = regSnap.val();
+                    if((filtro_inges || selec_inge == reg.ing) && (filtro_obras || (selec_obra == reg.obra) && (filtro_presu || selec_pres == regSnap.child(caso).val())) && (fecha_i_timestamp < reg.checkin && reg.checkin < fecha_f_timestamp)){
                         datos_reporte.push([
-                            registros_db[keys[i]].cu,
-                            registros_db[keys[i]].status,
-                            new Date(registros_db[keys[i]].checkin).toLocaleDateString("es-ES", options),
-                            "" + Math.round(10000*registros_db[keys[i]].horas/3600000)/10000,
-                            registros_db[keys[i]].inge, 
-                            registros_db[keys[i]].obra,
-                            registros_db[keys[i]].presupuesto]);
+                            reg.cu,
+                            reg.status,
+                            new Date(reg.checkin).toLocaleDateString("es-ES", options),
+                            (parseFloat(reg.horas)/3600000).toFixed(3),
+                            reg.inge, 
+                            reg.obra,
+                            regSnap.child(caso).val(),
+                        ]);
                     }
-                }
-            }           
-        }
+                });
+            }
+        });
+
         tabla_registros = $('#'+ id_datatable_reporte).DataTable({
             destroy: true,
             data: datos_reporte,
@@ -156,7 +179,7 @@ $('#' + id_tabla_button_reporte).click(function() {
                 {title: "Horas trabajadas"},
                 {title: "Colaborador"},
                 {title: "Obra"},
-                {title: "Presupuesto / Actividad"},
+                {title: "Presupuesto / Proceso"},
             ],
             language: idioma_espanol, // Esta en app_bibliotecas
         });
@@ -167,22 +190,28 @@ $('#' + id_imprime_button_reporte).click(function () {
     var doc;
     var selec_inge = $('#' + id_inge_ddl_reporte).val();
     var selec_obra = $('#' + id_obra_ddl_reporte).val();
-    var selec_pres = $('#' + id_pres_ddl_reporte).val();
+    var selec_pres;
+    var caso = "";
+    if($('#' + id_pres_ddl_reporte).val() == "presupuesto"){
+        selec_pres = $('#' + id_pres_ddl_reporte).text();
+        caso = "presupuesto";
+    } else { 
+        selec_pres = $('#' + id_pres_ddl_reporte).val();
+        caso = "proceso";
+    }
     var filtro_inges =  selec_inge === "Todos";
     var filtro_obras =  selec_obra === "Todos";
     var filtro_presu =  selec_pres === "Todos";
-    firebase.database().ref(rama_bd_registros).orderByKey().once('value',function(data){
+    firebase.database().ref(rama_bd_registros).once('value').then(function(data){
         var registros_db = data.val();
-        var keys = Object.keys(registros_db);
         var regs = [];
-        regs[0] = [{text:"Fecha", style:"tableHeader"},{text:"Horas trabajadas", style:"tableHeader"},{text:"Colaborador", style:"tableHeader"},{text:"Obra", style:"tableHeader"},{text:"Presupuesto / Actividad", style:"tableHeader"}]
-        var j = 1;
+        regs[0] = [{text:"Fecha", style:"tableHeader"},{text:"Horas trabajadas", style:"tableHeader"},{text:"Colaborador", style:"tableHeader"},{text:"Obra", style:"tableHeader"},{text:"Presupuesto / Proceso", style:"tableHeader"}]
         var fecha_i = new Date($('#' + id_fecha_inicio_reporte).val());
         var fecha_i_timestamp = fecha_i.getTime();
-
         var fecha_f;
         var fecha_f_timestamp;
         var horas_totales = 0;
+        
         if($('#' + id_fecha_final_reporte).val() === ""){
             if($('#' + id_fecha_inicio_reporte).val() === ""){
                 //Si no se selecciona ninguna fecha se hacen los reportes con todos los valores
@@ -203,31 +232,29 @@ $('#' + id_imprime_button_reporte).click(function () {
             fecha_f = new Date($('#' + id_fecha_final_reporte).val());
             fecha_f_timestamp = fecha_f.getTime() + (24*3600*1000); 
         }
-
-        for (var i = 0; i<keys.length; i++){
-
-            //filtros
-            if(filtro_inges || selec_inge === registros_db[keys[i]].inge){
-                if(filtro_obras || ((selec_obra === registros_db[keys[i]].obra) && (filtro_presu || selec_pres === registros_db[keys[i]].presupuesto))){
-                    if(fecha_i_timestamp < registros_db[keys[i]].checkin && registros_db[keys[i]].checkin < fecha_f_timestamp){
-                        var horas = Math.round(10000*registros_db[keys[i]].horas/3600000)/10000;
+        data.forEach(function(yearSnap){
+            yearSnap.forEach(function(weekSnap)){
+                weekSnap.forEach(function(regSnap){
+                    var reg = regSnap.val();
+                    if((filtro_inges || selec_inge == reg.ing) && (filtro_obras || (selec_obra == reg.obra) && (filtro_presu || selec_pres == regSnap.child(caso).val())) && (fecha_i_timestamp < reg.checkin && reg.checkin < fecha_f_timestamp)){
+                        var horas = (parseFloat(reg.horas)/3600000).toFixed(3);
                         //REGISTRAR
-                        regs[j] = [
-                            new Date(registros_db[keys[i]].checkin).toLocaleDateString("es-ES", options),
-                            "" + horas,//"" + Math.floor(registros_db[keys[i]].horas/3600000) + ":" + Math.floor((registros_db[keys[i]].horas % 3600000)/60000) + ":" + Math.floor((registros_db[keys[i]].horas % 60000) /1000), 
-                            registros_db[keys[i]].inge, 
-                            registros_db[keys[i]].obra,
-                            registros_db[keys[i]].presupuesto
+                        regs[regs.length] = [
+                            new Date(reg.checkin).toLocaleDateString("es-ES", options),
+                            "" + horas,
+                            reg.inge, 
+                            reg.obra,
+                            regSnap.child(caso).val(),
                         ];
                         //REGISTRAR end
-                        j = j + 1;;
                         horas_totales = horas_totales + horas;
                     }
-                }
-            }           
-        }
+                });
+            }
+        });
 
-        regs[j] = [{text: "Horas totales: ", style: "tableHeader"}, {text: "" + horas_totales.toFixed(2)},{},{},{}]
+
+        regs[regs.length] = [{text: "Horas totales: ", style: "totals"}, {text: "" + horas_totales.toFixed(2)},{},{},{}]
 
         doc = {     
             content: [
@@ -253,7 +280,7 @@ $('#' + id_imprime_button_reporte).click(function () {
                         headerRows: 1,
                         body: regs,
                     },
-                    layout: 'lightHorizontalLines'
+                    layout: 'lightHorizontalLines';//
                 }
             ],
             styles: {
@@ -274,6 +301,11 @@ $('#' + id_imprime_button_reporte).click(function () {
                 tableHeader: {
                     bold: true,
                     fontSize: 11,
+                    color: 'black'
+                },
+                totals: {
+                    bold: true,
+                    fontSize: 20,
                     color: 'black'
                 }
             },

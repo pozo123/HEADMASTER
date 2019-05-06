@@ -3,7 +3,7 @@ var id_presupuestos_ddl_imprimir = "DDL_presupuesto_imp";
 var id_consecutivo_ddl_imprimir = "DDL_consecutivo_imp";
 var id_imprimir_button_imprimir = "imprimir_presu";
 
-var rama_bd_obras = "proyectos/obras";
+var rama_bd_obras = "obras";
 
 //var multiples_consecutivos = false;
 
@@ -15,32 +15,13 @@ $('#tabImprimirPresupuesto').click(function(){
     select.appendChild(option);
 
     firebase.database().ref(rama_bd_obras).orderByChild('nombre').on('child_added',function(snapshot){
-        
         var obra = snapshot.val();
         var option3 = document.createElement('option');
         option3.text = option3.value = obra.nombre; 
         select.appendChild(option3);
-
     });    
 });
 
-/* $(document).ready(function() {
-
-    var select = document.getElementById(id_obra_ddl_imprimir);
-    var option = document.createElement('option');
-    option.style = "display:none";
-    option.text = option.value = "";
-    select.appendChild(option);
-
-    firebase.database().ref(rama_bd_obras).orderByChild('nombre').on('child_added',function(snapshot){
-        
-        var obra = snapshot.val();
-        var option3 = document.createElement('option');
-        option3.text = option3.value = obra.nombre; 
-        select.appendChild(option3);
-
-    });    
-}); */
 
 //Agregar esta en onChange de ddlobras
 function loadDDLPresupuestosImprimir(){
@@ -90,9 +71,8 @@ function loadDDLConsecutivosImprimir(){
 $('#' + id_imprimir_button_imprimir).click(function () {
     
     if(multiples_consecutivos === true){
-        alert(rama_bd_obras + "/" + $('#' + id_obra_ddl_imprimir + " option:selected").val() + "/presupuestos/" + $('#' + id_presupuestos_ddl_imprimir + " option:selected").val() + "/consecutivos/" + $('#' + id_consecutivo_ddl_imprimir + " option:selected").val() + "/pdf");
         firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_imprimir + " option:selected").val() + "/presupuestos/" + $('#' + id_presupuestos_ddl_imprimir + " option:selected").val() + "/consecutivos/" + $('#' + id_consecutivo_ddl_imprimir + " option:selected").val()).once('value').then(function(snapshot){
-            pdf = snapshot.val().pdf;
+            var pdf = snapshot.val().pdf;
 
             var downloadLink = document.createElement('a');
             downloadLink.target   = '_blank';

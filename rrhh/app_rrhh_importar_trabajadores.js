@@ -2,7 +2,8 @@ var id_file_importarTrabajadores = "importarTrabajadoresFile";
 var id_button_guardar_importarTrabajadores = "importarTrabajadoresButton";
 var id_filename_importarTrabajadores = "importarTrabajadoresLabelFile";
 
-var rama_bd_trabajadores = "produccion/trabajadores";
+var rama_bd_trabajadores = "rrhh/trabajadores";
+var rama_bd_rrhh = "rrhh";
 
 var excelSeleccionado = "";
 var fileName = "";
@@ -75,8 +76,8 @@ $('#' + id_button_guardar_importarTrabajadores).on("click",function() {
             }
         }
         console.log(resultado); 
-        firebase.database().ref(rama_bd_trabajadores).once('value').then(function(snapshot){
-            var trabajadores = snapshot.val();
+        firebase.database().ref(rama_bd_rrhh).once('value').then(function(snapshot){
+            var trabajadores = snapshot.child("trabajadores").val();
             for(key in resultado){
                 if(key > id_max){
                     id_max = key;
@@ -88,10 +89,11 @@ $('#' + id_button_guardar_importarTrabajadores).on("click",function() {
                     firebase.database().ref(rama_bd_trabajadores + "/" + key).set(resultado[key]);
                 }
             }
-            var num_trabajadores = parseInt(trabajadores.num_trabajadores_id);
+            var num_trabajadores = parseInt(snapshot.child("num_trabajadores_id").val());
             if(id_max > num_trabajadores){
-                firebase.database().ref(rama_bd_trabajadores + "/num_trabajadores_id").set(id_max);
+                firebase.database().ref(rama_bd_rrhh + "/num_trabajadores_id").set(id_max);
             }
+            alert("Importación exitosa");
         });
     };
     reader.readAsArrayBuffer(excelSeleccionado);

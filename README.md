@@ -14,7 +14,8 @@ REESTRUCTURA_BD:
     - gestionar_presu -> depende de def_ppto. También gestiona procs, no?
     - graphs -> definir formato
     - presupuesto -> definir que si lleva y que no, separar pdf de crear elemento en bd
-    - reporte_ppto -> depende de def_ppto    
+    - reporte_ppto -> depende de def_ppto   
+    - imprimir_ppto -> ppto ya esta en subprocs 
     
  actualizados/nuevos(2/5/19):
  - mande a obsoletos: dashgrid, pagos (todo se va a hacer con el admon), perfil, app_proy_asigna_proc, app_graphs (hice funcion nueva en app_proy_dashboard)
@@ -37,51 +38,24 @@ REESTRUCTURA_BD:
  - app_reporte -> reestructura_bd y limpieza general de código
 
  actualizados/nuevos(25/4/19):
- - app_utilidad -> carga sólo las obras asignadas
- - app_distribucion_supervisores -> reestructura_bd
- - app_gestionar_supervisores -> (REVISAR HTML) reestructura_bd, sólo se asigna por obra, se comenta un ddl
- - app_editar_proceso -> reestructura_bd
- - Mande a obsoletos: app_prod_gestionar_pptos, app_colaboradores_compras, app_colaboradores_produccion, app_colaboradores_rrhh, app_datos_kaizen, app_obra_prod, app_personal, app_inge, app_permisos
- - app_desplegar_kaizen -> reestructura_bd, si sólo una obra se carga automático, si no subproc quito botones
- - app_imprimir_presupuesto -> reestructura_bd
- - app_proy_asigna_proc -> reestructura_bd
- - app_kaizen_global -> ya lo reestructure, pero sigue haciendo falta checar todo pq no jalaba
- - score.js -> reestructura, permisos por credencial. Revisar si sobran/faltan pestañas
- 
- actualizados/nuevos(24/4/19):
+ - Mande a obsoletos: app_prod_gestionar_pptos, app_colaboradores_compras, app_colaboradores_produccion, app_colaboradores_rrhh, app_datos_kaizen, app_obra_prod, app_personal, app_inge, app_permisos 
+
+ HTMLs:
+ - app_gestionar_supervisores -> (REVISAR HTML) reestructura_bd, solo se asigna por obra, se comenta un ddl
  - app_admon_pago_kaizen -> (REVISAR HTML) nueva app + pad + checo si obra terminada
- - app_desplegar_procesos -> contemplo terminada
  - app_rrhh_horas_extra -> (REVISAR HTML) reestructura_bd, contemplo terminados, si obra simple mete a misc, simple también considera adicionales, botón carga semana anterior, trab y pagos a rrhh
   - app_rrhh_pagos_diversos -> (REVISAR HTML) si mismo trab, obra y proc, actualiza valor ahí, en impuestos y en total de nom y trab Y lo mismo que horas_extra, botón "Carga semana anterior" con id = "semanaAnteriorButtonDiversos" en hidden, contempla terminados, reestructura_bd, trab y pagos a rrhh
-  - app_rrhh_importar_trabajadores ->trab a rrhh
-  - app_rrhh_pago_nomina -> array asistencias si vacío llénalo con la obra, ya debería jalar, trab y pagos a rrhh
- 
- actualizados/nuevos(23/4/19):
  - app_proy_registros -> Nueva app, bien hecha y con elnuevo UML. Falta probar.(REVISAR HTML)
- - app_funciones -> sumaEnFirebase, calculaKaizen
-
- - app_desplegar_kaizen -> actualizar kaizen al abrirlo, obra simple despliega misc y adic
-
- actualizados/nuevos(16/4/19):
- - app_cierre_maestro -> cambié el cierre a las 6 porque diario hay miles de cierres maestros y pos no
-   
- actualizados/nuevos(2/4/19):
- - app_perfil -> chance reg 0?
- - app_distribucion_supervisores -> pda, meter datos y revisar
- - app_rrhh_editar_trabajadores -> como en biblioteca, necesita modal, trab y pagos a rrhh
- 
- actualizados/nuevos(25/3/19):
- - app_gestionar_supervisores -> empty con jquery
-   
- actualizados/nuevos(12/3/19):
- - app_prod_gestionar_pptos
- 
- actualizados/nuevos(11/3/19):
+ - app_proy_registros
+ - reporte_obras
  - app_admin_registro
-  
- actualizados/nuevos(26/2/19):
  - app_atributo
-   
+ - app_areas
+ - app_distribucion_supervisores (los pagos de la pagadora)
+ - app_gestionar_supervisores (las obras asignadas)
+ - app_rrhh_editar_trabajadores
+ - app_admon_pago_kaizen
+     
  Por probar:
  - app_pagos_nomina
  - app_rrhh_pagos_diversos -> terminar: sumar, distribuir, y KAIZEN, ya no al kaizen si atencion a clientes, distribuir horas si semana quebrada, que carguen los ddls, si funciona con multiples diversos
@@ -113,16 +87,6 @@ ARTURO:
  - Poner el filtro de areas adentro de las paginas para que te saque si metes el link directo
  - Ddl para navegar entre pestañas de areas
  - Poner filtros para pestañas en prod (gerente/supervisor)
- - HTMLs de:
-    - reporte_obras
-    - app_admin_registro
-    - app_atributo
-    - app_areas
-    - app_prod_gestionar_pptos -> Que solo salga el tab si eres gerente!
-    - app_distribucion_supervisores (los pagos de la pagadora)
-    - app_gestionar_supervisores (las obras asignadas)
-    - app_rrhh_editar_trabajadores
-    - app_admon_pago_kaizen
     
 DIEGO:
  - Definir quién llena las horas ppto de SCORE en los procs/pptos, y cómo (no sólo en kaizen)

@@ -4,7 +4,7 @@ var id_tab_editarTrabajadores = "tabEditarTrabajadores"
 
 var options_bibliotecas = { year: 'numeric', month: 'numeric', day: 'numeric' };
 
-var rama_bd_trabajadores = "produccion/trabajadores";
+var rama_bd_trabajadores = "rrhh/trabajadores";
 
 //_____MODAL______
 var id_modal_editarTrabajadores = "modalEditarTrabajadores";

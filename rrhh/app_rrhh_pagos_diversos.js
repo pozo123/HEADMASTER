@@ -8,14 +8,15 @@ var id_diverso_group_diversos = "diversoGroupDiversos";//Nuevo!
 var id_guardar_button_diversos = "guardarButtonDiversos";
 var id_terminar_button_diversos = "terminarButtonDiversos";
 
+var id_carga_semana_anterior_button_diversos = "semanaAnteriorButtonDiversos";
+
 var id_datatable_diversos = "dataTableDiversos";
 var id_datatable_div_diversos = "dataTableGroup1"
 var id_table_diversos = "tableDiversos";
 var id_tab_diversos = "tabDiversos";
 
-var rama_bd_pagos_nomina = "produccion/pagos_nomina";
-var rama_bd_obras_prod = "produccion/obras";
-var rama_bd_trabajadores = "produccion/trabajadores";
+var rama_bd_pagos_nomina = "rrhh/pagos_nomina";
+var rama_bd_trabajadores = "rrhh/trabajadores";
 var rama_bd_diversos = "rrhh/diversos";
 var rama_bd_obras_magico = "obras";
 var nuevo;
@@ -27,6 +28,7 @@ $('#' + id_tab_diversos).click(function(){
 });
 
 function resetDiversos(){
+    $('#' + id_carga_semana_anterior_button_diversos).addClass('hidden');
     $('#' + id_semana_ddl_diversos).empty();
     $('#' + id_year_ddl_diversos).empty();
     $('#' + id_diverso_ddl_diversos).empty();
@@ -73,6 +75,7 @@ function resetDiversos(){
 
 $('#' + id_year_ddl_diversos).change(function(){
     document.getElementById(id_diverso_ddl_diversos).selectedIndex = 0;
+    $('#' + id_carga_semana_anterior_button_diversos).addClass('hidden');
     $('#' + id_semana_ddl_diversos).empty();
     $('#' + id_datatable_diversos).empty();
     $('#' + id_datatable_div_diversos).addClass('hidden');
@@ -99,6 +102,7 @@ $('#' + id_year_ddl_diversos).change(function(){
 });
 
 $('#' + id_semana_ddl_diversos).change(function(){
+    $('#' + id_carga_semana_anterior_button_diversos).addClass('hidden');
     $('#' + id_datatable_diversos).empty();
     $('#' + id_datatable_div_diversos).addClass('hidden');
     $('#' + nuevo.id).empty();
@@ -151,6 +155,23 @@ $('#' + id_semana_ddl_diversos).change(function(){
 });
 
 $("#" + id_diverso_ddl_diversos).change(function(){
+    var year = $('#' + id_year_ddl_diversos + " option:selected").val();
+    var semana = $('#' + id_semana_ddl_diversos + " option:selected").val();
+    cargaEntradasDiversos(year,semana);
+});
+
+$('#' + id_carga_semana_anterior_button_diversos).click(function(){
+    var semana = $('#' + id_semana_ddl_diversos + " option:selected").val();
+    var year = $('#' + id_year_ddl_diversos + " option:selected").val();
+    if(parseFloat(semana) == 1){
+        alert("No se puede realizar esta acción en la primera semana del año");
+    } else {
+        cargaEntradasDiversos(year, parseInt(semana)-1);
+        $('#' + id_carga_semana_anterior_button_diversos).addClass('hidden');
+    }
+});
+
+function cargaEntradasDiversos(year,semana){
     $('#' + nuevo.id).empty();
     $('#' + id_datatable_diversos).empty();
     $('#' + id_datatable_diversos).addClass('hidden');
@@ -159,94 +180,62 @@ $("#" + id_diverso_ddl_diversos).change(function(){
     headersDiversos();
     nuevo = tableDiversos.insertRow(entradas + 1);
     nuevo.id = "nuevo_trabajador_diversos";
-    var year = $('#' + id_year_ddl_diversos + " option:selected").val();
-    var semana = $('#' + id_semana_ddl_diversos + " option:selected").val();
-    /*firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + semana).once('value').then(function(snapshot){
-        var nomina = snapshot.val();
-        var terminada = snapshot.val().diversos_terminados;
-        if(terminada){
-            //Cargar tabla con datos
-            var datos_diversos = [];
-            snapshot.forEach(function(obraSnap){
-                if(obraSnap.key != "terminada"){
-                    obraSnap.child("trabajadores").forEach(function(trabSnap){
-                        trabSnap.child("diversos").forEach(function(childSnap){
-                            var entrada = childSnap.val();
-                            console.log(obraSnap.key);
-                            console.log(obraSnap.val());
-                            datos_diversos.push([trabSnap.key,obraSnap.key,entrada.proceso,entrada.cantidad]);
-                        });
-                    });
+    firebase.database().ref(rama_bd_trabajadores).once('value').then(function(snapshot){
+        var vacio = true;
+        snapshot.forEach(function(trabSnap){
+            trabSnap.child('nomina/' + year + "/" + semana + "/diversos").forEach(function(diverSnap){
+                var diver = diverSnap.val();
+                if(diver.diverso == $('#' + id_diverso_ddl_diversos + " option:selected").val()){
+                    vacio = false;
+                    cargaRenglonDiversos(trabSnap.val(),false,diver.cantidad,diver.distribuible,diver.obra,diver.proceso);
                 }
             });
-            //Asincronía? :S
-            $('#' + id_datatable_diversos).removeClass('hidden');
-            var tabla_procesos = $('#'+ id_datatable_diversos).DataTable({
-                destroy: true,
-                data: datos_diversos,
-                dom: 'Bfrtip',
-                buttons: ['excel'],
-                columns: [
-                    {title: "ID",width: 70},
-                    {title: "OBRA",width: 70},
-                    {title: "PROCESO",width: 70},
-                    {title: "CANTIDAD",width: 70}
-                ],
-                language: idioma_espanol,
-            }); 
-        } else {*/
-            //Carga todos los registros hechos
-            firebase.database().ref(rama_bd_trabajadores).once('value').then(function(snapshot){
-                snapshot.forEach(function(trabSnap){
-                    trabSnap.child('nomina/' + year + "/" + semana + "/diversos").forEach(function(diverSnap){
-                        var diver = diverSnap.val();
-                        if(diver.diverso == $('#' + id_diverso_ddl_diversos + " option:selected").val()){
-                            cargaRenglonDiversos(trabSnap.val(),false,diver.cantidad,diver.distribuible,diver.obra,diver.proceso);
+        });
+        if(vacio){
+            $('#' + id_carga_semana_anterior_button_diversos).removeClass('hidden');
+        } else {
+            $('#' + id_carga_semana_anterior_button_diversos).addClass('hidden');
+        }
+        var cell_id = nuevo.insertCell(0);
+        var t_id = document.createElement('input');
+        t_id.id = "t_id_diver";
+        t_id.placeholder = "ID";
+        cell_id.appendChild(t_id);
+        $('#' + t_id.id).change(function(){
+            if($('#' + t_id.id).val() != ""){
+                firebase.database().ref(rama_bd_trabajadores + "/" + $('#' + t_id.id).val()).once('value').then(function(snapshot){
+                    var trabajador = snapshot.val();
+                    if(trabajador != null){
+                        cargaRenglonDiversos(trabajador, true,"","","","");
+                        $('#' + t_id.id).val("");
+                    } else {
+                        alert("No existe un trabajador con ese ID");
+                    }
+                });
+            }
+        });
+        var cell_nombre = nuevo.insertCell(1);
+        var t_nombre = document.createElement('input');
+        t_nombre.id = "t_nombre_diver"
+        t_nombre.placeholder = "Nombre";
+        cell_nombre.appendChild(t_nombre);
+        $('#' + t_nombre.id).change(function(){
+            if($('#' + t_nombre.id).val() != ""){
+                firebase.database().ref(rama_bd_trabajadores).orderByChild("nombre").equalTo($('#' + t_nombre.id).val()).once('value').then(function(snapshot){
+                    snapshot.forEach(function(childSnap){
+                        var trabajador = childSnap.val();
+                        if(trabajador != null){
+                            cargaRenglonDiversos(trabajador, true,"","","","");
+                            $('#' + t_nombre.id).val("");
+                        } else {
+                            alert("No existe un trabajador con ese nombre");
                         }
                     });
                 });
-                var cell_id = nuevo.insertCell(0);
-                var t_id = document.createElement('input');
-                t_id.id = "t_id_diver";
-                t_id.placeholder = "ID";
-                cell_id.appendChild(t_id);
-                $('#' + t_id.id).change(function(){
-                    if($('#' + t_id.id).val() != ""){
-                        firebase.database().ref(rama_bd_trabajadores + "/" + $('#' + t_id.id).val()).once('value').then(function(snapshot){
-                            var trabajador = snapshot.val();
-                            if(trabajador != null){
-                                cargaRenglonDiversos(trabajador, true,"","","","");
-                                $('#' + t_id.id).val("");
-                            } else {
-                                alert("No existe un trabajador con ese ID");
-                            }
-                        });
-                    }
-                });
-                var cell_nombre = nuevo.insertCell(1);
-                var t_nombre = document.createElement('input');
-                t_nombre.id = "t_nombre_diver"
-                t_nombre.placeholder = "Nombre";
-                cell_nombre.appendChild(t_nombre);
-                $('#' + t_nombre.id).change(function(){
-                    if($('#' + t_nombre.id).val() != ""){
-                        firebase.database().ref(rama_bd_trabajadores).orderByChild("nombre").equalTo($('#' + t_nombre.id).val()).once('value').then(function(snapshot){
-                            snapshot.forEach(function(childSnap){
-                                var trabajador = childSnap.val();
-                                if(trabajador != null){
-                                    cargaRenglonDiversos(trabajador, true,"","","","");
-                                    $('#' + t_nombre.id).val("");
-                                } else {
-                                    alert("No existe un trabajador con ese nombre");
-                                }
-                            });
-                        });
-                    }
-                });
-            });
-        /*}
-    });*/
-});
+            }
+        });
+    });
+};
 
 function cargaRenglonDiversos(trabajador,nuevo,cantidad_in,distribuible_in,obra_in,proc_in){
     var row = tableDiversos.insertRow(entradas + 1);
@@ -328,9 +317,12 @@ function generateDdls(cell_obra, cell_proc, nuevo, obra_in, proc_in){
         k = k.substring(1,2);
     }
     obra_ddl.id = "obra_" + k;
-    firebase.database().ref(rama_bd_obras_prod).once('value').then(function(snapshot){
+    firebase.database().ref(rama_bd_obras_magico).once('value').then(function(snapshot){
         snapshot.forEach(function(obraSnap){
             var obra = obraSnap.val();
+            if(obra.terminada){
+                option.style = "display:none";
+            }
             var option = document.createElement('OPTION');
             option.text = option.value = obra.nombre;
             obra_ddl.appendChild(option);
@@ -361,15 +353,15 @@ function generateDdls(cell_obra, cell_proc, nuevo, obra_in, proc_in){
                 //console.log(snapshot);
                 //console.log(obra_in);
                 var obra = snapshot.child(obra_in);
-                if(obra.val().num_procesos == 0){
+                if(obra.val().num_procesos == 0 && obra.child("procesos/ADIC/num_subprocesos").val() == 0){
                     var option = document.createElement('OPTION');
-                    option.text = obra.val().nombre;
-                    option.value = obra.val().nombre;
+                    option.text = "MISC";
+                    option.value = "MISC";
                     proc_input.appendChild(option);
                 } else {
                     obra.child("procesos").forEach(function(procSnap){
                         var proceso = procSnap.val();
-                        if(proceso.num_subprocesos == 0){
+                        if(proceso.num_subprocesos == 0 && proceso.clave != "ADIC"){
                             var option = document.createElement('OPTION');
                             option.text = proceso.clave;// + " (" + proceso.nombre + ")";
                             option.value = proceso.clave;
@@ -408,26 +400,30 @@ function generateDdls(cell_obra, cell_proc, nuevo, obra_in, proc_in){
                 option2.text = option2.value = "";
                 proc_input.appendChild(option2);
                 var obra = snapshot.child($('#' + obra_ddl.id + " option:selected").val());
-                if(obra.val().num_procesos == 0){
+                if(obra.val().num_procesos == 0 && obra.child("procesos/ADIC/num_subprocesos").val() == 0){
                     var option = document.createElement('OPTION');
-                    option.text = obra.val().nombre;
-                    option.value = obra.val().nombre;
+                    option.text = "MISC";
+                    option.value = "MISC";
                     proc_input.appendChild(option);
                 } else {
                     obra.child("procesos").forEach(function(procSnap){
                         var proceso = procSnap.val();
-                        if(proceso.num_subprocesos == 0){
+                        if(proceso.num_subprocesos == 0 && proceso.clave != "ADIC"){
                             var option = document.createElement('OPTION');
-                            option.text = proceso.clave;// + " (" + proceso.nombre + ")";
-                            option.value = proceso.clave;
-                            proc_input.appendChild(option);
+                            if(!proceso.terminado){
+                                option.text = proceso.clave;// + " (" + proceso.nombre + ")";
+                                option.value = proceso.clave;
+                                proc_input.appendChild(option);
+                            }
                         } else {
                             procSnap.child("subprocesos").forEach(function(subpSnap){
                                 var subproc = subpSnap.val();
-                                var option = document.createElement('OPTION');
-                                option.text = subproc.clave;// + " (" + subproc.nombre + ")";
-                                option.value = subproc.clave;
-                                proc_input.appendChild(option);
+                                if(!subproc.terminado){
+                                    var option = document.createElement('OPTION');
+                                    option.text = subproc.clave;// + " (" + subproc.nombre + ")";
+                                    option.value = subproc.clave;
+                                    proc_input.appendChild(option);
+                                }
                             });
                         }
                     });
@@ -498,7 +494,7 @@ function guardarDiversos(){
                     //console.log(obr)
                 }
                 var div = {
-                    cantidad: $('#cant_' + i).val(),
+                    cantidad: parseFloat($('#cant_' + i).val()),
                     distribuible: dist,
                     obra: obr, 
                     proceso: pro, 
@@ -509,6 +505,23 @@ function guardarDiversos(){
                     var diver = divSnap.val();
                     if(div.diverso == diver.diverso && ((diver.distribuible == div.distribuible) && (diver.obra == div.obra && diver.proceso == div.proceso))){
                         existe_div = true;
+                        if(div.cantidad != diver.cantidad){
+                            var diferencia = div.cantidad - parseFloat(diver.cantidad);
+                            firebase.database().ref(rama_bd_trabajadores + "/" + id_trabajador + "/nomina/" + year + "/" + semana + "/diversos/" + divSnap.key + "/cantidad").set(div.cantidad);
+                            var dif_impuestos = diferencia * 0.16;
+                            sumaEnFirebase(rama_bd_trabajadores + "/" + id_trabajador + "/nomina/" + year + "/" + semana + "/impuestos/impuestos_diversos", dif_impuestos);
+                            sumaEnFirebase(rama_bd_trabajadores + "/" + id_trabajador + "/nomina/" + year + "/" + semana + "/total_diversos", diferencia);
+                            sumaEnFirebase(rama_bd_pagos_nomina + "/" + year + "/" + semana + "/" + div.obr + "/trabajadores/" + id_trabajador + "/impuestos/impuestos_diversos", dif_impuestos);
+                            sumaEnFirebase(rama_bd_pagos_nomina + "/" + year + "/" + semana + "/" + div.obr + "/trabajadores/" + id_trabajador + "/total_diversos", diferencia);
+                            firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + semana + "/" + div.obr + "/trabajadores/" + id_trabajador + "/diversos").once('value').then(function(dSnap){
+                                dSnap.forEach(function(childSnap){
+                                    diver = childSnap.val();
+                                    if(div.diverso == diver.diverso && ((diver.distribuible == div.distribuible) && (diver.obra == div.obra && diver.proceso == div.proceso))){
+                                        firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + semana + "/" + div.obr + "/trabajadores/" + id_trabajador + "/diversos/" + childSnap.key + "/cantidad").set(div.cantidad);
+                                    }
+                                });
+                            });
+                        }
                     }
                 });
                 if(!existe_div){

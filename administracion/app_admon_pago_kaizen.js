@@ -39,10 +39,12 @@ $('#' + tab_pag_suministros_kaizen).click(function(){
 
     firebase.database().ref(rama_bd_obras_magico).orderByChild('nombre').on('child_added',function(snapshot){
         var obra = snapshot.val();
-        var option2 = document.createElement('OPTION');
-        option2.text = obra.nombre;
-        option2.value = obra.nombre;
-        select.appendChild(option2);
+        if(!obra.terminada){
+	        var option2 = document.createElement('OPTION');
+	        option2.text = obra.nombre;
+	        option2.value = obra.nombre;
+	        select.appendChild(option2);
+    	}
     });
 });
 

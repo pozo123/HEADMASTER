@@ -7,9 +7,9 @@ var id_registrar_button_distribucionSupervisores = "buttonDistSuper";
 var tab_distribucionSupervisores = "tabDistSuper";
 
 var rama_bd_obras_magico = "obras";
-var rama_bd_colaboradores_prod = "produccion/colaboradores";
+var rama_bd_personal = "personal";
 
-$('#' + tab_distribucionSupervisores).click(function(){
+$('#' + tab_distribucionSupervisores).click(function{
   $('#' + id_supervisores_ddl_distribucionSupervisores).empty();
   var select = document.getElementById(id_supervisores_ddl_distribucionSupervisores);
   var option = document.createElement('option');
@@ -17,31 +17,41 @@ $('#' + tab_distribucionSupervisores).click(function(){
   option.text = option.value = "";
   select.appendChild(option);
 
-  firebase.database().ref(rama_bd_colaboradores_prod).orderByChild('tipo').equalTo("supervisor").on('child_added',function(snapshot){
+  firebase.database().ref(rama_bd_personal).once('value').then(function(snapshot){
       var sup = snapshot.val();
-      var option2 = document.createElement('option');
-      option2.text = sup.nickname;
-      option2.value = sup.uid; 
-      select.appendChild(option2);
+      if(snapshot.child("areas/produccion").val() && sup.activo){
+	      var option2 = document.createElement('option');
+	      option2.text = sup.nickname;
+	      option2.value = sup.uid; 
+	      select.appendChild(option2);
+	  }
   });  
 });
 
 $('#' + id_supervisores_ddl_distribucionSupervisores).change(function(){
 	$('#' + id_div_obras_distribucionSupervisores).empty();
 	var div = document.getElementById(id_div_obras_distribucionSupervisores);
-	firebase.database().ref(rama_bd_colaboradores_prod + "/" + $('#' + id_supervisores_ddl_distribucionSupervisores + " option:selected").val()).once('value').then(function(snapshot){
-		snapshot.child("obras").forEach(function(childSnap){
-			var obra = childSnap.val();
-			if(obra.activa){
-				var row = document.createElement('div');
-				var label = document.createElement('label');
-          		label.innerHTML = obra.nombre;
-          		var textfield = document.createElement('input');
-          		textfield.type = "text";
-          		textfield.id = obra.nombre + "_distSuper";
-          		row.appendChild(label);
-          		row.appendChild(textfield);
-          		div.appendChild(row);
+	firebase.database().ref(rama_bd_obras_magico).once('value').then(function(snapshot){
+		snapshot.forEach(function(childSnap){
+			if(!childSnap.child("terminada").val()){
+				var act = false;
+				childSnap.child("supervisor").forEach(function(supSnap){
+					if(supSnap.child("nombre").val() == $('#' + id_supervisores_ddl_distribucionSupervisores + " option:selected").val()){
+						act = true;
+					}
+				});
+				var obra = childSnap.val();
+				if(act){
+					var row = document.createElement('div');
+					var label = document.createElement('label');
+	          		label.innerHTML = obra.nombre;
+	          		var textfield = document.createElement('input');
+	          		textfield.type = "text";
+	          		textfield.id = obra.nombre + "_distSuper";
+	          		row.appendChild(label);
+	          		row.appendChild(textfield);
+	          		div.appendChild(row);
+				}
 			}
 		});
 	});
@@ -78,7 +88,7 @@ $('#' + id_registrar_button_distribucionSupervisores).click(function(){
     			pda: pistaDeAuditoria(),
     		}
     		var dia = getWeek(new Date().getTime());
-    		firebase.database().ref(rama_bd_colaboradores_prod + "/" + $('#' + id_supervisores_ddl_distribucionSupervisores + " option:selected").val() + "/nomina/" + dia[1] + "/" + dia[0]).set(pago);
+    		firebase.database().ref(rama_bd_colaboradores_prod + "/" + $('#' + id_supervisores_ddl_distribucionSupervisores " option:selected").val() + "/nomina/" + dia[1] + "/" + dia[0]).set(pago);
 	    }
 	}
 });

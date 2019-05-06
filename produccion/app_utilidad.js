@@ -12,6 +12,7 @@ var id_profit_porcentaje_utilidad = "profitPorcentajeUtilidad";
 
 var id_button_load_utilidad = "loadButtonUtilidad";
 
+var rama_bd_personal = "personal";
 var rama_bd_obras_magico = "obras";
 
 $('#tabUtilidad').click(function(){
@@ -22,12 +23,31 @@ $('#tabUtilidad').click(function(){
     option.text = option.value = "";
     select.appendChild(option);
 
+	var user = firebase.auth().currentUser.uid;
+	var aut = false;
+	firebase.database().ref(rama_bd_personal + "/" + user).once('value').then(function(snapshot){
+		if(snapshot.child("areas/administracion").val() || parseInt(snapshot.child("credenciales").val()) < 3){
+			aut = true;
+		}
+	});
+
     firebase.database().ref(rama_bd_obras_magico).orderByChild('nombre').on('child_added',function(snapshot){
         var obra = snapshot.val();
-        var option2 = document.createElement('OPTION');
-        option2.text = obra.nombre;
-        option2.value = obra.nombre;
-        select.appendChild(option2);
+        if(!obra.terminada){
+        	if(!aut){
+        		snapshot.child("supervisor").forEach(function(childSnap){
+        			if(childSnap.key == user && childSnap.child("activo").val()){
+        				aut = true;
+        			}
+        		});
+        	}
+        	if(aut){
+		        var option2 = document.createElement('OPTION');
+		        option2.text = obra.nombre;
+		        option2.value = obra.nombre;
+		        select.appendChild(option2);
+		    }
+        }
     });
 });
 
@@ -120,7 +140,7 @@ function loadValuesProceso(){
 	    		$('#' + id_precio_venta_utilidad).val(precio);
 
 	    		$('#' + id_profit_cantidad_utilidad).val(precio*0.8-costos);
-	    		$('#' + id_profit_porcentaje_utilidad).val(100*parseFloat($('#' + id_profit_cantidad_utilidad).val())/(0.2*precio + costos));
+	    		$('#' + id_profit_porcentaje_utilidad).val(100*parseFloat($('#' + id_profit_cantidad_utilidad).val())/(0.2*precio + costos);
 	    	});
 	    });
 	}

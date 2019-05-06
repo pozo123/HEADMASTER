@@ -15,49 +15,6 @@ var id_grupo_categoria = "grupoCategoria";
 var rama_bd_obras_magico = "obras";
 var rama_bd_categorias_procesos = "categorias";
 
-
-
-var kaiz = {
-    PROYECTOS: {
-        PPTO: 0,
-        PAG: 0,
-    },
-    PRODUCCION: {
-        SUMINISTROS: {
-            CUANT: 0,
-            OdeC: 0,//-1
-            PAG: 0,
-        },
-        COPEO: {
-            PREC: 0,
-            COPEO: 0,//-1
-            PAG: 0,
-        },
-    },
-    ADMINISTRACION: {
-        ESTIMACIONES: {
-            PPTO: 0,
-            EST: 0,
-            PAG: 0,
-        },
-        ANTICIPOS: {
-            PPTO: 0,
-            PAG: 0,
-        },
-    },
-    PROFIT: {
-        PROG: {
-            BRUTO: 0,
-            NETO: 0,
-        },
-        REAL: {
-            BRUTO: 0,
-            NETO: 0,
-        },
-    }
-};
-
-
 $('#tabAltaProceso').click(function(){
     $('#' + id_grupo_subproceso).addClass("hidden");
     $('#' + id_grupo_categoria).addClass("hidden");
@@ -134,10 +91,12 @@ $("#" + id_subproceso_checkbox_proceso).change(function(){
 
         firebase.database().ref(rama_bd_obras_magico + "/" + $('#' + id_obra_ddl_procesos + " option:selected").text() + "/procesos").orderByKey().on('child_added',function(snapshot){
             var proc = snapshot.val();
-            var option2 = document.createElement('OPTION');
-            option2.text = proc.clave;
-            option2.value = proc.clave;
-            select.appendChild(option2);
+            if(snapshot.key != "ADIC" && snapshot.key != "PC00"){
+                var option2 = document.createElement('OPTION');
+                option2.text = proc.clave;
+                option2.value = proc.clave;
+                select.appendChild(option2);
+            }
         });
         $('#' + id_grupo_subproceso).removeClass("hidden");
     } else {
