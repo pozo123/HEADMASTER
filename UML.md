@@ -1,0 +1,443 @@
+- personal (magico)
+      - AFECTAN: app_personal, app_inges, app_colaboradores_produccion/admin/rrhh/compras
+      - SUSCRIBEN: 
+  - uid (como key):
+    - areas:   
+      - proyectos: boolean
+      - produccion: boolean
+      - compras: boolean
+      - administracion: boolean
+      - rrhh: bool
+    - credenciales: (0 sisadmin, 1 director, 2 lider de area, 3 los demas, 4 bajas/glitches)
+    - esp (si tienes area proy, "ie", "ihs")
+    - status (si tienes area proy, true si trabajando)
+    - uid: uid
+    - nombre: string
+    - nickname: ? string
+    - email: string
+    - activo
+    - buzon:
+       - mensaje (por uid, solo los no leidos)
+          - destinatario (uid)
+          - remitente (uid)
+          - mensaje
+          - leido
+          - timestamps
+             - enviado
+             - leido
+- administracion:
+   - flujos
+      - obra (por nombre)
+         - total
+         - procesos: (si obra simple, directo "pagos" con todo lo que contiene)
+            - proceso (por nombre):
+               - total
+               - subprocesos: (si proc simple, directo "pagos" con todo lo que contiene)
+                  - subproceso (por nombre):
+                     - total
+                     - ingresos
+                        - cu (por push)
+                           - pad: pad*
+                           - folio
+                           - tipo_pago: ("recibo" o "factura")
+                           - monto
+                           - fecha_pago
+                           - fecha_registro
+                           - formato ("estimacion" o "anticipo")
+   - investime
+      - registros
+         - año (ej 2019)
+            - semana (ej 3)
+               - registro (por uid)
+                  - familia
+                      - subfamilia
+                         - actividad
+                         - activo
+                         - checkin
+                         - checkout
+                         - colaborador (por uid)
+      - familias
+         - Globales
+            - subfamilias (por nombre)
+               - actividades: actividades
+         - Especificos
+            - actividades: actividades
+         - Rutinarios
+            - actividades: actividades
+   - centro de costos
+      - familia(nombre)
+         - nombre
+         - clave (definir!)
+         - years
+            - 2019: total (en float)
+            - 2020: total (en float)
+            - etc
+         - children:
+            - cuenta (por nombre)
+               - nombre
+               - clave
+               - total_cuenta (si no es hoja es suma)
+               - ppto_cuenta (si no es hoja es suma)
+               - forma_pago (GR, MIX, NA o (se me olvidó la ultima)) (si no es hoja es suma (O sea si solo un tipo en hojas ese, si hay mas entonces MIX))
+               - formato_fecha ("diario", "semanal", "quincenal", "mensual", "anual") (Hay que definir con lo del formato)
+               - areas_lectura: (si no es hoja es suma)
+                  - *todas las áreas que tienen acceso a esta cuenta, en bool
+               - areas_edicion: (si no es hoja es suma)
+                  - *todas las áreas que tienen acceso a esta cuenta, en bool
+               - children: "" si es hoja, si es nodo repite el formato json
+               - REGISTROS EN RAMA APARTE
+               - registros (si no es hoja NO puede existir, Hay que redistribuirlos a las hojas)
+                  - year (por numero)
+                     - total_year
+                     - semanas ???? O mensual? o que dependa del formato?? Hay que definir
+                        - semana (por numero)???
+                           - total_semana???
+                           - registro (por uid)
+                              - monto
+                              - timestamps
+                                 - ingreso (cuando se hace el registro)
+                                    - user: (username de quien lo hace)
+                                    - fecha (timestamp)
+                                 - fecha (de cuando es el valor)
+                                 - modificaciones:
+                                    - por push
+                                       - user: uid
+                                       - fecha: timestamp
+                              - concepto
+                              - cantidad //para compras? :/
+                              - clave_concepto //para compras? :/
+- categorias:
+   - categoria (por nombre)
+      - nombre
+      - clave
+- obras (magico)
+   - AFECTAN: app_obra app_obras_prod app_procesos
+   - SUSCRIBEN: app_procesos app_asistencia app_desplegar_procesos app_kaizen_global app_presupuesto
+   - obra: (por nombre)
+      - nombre
+      - cliente (nombre)
+      - clave
+      - terminada
+      - direccion
+         - calle
+         - numero
+         - colonia
+         - delegacion
+         - ciudad
+         - cp
+      - num_procesos
+      - utilidad_semanal
+      - fechas:
+         - fecha_inicio_real
+         - fecha_inicio_teorica
+         - fecha_final_real
+         - fecha_final_teorica
+      - kaizen: *
+      - supervisor 
+         - supervisor (por id)
+            - nombre
+            - activo: bool
+      - procesos:
+         - proceso (por clave):
+            - terminado
+            - contrato (a menos que sea padre, excepcion con IQONO MEXICO)
+            - nombre
+            - alcance
+            - clave
+            - tipo: "adicional"/"continuo"/"miscelaneo"/"proyecto"
+            - fecha_inicio
+            - fecha_final
+            - num_subprocesos
+            - kaizen: *
+            - SCORE (SOLO EN HOJA, formato igual que arriba)
+               - total_prog (en horas)
+               - total_trabajado (en horas)
+               - inges
+                  - inge (por uid)
+                     - horas_trabajadas (en horas) (separar en horas_trabajadas_ie y horas_trabajadas_ihs?
+                     - horas_programadas (en horas)
+            - subprocesos:
+               - subproceso (por clave):
+                  - terminado
+                  - contrato
+                  - nombre
+                  - alcance
+                  - clave
+                  - OdeC: igual que proc
+                  - SCORE: igual que proc simple
+                  - categoria
+                  - kaizen: *
+                  - fecha_inicio
+                  - fecha_final
+                  - presupuesto:
+                     - terminado
+                     - consec
+                     - consecutivos
+                        - pdf
+                     - nombre
+                     - Todo lo de presupuestos??? Definir
+            - OdeC: (En hoja)
+               - year (por num)
+                  - semana (por num)
+                     - OdeC (por clave)
+                        - clave
+                        - pad: pad*
+                        - precio_ppto
+                        - precio_pag
+                        - pagada: bool
+                        - proveedor
+                        - pagos:
+                           - pago (por push)
+                              - precio_pag
+                              - pad: pad*
+                              - timestamps:
+                                 - pago
+                                 - registro_pago
+                        - timestamps:
+                           - OdeC
+                           - registro_OdeC
+                           - pago
+                           - registro_pago
+- produccion
+   - destajistas: 
+      - AFECTAN: app_destajistas
+      - SUSCRIBEN:
+      - destajista: (por nombre)
+         - nombre
+         - telefono
+         - cuenta_bancaria
+         - especialidad: ("IE"/"IHS"/"Ambas")
+- clientes
+   - cliente (por nombre)
+      - clave
+      - nombre
+      - telefono
+      - atencion
+         - numero (por push pero de array, 0,1,2)
+            - area
+            - celular
+            - email
+            - extension
+            - nombre
+      - direccion
+         - calle
+         - ciudad
+         - colonia
+         - cp
+         - delegacion
+         - numero
+- proyectos
+   - registros
+      - year
+         - semana
+            - registro (por cu)
+               - checkin
+               - esp
+               - horas (en ms)
+               - inge (uid)
+               - obra
+               - proceso (este es nuevo)
+               - status
+   - cuantificaciones
+      - obra (por nombre)
+         - year
+            - semana
+               - cuantificacion (por push)
+                  - monto
+                  - descripcion
+                  - proceso (clave de proc, subp u obra)
+                  - pad: pad*
+- info_web
+- mensajes
+   - mensaje (por uid)
+      - destinatario (uid)
+      - remitente (uid)
+      - mensaje
+      - leido
+      - timestamps
+         - enviado
+         - leido
+- rrhh
+   - diversos
+      - diverso (por nombre)
+         - nombre
+         - distribuible (generalmente, no forzoso)
+  - num_trabajadores_id: int (actualizado en app_rrhh_trabajadores y app_rrhh_importar_trabajadores)
+  - trabajadores:
+      - AFECTAN: app_trabajadores
+      - SUSCRIBEN: app_asistencia
+      - trabajador(por id):
+         - puesto
+         - sueldo_base
+         - jefe (nombre destajista o HEAD)
+         - nombre
+         - id_trabajador
+         - fecha_antiguedad
+         - obra_asignada:
+            - 0 (1,2,3, lista): nombre
+         - especialidad
+         - activo: bool
+         - claves:
+            - RFC
+            - IMSS
+            - CURP
+         - info_personal
+            - fecha_nacimiento
+            - estado_civil
+            - sexo
+            - domicilio
+         - datos_bancarios:
+            - banco
+            - cuenta
+            - clabe
+         - tallas:
+            - camisa
+            - pantalon
+            - zapatos
+         - clave_pagadora
+         - nomina
+            - year: (ej 2019)
+               - semana: (ej 1)
+                  - lunes:
+                     - obra (nombre) 
+                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
+                     - asistencia (bool)
+                  - martes:
+                     - obra (nombre) 
+                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
+                     - asistencia (bool)
+                  - miercoles:
+                     - obra (nombre) 
+                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
+                     - asistencia (bool)
+                   - jueves:
+                     - obra (nombre) 
+                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
+                     - asistencia (bool)
+                  - viernes:
+                     - obra (nombre) 
+                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
+                     - asistencia (bool)
+                  - horas_extra:
+                     - por push:
+                        - fecha (timestamp)
+                        - obra 
+                        - proceso (Si obra es "Atencion a Clientes" proc es cliente)
+                        - horas (en horas)
+                  - diversos
+                     - por push:
+                        - cantidad
+                        - distribuible: bool
+                        - obra: ("NA" si distribuilble == true) 
+                        - proceso: ("NA" si distribuilble == true) (Si obra es "Atencion a Clientes" proc es cliente)
+                        - diverso (nombre de un catálogo)
+                  - total_diversos (No incluyen impuestos)
+                  - total_horas_extra (en $ y sin impuestos)
+                  - total_asistencia (sueldo_base * asistencias)
+                  - impuestos:
+                     - impuestos_horas_extra
+                     - impuestos_diversos
+                     - impuestos_asistencia (pagadora_trabajador - 3 totales - impu_div - impu_HE)
+                  - total (pagadora)
+  - pagos_nomina: 
+      - AFECTAN: app_pagos_nomina, app_asistencia
+      - SUSCRIBEN: 
+      - year: (ej 2019)
+         - semana: (ej 1)
+            - terminada: bool
+            - asistencias_terminadas: bool
+            - horas_extra_terminadas: bool
+            - diversos_terminados: bool
+            - total
+            - obra: (por nombre) (Una es "Atencion a Clientes")
+               - total (refleja TOTAL de kaizen)
+               - supervisores:
+                  - supervisor (por uid)
+                     - porcentaje (ej 30)
+                     - cantidad (= % * sueldo_base o pago nomina)
+               - trabajadores:
+                  - trabajador: (por id)
+                     - nombre
+                     - dias 
+                        - lunes:
+                           - asistencia: bool
+                           - proceso: (clave) "NA" si asistencia es false
+                        - martes:
+                           - asistencia: bool
+                           - proceso: (clave) "NA" si asistencia es false
+                        - miercoles:
+                           - asistencia: bool
+                           - proceso: (clave) "NA" si asistencia es false
+                        - jueves:
+                           - asistencia: bool
+                           - proceso: (clave) "NA" si asistencia es false
+                        - viernes:
+                           - asistencia: bool
+                           - proceso: (clave) "NA" si asistencia es false
+                     - horas_extra:
+                        - push:
+                           - horas (EN $)
+                           - proceso (clave)
+                           - fecha (ms, de un datepicker, es de cuando se trabajaron, no de cuando se pagan)
+                     - diversos (SE GUARDAN HASTA EL TERMINAR, POR LOS DISTRIBUIBLES)
+                        - por push: (si es distribuido se hacen entradas separadas)
+                           - cantidad
+                           - proceso ("distribuible" si depende de las asistencias)
+                           - diverso (nombre de un catálogo)
+                     - total_horas_extra (en $ y No incluyen impuestos)
+                     - total_diversos (No incluyen impuestos)
+                     - total_asistencia
+                     - impuestos:
+                        - impuestos_horas_extra
+                        - impuestos_diversos
+                        - impuestos_asistencia (impuestos_asistencia_trabajador * asistencias_aqui/asistencias totales)
+                     - total (subtotal + impuestos)
+- compras
+   - num_proveedores_id
+   - proveedores
+      - proveedor (por ref)
+         - razonSocial
+         - direccion
+         - telefono
+         - atiende
+         - RFC
+      
+- pad:
+  - uid
+  - timestamp
+  
+- kaizen: (Mayúsculas en caso de que haga falta llenarlas desde un excel)
+  - PROYECTOS:
+     - PPTO -> Admin/prod
+     - PAG -> SCORE (yo)
+  - PRODUCCION:
+     - SUMINISTROS:
+        - CUANT -> Proyectos
+        - OdeC -> Compras
+        - PAG -> Compras
+     - COPEO:
+        - PREC -> supervisor
+        - COPEO -> supervisor
+        - PAG -> rrhh
+  - ADMINISTRACION:
+     - ESTIMACIONES:
+        - PPTO -> admin
+        - EST -> admin
+        - PAG -> admin
+     - ANTICIPOS:
+        - PPTO -> admin
+        - PAG -> admin
+  - PROFIT:
+     - PROG:
+        - BRUTO -> NADIEEEEE
+        - NETO -> NADIEEEEE
+     - REAL:
+        - BRUTO -> NADIEEEEE
+        - NETO -> NADIEEEEE
+  
+  - Para calcular AVANCE (no sale en nuestra bd pero se puede calcular al displayearla):
+      - PAG = prod.copeo.pag / prod.copeo.copeo
+      - REAL = admin.est.est / admin.est.ppto
+
+  - Para calcular el PROFIT PROG
+      - (admin.est.ppto + admin.ants.ppto)*0.8 - prod.copeo.(copeo||prec) - prod.sum.(cuant||OdeC) - proy.ppto
