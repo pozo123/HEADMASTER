@@ -3,10 +3,8 @@ var id_obra_ddl_cuant_kaizen = "obraDdlCuant";
 var id_group_proc_cuant_kaizen = "groupProcCuant"
 var id_proc_ddl_cuant_kaizen = "procDdlCuant";
 
-
 var id_group_subp_cuant_kaizen = "groupSubpCuant"
 var id_subp_ddl_cuant_kaizen = "subpDdlCuant";
-
 
 var id_valor_anterior_cuant_kaizen = "anteriorCuant";
 var id_cantidad_cuant_kaizen = "cantidadCuant";
@@ -29,10 +27,12 @@ $('#' + tab_cuant_kaizen).click(function(){
 
     firebase.database().ref(rama_bd_obras_magico).orderByChild('nombre').on('child_added',function(snapshot){
         var obra = snapshot.val();
-        var option2 = document.createElement('OPTION');
-        option2.text = obra.nombre;
-        option2.value = obra.nombre;
-        select.appendChild(option2);
+        if(!obra.terminada){
+	        var option2 = document.createElement('OPTION');
+	        option2.text = obra.nombre;
+	        option2.value = obra.nombre;
+	        select.appendChild(option2);
+	    }
     });
 });
 
@@ -57,10 +57,12 @@ $("#" + id_obra_ddl_cuant_kaizen).change(function(){
 
 		    snapshot.child('procesos').forEach(function(childSnap){
 		    	var proc = childSnap.val();
-		    	var option2 = document.createElement('OPTION');
-		        option2.text = proc.clave + " (" + proc.nombre + ")";
-		        option2.value = proc.clave;
-		        select.appendChild(option2);
+		    	if(!proc.terminado){
+			    	var option2 = document.createElement('OPTION');
+			        option2.text = proc.clave + " (" + proc.nombre + ")";
+			        option2.value = proc.clave;
+			        select.appendChild(option2);
+			    }
 		    });
 	    }
     });
@@ -87,10 +89,12 @@ $("#" + id_proc_ddl_cuant_kaizen).change(function(){
 		    select.appendChild(option);
 		    snapshot.child('subprocesos').forEach(function(childSnap){
 		    	var subp = childSnap.val();
-		    	var option2 = document.createElement('OPTION');
-		        option2.text = subp.clave + " (" + subp.nombre + ")";
-		        option2.value = subp.clave;
-		        select.appendChild(option2);
+		    	if(!subp.terminado){
+			    	var option2 = document.createElement('OPTION');
+			        option2.text = subp.clave + " (" + subp.nombre + ")";
+			        option2.value = subp.clave;
+			        select.appendChild(option2);
+			    }
 		    });
 	    }
     });
@@ -106,7 +110,7 @@ $("#" + id_subp_ddl_cuant_kaizen).change(function(){
 
 $('#' + id_cantidad_cuant_kaizen).change(function(){
 	nuevo = deformatMoney($('#' + id_valor_anterior_cuant_kaizen).text()) + parseFloat($('#' + id_cantidad_cuant_kaizen).val());
-	$('#' + id_valor_nuevo_cuant_kaizen).text(nuevo);
+	$('#' + id_valor_nuevo_cuant_kaizen).text(formatMoney(nuevo));
 });
 
 $('#' + id_actualizar_valor_cuant_kaizen).click(function(){
@@ -121,7 +125,7 @@ $('#' + id_actualizar_valor_cuant_kaizen).click(function(){
 		var query_p = rama_bd_obras_magico + "/" + $('#' + id_obra_ddl_cuant_kaizen + " option:selected").val() + "/procesos/" + $('#' + id_proc_ddl_cuant_kaizen + " option:selected").val();
 		var query_s = rama_bd_obras_magico + "/" + $('#' + id_obra_ddl_cuant_kaizen + " option:selected").val() + "/procesos/" + $('#' + id_proc_ddl_cuant_kaizen + " option:selected").val() + "/subprocesos/" + $('#' + id_subp_ddl_cuant_kaizen + " option:selected").val();
 		sumaCuantKaizen(query_o);
-		var proc = $('#' + id_obra_ddl_cuant_kaizen + " option:selected").val();
+		var proc = "MISC";
 		if(caso != "obra"){
 			proc = $('#' + id_proc_ddl_cuant_kaizen + " option:selected").val();
 			sumaCuantKaizen(query_p);
@@ -129,6 +133,8 @@ $('#' + id_actualizar_valor_cuant_kaizen).click(function(){
 				proc = $('#' + id_subp_ddl_cuant_kaizen + " option:selected").val();
 				sumaCuantKaizen(query_s);
 			}
+		} else {
+			sumaCuantKaizen(rama_bd_obras_magico + "/" + $('#' + id_obra_ddl_cuant_kaizen + " option:selected").val() + "/procesos/MISC");
 		}
 		var desc = $('#' + id_descripcion_cuant_kaizen).val() ? $('#' + id_descripcion_cuant_kaizen).val() : "";
 		var cuant = {
@@ -139,7 +145,7 @@ $('#' + id_actualizar_valor_cuant_kaizen).click(function(){
 		}
 		var hoy = getWeek(new Date().getTime());
 		firebase.database().ref(rama_bd_cuantificaciones + "/" + $('#' + id_obra_ddl_cuant_kaizen + " option:selected").val() + "/" + hoy[0] + "/" + hoy[1]).push(cuant);
-		$('#' + id_valor_anterior_cuant_kaizen).text(formatMoney($('#' + id_valor_nuevo_cuant_kaizen).text()));
+		$('#' + id_valor_anterior_cuant_kaizen).text(formatMoney($('#' + id_valor_nuevo_cuant_kaizen).text());
 		$('#' + id_cantidad_cuant_kaizen).val("");
 		alert("Actualizado");
 	}

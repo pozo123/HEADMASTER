@@ -30,9 +30,9 @@ var id_zapatos_trabajador = "trabajadorZapatos";//textfield
 var id_groupId_trabajador = "groupIdTrabajador"
 var id_registrar_button_trabajador = "registrarTrabajador";//button
 
-var rama_bd_trabajadores = "produccion/trabajadores";
-var rama_bd_destajistas = "produccion/destajistas";
-var rama_bd_obras_prod = "produccion/obras";
+var rama_bd_trabajadores = "rrhh/trabajadores";
+var rama_bd_destajistas = "rrhh/destajistas";
+var rama_bd_obras_magico = "obras";
 
 var id_tab_trabajadores = "tabTrabajadores";
 
@@ -109,12 +109,14 @@ $('#' + id_tab_trabajadores).click(function(){
 	    select_edoc.appendChild(el);
 	}
 
-    firebase.database().ref(rama_bd_obras_prod).orderByChild('nombre').on('child_added',function(snapshot){
+    firebase.database().ref(rama_bd_obras_magico).orderByChild('nombre').on('child_added',function(snapshot){
         var obra = snapshot.val();
-        var option8 = document.createElement('OPTION');
-        option8.text = obra.nombre;
-        option8.value = obra.nombre;
-        select_obra.appendChild(option8);
+        if(!obra.terminada){
+	        var option8 = document.createElement('OPTION');
+	        option8.text = obra.nombre;
+	        option8.value = obra.nombre;
+	        select_obra.appendChild(option8);
+	    }
     });
 
     firebase.database().ref(rama_bd_destajistas).orderByChild('nombre').on('child_added',function(snapshot){

@@ -10,51 +10,31 @@ REESTRUCTURA_BD:
  - prod: check
  - proy
     - bibliotecas -> definir areas (en donde como catalogo y en donde editar), definir ediciones y eliminados, cambiar las ramas adecuadsa
-    - dashboard -> checar cual es la ultima version, definir formato y datos
-    - gestionar_presu -> depende de def_ppto. También gestiona procs, no?
-    - graphs -> definir formato
+    - dashboard -> checar cual es la ultima version, definir formato y datos. Mandar a obsoletos
+    - gestionar_presu -> depende de def_ppto. Tambien gestiona procs, no?
     - presupuesto -> definir que si lleva y que no, separar pdf de crear elemento en bd
     - reporte_ppto -> depende de def_ppto   
     - imprimir_ppto -> ppto ya esta en subprocs 
     
- actualizados/nuevos(2/5/19):
- - mande a obsoletos: dashgrid, pagos (todo se va a hacer con el admon), perfil, app_proy_asigna_proc, app_graphs (hice funcion nueva en app_proy_dashboard)
- - app_proy_registros -> (REVISAR HTML) ya no pptos ni equipos, PC00-MISC, (+ comenté que alimentara a kaizen + corregí error + nuevos registros usando el nuevo uml)
- - app_cierre_maestro -> ya no pptos ni equipos (+ comenté que alimentara a kaizen + reestructura_bd)
- - app_obra -> pc00-misc, presupuestos, cambio de rama a administracion, reestructura_bd
- - app_proy_scoreboard -> nueva app (habrá que mandar "app_dashboard" a obsoletos)
 
- actualizados/nuevos(30/4/19):
- - app_proy_actualizar_esp -> (REVISAR HTML) nueva app. 2 radio buttons y un botón nada más.
- - app_procesos -> Borro campos al actualizar para evitar duplicar + (reestructura_bd, fechas, no obra_prod, kaiz en procesos)
- - app_compras_proveedor -> (REVISAR HTML) nueva app. Incluye alta Y edicion
- - app_compras_importar_proveedores -> (REVISAR HTML) igual a importar trabajadores
- - app_funciones -> sendMessage y markMessageAsRead
- - app_reporte_obras -> (REVISAR HTML, faltan divs y sobran dropdown checkboxes) reestructura_bd. 
- - app_rrhh_trabajadores -> num_id_trabajadores + reestructura_bd y contempla terminadas, trab y pagos a rrhh
- 
- actualizados/nuevos(29/4/19):
- - app_proy_cuant_kaizen -> contemplo terminados y si simple a misc
- - app_reporte -> reestructura_bd y limpieza general de código
-
- actualizados/nuevos(25/4/19):
- - Mande a obsoletos: app_prod_gestionar_pptos, app_colaboradores_compras, app_colaboradores_produccion, app_colaboradores_rrhh, app_datos_kaizen, app_obra_prod, app_personal, app_inge, app_permisos 
+ Obsoletos: 
+ - app_prod_gestionar_pptos, app_colaboradores_compras, app_colaboradores_produccion, app_colaboradores_rrhh, app_datos_kaizen, app_obra_prod, app_personal, app_inge, app_permisos, dashgrid, pagos (todo se va a hacer con el admon), perfil, app_proy_asigna_proc, app_graphs (hice funcion nueva en app_proy_scoreboard)
 
  HTMLs:
- - app_gestionar_supervisores -> (REVISAR HTML) reestructura_bd, solo se asigna por obra, se comenta un ddl
+ - app_admin_registro
  - app_admon_pago_kaizen -> (REVISAR HTML) nueva app + pad + checo si obra terminada
+ - app_obra -> cambio de rama a administracion
+ - app_proy_scoreboard -> nueva app 
+ - app_proy_actualizar_esp -> (REVISAR HTML) nueva app. 2 radio buttons y un botón nada más.
+ - app_proy_registros -> (REVISAR HTML) ya no pptos ni equipos, PC00-MISC, (+ comenté que alimentara a kaizen + corregí error + nuevos registros usando el nuevo uml)
+ - app_reporte_obras -> (REVISAR HTML, faltan divs y sobran dropdown checkboxes) reestructura_bd. 
+ - app_distribucion_supervisores (los pagos de la pagadora)
+ - app_gestionar_supervisores -> (REVISAR HTML) reestructura_bd, solo se asigna por obra, se comenta un ddl
  - app_rrhh_horas_extra -> (REVISAR HTML) reestructura_bd, contemplo terminados, si obra simple mete a misc, simple también considera adicionales, botón carga semana anterior, trab y pagos a rrhh
   - app_rrhh_pagos_diversos -> (REVISAR HTML) si mismo trab, obra y proc, actualiza valor ahí, en impuestos y en total de nom y trab Y lo mismo que horas_extra, botón "Carga semana anterior" con id = "semanaAnteriorButtonDiversos" en hidden, contempla terminados, reestructura_bd, trab y pagos a rrhh
- - app_proy_registros -> Nueva app, bien hecha y con elnuevo UML. Falta probar.(REVISAR HTML)
- - app_proy_registros
- - reporte_obras
- - app_admin_registro
+ - app_rrhh_editar_trabajadores
  - app_atributo
  - app_areas
- - app_distribucion_supervisores (los pagos de la pagadora)
- - app_gestionar_supervisores (las obras asignadas)
- - app_rrhh_editar_trabajadores
- - app_admon_pago_kaizen
      
  Por probar:
  - app_pagos_nomina

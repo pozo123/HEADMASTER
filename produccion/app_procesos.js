@@ -15,6 +15,8 @@ var id_grupo_categoria = "grupoCategoria";
 var rama_bd_obras_magico = "obras";
 var rama_bd_categorias_procesos = "categorias";
 
+//KAIZ en funciones
+
 $('#tabAltaProceso').click(function(){
     $('#' + id_grupo_subproceso).addClass("hidden");
     $('#' + id_grupo_categoria).addClass("hidden");
@@ -35,10 +37,12 @@ $('#tabAltaProceso').click(function(){
 
     firebase.database().ref(rama_bd_obras_magico).orderByChild('nombre').on('child_added',function(snapshot){
         var obra = snapshot.val();
-        var option2 = document.createElement('OPTION');
-        option2.text = obra.nombre;
-        option2.value = obra.clave;
-        select.appendChild(option2);
+        if(!obra.terminada){
+            var option2 = document.createElement('OPTION');
+            option2.text = obra.nombre;
+            option2.value = obra.clave;
+            select.appendChild(option2);
+        }
     });
 
     $('#' + id_categoria_ddl_procesos).empty();
@@ -61,23 +65,6 @@ $('#' + id_obra_ddl_procesos).change(function(){
     $('#' + id_grupo_subproceso).addClass("hidden");
     $('#' + id_grupo_categoria).addClass("hidden");
     $("#" + id_subproceso_checkbox_proceso).prop('checked', false);
-    /*
-    if($("#" + id_subproceso_checkbox_proceso).is(":checked")){
-        $('#' + id_proceso_ddl_procesos).empty();
-        var select = document.getElementById(id_proceso_ddl_procesos);
-        var option = document.createElement('option');
-        option.style = "display:none";
-        option.text = option.value = "";
-        select.appendChild(option);
-
-        firebase.database().ref(rama_bd_obras_magico + "/" + $('#' + id_obra_ddl_procesos + " option:selected").text() + "/procesos").orderByKey().on('child_added',function(snapshot){
-            var proc = snapshot.val();
-            var option2 = document.createElement('OPTION');
-            option2.text = proc.clave;
-            option2.value = proc.clave;
-            select.appendChild(option2);
-        });
-    }*/
 });
 
 $("#" + id_subproceso_checkbox_proceso).change(function(){
@@ -91,7 +78,7 @@ $("#" + id_subproceso_checkbox_proceso).change(function(){
 
         firebase.database().ref(rama_bd_obras_magico + "/" + $('#' + id_obra_ddl_procesos + " option:selected").text() + "/procesos").orderByKey().on('child_added',function(snapshot){
             var proc = snapshot.val();
-            if(snapshot.key != "ADIC" && snapshot.key != "PC00"){
+            if(!proc.terminado && snapshot.key != "ADIC" && snapshot.key != "PC00"){
                 var option2 = document.createElement('OPTION');
                 option2.text = proc.clave;
                 option2.value = proc.clave;
@@ -113,22 +100,16 @@ $('#' + id_proceso_ddl_procesos).change(function(){
 });
 
 $('#' + id_agregar_procesos).click(function() {
-    if($('#' + id_fecha_inicio_procesos).val() === "" || $('#' + id_fecha_final_procesos).val() === "" || (($("#" + id_subproceso_checkbox_proceso).checked == true) && ($('#' + id_categoria_ddl_procesos + " option:selected").val() === "" || $('#' + id_proceso_ddl_procesos + " option:selected").val() === "")) || $('#' + id_obra_ddl_procesos + " option:selected").val() === ""){
+    if($('#' + id_nombre_procesos).val() ||$('#' + id_fecha_inicio_procesos).val() === "" || $('#' + id_fecha_final_procesos).val() === "" || (($("#" + id_subproceso_checkbox_proceso).checked == true) && ($('#' + id_categoria_ddl_procesos + " option:selected").val() === "" || $('#' + id_proceso_ddl_procesos + " option:selected").val() === "")) || $('#' + id_obra_ddl_procesos + " option:selected").val() === ""){
         alert("Llena todos los campos requeridos");
     } else {
         var f_i = new Date($('#' + id_fecha_inicio_procesos).val()).getTime();
         var f_f = new Date($('#' + id_fecha_final_procesos).val()).getTime();
         if(f_f < f_i){
-            alert("La fecha final debe ser después de la fecha inicial");
+            alert("La fecha final debe ser posterior a la fecha inicial");
         } else {
-            var fech = {
-                fecha_inicio_real: 0,
-                fecha_inicio_teorica: f_i,
-                fecha_final_real: 0,
-                fecha_final_teorica: f_f,
-            }
             var cl;
-            // forma de checkar si un checkbox está listo
+            // forma de checkar si un checkbox está checked
             if($("#" + id_subproceso_checkbox_proceso).is(":checked")){
                 firebase.database().ref(rama_bd_obras_magico + "/" + $('#' + id_obra_ddl_procesos + " option:selected").text() + "/procesos/" + $('#' + id_proceso_ddl_procesos + " option:selected").val()).once('value').then(function(snapshot){
                     console.log(rama_bd_obras_magico + "/" + $('#' + id_obra_ddl_procesos + " option:selected").text() + "/procesos/" + $('#' + id_proceso_ddl_procesos + " option:selected").val())
@@ -145,15 +126,15 @@ $('#' + id_agregar_procesos).click(function() {
                         nombre: $('#' + id_nombre_procesos).val(),
                         clave: cl,
                         categoria: $('#' + id_categoria_ddl_procesos + " option:selected").text(),
-                        fechas: fech,
-                        //kaizen: kaiz,
+                        fecha_inicio: f_i,
+                        fecha_final: f_f,
+                        kaizen: kaiz,
                         alcance: $('#' + id_alcance_proceso_procesos).val(),
                     }
                     firebase.database().ref(rama_bd_obras_magico + "/" + $('#' + id_obra_ddl_procesos + " option:selected").text() + "/procesos/" + proc.clave + "/subprocesos/" + cl).set(subproceso);
                     firebase.database().ref(rama_bd_obras_magico + "/" + $('#' + id_obra_ddl_procesos + " option:selected").text() + "/procesos/" + proc.clave + "/num_subprocesos").set(num_sub);
-                    firebase.database().ref(rama_bd_obras_prod + "/" + $('#' + id_obra_ddl_procesos + " option:selected").text() + "/procesos/" + proc.clave + "/subprocesos/" + cl).set(subproceso);
-                    firebase.database().ref(rama_bd_obras_prod + "/" + $('#' + id_obra_ddl_procesos + " option:selected").text() + "/procesos/" + proc.clave + "/num_subprocesos").set(num_sub);
-                    firebase.database().ref(rama_bd_obras_magico + "/" + $('#' + id_obra_ddl_procesos + " option:selected").text() + "/procesos/" + proc.clave + "/subprocesos/" + cl + "/kaizen").set(kaiz);
+                    $('#' + id_nombre_procesos).val("");
+                    $('#' + id_alcance_proceso_procesos).val("");
                 });
             } else {
                 console.log(rama_bd_obras_magico + "/" + $('#' + id_obra_ddl_procesos + " option:selected").text())
@@ -165,21 +146,25 @@ $('#' + id_agregar_procesos).click(function() {
                         nombre: $('#' + id_nombre_procesos).val(),
                         tipo: "continuo",
                         clave: cl,
-                        fechas: fech,
+                        fecha_inicio: f_i,
+                        fecha_final: f_f,
                         num_subprocesos: 0,
                         subprocesos: "",
-                        //kaizen: kaiz,
+                        kaizen: kaiz,
                         alcance: $('#' + id_alcance_proceso_procesos).val(),
                     }
                     firebase.database().ref(rama_bd_obras_magico + "/" + obra.nombre + "/procesos/" + cl).set(proceso);
                     firebase.database().ref(rama_bd_obras_magico + "/" + obra.nombre + "/num_procesos").set(num_proc);
-                    firebase.database().ref(rama_bd_obras_prod + "/" + obra.nombre + "/procesos/" + cl).set(proceso);
-                    firebase.database().ref(rama_bd_obras_prod + "/" + obra.nombre + "/num_procesos").set(num_proc);
-                    firebase.database().ref(rama_bd_obras_magico + "/" + obra.nombre + "/procesos/" + cl + "/kaizen").set(kaiz);
-                    if(f_f > obra.fechas.fecha_final_teorica){
-                        firebase.database().ref(rama_bd_obras_prod + "/" + obra.nombre + "/fechas/fecha_final_teorica").set(f_f);
-                        firebase.database().ref(rama_bd_obras_magico + "/" + obra.nombre + "/fechas/fecha_final_teorica").set(f_f);
+                    if(f_f > obra.fechas.fecha_final_real){
+                        firebase.database().ref(rama_bd_obras_magico + "/" + obra.nombre + "/fechas/fecha_final_real").set(f_f);
+                        firebase.database().ref(rama_bd_obras_magico + "/" + obra.nombre + "/procesos/MISC/fecha_final").set(f_f);
                     }
+                    if(f_i < obra.fechas.fecha_inicio_real){
+                        firebase.database().ref(rama_bd_obras_magico + "/" + obra.nombre + "/fechas/fecha_inicio_real").set(f_i);
+                        firebase.database().ref(rama_bd_obras_magico + "/" + obra.nombre + "/procesos/PC00/fecha_inicio").set(f_i);
+                    }
+                    $('#' + id_nombre_procesos).val("");
+                    $('#' + id_alcance_proceso_procesos).val("");
                 });
             }
         }
