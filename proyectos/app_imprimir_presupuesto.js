@@ -3,7 +3,7 @@ var id_presupuestos_ddl_imprimir = "DDL_presupuesto_imp";
 var id_consecutivo_ddl_imprimir = "DDL_consecutivo_imp";
 var id_imprimir_button_imprimir = "imprimir_presu";
 
-var rama_bd_obras = "obras";
+var rama_bd_obras = "test/obras";
 
 //var multiples_consecutivos = false;
 

@@ -1,4 +1,4 @@
-var rama_bd_personal = "personal";
+var rama_bd_personal = "test/personal";
 
 firebase.auth().onAuthStateChanged(user => {
     if(user) {
@@ -10,14 +10,15 @@ firebase.auth().onAuthStateChanged(user => {
             var usuarioNombre = document.getElementById('usuarioConectado');
             usuarioNombre.innerHTML = user_bd.nickname;
             var creden = user_bd.credenciales;
-            
+            console.log(rama_bd_personal);
             if(creden == 3){
+                console.log("creden3");
                 $('#tabAltaCliente').addClass('hidden');
                 $('#tabAltaReqsExcs').removeClass('hidden');
                 $('#tabAltaTiposGens').removeClass('hidden');
                 $('#tabReporte').removeClass('hidden');
                 $('#tabReportePpto').removeClass('hidden');
-                $('#tabPerfil').removeClass('hidden');
+                $('#tabRegistrosProy').removeClass('hidden');
                 $('#tabActivar').addClass('hidden');
                 $('#tabPagos').addClass('hidden');
                 $('#tabPermisos').addClass('hidden');
@@ -34,11 +35,11 @@ firebase.auth().onAuthStateChanged(user => {
                 $('#pageSubmenuCierre').removeClass('hidden');
                 $('#pageSubmenuActRegs').removeClass('hidden');
                 if(creden == 2){
-                    $('#tabPerfil').removeClass('hidden');
+                    $('#tabRegistrosProy').removeClass('hidden');
                     $('#tabPermisos').addClass('hidden');
                 } else {
                     $('#tabPermisos').removeClass('hidden');
-                    $('#tabPerfil').addClass('hidden');
+                    $('#tabRegistrosProy').addClass('hidden');
                 }
             } else {
                 $('#tabAltaCliente').addClass('hidden');
@@ -46,7 +47,7 @@ firebase.auth().onAuthStateChanged(user => {
                 $('#tabAltaTiposGens').addClass('hidden');
                 $('#tabReporte').addClass('hidden');
                 $('#tabReportePpto').addClass('hidden');
-                $('#tabPerfil').addClass('hidden');
+                $('#tabRegistrosProy').addClass('hidden');
                 $('#tabActivar').addClass('hidden');
                 $('#tabPagos').addClass('hidden');
                 $('#tabPermisos').addClass('hidden');

@@ -145,7 +145,7 @@ $('#' + id_actualizar_valor_cuant_kaizen).click(function(){
 		}
 		var hoy = getWeek(new Date().getTime());
 		firebase.database().ref(rama_bd_cuantificaciones + "/" + $('#' + id_obra_ddl_cuant_kaizen + " option:selected").val() + "/" + hoy[0] + "/" + hoy[1]).push(cuant);
-		$('#' + id_valor_anterior_cuant_kaizen).text(formatMoney($('#' + id_valor_nuevo_cuant_kaizen).text());
+		$('#' + id_valor_anterior_cuant_kaizen).text(formatMoney($('#' + id_valor_nuevo_cuant_kaizen).text()));
 		$('#' + id_cantidad_cuant_kaizen).val("");
 		alert("Actualizado");
 	}

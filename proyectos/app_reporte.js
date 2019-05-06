@@ -1,4 +1,4 @@
-//var id_imprime_button_reporte = "button_generar_reporte";
+var id_imprime_button_reporte = "button_generar_reporte";
 var id_inge_ddl_reporte = "reporte_DDL_ingeniero";
 var id_obra_ddl_reporte = "reporte_DDL_proyecto";
 var id_pres_ddl_reporte = "reporte_DDL_presupuesto";
@@ -149,7 +149,7 @@ $('#' + id_tabla_button_reporte).click(function() {
             fecha_f_timestamp = fecha_f.getTime() + (24*3600*1000); 
         }
         data.forEach(function(yearSnap){
-            yearSnap.forEach(function(weekSnap)){
+            yearSnap.forEach(function(weekSnap){
                 weekSnap.forEach(function(regSnap){
                     var reg = regSnap.val();
                     if((filtro_inges || selec_inge == reg.ing) && (filtro_obras || (selec_obra == reg.obra) && (filtro_presu || selec_pres == regSnap.child(caso).val())) && (fecha_i_timestamp < reg.checkin && reg.checkin < fecha_f_timestamp)){
@@ -164,7 +164,7 @@ $('#' + id_tabla_button_reporte).click(function() {
                         ]);
                     }
                 });
-            }
+            });
         });
 
         tabla_registros = $('#'+ id_datatable_reporte).DataTable({
@@ -233,7 +233,7 @@ $('#' + id_imprime_button_reporte).click(function () {
             fecha_f_timestamp = fecha_f.getTime() + (24*3600*1000); 
         }
         data.forEach(function(yearSnap){
-            yearSnap.forEach(function(weekSnap)){
+            yearSnap.forEach(function(weekSnap){
                 weekSnap.forEach(function(regSnap){
                     var reg = regSnap.val();
                     if((filtro_inges || selec_inge == reg.ing) && (filtro_obras || (selec_obra == reg.obra) && (filtro_presu || selec_pres == regSnap.child(caso).val())) && (fecha_i_timestamp < reg.checkin && reg.checkin < fecha_f_timestamp)){
@@ -250,7 +250,7 @@ $('#' + id_imprime_button_reporte).click(function () {
                         horas_totales = horas_totales + horas;
                     }
                 });
-            }
+            });
         });
 
 
@@ -280,7 +280,7 @@ $('#' + id_imprime_button_reporte).click(function () {
                         headerRows: 1,
                         body: regs,
                     },
-                    layout: 'lightHorizontalLines';//
+                    layout: 'lightHorizontalLines',//
                 }
             ],
             styles: {

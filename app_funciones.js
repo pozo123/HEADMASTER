@@ -1,15 +1,15 @@
 
 
-var rama_bd_obras_magico = "obras";
-var rama_bd_obras = "obras";
-var rama_bd_personal = "personal";
+var rama_bd_obras_magico = "test/obras";
+var rama_bd_obras = "test/obras";
+var rama_bd_personal = "test/personal";
 var rama_bd_mensajes = "mensajes";
 
 
 function sendMessage(uid_destinatario, uid_remitente, message){
   var message = {
     destinatario: uid_destinatario,
-    remitente: uid_remitente.
+    remitente: uid_remitente,
     mensaje: message,
     leido: 0,
     timestamps: {

@@ -1,155 +1,108 @@
-var id_nombre_obra = "obraNombre";
-var id_clave_obra = "obraClave";
-var id_cliente_ddl_obra = "cliente";
-var id_direccion_calle_obra = "calleObra";
-var id_direccion_num_obra = "numObra";
-var id_direccion_colonia_obra = "coloniaObra";
-var id_direccion_delegacion_obra = "delegacionObra";
-var id_direccion_ciudad_obra = "ciudadObra";
-var id_direccion_cp_obra = "cpObra";
-var id_registrar_button_obra = "registrarObra";
-var id_fecha_inicio_obra = "fechaInicioObra";
-var id_fecha_final_obra = "fechaFinalObra";
-var id_supervisor_ddl_obra = "supervisorDdlObra";
+var id_cerrar_button_cierre = "cerrarDia";
+var rama_bd_personal = "test/personal";
+var rama_bd_registros = "test/proyectos/registros";
+var rama_bd_obras = "test/obras";
 
-var rama_bd_obras = "obras";
-var rama_bd_clientes = "clientes";
-var rama_bd_personal = "personal";
+var interval;
 
-var procesos = {};
-//Kaiz en funciones
-
-$('#tabAltaObra').click(function(){
-    jQuery('#' + id_fecha_inicio_obra).datetimepicker(
-        {timepicker:false, weeks:true,format:'m.d.Y'}
-    );
-    jQuery('#' + id_fecha_final_obra).datetimepicker(
-        {timepicker:false, weeks:true,format:'m.d.Y'}
-    );
-    var select = document.getElementById(id_cliente_ddl_obra);
-    var option = document.createElement('option');
-    option.style = "display:none";
-    option.text = option.value = "";
-    select.appendChild(option);
-
-    firebase.database().ref(rama_bd_clientes).orderByChild('nombre').on('child_added',function(snapshot){
-        var cliente = snapshot.val();
-        var option2 = document.createElement('OPTION');
-        option2.text = option2.value = cliente.nombre;
-        select.appendChild(option2);
-    });
-
-    var select2 = document.getElementById(id_supervisor_ddl_obra) ;
-    var option3 = document.createElement('option');
-    option3.style = "display:none";
-    option3.text = option3.value = "";
-    select2.appendChild(option3);
-
-    firebase.database().ref(rama_bd_personal).orderByChild('nombre').on('child_added',function(snapshot){
-        var sup = snapshot.val();
-        if(snapshot.child("areas/produccion").val()){
-            var option4 = document.createElement('OPTION');
-            option4.text = sup.nombre;
-            option4.value = snapshot.key;
-            select2.appendChild(option4);
-        }
-    });
-   
+$(document).ready(function(){
+    checkTime();
+    setInterval(checkTime, 3600000);
 });
 
-$('#' + id_registrar_button_obra).click(function () {
-    if(!$('#' + id_nombre_obra_ddl_obra_proy + " option:selected").val() == "" || !$('#' + id_clave_obra).val() || $('#' + id_cliente_ddl_obra + " option:selected").val() === ""){
-        alert("Llena todos los campos requeridos");
-    } else {   
-        var f_i = new Date($('#' + id_fecha_inicio_obra).val()).getTime();
-        var f_f = new Date($('#' + id_fecha_final_obra).val()).getTime();
-        var fech = {
-            fecha_inicio_real: 0,
-            fecha_inicio_teorica: f_i,
-            fecha_final_real: 0,
-            fecha_final_teorica: f_f,
-        }
-        procesos["MISC"] = {
-            terminado: false,
-            alcance: "MISCELANEOS",
-            nombre: "MISCELANEOS",
-            clave: "MISC",
-            tipo: "miscelaneo",    
-            fecha_inicio: f_i,
-            fecha_final: f_f,
-            kaizen: kaiz,
-            num_subprocesos: 0,
-            subprocesos: "",
-            SCORE: "",
-        };
-        procesos["PC00"] = {
-            terminado: false,
-            alcance: "TRABAJO PREVIO A FIRMAR CONTRATO",
-            nombre: "PREPROYECTO",
-            clave: "PC00",
-            tipo: "proyecto",
-            fecha_inicio: f_i,
-            fecha_final: f_f,
-            kaizen: kaiz,
-            num_subprocesos: 0,
-            subprocesos: {
-                PC00-MISC: {
-                    terminado: false,
-                    nombre: "Miescelaneos preproyecto",
-                    alcance: "Miscelaneos preproyecto",
-                    clave: "PC00-MISC",
-                    SCORE: "",
-                    categoria: "MISCELANEO",
-                    kaizen: kaiz,
-                    fecha_inicio: f_i,
-                    fecha_final: f_f,
-                    //presupuesto: "",
-                }
-            },
-        };
-        procesos["ADIC"] = {
-            terminado: false,
-            alcance: "ADICIONALES",
-            nombre: "ADICIONALES",
-            clave: "ADIC",
-            tipo: "adicional",
-            fecha_inicio: f_i,
-            fecha_final: f_f,
-            kaizen: kaiz,
-            num_subprocesos: 0,
-            subprocesos: "",
-        };
+$('#' + id_cerrar_button_cierre).click(function(){
+    cierreMaestro(false);
+});
 
-        var obra_mag = {      
-            nombre: $('#' + id_nombre_obra_ddl_obra_proy).val(),
-            cliente: $('#' + id_cliente_ddl_obra + " option:selected").text(),
-            clave: $('#' + id_clave_obra).val(),
-            num_procesos: 0,
-            terminada: false,
-            direccion: {
-                calle: $('#' + id_direccion_calle_obra).val(),
-                numero: $('#' + id_direccion_num_obra).val(),
-                colonia: $('#' + id_direccion_colonia_obra).val(),
-                delegacion: $('#' + id_direccion_delegacion_obra).val(),
-                ciudad: $('#' + id_direccion_ciudad_obra).val(),
-                cp: $('#' + id_direccion_cp_obra).val(),
-            },
-            utilidad_semanal: 0,
-            procesos: procesos,
-            fechas: fech,
-            kaizen: kaiz,
-        }
-
-        firebase.database().ref(rama_bd_obras + "/" + $('#' + id_nombre_obra_ddl_obra_proy).val()).set(obra_mag);
-        
-        var superv = {
-            nombre: $('#' + id_supervisor_ddl_obra + " option:selected").text(),
-            activo: true,
-        };
-
-        firebase.database().ref(rama_bd_obras + "/" + $('#' + id_nombre_obra_ddl_obra_proy).val() + "/supervisor/" + $('#' + id_supervisor_ddl_obra + " option:selected").val()).set(superv);
-
-        alert("¡Alta exitosa!");
-                
+function checkTime(){
+    var hora = new Date().getHours();
+    var minutos;
+    if(hora >= 17){
+        minutos = new Date().getMinutes();
+        var ms_que_faltan = (60 - minutos)*60000;
+        interval = setInterval(endDay, ms_que_faltan);
     }
-});
+};
+
+function endDay(){
+    cierreMaestro(true);
+    clearInterval(interval);
+}
+
+function cierreMaestro(automatico){
+    firebase.database().ref(rama_bd_personal).once('value').then(function(snapshot){
+        snapshot.forEach(function(inge_snap){
+            if(inge_snap.child("areas/proyectos").val()){
+                var ing = inge_snap.val();
+                if(ing.status == false){
+                    var hoy = getWeek(new Date().getTime());
+                    firebase.database().ref(rama_bd_registros).once('value').then(function(childSnap){
+                        childSnap.forEach(function(yearSnap){
+                            yearSnap.forEach(function(weekSnap){
+                                weekSnap.forEach(function(regSnap){
+                                    var reg = regSnap.val();
+                                    if(reg.status == false && reg.inge == inge_snap.key){
+                                        cierraRegistro(regSnap, yearSnap.key + "/" + weekSnap.key + "/" + regSnap.key);
+                                    }
+                                });
+                            });
+                        });
+                        var fal = false;
+                        firebase.database().ref(rama_bd_personal + "/" + inge_snap.key + "/status").set(fal);                           
+                        if(automatico){
+                            console.log("Sesion de " + ing.nombre + " cerrada.");
+                        } else {
+                            alert("Sesion de " + ing.nombre + " cerrada.");
+                        }
+                    });
+                }
+            }
+        });
+    });
+}
+
+function cierraRegistro(regSnap, path){
+    var reg = regSnap.val();
+    var checkin = parseInt(reg.checkin);
+    var esp = reg.esp;
+    var horas = new Date().getTime() - checkin;
+    var updates = {
+        horas: horas,
+        status: true,
+    }
+    firebase.database().ref(rama_bd_registros + "/" + path).update(updates);
+    if(reg.obra != "Otros"){
+        var cant_horas = parseFloat(horas / 3600000);
+        //var cant = cant_horas * precio_hora;
+        var proc_path = reg.proceso.split("-");
+        if(proc_path.length > 1){
+            //sumaScoreKaizen(reg.obra + "/procesos/" + proc_path[0] + "/subprocesos/" + reg.proceso, cant);
+            sumaScoreProc(reg.obra + "/procesos/" + proc_path[0] + "/subprocesos/" + reg.proceso, cant_horas,esp,reg.inge);
+        } else {
+            sumaScoreProc(reg.obra + "/procesos/" + reg.proceso, cant_horas,esp,reg.inge);
+        }
+        //sumaScoreKaizen(reg.obra + "/procesos/" + proc_path[0], cant);
+        //sumaScoreKaizen(reg.obra,cant);
+    }
+}
+
+function sumaScoreProc(query,cant){
+    firebase.database().ref(rama_bd_obras + "/" + query + "/SCORE").once('value').then(function(snapshot){
+        if(snapshot.exists()){
+            var total = snapshot.child("total_trabajado").exists() ? parseFloat(snapshot.child("total_trabajado").val()) : 0;
+            var horas_trabajador = snapshot.child("inges/" + user + "/horas_trabajadas").exists() ? parseFloat(snapshot.child("inges/" + user + "/horas_trabajadas").val()) : 0;
+            total += cant;
+            horas_trabajador += cant;
+            firebase.database().ref(rama_bd_obras + "/" + query + "/SCORE/total_trabajado").set(total);
+            firebase.database().ref(rama_bd_obras + "/" + query + "/SCORE/inges/" + user + "/horas_trabajadas").set(horas_trabajador);
+        }
+    });
+}
+/*
+function sumaScoreKaizen(query,cant){
+    firebase.database().ref(rama_bd_obras + "/" + query + "/kaizen/PROYECTOS/PAG").once('value').then(function(snapshot){
+        var precio_anterior = snapshot.exists() ? parseFloat(snapshot.val()) : 0;
+        var nuevo_precio = precio_anterior + cant;
+        firebase.database().ref(rama_bd_obras + "/" + query + "/kaizen/PROYECTOS/PAG").set(nuevo_precio);
+    });
+}*/

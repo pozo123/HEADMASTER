@@ -82,6 +82,18 @@ $('#' + id_registrar_button_obra).click(function () {
             subprocesos: "",
             SCORE: "",
         };
+        var subp = {};
+        subp["PC00-MISC"] = {
+            terminado: false,
+            nombre: "Miescelaneos preproyecto",
+            alcance: "Miscelaneos preproyecto",
+            clave: "PC00-MISC",
+            SCORE: "",
+            categoria: "MISCELANEO",
+            kaizen: kaiz,
+            fecha_inicio: f_i,
+            fecha_final: f_f,
+        }
         procesos["PC00"] = {
             terminado: false,
             alcance: "TRABAJO PREVIO A FIRMAR CONTRATO",
@@ -92,20 +104,7 @@ $('#' + id_registrar_button_obra).click(function () {
             fecha_final: f_f,
             kaizen: kaiz,
             num_subprocesos: 0,
-            subprocesos: {
-                PC00-MISC: {
-                    terminado: false,
-                    nombre: "Miescelaneos preproyecto",
-                    alcance: "Miscelaneos preproyecto",
-                    clave: "PC00-MISC",
-                    SCORE: "",
-                    categoria: "MISCELANEO",
-                    kaizen: kaiz,
-                    fecha_inicio: f_i,
-                    fecha_final: f_f,
-                    //presupuesto: "",
-                }
-            },
+            subprocesos: subp,
         };
         procesos["ADIC"] = {
             terminado: false,

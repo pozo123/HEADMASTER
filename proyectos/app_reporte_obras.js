@@ -118,7 +118,7 @@ function loadObrasCBReporteObras(){
 
 function loadIngesCBReporteObras(){
 	if($('#' + id_rb_inges_no_reporte_obras).prop('checked')){
-		firebase.database().ref(rama_bd_inges).once('value'.then(function(snapshot){
+		firebase.database().ref(rama_bd_inges).once('value').then(function(snapshot){
 			var inge = snapshot.val();
 			if(snapshot.child("areas/proyectos").val()){
 				var cb = document.createElement("INPUT");

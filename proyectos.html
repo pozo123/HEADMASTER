@@ -527,27 +527,27 @@
                         <h6 class="card-title" id="usuarioConectado"></h6>
                     </div>
                 </ul>
-                <ul class="list-unstyled components" id = "tabPerfil">
+                <ul class="list-unstyled components" id = "tabRegistrosProy">
                     <div class="card text-center text-white bg-dark">
                         <div class="card-body" id="card">
                             
-                            <div class="container-fluid" id="entrada_form">
+                            <div class="container-fluid" id="entradaGroupRegistros">
                                 <label for="">¿En qué vas a trabajar hoy?</label>
                                 <div class="form-group">
                                     <label for="">Obra:</label>
-                                    <select id ="DDL_obraAsignado" class="form-control" onChange="loadDDLPresupuestos()"></select>
+                                    <select id ="obraDdlRegistros" class="form-control"></select>
                                 </div>
-                                <div class="form-group" id="presAsignado_form">
+                                <div class="form-group" id="procGroupRegistros">
                                     <label for="">Presupuesto:</label>
-                                    <select id ="DDL_presupuestoAsignado" class="form-control"></select>
+                                    <select id ="procDdlRegistros" class="form-control"></select>
                                 </div>
     
-                                <div class="form-group hidden" id="otros_group">
+                                <div class="form-group hidden" id="otrosGroupRegistros">
                                     <label for="otros">¿En qué vas a trabajar?</label>
-                                    <textarea class="form-control" id="otros" rows="5"></textarea>
+                                    <textarea class="form-control" id="otrosRegistros" rows="5"></textarea>
                                 </div>
 
-                                <div class="row text-center">
+                                <!--<div class="row text-center">
                                     <div class= "col-md-6" id = "radio_ie_group">
                                         <input type="radio" name="name" id="radio_ie_perfil" aria-label="">
                                         <label>IE</label>
@@ -556,12 +556,12 @@
                                         <input type="radio" name="name" id="radio_ihs_perfil" aria-label="">
                                         <label>IHS</label>
                                     </div>        
-                                </div>
+                                </div>-->
     
-                                <button type="button" name="" id="button_registro_entrada" class="btn btn-success btn-lg btn-block">Entrada</button> 
+                                <button type="button" name="" id="entradaButtonRegistros" class="btn btn-success btn-lg btn-block">Entrada</button> 
                             </div>
                             <div class="container-fluid">
-                                <button type="button" name="" id="button_registro_salida" class="btn btn-danger btn-lg btn-block hidden">Salida</button>
+                                <button type="button" name="" id="salidaButtonRegistros" class="btn btn-danger btn-lg btn-block hidden">Salida</button>
                             </div>
                         </div>
                     </div>
@@ -1951,30 +1951,34 @@
 <!--My scripts-->
         <script src="numeroLetras.js"></script>
         <script src="app_principal.js"></script>        
-        <script src="proyectos/app_inge.js"></script>
-        <script src="proyectos/app_obra.js"></script>
-        <script src="proyectos/app_perfil.js"></script>
+        <!--<script src="proyectos/app_inge.js"></script>-->
+        <!--<script src="proyectos/app_obra.js"></script>-->
+        <!--<script src="proyectos/app_perfil.js"></script>-->
         <script src="proyectos/app_presupuesto.js"></script>
         <script src="proyectos/app_cliente.js"></script>
-        <script src ="proyectos/app_atn.js"></script>
+        <script src="proyectos/app_atn.js"></script>
         <script src="proyectos/app_reporte.js"></script>
         <script src="proyectos/app_reporte_obras.js"></script>
         <script src="proyectos/app_dashboard.js"></script>
         <script src="proyectos/score.js"></script>
         <script src="proyectos/app_gestionar_presu.js"></script>
-        <script src="proyectos/app_permisos.js"></script>
+        <!--<script src="proyectos/app_permisos.js"></script>-->
         <script src="proyectos/app_imprimir_presupuesto.js"></script>
         <script src="proyectos/app_bibliotecas.js"></script>
         <script src="proyectos/app_exc_reqs.js"></script>
         <script src="proyectos/app_cierre_maestro.js"></script>
-        <script src = "proyectos/app_graphs.js"></script>
-        <script src = "proyectos/app_actualizar_regs.js"></script>
-        <script src = "proyectos/app_dashgrid.js"></script>
-        <script src = "proyectos/app_reporte_ppto.js"></script>
-        <script src = "proyectos/app_pagos.js"></script>
-        <script src = "proyectos/app_proy_cuant_kaizen.js"></script>
-        <script src = "app_desplegar_procesos.js"></script>
-        <script src="proyectos/app_proy_asigna_proc.js"></script>
+        <!--<script src="proyectos/app_graphs.js"></script>-->
+        <script src="proyectos/app_actualizar_regs.js"></script>
+        <!--<script src="proyectos/app_dashgrid.js"></script>-->
+        <script src="proyectos/app_reporte_ppto.js"></script>
+        <!--<script src="proyectos/app_pagos.js"></script>-->
+        <script src="proyectos/app_proy_cuant_kaizen.js"></script>
+        <script src="app_desplegar_procesos.js"></script>
+        <script src="proyectos/app_proy_registros.js"></script>
+        <!--<script src="proyectos/app_proy_asigna_proc.js"></script>-->
+        <script src="app_funciones.js"></script>
+        <script src="proyectos/app_proy_scoreboard.js"></script>
+
         
 
         <!-- PdfMaker-->

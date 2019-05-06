@@ -15,10 +15,9 @@ REESTRUCTURA_BD:
     - presupuesto -> definir que si lleva y que no, separar pdf de crear elemento en bd
     - reporte_ppto -> depende de def_ppto   
     - imprimir_ppto -> ppto ya esta en subprocs 
+    - actualizar_Regs
     
 
- Obsoletos: 
- - app_prod_gestionar_pptos, app_colaboradores_compras, app_colaboradores_produccion, app_colaboradores_rrhh, app_datos_kaizen, app_obra_prod, app_personal, app_inge, app_permisos, dashgrid, pagos (todo se va a hacer con el admon), perfil, app_proy_asigna_proc, app_graphs (hice funcion nueva en app_proy_scoreboard)
 
  HTMLs:
  - app_admin_registro
@@ -35,12 +34,14 @@ REESTRUCTURA_BD:
  - app_rrhh_editar_trabajadores
  - app_atributo
  - app_areas
+
+ Obsoletos: 
+ - app_prod_gestionar_pptos, app_colaboradores_compras, app_colaboradores_produccion, app_colaboradores_rrhh, app_datos_kaizen, app_obra_prod, app_personal, app_inge, app_permisos, dashgrid, pagos (todo se va a hacer con el admon), perfil, app_proy_asigna_proc, app_graphs (hice funcion nueva en app_proy_scoreboard)
      
  Por probar:
  - app_pagos_nomina
  - app_rrhh_pagos_diversos -> terminar: sumar, distribuir, y KAIZEN, ya no al kaizen si atencion a clientes, distribuir horas si semana quebrada, que carguen los ddls, si funciona con multiples diversos
  - app_reporte_obras ->(edité, ahora tiene checkboxes... creo :S)
- - loadScoreKaizen (en app_funciones)
  - app_gestionar_supervisores
  - app_atributo
  
@@ -69,6 +70,7 @@ ARTURO:
  - Poner filtros para pestañas en prod (gerente/supervisor)
     
 DIEGO:
+ - Cierre maestro no creo que quite la modalidad de picar "salida"
  - Definir quién llena las horas ppto de SCORE en los procs/pptos, y cómo (no sólo en kaizen)
  - desplegar kaizen lo del cambio de obra
  - app_prod_entrada_estimacion

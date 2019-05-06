@@ -1,5 +1,5 @@
 var id_obra_ddl_registros = "obraDdlRegistros";
-var id_proc_ddl_registros = "procDdlRegistros";//Si simple, load pptos, si no load procs
+var id_proc_ddl_registros = "procDdlRegistros";
 var id_proc_group_registros = "procGroupRegistros";
 var id_otros_registros = "otrosRegistros";
 var id_otros_group_registros = "otrosGroupRegistros";
@@ -7,55 +7,65 @@ var id_entrada_button_registros = "entradaButtonRegistros";
 var id_entrada_group_registros = "entradaGroupRegistros";
 var id_salida_button_registros = "salidaButtonRegistros";
 
-var rama_bd_registros = "proyectos/registros";
-var rama_bd_obras = "obras";
-var rama_bd_personal = "personal";
+var rama_bd_registros = "test/proyectos/registros";
+var rama_bd_obras = "test/obras";
+var rama_bd_personal = "test/personal";
 
 var esp;
 var path = "";
 
 var precio_hora = 1300;
-var user;
+var user_global;
 
 $(document).ready(function() {
-    user = firebase.auth().currentUser.uid;
-    firebase.database().ref(rama_bd_personal + "/" + user).once('value').then(function(snapshot){
-        esp = snapshot.child("esp").val();
-        if(snapshot.child("areas/proyectos").val() && !snapshot.child("areas/administracion").val()){
-            modoRegistros();
-            setInterval(modoRegistros, 60000);
+    firebase.auth().onAuthStateChanged(user => {
+        if(user) {
+            user_global = user.uid;
+            firebase.database().ref(rama_bd_personal + "/" + user_global).once('value').then(function(snapshot){
+                esp = snapshot.child("esp").val();
+                if(snapshot.child("areas/proyectos").val() && !snapshot.child("areas/administracion").val()){
+                    modoRegistros();
+                    setInterval(modoRegistros, 60000);
 
-            var select = document.getElementById(id_obra_ddl_registros);
-            var option = document.createElement('option');
-            option.style = "display:none";
-            option.text = option.value = "";
-            select.appendChild(option);
-            var option2 = document.createElement('option');
-            option2.text = option2.value = "Otros";
-            select.appendChild(option2);
+                    var select = document.getElementById(id_obra_ddl_registros);
+                    var option = document.createElement('option');
+                    option.style = "display:none";
+                    option.text = option.value = "";
+                    select.appendChild(option);
+                    var option2 = document.createElement('option');
+                    option2.text = option2.value = "Otros";
+                    select.appendChild(option2);
 
-            firebase.database().ref(rama_bd_obras).orderByChild('nombre').on('child_added',function(snapshot){
-                var obra = snapshot.val();
-                var tipo = (obra.num_procesos == 0 && obra.procesos.ADIC.num_subprocesos == 0) ? "simple" : "padre";
-                if(!obra.terminada){   
-                    var option3 = document.createElement('option');
-                    option3.text = obra.nombre;
-                    option3.value = tipo; 
-                    select.appendChild(option3);
+                    firebase.database().ref(rama_bd_obras).orderByChild('nombre').on('child_added',function(snapshot){
+                        var obra = snapshot.val();
+                        var tipo = (obra.num_procesos == 0 && obra.procesos.ADIC.num_subprocesos == 0) ? "simple" : "padre";
+                        if(!obra.terminada){   
+                            var option3 = document.createElement('option');
+                            option3.text = obra.nombre;
+                            option3.value = tipo; 
+                            select.appendChild(option3);
+                        }
+                    });
                 }
             });
+        } else {
+            alert("No existe el usuario");
         }
-    });
+    }); 
 });
 
+function modoActivoRegistros(){
+    $('#' + id_entrada_group_registros).addClass("hidden");
+    $('#' + id_salida_button_registros).removeClass("hidden");
+}
+
 function modoRegistros(){
-    firebase.database().ref(rama_bd_personal + "/" + user).once('value').then(function(snapshot){
+    firebase.database().ref(rama_bd_personal).orderByKey().equalTo(user_global).on('child_added', function(snapshot){
         if(snapshot.child("status").val()){
-            $('#' + id_entrada_group_registros).addClass("hidden");
-            $('#' + id_salida_button_registros).removeClass("hidden");
+            modoActivoRegistros();
         } else {
-            $('#' + id_entrada_group_registros).addClass("hidden");
-            $('#' + id_salida_button_registros).removeClass("hidden");
+            $('#' + id_entrada_group_registros).removeClass("hidden");
+            $('#' + id_salida_button_registros).addClass("hidden");
         }
     });
 }
@@ -63,7 +73,7 @@ function modoRegistros(){
 $('#' + id_obra_ddl_registros).change(function(){
     var obra_nombre = $('#' + id_obra_ddl_registros + " option:selected").text();
     $('#' + id_proc_ddl_registros).empty();
-    if(obra == "Otros"){
+    if(obra_nombre == "Otros"){
         $('#' + id_proc_group_registros).addClass("hidden");
         $('#' + id_otros_group_registros).removeClass("hidden");
     } else {
@@ -120,7 +130,7 @@ $('#' + id_entrada_button_registros).click(function(){
         var reg = {
             esp: esp,
             horas: 0,
-            inge: user,
+            inge: user_global,
             obra: $('#' + id_obra_ddl_registros + " option:selected").text(),
             proceso: proc,
             status: false,
@@ -129,31 +139,41 @@ $('#' + id_entrada_button_registros).click(function(){
         var hoy = getWeek(new Date().getTime());
         var cu_reg = firebase.database().ref(rama_bd_registros + "/" + hoy[1] + "/" + hoy[0]).push(reg).key;
         var tru = true;
-        firebase.database().ref(rama_bd_personal + "/" + user + "/status").set(tru);
+        firebase.database().ref(rama_bd_personal + "/" + user_global + "/status").set(tru).then(() => {
+            modoRegistros();
+        });
         path = hoy[1] + "/" + hoy[0] + "/" + cu_reg;
     }
 });
 
 $('#' + id_salida_button_registros).click(function(){
     var hoy = getWeek(new Date().getTime());
-    firebase.database().ref(rama_bd_registros).once('value').then(function(snapshot){
-        if(path != "" && snapshot.child(path).exists()){
-            cierraRegistro(snapshot.child(path));
-        } else {
-            snapshot.forEach(function(yearSnap){
-                yearSnap.forEach(function(weekSnap){
-                    weekSnap.forEach(function(regSnap){
-                        var reg == regSnap.val();
-                        if(reg.status == false && reg.inge == user){
-                            path = yearSnap.key + "/" + weekSnap.key + "/" + regSnap.key;
-                            cierraRegistro(regSnap);
-                        }
+    firebase.database().ref(rama_bd_personal + "/" + user_global).once('value').then(function(snapshot){
+        if(snapshot.child("status")){
+            firebase.database().ref(rama_bd_registros).once('value').then(function(snapshot){
+                if(path != "" && snapshot.child(path).exists()){
+                    cierraRegistro(snapshot.child(path));
+                } else {
+                    snapshot.forEach(function(yearSnap){
+                        yearSnap.forEach(function(weekSnap){
+                            weekSnap.forEach(function(regSnap){
+                                var reg = regSnap.val();
+                                if(reg.status == false && reg.inge == user_global){
+                                    path = yearSnap.key + "/" + weekSnap.key + "/" + regSnap.key;
+                                    cierraRegistro(regSnap);
+                                }
+                            });
+                        });
                     });
+                }
+                var fal = false;
+                firebase.database().ref(rama_bd_personal + "/" + user_global + "/status").set(fal).then(() => {
+                    modoRegistros();
                 });
             });
+        } else {
+            modoRegistros();
         }
-        var fal = false;
-        firebase.database().ref(rama_bd_personal + "/" + user + "/status").set(fal);
     });
 });
 
@@ -184,14 +204,16 @@ function cierraRegistro(regSnap){
 
 function sumaScoreProc(query,cant){
     firebase.database().ref(rama_bd_obras + "/" + query + "/SCORE").once('value').then(function(snapshot){
-        if(snapshot.exists()){
+        //if(snapshot.exists()){
             var total = snapshot.child("total_trabajado").exists() ? parseFloat(snapshot.child("total_trabajado").val()) : 0;
-            var horas_trabajador = snapshot.child("inges/" + user + "/horas_trabajadas").exists() ? parseFloat(snapshot.child("inges/" + user + "/horas_trabajadas").val()) : 0;
+            var horas_trabajador = snapshot.child("inges/" + user_global + "/horas_trabajadas").exists() ? parseFloat(snapshot.child("inges/" + user_global + "/horas_trabajadas").val()) : 0;
             total += cant;
             horas_trabajador += cant;
+            console.log(query);
+            console.log(rama_bd_obras + "/" + query + "/SCORE/inges/" + user_global + "/horas_trabajadas");
             firebase.database().ref(rama_bd_obras + "/" + query + "/SCORE/total_trabajado").set(total);
-            firebase.database().ref(rama_bd_obras + "/" + query + "/SCORE/inges/" + user + "/horas_trabajadas").set(horas_trabajador);
-        }
+            firebase.database().ref(rama_bd_obras + "/" + query + "/SCORE/inges/" + user_global + "/horas_trabajadas").set(horas_trabajador);
+        //}
     });
 }
 /*

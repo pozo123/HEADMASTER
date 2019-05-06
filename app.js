@@ -1,4 +1,4 @@
-var rama_bd_personal = "personal";
+var rama_bd_personal = "test/personal";
 var id_dropdownMenu = "dropdownMenu";
 
 $(document).ready(function() {

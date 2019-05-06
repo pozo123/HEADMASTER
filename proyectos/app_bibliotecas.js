@@ -1,11 +1,10 @@
 var rama_bd_tipos_presupuesto = "proyectos/tipos_presupuesto";
 var rama_bd_generos = "proyectos/generos";
-var rama_bd_obras = "proyectos/obras";
+var rama_bd_obras = "test/obras";
 var rama_bd_reqs = "proyectos/reqs";
 var rama_bd_exclusiones = "proyectos/exclusiones";
 var rama_bd_clientes = "clientes";
-var rama_bd_inges = "proyectos/inges";
-var rama_bd_registros = "proyectos/registros";
+var rama_bd_registros = "test/proyectos/registros";
 
 var id_datatable_clientes_bibliotecas = "dataTableClientes";
 var id_datatable_exclusiones_bibliotecas = "dataTableExclusiones";
