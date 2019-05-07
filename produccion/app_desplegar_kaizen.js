@@ -244,10 +244,10 @@ function cargaKaizen(){
 		});
 		if(simple){
 			$('#' + id_desplegar_subprocesos_button_kaizen).addClass('hidden');
-			$('#' + id_desplegar_subprocesos_button_kaizen).addClass('hidden');
+			$('#' + id_colapsar_subprocesos_button_kaizen).addClass('hidden');
 		} else {
 			$('#' + id_desplegar_subprocesos_button_kaizen).removeClass('hidden');
-			$('#' + id_desplegar_subprocesos_button_kaizen).removeClass('hidden');
+			$('#' + id_colapsar_subprocesos_button_kaizen).removeClass('hidden');
 		}
 		for(i=0;i<(num_procesos + 3);i++){
 			createRow(procesos[i].proc, table, procesos[i].tipo);

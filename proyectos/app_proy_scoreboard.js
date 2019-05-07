@@ -188,12 +188,188 @@ function loadGraph(reg, horas_programadas, horas_trabajadas){
 }
 
                 
-function loadDashcard(nickname, activo, reg, horas_programadas, horas_trabajadas, div_cards){
+function loadDashcard(nickname, activo, reg, horas_programadas, horas_trabajadas, horas_programadas_individuales, horas_trabajadas_individuales, div_cards){
+
+    var font = "";
+    var card = document.createElement('div');
+
+    if(reg.esp === "ie"){
+        card.className = "card card_dash border-danger mb-3";
+        font="danger";
+    } else if(reg.esp = "ihs"){
+        card.className = "card card_dash border-info mb-3";
+        font="info";
+    } else {
+        card.className = "card card_dash border-secondary mb-3";
+        font = "";
+    }
+
     if(activo){
         console.log(nickname + ": \nEsp: " + reg.esp + "\nObra: " + reg.obra + "\nProceso: " + reg.proceso + "\nHoras Programadas: " + horas_programadas + "\nHoras Trabajadas: " + horas_trabajadas);
-        //document.getElementById(div_cards).appendChild(card);
+
+        // Header del Card
+        var header = document.createElement('div');
+        header.className = "card-header text-center";
+        var row = document.createElement('div');
+        row.className = "row";
+
+        // Divido en dos columnas, la primera tiene obra y la segunda horas.
+
+        //1ra columna con obra.
+        var col_obra = document.createElement('div');
+        col_obra.className = "col-md-6";
+        var p_obra = document.createElement("p")
+        p_obra.setAttribute("style", "font-size: 1em; color:black;");
+        var node_obra = document.createTextNode(reg.obra);
+        p_obra.appendChild(node_obra);
+        col_obra.appendChild(p_obra);
+
+        //2da columna con horas.
+        var col_horas = document.createElement('div');
+        col_horas.className = "col-md-6";
+        var p_horas = document.createElement("p")
+        p_horas.setAttribute("style", "font-size: 1em; font-weight: bold;");
+        var node_horas = document.createTextNode(horas_trabajadas + "/ ");
+        var span_horas = document.createElement('span');
+        span_horas.setAttribute("style", "color:red;");
+        var node_span = document.createTextNode(horas_programadas);
+        span_horas.appendChild(node_span);
+        
+        p_horas.appendChild(node_horas);
+        p_horas.appendChild(span_horas);
+        col_horas.appendChild(p_horas);
+        
+        row.appendChild(col_obra);
+        row.appendChild(col_horas);
+        
+        // se completa el header
+        header.append(row)
+
+        var body = document.createElement('div');
+        body.className = "card-body text-center text-"+ font;
+        
+        var row = document.createElement('div');
+        row.className = "row";
+
+        var col_nickname = document.createElement('div');
+        col_nickname.className = "col-md-4";
+        var p_nickname = document.createElement("p")
+        p_nickname.setAttribute("style", "font-size: 0.9em; color:black;");
+        var node_nickname = document.createTextNode(nickname);
+        p_nickname.appendChild(node_nickname);
+        col_nickname.appendChild(p_nickname);
+
+        var col_proceso = document.createElement('div');
+        col_proceso.className = "col-md-4";
+        var p_proceso = document.createElement("p")
+        p_proceso.setAttribute("style", "font-size: 1em; color:black;");
+        var node_proceso = document.createTextNode(reg.proceso);
+        p_proceso.appendChild(node_proceso);
+        col_proceso.appendChild(p_proceso);
+
+        row.appendChild(col_nickname);
+        row.appendChild(col_proceso);
+        
+        body.appendChild(row);
+        
+        // footer
+
+        var footer = document.createElement('div');
+        footer.className = "card-footer text-center";
+        var row_footer = document.createElement('div');
+        row_footer.className = "row";
+        
+        var col3 = document.createElement('div');
+        col3.className = "col-md-6";
+        var p_horas_inge_ejecutadas = document.createElement('p');
+        p_horas_inge_ejecutadas.setAttribute("style", "font-size: 0.7em;");
+        var node_horas_ejecutadas = document.createTextNode("Ejec: ");
+        var span_horas_ejecutadas = document.createElement('span');
+        span_horas_ejecutadas.setAttribute("style", "color:red;");
+        var node_span_horas_ejecutadas = document.createTextNode(horas_trabajadas_individuales);
+        span_horas_ejecutadas.appendChild(node_span_horas_ejecutadas);
+        p_horas_inge_ejecutadas.appendChild(node_horas_ejecutadas);
+        p_horas_inge_ejecutadas.appendChild(span_horas_ejecutadas);
+        
+        col3.appendChild(p_horas_inge_ejecutadas);
+        
+        var col4 = document.createElement('div');
+        col4.className = "col-md-6";
+        var p_horas_inge_presupuestadas = document.createElement('p');
+        p_horas_inge_presupuestadas.setAttribute("style", "font-size: 0.7em;");
+        var node_horas_presupuestadas = document.createTextNode("Prog: ");
+        var span_horas_presupuestadas = document.createElement('span');
+        span_horas_presupuestadas.setAttribute("style", "color:red;");
+        var node_span_horas_presupuestadas = document.createTextNode(horas_programadas_individuales);
+        span_horas_presupuestadas.appendChild(node_span_horas_presupuestadas);
+        p_horas_inge_presupuestadas.appendChild(node_horas_presupuestadas);
+        p_horas_inge_presupuestadas.appendChild(span_horas_presupuestadas);
+        
+        col4.appendChild(p_horas_inge_presupuestadas);
+        
+        row_footer.appendChild(col3);
+        row_footer.appendChild(col4);
+        
+        footer.appendChild(row_footer);
+         
+        card.appendChild(header);
+        card.appendChild(body);
+        card.appendChild(footer);
+
+        document.getElementById(div_cards).appendChild(card);
     } else {
         console.log(nickname + ": No activo");
-        //document.getElementById(div_cards).appendChild(card);
+
+        var header = document.createElement('div');
+        header.className = "card-header text-center";
+        var row = document.createElement('div');
+        row.className = "row";
+
+        // Divido en dos columnas, la primera tiene obra y la segunda horas.
+
+        //1ra columna con obra.
+        var col_inactivo = document.createElement('div');
+        col_inactivo.className = "col-md-12";
+        var p_inactivo = document.createElement("p")
+        p_inactivo.setAttribute("style", "font-size: 1em; color:red;");
+        var node_inactivo = document.createTextNode(reg.obra);
+        p_inactivo.appendChild(node_inactivo);
+        col_inactivo.appendChild(p_inactivo);
+
+        row.appendChild(col_inactivo);
+        
+        // se completa el header
+        header.append(row)
+
+        var body = document.createElement('div');
+        body.className = "card-body text-center text-"+ font;
+        
+        var row = document.createElement('div');
+        row.className = "row";
+
+        var col_nickname = document.createElement('div');
+        col_nickname.className = "col-md-12";
+        var p_nickname = document.createElement("p")
+        p_nickname.setAttribute("style", "font-size: 0.9em; color:black;");
+        var node_nickname = document.createTextNode(nickname);
+        p_nickname.appendChild(node_nickname);
+        col_nickname.appendChild(p_nickname);
+
+        row.appendChild(col_nickname);
+        
+        body.appendChild(row);
+        
+        // footer
+
+        var footer = document.createElement('div');
+        footer.className = "card-footer text-center";
+        var row_footer = document.createElement('div');
+        row_footer.className = "row";
+         
+        card.appendChild(header);
+        card.appendChild(body);
+        card.appendChild(footer);
+
+        document.getElementById(div_cards).appendChild(card);
     }
 }

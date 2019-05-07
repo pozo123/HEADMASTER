@@ -4,7 +4,11 @@ var rama_bd_obras_magico = "test/obras";
 var rama_bd_obras = "test/obras";
 var rama_bd_personal = "test/personal";
 var rama_bd_mensajes = "mensajes";
+var rama_bd_version = "info_web/version";
 
+function refreshAll(){
+  sumaEnFirebase(rama_bd_version, 0.001);
+}
 
 function sendMessage(uid_destinatario, uid_remitente, message){
   var message = {
@@ -236,6 +240,19 @@ function calculaUtilidad(costos, criterio, valor){
     return profitPorcentaje;
     //return profitCantidad;
   }
+}
+
+function descargaRespaldo(){
+  var d = new Date();
+  firebase.database().ref().once('value').then(function(snapshot){
+    var rama = snapshot.val();
+    snapshot.forEach(function(childSnap){
+      downloadObjectAsJson(childSnap.val(),childSnap.key + "-respaldoHEAD-" + d.getDate() + "-" + parseInt(d.getMonth() + 1) + "-" + d.getFullYear());
+      console.log(childSnap.key);
+    });
+    //downloadObjectAsJson(rama);
+    //alert("Descarga exitosa");
+  });
 }
 
 function downloadObjectAsJson(exportObj, exportName){

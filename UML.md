@@ -122,7 +122,96 @@
       - timestamps
          - enviado
          - leido
-- personal (magico) (supervisores son los que estan en prod, se ven en obra)- SUSCRIBEN: 
+- obras (magico)
+   - AFECTAN: app_obra app_obras_prod app_procesos
+   - SUSCRIBEN: app_procesos app_asistencia app_desplegar_procesos app_kaizen_global app_presupuesto
+   - obra: (por nombre)
+      - nombre
+      - cliente (nombre)
+      - clave
+      - terminada
+      - direccion
+         - calle
+         - numero
+         - colonia
+         - delegacion
+         - ciudad
+         - cp
+      - num_procesos
+      - utilidad_semanal
+      - fechas:
+         - fecha_inicio_real
+         - fecha_inicio_teorica
+         - fecha_final_real
+         - fecha_final_teorica
+      - kaizen: *
+      - supervisor 
+         - supervisor (por id)
+            - nombre
+            - activo: bool
+      - procesos:
+         - proceso (por clave):
+            - alcance
+            - clave
+            - fecha_inicio
+            - fecha_final
+            - kaizen: *
+            - nombre
+            - num_subprocesos
+            - terminado
+            - tipo: "adicional"/"continuo"/"miscelaneo"/"proyecto"
+            - contrato (a menos que sea padre, excepcion con IQONO MEXICO)
+            - SCORE (SOLO EN HOJA)
+               - total_prog (en horas)
+               - total_trabajado (en horas)
+               - programado (horas definidas, una vez)
+               - inges
+                  - inge (por uid)
+                     - horas_trabajadas (en horas) 
+                     - horas_programadas (en horas)
+            - subprocesos:
+               - subproceso (por clave):
+                  - alcance
+                  - categoria
+                  - clave
+                  - fecha_inicio
+                  - fecha_final
+                  - kaizen: *
+                  - terminado
+                  - contrato
+                  - nombre
+                  - OdeC: igual que proc
+                  - SCORE: igual que proc simple
+                  - presupuesto: (solo en adic y pc00, pc00-misc = "")
+                     - terminado
+                     - consec
+                     - consecutivos
+                        - pdf
+                     - nombre
+                     - Todo lo de presupuestos??? Definir
+            - OdeC: (En hoja)
+               - year (por num)
+                  - semana (por num)
+                     - OdeC (por clave)
+                        - clave
+                        - pad: pad*
+                        - precio_ppto
+                        - precio_pag
+                        - pagada: bool
+                        - proveedor
+                        - pagos:
+                           - pago (por push)
+                              - precio_pag
+                              - pad: pad*
+                              - timestamps:
+                                 - pago
+                                 - registro_pago
+                        - timestamps:
+                           - OdeC
+                           - registro_OdeC
+                           - pago
+                           - registro_pago
+- personal (magico) (supervisores son los que estan en prod, se ven en obra)
   - uid (como key):
     - areas:   
       - proyectos: boolean
@@ -157,6 +246,27 @@
          - telefono
          - cuenta_bancaria
          - especialidad: ("IE"/"IHS"/"Ambas")
+- proyectos
+   - registros
+      - year
+         - semana
+            - registro (por cu)
+               - checkin
+               - esp
+               - horas (en ms)
+               - inge (uid)
+               - obra
+               - proceso (este es nuevo)
+               - status
+   - cuantificaciones
+      - obra (por nombre)
+         - year
+            - semana
+               - cuantificacion (por push)
+                  - monto
+                  - descripcion
+                  - proceso (clave de proc, subp u obra)
+                  - pad: pad*
 - rrhh
    - diversos
       - diverso (por nombre)
@@ -293,115 +403,6 @@
                         - impuestos_asistencia (impuestos_asistencia_trabajador * asistencias_aqui/asistencias totales)
                      - total (subtotal + impuestos)
   
-- obras (magico)
-   - AFECTAN: app_obra app_obras_prod app_procesos
-   - SUSCRIBEN: app_procesos app_asistencia app_desplegar_procesos app_kaizen_global app_presupuesto
-   - obra: (por nombre)
-      - nombre
-      - cliente (nombre)
-      - clave
-      - terminada
-      - direccion
-         - calle
-         - numero
-         - colonia
-         - delegacion
-         - ciudad
-         - cp
-      - num_procesos
-      - utilidad_semanal
-      - fechas:
-         - fecha_inicio_real
-         - fecha_inicio_teorica
-         - fecha_final_real
-         - fecha_final_teorica
-      - kaizen: *
-      - supervisor 
-         - supervisor (por id)
-            - nombre
-            - activo: bool
-      - procesos:
-         - proceso (por clave):
-            - terminado
-            - contrato (a menos que sea padre, excepcion con IQONO MEXICO)
-            - nombre
-            - alcance
-            - clave
-            - tipo: "adicional"/"continuo"/"miscelaneo"/"proyecto"
-            - fecha_inicio
-            - fecha_final
-            - num_subprocesos
-            - kaizen: *
-            - SCORE (SOLO EN HOJA, formato igual que arriba)
-               - total_prog (en horas)
-               - total_trabajado (en horas)
-               - inges
-                  - inge (por uid)
-                     - horas_trabajadas (en horas) (separar en horas_trabajadas_ie y horas_trabajadas_ihs?
-                     - horas_programadas (en horas)
-            - subprocesos:
-               - subproceso (por clave):
-                  - terminado
-                  - contrato
-                  - nombre
-                  - alcance
-                  - clave
-                  - OdeC: igual que proc
-                  - SCORE: igual que proc simple
-                  - categoria
-                  - kaizen: *
-                  - fecha_inicio
-                  - fecha_final
-                  - presupuesto:
-                     - terminado
-                     - consec
-                     - consecutivos
-                        - pdf
-                     - nombre
-                     - Todo lo de presupuestos??? Definir
-            - OdeC: (En hoja)
-               - year (por num)
-                  - semana (por num)
-                     - OdeC (por clave)
-                        - clave
-                        - pad: pad*
-                        - precio_ppto
-                        - precio_pag
-                        - pagada: bool
-                        - proveedor
-                        - pagos:
-                           - pago (por push)
-                              - precio_pag
-                              - pad: pad*
-                              - timestamps:
-                                 - pago
-                                 - registro_pago
-                        - timestamps:
-                           - OdeC
-                           - registro_OdeC
-                           - pago
-                           - registro_pago
-- proyectos
-   - registros
-      - year
-         - semana
-            - registro (por cu)
-               - checkin
-               - esp
-               - horas (en ms)
-               - inge (uid)
-               - obra
-               - proceso (este es nuevo)
-               - status
-   - cuantificaciones
-      - obra (por nombre)
-         - year
-            - semana
-               - cuantificacion (por push)
-                  - monto
-                  - descripcion
-                  - proceso (clave de proc, subp u obra)
-                  - pad: pad*
 
 - pad:
   - uid

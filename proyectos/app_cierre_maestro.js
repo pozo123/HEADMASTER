@@ -34,7 +34,7 @@ function cierreMaestro(automatico){
         snapshot.forEach(function(inge_snap){
             if(inge_snap.child("areas/proyectos").val()){
                 var ing = inge_snap.val();
-                if(ing.status == false){
+                if(ing.status == true){
                     var hoy = getWeek(new Date().getTime());
                     firebase.database().ref(rama_bd_registros).once('value').then(function(childSnap){
                         childSnap.forEach(function(yearSnap){
@@ -54,6 +54,7 @@ function cierreMaestro(automatico){
                         } else {
                             alert("Sesion de " + ing.nombre + " cerrada.");
                         }
+                        setTimeout(refreshAll(), 30000);
                     });
                 }
             }

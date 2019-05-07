@@ -15,11 +15,11 @@ Cambiar procesos (alta y editar) y cliente a admin
 Revisar dashcards, reportes y graphs con registros
 
 SCORE en proc:
-    - Atributo activo, empieza en false.
-    - Para activar, dar horas totales del proc. Sólo se puede dar una vez.
+    - Atributo programado, empieza en false.
+    - Para proramar, dar horas totales del proc. Sólo se puede dar una vez.
     - quitar equipos. Esp sigue existiendo pero las horas no se dividen por esp. Esp sólo se guarda en el registro, para futuros reportes. 
     - Distribuir horas es por inge, vale madres el equipo. Solo hay horas totales, no por equipo. Los equipos se van a distribuir pq cada subproc sera ie o ihs (en general).
-    - Atributo SCORE ya no es ppto, solo en proc, y ya no tiene equipos.
+    - Atributo SCORE ya no en ppto, solo en proc, y ya no tiene equipos.
 
 En registros:
     - Ahora por year y semana
@@ -44,9 +44,9 @@ En ppto:
 	- quitar horas_programadas y horas_trabajadas, añadir totales trabajados en rama SCORE (antes colaboradores_asignados)
 	- Revisar terminado
 En procesos (y subprocesos)
-	- atributo SCORE -> tiene todo lo de colaboradores_asignados, mas los totales trabajados ie, ihs y total
+	- atributo SCORE -> tiene todo lo de colaboradores_asignados, mas los totales trabajados
 	- Revisar terminado
-	- activo o qué pedo?
+	- programado
 En reportes: 
     - estructura registros nueva
 En colaboradores:
@@ -56,10 +56,7 @@ En colaboradores:
 	- falta credenciales, 0 sisadmin, 1 director, 2 lider de area, 3 los demas, 4 bajas/glitches. Sustituye funcionalidad de tipo en prod. Ya no hay esp_chamba, y esp si yienes area proy es "ie", "ihs", status si proy
 	- Nomina de sups en pagos_nomina. Obras asignadas en obra.
 
-- Horas de carlitos en misc? ya no? todo parejo -> Pero qué esp? 
 - App para declarar las horas ppto en el kaizen, sólo se pueden hacer una vez
-
-- PC00 nombre: "COMERCIALIZACION" alcance: ""
 
 Cambios en bd:
  - Pasar las OdeCs a obras y borrar 
@@ -74,6 +71,15 @@ Cambios en bd:
 
 
  FALTA:
- - obras
- - proyectos
- - rrhh -> trabajadores.activo, creo que nadie lo tiene
+ - obras 
+    - Ponerles direccion a todas
+    - Procs (Todo con un actualizar_regs)
+       - Sumar horas de VIA OFICINAS de registros anteriores.
+       - Pasar horas programadas de pptos a procs
+    - Pptos -> Darlos de alta
+ - proyectos -> Definir si nos quedamos con:
+    - clase
+    - exclusiones
+    - reqs
+    - generos
+    - tipos_prespuesto

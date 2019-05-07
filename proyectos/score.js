@@ -10,7 +10,6 @@ firebase.auth().onAuthStateChanged(user => {
             var usuarioNombre = document.getElementById('usuarioConectado');
             usuarioNombre.innerHTML = user_bd.nickname;
             var creden = user_bd.credenciales;
-            console.log(rama_bd_personal);
             if(creden == 3){
                 console.log("creden3");
                 $('#tabAltaCliente').addClass('hidden');
@@ -33,7 +32,6 @@ firebase.auth().onAuthStateChanged(user => {
                 $('#tabActivar').removeClass('hidden');
                 $('#tabPagos').removeClass('hidden');
                 $('#pageSubmenuCierre').removeClass('hidden');
-                $('#pageSubmenuActRegs').removeClass('hidden');
                 if(creden == 2){
                     $('#tabRegistrosProy').removeClass('hidden');
                     $('#tabPermisos').addClass('hidden');

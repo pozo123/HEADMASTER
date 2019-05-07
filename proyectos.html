@@ -594,7 +594,6 @@
                         <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Dar de alta</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu2">
                             <li class="tab" id="tabAltaColaborador"><a href="#" onclick="openTabs('tabAltaColaborador','altaColaborador')">Colaborador HEAD</a></li>
-                            <li class="tab" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Obra</a></li>
                             <li class="tab" id="tabAltaCliente"><a href="#" onclick="openTabs('tabAltaCliente','altaCliente')">Despachos</a></li>
                             <li class="tab" id="tabAltaAtencion"><a href="#" onclick="openTabs('tabAltaAtencion','altaAtencion')">AT'N</a></li>
                             <li class="tab" id="tabAltaReqsExcs"><a href="#" onclick="openTabs('tabAltaReqsExcs','altaReqsExcs')">Requisitos/Exclusiones</a></li>
@@ -658,18 +657,25 @@
                 <div class="row">
                     <div class="container-fluid">
                         <div id="dashboard" class="tabcontent dashboard">
-                            <div class="subDash row">
-                                <div class="container-fluid">
-                                    <h3>Dashboard</h3>
-                                    <div class="card-deck" id ="dashCards"></div>                           
+                            <h3>Dashboard</h3>
+                            <div class= "row">
+                                <div class= "col-lg-12">
+                                    <div class="container-fluid">
+                                        <div class="card-deck" id ="divCardsGrupalesScoreboard"></div>                           
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class ="row">
-                                <div class = "container-fluid">
-                                    <h3>Gráficas de presupuestos SCORE</h3>
-                                    <div class = "card-deck" id="graphs" style= "margin-top:50px ; margin-bottom: 50px;">
-    
+                            <div class= "row">
+                                <div class= "col-lg-6">
+                                    <div class="container-fluid">
+                                        <div class="" id ="divCardsIndScoreboard"></div>                           
+                                    </div>
+                                </div>
+
+                                <div class= "col-lg-6">
+                                    <div class="container-fluid">
+                                        <div class="" id ="divGraphsScoreboard"></div>                           
                                     </div>
                                 </div>
                             </div>
@@ -1164,7 +1170,7 @@
                             </div>
                         </div>
 
-                        <div id="altaObra" class="tabcontent hidden">
+                        <!--<div id="altaObra" class="tabcontent hidden">
                             <h1>Obra</h1><br/>
                             <p>* Los campos son obligatorios</p>
                             <div class="container-fluid">
@@ -1220,7 +1226,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
 
                         <div id="altaCliente" class="tabcontent hidden">
                             <h1>Cliente</h1>
@@ -1952,7 +1958,6 @@
         <script src="numeroLetras.js"></script>
         <script src="app_principal.js"></script>        
         <!--<script src="proyectos/app_inge.js"></script>-->
-        <!--<script src="proyectos/app_obra.js"></script>-->
         <!--<script src="proyectos/app_perfil.js"></script>-->
         <script src="proyectos/app_presupuesto.js"></script>
         <script src="proyectos/app_cliente.js"></script>

@@ -133,6 +133,7 @@ $('#' + id_agregar_procesos).click(function() {
                         SCORE: {
                             total_prog: "",
                             total_trabajado: "",
+                            programado: false,
                             inges: "",
                         }
                     }
