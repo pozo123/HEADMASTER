@@ -1,7 +1,7 @@
 var id_cerrar_button_cierre = "cerrarDia";
-var rama_bd_personal = "test/personal";
-var rama_bd_registros = "test/proyectos/registros";
-var rama_bd_obras = "test/obras";
+var rama_bd_personal = "personal";
+var rama_bd_registros = "proyectos/registros";
+var rama_bd_obras = "obras";
 
 var interval;
 

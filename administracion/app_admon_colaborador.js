@@ -25,7 +25,7 @@ var id_registrar_button_col_admin = "registrarColaboradorAdmin";
 var id_editar_button_col_admin = "editarButtonColAdmin";
 var  id_borrar_button_col_admin = "borrarButtonColAdmin";
 
-var rama_bd_personal = "test/personal";
+var rama_bd_personal = "personal";
 
 $(document).ready(function(){
 

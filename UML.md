@@ -164,7 +164,7 @@
             - SCORE (SOLO EN HOJA)
                - total_prog (en horas)
                - total_trabajado (en horas)
-               - programado (horas definidas, una vez)
+               - programado:bool (horas definidas, una vez)
                - inges
                   - inge (por uid)
                      - horas_trabajadas (en horas) 

@@ -1,4 +1,4 @@
-var rama_bd_personal = "test/personal";
+var rama_bd_personal = "personal";
 
 firebase.auth().onAuthStateChanged(user => {
     if(user) {

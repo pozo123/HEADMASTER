@@ -9,7 +9,7 @@ var id_cantidad_pag_suministros_kaizen = "cantidadPagSum";
 var id_actualizar_valor_pag_suministros_kaizen = "actualizarPagSum";
 
 var tab_pag_suministros_kaizen = "tabPagSum";
-var rama_bd_obras_magico = "test/obras";
+var rama_bd_obras_magico = "obras";
 var caso;
 var obra_global;
 

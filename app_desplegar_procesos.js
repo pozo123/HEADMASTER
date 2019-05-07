@@ -11,7 +11,7 @@ var class_button_colapsar_subprocesos_desplegarProcesos = "colapsarSubpClassDesp
 var class_button_desplegar_subprocesos_desplegarProcesos = "desplegarSubpClassDesplegarProcesos";
 var nombre_seleccionado;
 
-var rama_bd_obras_magico = "test/obras";
+var rama_bd_obras_magico = "obras";
 
 $('.' + class_tab_procesos).click(function(){
     loadTablaProcesos();

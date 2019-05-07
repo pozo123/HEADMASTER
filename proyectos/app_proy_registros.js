@@ -7,9 +7,9 @@ var id_entrada_button_registros = "entradaButtonRegistros";
 var id_entrada_group_registros = "entradaGroupRegistros";
 var id_salida_button_registros = "salidaButtonRegistros";
 
-var rama_bd_registros = "test/proyectos/registros";
-var rama_bd_obras = "test/obras";
-var rama_bd_personal = "test/personal";
+var rama_bd_registros = "proyectos/registros";
+var rama_bd_obras = "obras";
+var rama_bd_personal = "personal";
 
 var esp;
 var path = "";

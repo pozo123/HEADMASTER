@@ -10,7 +10,7 @@ var id_proveedor_odec_kaizen = "proveedorOdeC";
 var id_actualizar_valor_odec_kaizen = "actualizarOdeC";
 
 var tab_odec_kaizen = "tabOdeC";
-var rama_bd_obras_magico = "test/obras";
+var rama_bd_obras_magico = "obras";
 var caso;
 
 $('#' + tab_odec_kaizen).click(function(){

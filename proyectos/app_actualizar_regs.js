@@ -1,23 +1,23 @@
 
 var id_boton_chido = "botonChidoRegs";
-var rama_bd_registros = "test/proyectos/registros";
-var rama_bd_obras = "test/obras";
+var rama_bd_registros = "proyectos/registros";
+var rama_bd_obras = "obras";
 
 $('#' + id_boton_chido).click(function(){
 
     /*//Ponerle atributo "activo" a los trabajadores
-    firebase.database().ref("test/rrhh/trabajadores").once('value').then(function(snapshot){
+    firebase.database().ref("rrhh/trabajadores").once('value').then(function(snapshot){
         var trabajadores = snapshot.val();
         for(key in trabajadores){
             trabajadores[key]["activo"] = true;
         }
         console.log(trabajadores);
-        //firebase.database().ref("test/rrhh/trabajadores").update(trabajadores);
+        //firebase.database().ref("rrhh/trabajadores").update(trabajadores);
     });*/
 
  /*   //Sumar horas previas a hoy a los procesos adecuados, generando un registro de SCORE
  //No lo uses, porque con los cambios en la bd ya no jala
-    firebase.database().ref("test/obras").once('value').then(function(obrasSnap){
+    firebase.database().ref("obras").once('value').then(function(obrasSnap){
         var horas = [];
         var updates = obrasSnap.val();
         horas["Otros"] = {};
@@ -110,7 +110,7 @@ $('#' + id_boton_chido).click(function(){
                                         proceso: skey,
                                         status: true,
                                     }
-                                    firebase.database().ref("test/proyectos/registros" + "/" + hoy[1] + "/" + hoy[0]).push(newreg);
+                                    firebase.database().ref("proyectos/registros" + "/" + hoy[1] + "/" + hoy[0]).push(newreg);
                                 }
                                 if(horas[key][pkey][skey]["ihs"] != ""){
                                     console.log(key + "/" + pkey + "/" + skey + "/ihs: " + horas[key][pkey][skey]["ihs"]);
@@ -125,7 +125,7 @@ $('#' + id_boton_chido).click(function(){
                                         proceso: skey,
                                         status: true,
                                     }
-                                    firebase.database().ref("test/proyectos/registros" + "/" + hoy[1] + "/" + hoy[0]).push(newreg);
+                                    firebase.database().ref("proyectos/registros" + "/" + hoy[1] + "/" + hoy[0]).push(newreg);
                                 }
                             }
                         } else {
@@ -143,7 +143,7 @@ $('#' + id_boton_chido).click(function(){
                                         proceso: "PC00-MISC",
                                         status: true,
                                     }
-                                    firebase.database().ref("test/proyectos/registros" + "/" + hoy[1] + "/" + hoy[0]).push(newreg);
+                                    firebase.database().ref("proyectos/registros" + "/" + hoy[1] + "/" + hoy[0]).push(newreg);
                                 }
                                 if(horas[key][pkey]["PC00-MISC"]["ihs"] != ""){
                                     console.log(key + "/" + pkey + "/ihs/PC00-MISC: " + horas[key][pkey]["PC00-MISC"]["ihs"]);
@@ -158,7 +158,7 @@ $('#' + id_boton_chido).click(function(){
                                         proceso: "PC00-MISC",
                                         status: true,
                                     }
-                                    firebase.database().ref("test/proyectos/registros" + "/" + hoy[1] + "/" + hoy[0]).push(newreg);
+                                    firebase.database().ref("proyectos/registros" + "/" + hoy[1] + "/" + hoy[0]).push(newreg);
                                 }
                             } else {
                                 if(horas[key][pkey]["ie"] != ""){
@@ -174,7 +174,7 @@ $('#' + id_boton_chido).click(function(){
                                         proceso: pkey,
                                         status: true,
                                     }
-                                    firebase.database().ref("test/proyectos/registros" + "/" + hoy[1] + "/" + hoy[0]).push(newreg);
+                                    firebase.database().ref("proyectos/registros" + "/" + hoy[1] + "/" + hoy[0]).push(newreg);
                                 }
                                 if(horas[key][pkey]["ihs"] != ""){
                                     console.log(key + "/" + pkey + "/ihs: " + horas[key][pkey]["ihs"]);
@@ -189,14 +189,14 @@ $('#' + id_boton_chido).click(function(){
                                         proceso: pkey,
                                         status: true,
                                     }
-                                    firebase.database().ref("test/proyectos/registros" + "/" + hoy[1] + "/" + hoy[0]).push(newreg);
+                                    firebase.database().ref("proyectos/registros" + "/" + hoy[1] + "/" + hoy[0]).push(newreg);
                                 }
                             }
                         }
                     }
                 }
                 console.log(updates);
-                //firebase.database().ref("test/obras").update(updates);
+                //firebase.database().ref("obras").update(updates);
                 //horas[reg.obra]["procesos"][path[0]]["subprocesos"][path[1]]["SCORE"]["total_trabajado"] 
             });
         });

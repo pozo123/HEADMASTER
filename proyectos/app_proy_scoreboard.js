@@ -5,8 +5,8 @@ var id_div_graphs_scoreboard = "divGraphsScoreboard";
 var id_div_cards_grupales_scoreboard = "divCardsGrupalesScoreboard";
 var id_div_cards_ind_scoreboard = "divCardsIndScoreboard";
 
-var rama_bd_obras = "test/obras";
-var rama_bd_personal = "test/personal";
+var rama_bd_obras = "obras";
+var rama_bd_personal = "personal";
 var rama_bd_registros = "proyectos/registros";
 //MODIFICAR VALORES
 var wait_long = 7;
@@ -26,7 +26,7 @@ $('#' + id_fullscreen_scoreboard).click(function(){
     firebase.database().ref(rama_bd_personal).once('value').then(function(snapshot){
         inges[0] = "Todos";
         snapshot.forEach(function(childSnap){
-            if(childSnap.child("areas/proyectos").val() && !childSnap.child("areas/administracion").val()){
+            if(childSnap.child("areas/proyectos").val() && !childSnap.child("areas/administracion").val() && childSnap.child("activo").val()){
                 inges[inges.length] = childSnap;
             }
         });
@@ -70,13 +70,13 @@ function cyclePresentation(){
 }
 
 function scoreboardGrupal(){
-    $('#' + id_div_graphs_scoreboard).emtpy();
-    $('#' + id_div_cards_ind_scoreboard).emtpy();
+    $('#' + id_div_graphs_scoreboard).empty();
+    $('#' + id_div_cards_ind_scoreboard).empty();
     $('#' + id_div_cards_grupales_scoreboard).empty();
     console.log("TODOS");
     for(var i=1;i<inges.length;i++){
         var inge = inges[i].val();
-        if(inge.activo){
+        if(inge.status){
             getRegScoreboard(inges[i],id_div_cards_grupales_scoreboard);
         } else {
             loadDashcard(inges[i].child("nickname").val(), false,id_div_cards_grupales_scoreboard);
@@ -86,15 +86,15 @@ function scoreboardGrupal(){
 }
 
 function scoreboardIndividual(ingeSnap){
-    $('#' + id_div_graphs_scoreboard).emtpy();
-    $('#' + id_div_cards_ind_scoreboard).emtpy();
+    $('#' + id_div_graphs_scoreboard).empty();
+    $('#' + id_div_cards_ind_scoreboard).empty();
     $('#' + id_div_cards_grupales_scoreboard).empty();
     var inge = ingeSnap.val();
     if(inge.status){
         getRegScoreboard(ingeSnap,id_div_cards_ind_scoreboard);
     } else {
         loadDashcard(ingeSnap.child("nickname").val(), false,id_div_cards_ind_scoreboard);
-        console.log(inge.nickname + ", No Activo");
+        //console.log(inge.nickname + ", No Activo");
     }
 }
 
@@ -104,7 +104,7 @@ function getRegScoreboard(ingeSnap, div_cards){
         snapshot.forEach(function(regSnap){
             if(regSnap.inge = ingeSnap.key){
                 var reg = regSnap.val();
-                console.log(regSnap.val());
+                //console.log(regSnap.val());
 
                 var path = reg.proceso.split("-");
                 var proc_query = path.length > 1 ? path[0] + "/subprocesos/" + path[1] : reg.proceso;
@@ -114,11 +114,14 @@ function getRegScoreboard(ingeSnap, div_cards){
                 firebase.database().ref(rama_bd_obras + "/" + reg.obra + "/procesos/" + proc_query + "/SCORE").once('value').then(function(snapshot){
                     var horas_programadas = snapshot.child("total_prog").exists() ? parseFloat(snapshot.child("total_prog").val()) : 0;
                     var horas_trabajadas = snapshot.child("total_trabajado").exists() ? parseFloat(snapshot.child("total_trabajado").val()) : 0;
+                    var horas_prog_ind = snapshot.child("inges/" + ingeSnap.key + "/horas_programadas").exists() ? parseFloat(snapshot.child("total_prog").val()) : 0;
+                    var horas_trab_ind = snapshot.child("inges/" + ingeSnap.key + "/horas_trabajadas").exists() ? parseFloat(snapshot.child("total_trabajado").val()) : 0;
 
-                    var horas_reg = new Date().getTime() - parseFloat(reg.checkin);
+                    var horas_reg = (new Date().getTime() - parseFloat(reg.checkin))/3600000;
                     horas_trabajadas += horas_reg;
+                    horas_trab_ind += horas_reg;
                     
-                    loadDashcard(ingeSnap.child("nickname").val(), true, reg, horas_programadas, horas_trabajadas / 3600000, div_cards);
+                    loadDashcard(ingeSnap.child("nickname").val(), true, div_cards, reg, horas_programadas, (horas_trabajadas).toFixed(2), horas_prog_ind, (horas_trab_ind).toFixed(2);
                     loadGraph(reg, horas_programadas, horas_trabajadas);
                 });
 
@@ -188,24 +191,29 @@ function loadGraph(reg, horas_programadas, horas_trabajadas){
 }
 
                 
-function loadDashcard(nickname, activo, reg, horas_programadas, horas_trabajadas, horas_programadas_individuales, horas_trabajadas_individuales, div_cards){
-
+function loadDashcard(nickname, activo, div_cards, reg, horas_programadas, horas_trabajadas, horas_programadas_individuales, horas_trabajadas_individuales){
+    //console.log(nickname + ": " + activo);
+    //console.log(reg);
     var font = "";
     var card = document.createElement('div');
-
-    if(reg.esp === "ie"){
-        card.className = "card card_dash border-danger mb-3";
-        font="danger";
-    } else if(reg.esp = "ihs"){
-        card.className = "card card_dash border-info mb-3";
-        font="info";
+    if(reg != undefined){
+        if(reg.esp === "ie"){
+            card.className = "card card_dash border-danger mb-3";
+            font="danger";
+        } else if(reg.esp = "ihs"){
+            card.className = "card card_dash border-info mb-3";
+            font="info";
+        } else {
+            card.className = "card card_dash border-secondary mb-3";
+            font = "";
+        }
     } else {
         card.className = "card card_dash border-secondary mb-3";
         font = "";
     }
 
     if(activo){
-        console.log(nickname + ": \nEsp: " + reg.esp + "\nObra: " + reg.obra + "\nProceso: " + reg.proceso + "\nHoras Programadas: " + horas_programadas + "\nHoras Trabajadas: " + horas_trabajadas);
+        //console.log(nickname + ": \nEsp: " + reg.esp + "\nObra: " + reg.obra + "\nProceso: " + reg.proceso + "\nHoras Programadas: " + horas_programadas + "\nHoras Trabajadas: " + horas_trabajadas);
 
         // Header del Card
         var header = document.createElement('div');
@@ -318,7 +326,7 @@ function loadDashcard(nickname, activo, reg, horas_programadas, horas_trabajadas
 
         document.getElementById(div_cards).appendChild(card);
     } else {
-        console.log(nickname + ": No activo");
+        //console.log(nickname + ": No activo");
 
         var header = document.createElement('div');
         header.className = "card-header text-center";
@@ -332,7 +340,7 @@ function loadDashcard(nickname, activo, reg, horas_programadas, horas_trabajadas
         col_inactivo.className = "col-md-12";
         var p_inactivo = document.createElement("p")
         p_inactivo.setAttribute("style", "font-size: 1em; color:red;");
-        var node_inactivo = document.createTextNode(reg.obra);
+        var node_inactivo = document.createTextNode("");
         p_inactivo.appendChild(node_inactivo);
         col_inactivo.appendChild(p_inactivo);
 

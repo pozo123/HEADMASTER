@@ -1,8 +1,8 @@
 
 
-var rama_bd_obras_magico = "test/obras";
-var rama_bd_obras = "test/obras";
-var rama_bd_personal = "test/personal";
+var rama_bd_obras_magico = "obras";
+var rama_bd_obras = "obras";
+var rama_bd_personal = "personal";
 var rama_bd_mensajes = "mensajes";
 var rama_bd_version = "info_web/version";
 

@@ -5,7 +5,7 @@ var id_contrato_asigna_contrato = "contratoAsignaContrato";
 
 var id_guardar_button_asigna_contrato = "guardarButtonAsignaContrato";
 
-var rama_bd_obras_magico = "test/obras";
+var rama_bd_obras_magico = "obras";
 var tab_asigna_contrato = "tabAsignaContrato";
 
 var caso;
