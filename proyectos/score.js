@@ -36,6 +36,9 @@ firebase.auth().onAuthStateChanged(user => {
                     $('#tabRegistrosProy').removeClass('hidden');
                     $('#tabPermisos').addClass('hidden');
                 } else {
+                    if(creden == 0){
+                        //$('#botonChidoRegs').removeClass('hidden');
+                    }
                     $('#tabPermisos').removeClass('hidden');
                     $('#tabRegistrosProy').addClass('hidden');
                 }

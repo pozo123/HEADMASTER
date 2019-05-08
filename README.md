@@ -13,12 +13,9 @@ REESTRUCTURA_BD:
     - reporte_ppto -> depende de def_ppto   
     - imprimir_ppto -> ppto ya esta en subprocs     
 
+    - Poner nota en registro si creden == 2
 
  HTMLs:
- - Para reestructura:
-    - app_proy_scoreboard -> nueva app 
-    - app_proy_registros -> (REVISAR HTML) ya no pptos ni equipos, PC00-MISC, (+ comenté que alimentara a kaizen + corregí error + nuevos registros usando el nuevo uml)
-
  - app_admin_registro
  - app_admon_pago_kaizen -> (REVISAR HTML) nueva app + pad + checo si obra terminada
  - app_proy_actualizar_esp -> (REVISAR HTML) nueva app. 2 radio buttons y un botón nada más.

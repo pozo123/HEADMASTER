@@ -127,6 +127,12 @@
                             <li class="tab" id="tabAltaCuentas"><a href="#" onclick="openTabs('tabAltaCuentas','altaCuentas')">Alta de Cuentas</a></li>
                         </ul>
                     </li>
+                    <li>
+                        <a href="#pageSubmenu5" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Clientes</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu5">
+                            <li class="tab" id="tabAltaCliente"><a href="#" onclick="openTabs('tabAltaCliente','altaCliente')">Despachos</a></li>
+                        </ul>
+                    </li>
                     <li class="tab"><a href="#" data-toggle="modal" data-target="#contraseñaModal">Cambiar contraseña</a></li>
                     <!-- <li class="tab" id="tabPermisos"><a href="#" onclick="openTabs('tabPermisos','permisos')">Permisos de usuario</a></li> -->
                 </ul>
@@ -391,7 +397,111 @@
                                     </div>
                                 </div>
                         </div>
+                        <!-- Clientes -->
+                        <div id="altaCliente" class="tabcontent hidden">
+                            <h1>Cliente</h1>
+                            <p>* Los campos son obligatorios</p>
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="container-fluid">
+                                        <form action="#" onsubmit="return false;">
+                                            <div class="form-row">
+                                                <div class="col-lg-4">
+                                                    <label for="clienteNombre">*Nombre de la empresa:</label>
+                                                    <input type="text" name="" id="clienteNombre" class="form-control" placeholder="Ingresa el nombre de la empresa">
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="claveCliente">*Clave:</label>
+                                                    <input type="text" name="" id="claveCliente" class="form-control" placeholder="Clave:">
+                                                </div>
 
+                                                <div class="col-lg-4">
+                                                    <label for="clienteTelefono">Teléfono Oficina:</label>
+                                                    <input type="text" name="" id="clienteTelefono" class="form-control" placeholder="Ingresa el telefono de la empresa ">
+                                                </div>
+                                            </div> 
+
+                                            <hr class="style2">
+                                            <div class="form-group">
+                                                <h4>Dirección</h4><br/>
+                                                <div class="form-row">
+                                                    <div class="col-lg-4">
+                                                        <input type="text" id="calleCliente" class="form-control" placeholder="Nombre de la calle">
+                                                    </div>
+                                                    <div class="col-lg-2">
+                                                        <input type="text" id="numCliente"  class="form-control" placeholder="número">
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <input type="text" id="coloniaCliente" class="form-control" placeholder="Colonia">
+                                                    </div>
+
+                                                    <div class="col-lg-3">
+                                                        <input type="text" id="delegacionCliente" class="form-control" placeholder="Delegación/Municipio">
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <div class="form-row">
+                                                    <div class="col-lg-2">
+                                                        <input type="text" id="cpCliente" class="form-control" placeholder="Código Postal">
+                                                    </div>
+                                                    <div class="col-lg-2">
+                                                        <input type="text" id="ciudadCliente" class="form-control" placeholder="Estado">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <hr class="style2">
+                                            <div class="form-group">
+                                                <h4>*AT'N</h4><br/>
+                                                <div class="form-group">
+                                                    <label for="nombreAtencion">Nombre:</label>
+                                                    <input type="text" name="" id="nombreAtencion" class="form-control" placeholder="Ingresa el nombre de la persona que vas a agregar:">
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="col-lg-4">
+                                                        <input type="text" id="areaAtencion" class="form-control" placeholder="Área/departamento">
+                                                    </div>
+                                                    <div class="col-lg-2">
+                                                        <input type="text" id="celAtencion"  class="form-control" placeholder="Celular">
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <input type="text" id="emailAtencion" class="form-control" placeholder="Email">
+                                                    </div>
+
+                                                    <div class="col-lg-3">
+                                                        <input type="text" id="extAtencion" class="form-control" placeholder="Extensión">
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                            </div>
+                                            <div class="form-row align-items-center">
+                                                <div class="col-md-6 col-sm-12">
+                                                    <button id="addAtencion" type="button" class="btn btn-outline-danger btn-lg btn-block">Añadir AT'N</button>
+                                                </div>
+                                                <div class="col-md-6 col-sm-12">
+                                                        <button id="delAtencion" type="button" class="btn btn-outline-secondary btn-lg btn-block">Eliminar último</button>
+                                                </div>
+                                            </div>
+                            
+                                            <div class="form-group pt-3">
+                                                <div class="card w-100 scrollbar scrollbar-danger">
+                                                    <div class="card-header text-center">
+                                                        AT'N
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <ul id="ListaClientes"class="list-group list-group-flush">
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <button id="registrarCliente" type="button" class="btn btn-success btn-lg btn-block">Registrar Cliente</button>
+                                            <button id="borrarTodoCliente" type="reset" class="btn btn-outline-danger btn-lg btn-block">Borrar Todo</button>   
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- Areas-->
                         <div id="areas" class="tabcontent hidden">
                             <h1>Asignar Areas de Usuario</h1>
@@ -504,6 +614,7 @@
 <script src="app_funciones.js"></script>
 <script src="administracion/app_admon_colaborador.js"></script>
 <script src="administracion/app_obra.js"></script>
+<script src="administracion/app_cliente.js"></script>
 <!--<script src="administracion/app_cuenta_cc.js"></script> -->
 <script src="administracion/app_admon_areas.js"></script>
 

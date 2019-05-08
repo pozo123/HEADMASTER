@@ -1,6 +1,6 @@
 Reestructuración de la base de datos.
 
-Los labels en cuant_kaizen_proy
+Los labels en cuant_kaizen_proy ->AQUI
 
 CHECKLIST de KICK-OFF 
  -> subir y editar por req (req = {id, alcance, nombre_corto, familia})
@@ -11,7 +11,7 @@ CHECKLIST de KICK-OFF
 LISTA DE CAMBIOS:
 Obra simple manda todo a misc
 Mudar pago_nomina y trabajadores a rrhh
-Cambiar procesos (alta y editar) y cliente a admin
+Cambiar procesos (alta y editar) y cliente a admin ->AQUI
 Revisar dashcards, reportes y graphs con registros
 
 SCORE en proc:
@@ -23,7 +23,7 @@ SCORE en proc:
 
 En registros:
     - Ahora por year y semana
-    - Que tal vez no sume a kaizen, porque no se pagan las horas trabajadas sino las presupuestadas.
+    - Que no sume a kaizen, porque no se pagan las horas trabajadas sino las presupuestadas.
 En app_areas: 
     - Si se da proy ponerle esp
 En obras:

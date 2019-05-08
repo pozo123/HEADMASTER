@@ -140,7 +140,7 @@ function loadValuesProceso(){
 	    		$('#' + id_precio_venta_utilidad).val(precio);
 
 	    		$('#' + id_profit_cantidad_utilidad).val(precio*0.8-costos);
-	    		$('#' + id_profit_porcentaje_utilidad).val(100*parseFloat($('#' + id_profit_cantidad_utilidad).val())/(0.2*precio + costos);
+	    		$('#' + id_profit_porcentaje_utilidad).val(100*parseFloat($('#' + id_profit_cantidad_utilidad).val())/(0.2*precio + costos));
 	    	});
 	    });
 	}

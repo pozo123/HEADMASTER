@@ -2,8 +2,41 @@
 var id_boton_chido = "botonChidoRegs";
 var rama_bd_registros = "proyectos/registros";
 var rama_bd_obras = "obras";
+var rama_bd_obras_proy_obsoleto = "test/proyectos/obras";
 
 $('#' + id_boton_chido).click(function(){
+
+    //Jalar horas programadas de pptos en obsoleto a SCORE procs
+    /*var horas = {};
+    var sinproc = {};
+    firebase.database().ref(rama_bd_obras_proy_obsoleto).once('value').then(function(snapshot){
+        snapshot.forEach(function(obraSnap){
+            horas[obraSnap.key] = {};
+            sinproc[obraSnap.key] = {};
+            obraSnap.child("presupuestos").forEach(function(pptoSnap){
+                var ppto = pptoSnap.val();
+                if(!ppto.proceso || ppto.proceso == ""){
+                    sinproc[obraSnap.key][pptoSnap.key] = true;
+                } else {
+                    horas[obraSnap.key][ppto.proceso] = horas[obraSnap.key][ppto.proceso] ? horas[obraSnap.key][ppto.proceso] + parseFloat(ppto.horas_programadas) : parseFloat(ppto.horas_programadas);
+                }
+            });
+        });
+        console.log(sinproc);
+        console.log(horas);
+        for(key in horas){
+            for(pkey in horas[key]){
+                if(horas[key][pkey] != 0){
+                    var proc = pkey.split("-");
+                    proc = proc.length > 1 ? proc[0] + "/subprocesos/" + pkey : pkey;
+                    proc = proc == "PC00" ? "PC00/subprocesos/PC00-MISC" : proc;
+                    var query = rama_bd_obras + "/" + key + "/procesos/" + proc + "/SCORE/total_prog";
+                    console.log(query + ": " + horas[key][pkey]);
+                    //firebase.database().ref(query).set(horas[key][pkey]);
+                }
+            }
+        }
+    });*/
 
     /*//Ponerle atributo "activo" a los trabajadores
     firebase.database().ref("rrhh/trabajadores").once('value').then(function(snapshot){

@@ -9,15 +9,23 @@ var rama_bd_obras = "obras";
 var rama_bd_personal = "personal";
 var rama_bd_registros = "proyectos/registros";
 //MODIFICAR VALORES
-var wait_long = 7;
-var wait_short = 3;
-var unidad_t = 1000;
+var wait_long = 20;
+var wait_short = 8;
+
+var unidad_t;
 
 var i = 0;
 var j = 0;
 var inges = [];
 var myInterval;
 var modo_display = false; //true si en pantalla completa (con el botón), false si no. Ponerle un listener para si cambia
+
+$(document).ready(function() {
+    unidad_t = parseFloat(gcd_two_numbers(wait_long,wait_short));
+    wait_short = wait_short / unidad_t;
+    wait_long = wait_long / unidad_t;
+    unidad_t = unidad_t * 1000;
+});
 
 $('#' + id_fullscreen_scoreboard).click(function(){
     $('#' + id_div_graphs_scoreboard).empty();
@@ -26,7 +34,7 @@ $('#' + id_fullscreen_scoreboard).click(function(){
     firebase.database().ref(rama_bd_personal).once('value').then(function(snapshot){
         inges[0] = "Todos";
         snapshot.forEach(function(childSnap){
-            if(childSnap.child("areas/proyectos").val() && !childSnap.child("areas/administracion").val() && childSnap.child("activo").val()){
+            if(childSnap.child("areas/proyectos").val() && !childSnap.child("areas/administracion").val() && childSnap.child("activo").val() && childSnap.child("nickname").val() != "SCORE"){
                 inges[inges.length] = childSnap;
             }
         });
@@ -89,6 +97,7 @@ function scoreboardIndividual(ingeSnap){
     $('#' + id_div_graphs_scoreboard).empty();
     $('#' + id_div_cards_ind_scoreboard).empty();
     $('#' + id_div_cards_grupales_scoreboard).empty();
+    //console.log(ingeSnap.child("nickname").val())
     var inge = ingeSnap.val();
     if(inge.status){
         getRegScoreboard(ingeSnap,id_div_cards_ind_scoreboard);
@@ -100,29 +109,30 @@ function scoreboardIndividual(ingeSnap){
 
 function getRegScoreboard(ingeSnap, div_cards){
     var hoy = getWeek(new Date().getTime());
-    firebase.database().ref(rama_bd_registros + "/" + hoy[1] + "/" + hoy[0]).once('value').then(function(snapshot){
+    firebase.database().ref(rama_bd_registros + "/" + hoy[1] + "/" + hoy[0]).orderByChild("status").equalTo(false).once('value').then(function(snapshot){
         snapshot.forEach(function(regSnap){
-            if(regSnap.inge = ingeSnap.key){
+            if(regSnap.child("inge").val() == ingeSnap.key){
                 var reg = regSnap.val();
                 //console.log(regSnap.val());
 
                 var path = reg.proceso.split("-");
-                var proc_query = path.length > 1 ? path[0] + "/subprocesos/" + path[1] : reg.proceso;
+                var proc_query = path.length > 1 ? path[0] + "/subprocesos/" + reg.proceso : reg.proceso;
                 var hoy = getWeek(new Date().getTime());
                 var year = hoy[1];
                 var week = hoy[0];
                 firebase.database().ref(rama_bd_obras + "/" + reg.obra + "/procesos/" + proc_query + "/SCORE").once('value').then(function(snapshot){
                     var horas_programadas = snapshot.child("total_prog").exists() ? parseFloat(snapshot.child("total_prog").val()) : 0;
                     var horas_trabajadas = snapshot.child("total_trabajado").exists() ? parseFloat(snapshot.child("total_trabajado").val()) : 0;
-                    var horas_prog_ind = snapshot.child("inges/" + ingeSnap.key + "/horas_programadas").exists() ? parseFloat(snapshot.child("total_prog").val()) : 0;
-                    var horas_trab_ind = snapshot.child("inges/" + ingeSnap.key + "/horas_trabajadas").exists() ? parseFloat(snapshot.child("total_trabajado").val()) : 0;
+                    var horas_prog_ind = snapshot.child("inges/" + ingeSnap.key + "/horas_programadas").exists() ? parseFloat(snapshot.child("inges/" + ingeSnap.key + "/horas_programadas").val()) : 0;
+                    var horas_trab_ind = snapshot.child("inges/" + ingeSnap.key + "/horas_trabajadas").exists() ? parseFloat(snapshot.child("inges/" + ingeSnap.key + "/horas_trabajadas").val()) : 0;
 
                     var horas_reg = (new Date().getTime() - parseFloat(reg.checkin))/3600000;
                     horas_trabajadas += horas_reg;
                     horas_trab_ind += horas_reg;
                     
-                    loadDashcard(ingeSnap.child("nickname").val(), true, div_cards, reg, horas_programadas, (horas_trabajadas).toFixed(2), horas_prog_ind, (horas_trab_ind).toFixed(2);
-                    loadGraph(reg, horas_programadas, horas_trabajadas);
+                    //console.log(proc_query + ": " + horas_programadas);
+                    loadDashcard(ingeSnap.child("nickname").val(), true, div_cards, reg, horas_programadas, (horas_trabajadas).toFixed(2), horas_prog_ind, (horas_trab_ind).toFixed(2));
+                    loadGraph(reg, horas_programadas, (horas_trabajadas).toFixed(2));
                 });
 
             }
@@ -131,21 +141,26 @@ function getRegScoreboard(ingeSnap, div_cards){
 
 }
 
+var danger_color = {red: 'rgb(232, 18, 63)', blue: 'rgb(24, 99, 204)'};
+
 function loadGraph(reg, horas_programadas, horas_trabajadas){
     var obra = reg.obra;
     var proc = reg.proceso   
     var color = Chart.helpers.color;
-    var graph_color = reg.esp == "ie" ? color(window.chartColors.red).alpha(0.5).rgbString() : color(window.chartColors.blue).alpha(0.5).rgbString()
+    var palette = horas_trabajadas < horas_programadas ? window.chartColors : danger_color;
+    var bar_color = reg.esp == "ie" ? palette.red : palette.blue;
+    var graph_color = color(bar_color).alpha(0.5).rgbString();
+    var border_color = bar_color;
     var barChartData = {
         labels: ['H.Programadas', 'H. Ejecutadas'],
         datasets: [{
             label: 'Horas',
             backgroundColor: graph_color,
-            borderColor: window.chartColors.red,
+            borderColor: border_color,
             borderWidth: 1,
             data: [
                 horas_programadas,
-                horas_trabajadas / 3600000,
+                horas_trabajadas,
             ]
         }]
     };

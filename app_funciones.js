@@ -6,6 +6,20 @@ var rama_bd_personal = "personal";
 var rama_bd_mensajes = "mensajes";
 var rama_bd_version = "info_web/version";
 
+
+function gcd_two_numbers(x, y) {
+  if ((typeof x !== 'number') || (typeof y !== 'number')) 
+    return false;
+  x = Math.abs(x);
+  y = Math.abs(y);
+  while(y) {
+    var t = y;
+    y = x % y;
+    x = t;
+  }
+  return x;
+}
+
 function refreshAll(){
   sumaEnFirebase(rama_bd_version, 0.001);
 }

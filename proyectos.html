@@ -574,7 +574,8 @@
                         <a href="#pageSubmenu4" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Dashboard</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu4">
                             <li class="tab" id="tabDashboard"><a href="#" onclick="openTabs('tabDashboard','dashboard')">Dashboard</a></li>
-                            <li class="tab" id="tabDashgrid"><a href="#" onclick="openTabs('tabDashgrid','dashgrid')">Gestionar Dashgrid</a></li>
+                            <li class="tab" id="tabActualizarEsp"><a href="#" onclick="openTabs('tabActualizarEsp','actualizarEsp')">Actualizar Especializacion</a></li>
+                            <!--<li class="tab" id="tabDashgrid"><a href="#" onclick="openTabs('tabDashgrid','dashgrid')">Gestionar Dashgrid</a></li>-->
                             <li class="tab" id="tabCuant"><a href="#" onclick="openTabs('tabCuant','suministros')">Suministros</a></li>
                             <li class="tab tabCatalogoProceso" id="tabCatalogoProceso"><a href="#" onclick="openTabs('tabCatalogoProceso','catalogoProceso')">Catálogo de procesos</a></li>
                         </ul>
@@ -594,7 +595,7 @@
                         <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Dar de alta</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu2">
                             <li class="tab" id="tabAltaColaborador"><a href="#" onclick="openTabs('tabAltaColaborador','altaColaborador')">Colaborador HEAD</a></li>
-                            <li class="tab" id="tabAltaCliente"><a href="#" onclick="openTabs('tabAltaCliente','altaCliente')">Despachos</a></li>
+                            <!--<li class="tab" id="tabAltaCliente"><a href="#" onclick="openTabs('tabAltaCliente','altaCliente')">Despachos</a></li>-->
                             <li class="tab" id="tabAltaAtencion"><a href="#" onclick="openTabs('tabAltaAtencion','altaAtencion')">AT'N</a></li>
                             <li class="tab" id="tabAltaReqsExcs"><a href="#" onclick="openTabs('tabAltaReqsExcs','altaReqsExcs')">Requisitos/Exclusiones</a></li>
                             <li class="tab" id="tabAltaTiposGens"><a href="#" onclick="openTabs('tabAltaTiposGens','altaTiposGens')">Tipos de presupuesto/Géneros</a></li>
@@ -610,7 +611,7 @@
                         </ul>
                     </li>
                     <li class="tab"><a href="#" data-toggle="modal" data-target="#contraseñaModal">Cambiar contraseña</a></li>
-                    <li class="tab" id="tabPermisos"><a href="#" onclick="openTabs('tabPermisos','permisos')">Permisos de usuario</a></li>
+                    <!--<li class="tab" id="tabPermisos"><a href="#" onclick="openTabs('tabPermisos','permisos')">Permisos de usuario</a></li>-->
                     <li>
                         <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Bibliotecas</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu3">
@@ -694,12 +695,12 @@
                             </div>
                         </div>
 
-                         <div id="dashgrid" class="tabcontent hidden">
+                        <!--<div id="dashgrid" class="tabcontent hidden">
                                 <h1>Gestionar DashGrid</h1>
                                 <p>Selecciona la manera en la que deseas ordenar a los ingenieros que aparecen en el dashboard</p>
-                             <div class="container-fluid">
-                                 <div class="row align-items-center">
-                                     <div class="col-lg-3">
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3">
                                          
                                     </div>
                                     <div class="col-lg-6">
@@ -733,7 +734,36 @@
                                     <div id = "divDashgrid"></div>
                                 </div>
                             </div>
-                         </div>
+                         </div>-->
+                         <div id="actualizarEsp" class="tabcontent hidden">
+                            <h1>Actualizar Especializacion</h1>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">                   
+                                                <label for="rbEspActEsp">Especializacion:</label>
+                                                <div class="form-group" id="rbEspActEsp">
+                                                    <input class="form-check-input" type="radio" name="espActEsp" id="ieRbEsp" value="ie">
+                                                    <label class="form-check-label" for="ieRbEsp">IE</label>
+                                                    <br/>
+                                                    <input class="form-check-input" type="radio" name="espActEsp" id="ihsRbEsp" value="ihs">
+                                                    <label class="form-check-label" for="ihsRbEsp">IHS</label>
+                                                </div>
+                                            
+                                                <br/>
+                                                <div class="form-row">
+                                                    <div class= "col-lg-6">
+                                                        <button id="actualizarButtonEsp" type="button" class="btn btn-outline-success btn-block">Actualizar</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <br/>
+                                        </div>
+                                        <div class="col-lg-3"></div>
+                                    </div>
+                                </div>
+                        </div>
 
                          <div id="suministros" class="tabcontent hidden">
                             <h1>Dar de altas Suministros</h1>
@@ -768,8 +798,12 @@
                                                 </div>
 
                                                 <div class="form-row">
-                                                    <label id="anteriorCuant">$ Cantidad Anterior:</label>
-                                                    <label id="nuevoCuant">$ Cantidad Actualizada:</label>
+                                                    <label for="anteriorCuant">Cantidad Anterior:</label>
+                                                    <label id="anteriorCuant">$--.--</label>
+                                                </div>
+                                                <div class="form-row">
+                                                    <label for="nuevoCuant">Cantidad Actualizada:</label>
+                                                    <label id="nuevoCuant">$--.--</label>
                                                 </div>
                                             
                                                 <br/>
@@ -1228,7 +1262,7 @@
                             </div>
                         </div>-->
 
-                        <div id="altaCliente" class="tabcontent hidden">
+                        <!--<div id="altaCliente" class="tabcontent hidden">
                             <h1>Cliente</h1>
                             <p>* Los campos son obligatorios</p>
                             <div class="container-fluid">
@@ -1331,7 +1365,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
 
                         <div id="altaAtencion" class="tabcontent hidden">
                             <h1>AT'N</h1>
@@ -1634,7 +1668,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        <!--
                         <div id="permisos" class="tabcontent hidden">
                             <h1>Permisos de usuario</h1>
                             <p>Otorga permisos de acceso a el usuario seleccionado</p>
@@ -1716,7 +1750,7 @@
                                     </div>
                                 </form>
                             </div>
-                        </div>
+                        </div>-->
 
                         <div id= "bibClientes" class="tabcontent hidden">
                             <div class="container-fluid">
@@ -1960,7 +1994,7 @@
         <!--<script src="proyectos/app_inge.js"></script>-->
         <!--<script src="proyectos/app_perfil.js"></script>-->
         <script src="proyectos/app_presupuesto.js"></script>
-        <script src="proyectos/app_cliente.js"></script>
+        <!--<script src="proyectos/app_cliente.js"></script>-->
         <script src="proyectos/app_atn.js"></script>
         <script src="proyectos/app_reporte.js"></script>
         <!--<script src="proyectos/app_dashboard.js"></script>-->
@@ -1982,6 +2016,7 @@
         <!--<script src="proyectos/app_proy_asigna_proc.js"></script>-->
         <script src="app_funciones.js"></script>
         <script src="proyectos/app_proy_scoreboard.js"></script>
+        <script src="proyectos/app_proy_actualizar_esp.js"></script>
 
         
 
