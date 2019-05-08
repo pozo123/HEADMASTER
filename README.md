@@ -13,7 +13,8 @@ REESTRUCTURA_BD:
     - reporte_ppto -> depende de def_ppto   
     - imprimir_ppto -> ppto ya esta en subprocs     
 
-    - Poner nota en registro si creden == 2
+  - Poner nota en registro si creden == 2
+  - Checkbox de "existente" al final de ppto, si click carga un ddl con los pptos de esa obra y en vez de crear un nuevo valor edito el proc seleccionado. En el de proy bloqueo la categoría y cargo la del proc seleccionado.
 
  HTMLs:
  - app_admin_registro

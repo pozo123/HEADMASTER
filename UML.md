@@ -184,11 +184,11 @@
                   - SCORE: igual que proc simple
                   - presupuesto: (solo en adic y pc00, pc00-misc = "")
                      - terminado
-                     - consec
-                     - consecutivos
-                        - pdf
                      - nombre
-                     - Todo lo de presupuestos??? Definir
+                     - archivos:
+                        - por index (0,1,2)
+                           - pdf
+                           - pda
             - OdeC: (En hoja)
                - year (por num)
                   - semana (por num)
