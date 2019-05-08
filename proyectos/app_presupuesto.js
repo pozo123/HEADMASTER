@@ -1,3 +1,6 @@
+//DANDOLE AL PPTO
+//pruba
+
 var id_nombre_presupuesto = "presupuestoNombre";
 var id_horas_programadas_ie_presupuesto = "horasProgramadasIe";
 var id_horas_programadas_ihs_presupuesto = "horasProgramadasIhs";
