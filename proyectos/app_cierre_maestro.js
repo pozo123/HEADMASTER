@@ -1,4 +1,4 @@
-/*var id_cerrar_button_cierre = "cerrarDia";
+var id_cerrar_button_cierre = "cerrarDia";
 var rama_bd_personal = "personal";
 var rama_bd_registros = "proyectos/registros";
 var rama_bd_obras = "obras";
@@ -44,7 +44,8 @@ function cierreMaestro(automatico){
                                         weekSnap.forEach(function(regSnap){
                                             var reg = regSnap.val();
                                             if(reg.status == false && reg.inge == inge_snap.key){
-                                                cierraRegistro(regSnap, yearSnap.key + "/" + weekSnap.key + "/" + regSnap.key);
+                                                console.log(yearSnap.key + "/" + weekSnap.key + "/" + regSnap.key);
+                                                cierraRegistroMaestro(regSnap, yearSnap.key + "/" + weekSnap.key + "/" + regSnap.key);
                                             }
                                         });
                                     }
@@ -66,7 +67,7 @@ function cierreMaestro(automatico){
     });
 }
 
-function cierraRegistro(regSnap, path){
+function cierraRegistroMaestro(regSnap, path){
     var reg = regSnap.val();
     var checkin = parseInt(reg.checkin);
     var esp = reg.esp;
@@ -76,7 +77,7 @@ function cierraRegistro(regSnap, path){
         status: true,
     }
     if(path == ""){
-        alert("Error. Contacte al administrador del sistema");
+        alert("Error. Contacte al administrador del sistema");//Llamó dos veces
     } else {
         firebase.database().ref(rama_bd_registros + "/" + path).update(updates);
         if(reg.obra != "Otros"){
@@ -106,7 +107,7 @@ function sumaScoreProc(query,cant){
             firebase.database().ref(rama_bd_obras + "/" + query + "/SCORE/inges/" + user + "/horas_trabajadas").set(horas_trabajador);
         }
     });
-}*/
+}
 /*
 function sumaScoreKaizen(query,cant){
     firebase.database().ref(rama_bd_obras + "/" + query + "/kaizen/PROYECTOS/PAG").once('value').then(function(snapshot){
