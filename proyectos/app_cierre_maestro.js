@@ -1,4 +1,4 @@
-var id_cerrar_button_cierre = "cerrarDia";
+/*var id_cerrar_button_cierre = "cerrarDia";
 var rama_bd_personal = "personal";
 var rama_bd_registros = "proyectos/registros";
 var rama_bd_obras = "obras";
@@ -38,14 +38,18 @@ function cierreMaestro(automatico){
                     var hoy = getWeek(new Date().getTime());
                     firebase.database().ref(rama_bd_registros).once('value').then(function(childSnap){
                         childSnap.forEach(function(yearSnap){
-                            yearSnap.forEach(function(weekSnap){
-                                weekSnap.forEach(function(regSnap){
-                                    var reg = regSnap.val();
-                                    if(reg.status == false && reg.inge == inge_snap.key){
-                                        cierraRegistro(regSnap, yearSnap.key + "/" + weekSnap.key + "/" + regSnap.key);
+                            if(yearSnap.hasChildren()){
+                                yearSnap.forEach(function(weekSnap){
+                                    if(weekSnap.hasChildren()){
+                                        weekSnap.forEach(function(regSnap){
+                                            var reg = regSnap.val();
+                                            if(reg.status == false && reg.inge == inge_snap.key){
+                                                cierraRegistro(regSnap, yearSnap.key + "/" + weekSnap.key + "/" + regSnap.key);
+                                            }
+                                        });
                                     }
                                 });
-                            });
+                            }
                         });
                         var fal = false;
                         firebase.database().ref(rama_bd_personal + "/" + inge_snap.key + "/status").set(fal);                           
@@ -71,19 +75,23 @@ function cierraRegistro(regSnap, path){
         horas: horas,
         status: true,
     }
-    firebase.database().ref(rama_bd_registros + "/" + path).update(updates);
-    if(reg.obra != "Otros"){
-        var cant_horas = parseFloat(horas / 3600000);
-        //var cant = cant_horas * precio_hora;
-        var proc_path = reg.proceso.split("-");
-        if(proc_path.length > 1){
-            //sumaScoreKaizen(reg.obra + "/procesos/" + proc_path[0] + "/subprocesos/" + reg.proceso, cant);
-            sumaScoreProc(reg.obra + "/procesos/" + proc_path[0] + "/subprocesos/" + reg.proceso, cant_horas,esp,reg.inge);
-        } else {
-            sumaScoreProc(reg.obra + "/procesos/" + reg.proceso, cant_horas,esp,reg.inge);
+    if(path == ""){
+        alert("Error. Contacte al administrador del sistema");
+    } else {
+        firebase.database().ref(rama_bd_registros + "/" + path).update(updates);
+        if(reg.obra != "Otros"){
+            var cant_horas = parseFloat(horas / 3600000);
+            //var cant = cant_horas * precio_hora;
+            var proc_path = reg.proceso.split("-");
+            if(proc_path.length > 1){
+                //sumaScoreKaizen(reg.obra + "/procesos/" + proc_path[0] + "/subprocesos/" + reg.proceso, cant);
+                sumaScoreProc(reg.obra + "/procesos/" + proc_path[0] + "/subprocesos/" + reg.proceso, cant_horas,esp,reg.inge);
+            } else {
+                sumaScoreProc(reg.obra + "/procesos/" + reg.proceso, cant_horas,esp,reg.inge);
+            }
+            //sumaScoreKaizen(reg.obra + "/procesos/" + proc_path[0], cant);
+            //sumaScoreKaizen(reg.obra,cant);
         }
-        //sumaScoreKaizen(reg.obra + "/procesos/" + proc_path[0], cant);
-        //sumaScoreKaizen(reg.obra,cant);
     }
 }
 
@@ -98,7 +106,7 @@ function sumaScoreProc(query,cant){
             firebase.database().ref(rama_bd_obras + "/" + query + "/SCORE/inges/" + user + "/horas_trabajadas").set(horas_trabajador);
         }
     });
-}
+}*/
 /*
 function sumaScoreKaizen(query,cant){
     firebase.database().ref(rama_bd_obras + "/" + query + "/kaizen/PROYECTOS/PAG").once('value').then(function(snapshot){

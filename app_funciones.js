@@ -362,7 +362,15 @@ function formatMoney(n, c, d, t) {
   //return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 };
 
-var kaiz = {
+function highLight(id){
+  document.getElementById(id).style.background = "#e6fff2";
+  console.log("Gray: " + id);
+    setTimeout(function(){  document.getElementById(id).style.background = "white";}, 1000);
+}
+
+const porcentaje_indirectos = 0.2;
+
+const kaiz = {
     PROYECTOS: {
         PPTO: 0,
         PAG: 0,

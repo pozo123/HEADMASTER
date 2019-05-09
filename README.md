@@ -13,8 +13,8 @@ REESTRUCTURA_BD:
     - reporte_ppto -> depende de def_ppto   
     - imprimir_ppto -> ppto ya esta en subprocs     
 
+  - Merge pdf para anexos
   - Poner nota en registro si creden == 2
-  - Checkbox de "existente" al final de ppto, si click carga un ddl con los pptos de esa obra y en vez de crear un nuevo valor edito el proc seleccionado. En el de proy bloqueo la categorÌa y cargo la del proc seleccionado.
 
  HTMLs:
  - app_admin_registro
@@ -146,7 +146,6 @@ TO DO:
    - Dashcards nuevo dise√±o
    - Amarillo y rojo en dashcards y graphs para cuando esten al 90% o se hayan pasado de las horas programadas
    - Update uml
-   - En ppto si algo est√° vacio (req/exc/anexo) poner "no aplica"
    - Los editar en bibliotecas ya no solo afectan la bd de proyectos. Checar que si se cambia el nombre de cliente, por ejemplo, se cambie tambi√©n en obra magico y en todos los lugares que sean correspondientes
 
 dudas:
@@ -189,6 +188,3 @@ OBRAS:
       - MINAS
       - LAS VENTANAS
       - CENTRAL PARK T-A/T-B
-HOLA ARTURO! 3/5/19
-
-QU… ONDA DIEGO?

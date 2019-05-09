@@ -61,7 +61,7 @@ function modoActivoRegistros(){
 
 function modoRegistros(){
     firebase.database().ref(rama_bd_personal).orderByKey().equalTo(user_global).on('child_added', function(snapshot){
-        if(snapshot.child("status").val()){
+        if(snapshot.child("status").val() == true){
             modoActivoRegistros();
         } else {
             $('#' + id_entrada_group_registros).removeClass("hidden");
@@ -166,7 +166,7 @@ $('#' + id_salida_button_registros).click(function(){
                         });
                     });
                 }
-                var fal = false;
+                var fal = false;//AQUI
                 firebase.database().ref(rama_bd_personal + "/" + user_global + "/status").set(fal).then(() => {
                     modoRegistros();
                 });
@@ -186,19 +186,23 @@ function cierraRegistro(regSnap){
         horas: horas,
         status: true,
     }
-    firebase.database().ref(rama_bd_registros + "/" + path).update(updates);
-    if(reg.obra != "Otros"){
-        var cant_horas = parseFloat(horas / 3600000);
-        //var cant = cant_horas * precio_hora;
-        var proc_path = reg.proceso.split("-");
-        if(proc_path.length > 1){
-            //sumaScoreKaizen(reg.obra + "/procesos/" + proc_path[0] + "/subprocesos/" + reg.proceso, cant);
-            sumaScoreProc(reg.obra + "/procesos/" + proc_path[0] + "/subprocesos/" + reg.proceso, cant_horas);
-        } else {
-            sumaScoreProc(reg.obra + "/procesos/" + reg.proceso, cant_horas);
+    if(path == ""){
+        alert("Error. Contacte al administrador del sistema");
+    } else {
+        firebase.database().ref(rama_bd_registros + "/" + path).update(updates);
+        if(reg.obra != "Otros"){
+            var cant_horas = parseFloat(horas / 3600000);
+            //var cant = cant_horas * precio_hora;
+            var proc_path = reg.proceso.split("-");
+            if(proc_path.length > 1){
+                //sumaScoreKaizen(reg.obra + "/procesos/" + proc_path[0] + "/subprocesos/" + reg.proceso, cant);
+                sumaScoreProc(reg.obra + "/procesos/" + proc_path[0] + "/subprocesos/" + reg.proceso, cant_horas);
+            } else {
+                sumaScoreProc(reg.obra + "/procesos/" + reg.proceso, cant_horas);
+            }
+            //sumaScoreKaizen(reg.obra + "/procesos/" + proc_path[0], cant);
+            //sumaScoreKaizen(reg.obra,cant);
         }
-        //sumaScoreKaizen(reg.obra + "/procesos/" + proc_path[0], cant);
-        //sumaScoreKaizen(reg.obra,cant);
     }
 }
 
