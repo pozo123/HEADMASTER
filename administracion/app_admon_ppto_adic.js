@@ -315,13 +315,14 @@ $('#' + id_registrar_button_ppto_proy).click(function () {
             var esti_kaiz = precio_venta * (1 - porcentaje_anticipo);
             var brut_kaiz = precio_venta * (1 - porcentaje_indirectos) - proy_kaiz - mate_kaiz - mdeo_kaiz;
             var neto_kaiz = brut_kaiz * 0.6;            
-
+            //AQUI cambiar si adic
             if(document.getElementById(id_existente_check_ppto_proy).checked && obra_global_snap.child("procesos/PC00/subprocesos/" + $('#' + id_proc_ddl_ppto_proy + " option:selected").text() + "/presupuesto").exists()){
                 var subp_clave = $('#' + id_proc_ddl_ppto_proy + " option:selected").text();
                 var nombre = $('#' + id_nombre_ppto_proy).val();
-                var consecutivo = parseInt(obra_global_snap.child("procesos/PC00/presupuesto/archivos").numChildren()) + 1;
+                var consecutivo = parseInt(obra_global_snap.child("procesos/PC00/presupuesto/archivos").numChildren()) + 1;//AQUI diferente para adic
                 console.log(consecutivo);
 
+                //AQUI cambiar adic (y en todo lo pc00)
                 proy_kaiz -= parseFloat(obra_global_snap.child("procesos/PC00/subprocesos/" + subp_clave + "/kaizen/PROYECTOS/PPTO").val());
                 mate_kaiz -= parseFloat(obra_global_snap.child("procesos/PC00/subprocesos/" + subp_clave + "/kaizen/PRODUCCION/SUMINISTROS/CUANT").val());
                 mdeo_kaiz -= parseFloat(obra_global_snap.child("procesos/PC00/subprocesos/" + subp_clave + "/kaizen/PRODUCCION/COPEO/PREC").val());
@@ -334,9 +335,9 @@ $('#' + id_registrar_button_ppto_proy).click(function () {
                 updates["presupuesto/archivos/" + consecutivo] = cons;
                 updates["alcance"] = ppto[3];
                 updates["nombre"] = nombre;
-
+                //AQUI adic
                 firebase.database().ref(rama_bd_obras + "/" + obra_global.nombre + "/procesos/PC00/subprocesos/" + subp_clave).update(updates);
-
+                //AQUI adic
                 var query_subp = rama_bd_obras + "/" + obra_global.nombre + "/procesos/PC00/subprocesos/" + subp_clave + "/kaizen";
                 sumaEnFirebase(query_subp + "/PROYECTOS/PPTO", proy_kaiz);
                 sumaEnFirebase(query_subp + "/PRODUCCION/SUMINISTROS/CUANT", mate_kaiz);
@@ -346,7 +347,7 @@ $('#' + id_registrar_button_ppto_proy).click(function () {
                 sumaEnFirebase(query_subp + "/PROFIT/PROG/BRUTO", brut_kaiz);
                 sumaEnFirebase(query_subp + "/PROFIT/PROG/NETO", neto_kaiz);
             } else {
-                var clave_cat = $('#' + id_categoria_ddl_ppto_proy + " option:selected").val();
+                var clave_cat = $('#' + id_categoria_ddl_ppto_proy + " option:selected").val();//AQUI no si adic
                 var subp_num = parseInt(obra_global.procesos.PC00.num_subprocesos) + 1;
                 var subp = "PC00-" + clave_cat + ("0" + subp_num).slice(-2);
                 var kaiz_nuevo = JSON.parse(JSON.stringify(kaiz));//Saca copia de kaiz sin modificarlo
@@ -361,7 +362,7 @@ $('#' + id_registrar_button_ppto_proy).click(function () {
                 console.log(kaiz);
                 var subproc = {
                     alcance: ppto[3],
-                    categoria: $('#' + id_categoria_ddl_ppto_proy + " option:selected").text(),
+                    categoria: $('#' + id_categoria_ddl_ppto_proy + " option:selected").text(),//AQUI no si adic
                     clave: subp,
                     fecha_inicio: "",
                     fecha_final: "",
@@ -388,7 +389,7 @@ $('#' + id_registrar_button_ppto_proy).click(function () {
                 console.log(subproc);
                 console.log(rama_bd_obras + "/" + obra_global.nombre + "/procesos/PC00/num_subprocesos");
                 console.log(subp_num);
-
+                //AQUI cambiar query por ADIC
                 firebase.database().ref(rama_bd_obras + "/" + obra_global.nombre + "/procesos/PC00/subprocesos/" + subp).set(subproc);
                 firebase.database().ref(rama_bd_obras + "/" + obra_global.nombre + "/procesos/PC00/num_subprocesos").set(subp_num);
             };
@@ -419,8 +420,8 @@ function generaPptoProy(genera){
     if(!existente){
         var codigo_obra = obra_global.clave;
         var codigo_categoria = $('#' + id_categoria_ddl_ppto_proy + " option:selected").val();
-        var num_proc = parseInt(obra_global.procesos.PC00.num_subprocesos) + 1;
-        clave_presu = codigo_obra + "/PC00-" + codigo_categoria + ("0" + num_proc).slice(-2);
+        var num_proc = parseInt(obra_global.procesos.PC00.num_subprocesos) + 1;//AQUI cambiar PC00 por ADIC         
+        clave_presu = codigo_obra + "/PC00-" + codigo_categoria + ("0" + num_proc).slice(-2);//AQUI diferente si adic, y en todo en donde diga categoria
     } else {
         clave_presu = codigo_obra + "/" + $('#' + id_proc_ddl_ppto_proy + " option:selected").text();
     }
@@ -596,7 +597,7 @@ function generaPptoProy(genera){
     
         // [left, top, right, bottom] or [horizontal, vertical] or just a number for equal margins
         pageMargins: [ 40, 72, 23, 40],
-        footer: { fontSize:8,alignment: 'center', text:'Av. Constituyentes 561 Int. 101a, Col. América, Miguel Hidalgo, Ciudad de México, C.P. 11820, Tel. 6273 7900 , email: proyectos@headingenieria.mx'},
+        footer: { fontSize:8,alignment: 'center', text:'Av. Constituyentes 561 Int. 101a, Col. América, Miguel Hidalgo, Ciudad de México, C.P. 11820, Tel. 6273 7900 , email: proyectos@headingenieria.mx'},//AQUI quitar email en adic
         header:function(currentPage, pageCount) {
             return{
                 columns: [

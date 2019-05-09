@@ -364,7 +364,7 @@ function formatMoney(n, c, d, t) {
 
 function highLight(id){
   document.getElementById(id).style.background = "#e6fff2";
-  console.log("Gray: " + id);
+  //console.log("Gray: " + id);
     setTimeout(function(){  document.getElementById(id).style.background = "white";}, 1000);
 }
 
