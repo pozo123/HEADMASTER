@@ -1,52 +1,50 @@
 //Todos los id
 //Header
-var id_nombre_ppto_proy = "nombrePptoProy";
-var id_titulo_ppto_proy = "tituloPptoProy";
-var id_obra_ddl_ppto_proy = "obraDdlPptoProy";
-var id_categoria_ddl_ppto_proy = "categoriaDdlPptoProy";
+var id_nombre_ppto_adic = "nombrePptoAdic";
+var id_titulo_ppto_adic = "tituloPptoAdic";
+var id_obra_ddl_ppto_adic = "obraDdlPptoAdic";
 
-var id_atn_ddl_check_ppto_proy = "atnDdlCbPptoProy";
+var id_atn_ddl_check_ppto_adic = "atnDdlCbPptoAdic";
 
 //Body
-var id_descripcion_entrada_ppto_proy = 'descripcionEntradaPptoProy';
-var id_precio_entrada_ppto_proy = "precioEntradaPptoProy";
-var id_add_entrada_button_ppto_proy = "addEntradaButtonPptoProy";
-var id_del_entrada_button_ppto_proy ="delEntradaButtonPptoProy"
-var id_entrada_lista_ppto_proy = "entradasListaPptoProy";
+var id_descripcion_entrada_ppto_adic = 'descripcionEntradaPptoAdic';
+var id_precio_entrada_ppto_adic = "precioEntradaPptoAdic";
+var id_add_entrada_button_ppto_adic = "addEntradaButtonPptoAdic";
+var id_del_entrada_button_ppto_adic ="delEntradaButtonPptoAdic"
+var id_entrada_lista_ppto_adic = "entradasListaPptoAdic";
 
 //Footer
-var id_reqs_ddl_check_ppto_proy = "reqsDdlCbPptoProy";
-var id_excs_ddl_check_ppto_proy = "excDdlCbPptoProy";
+var id_reqs_ddl_check_ppto_adic = "reqsDdlCbPptoAdic";
+var id_excs_ddl_check_ppto_adic = "excDdlCbPptoAdic";
 
-var id_anticipo1_rb_ppto_proy = "anticipo1RbPptoProy";
-var id_anticipo2_rb_ppto_proy = "anticipo2RbPptoProy";
-var id_anticipo3_rb_ppto_proy = "anticipo3RbPptoProy";
-var id_anticipo_ppto_proy = "anticipoPptoProy";
+var id_anticipo1_rb_ppto_adic = "anticipo1RbPptoAdic";
+var id_anticipo2_rb_ppto_adic = "anticipo2RbPptoAdic";
+var id_anticipo3_rb_ppto_adic = "anticipo3RbPptoAdic";
+var id_anticipo_ppto_adic = "anticipoPptoAdic";
 
-var id_tiempoEntrega_ppto_proy = 'tiempoEntregaPptoProy';
+var id_tiempoEntrega_ppto_adic = 'tiempoEntregaPptoAdic';
 
-var id_bancarios_check_ppto_proy = "bancariosCheckPptoProy";
-var id_fiscales_check_ppto_proy = "fiscalesCheckPptoProy";
+var id_bancarios_check_ppto_adic = "bancariosCheckPptoAdic";
+var id_fiscales_check_ppto_adic = "fiscalesCheckPptoAdic";
 
 //Funcionalidad (kaizen)
-var id_proyectos_ppto_proy = "proyectosPptoProy";
-var id_suministros_ppto_proy = "suministrosPptoProy";
-var id_copeo_ppto_proy = "copeoPptoProy";
+var id_proyectos_ppto_adic = "proyectosPptoAdic";
+var id_suministros_ppto_adic = "suministrosPptoAdic";
+var id_copeo_ppto_adic = "copeoPptoAdic";
 
-var id_profit_cantidad_ppto_proy = "profitCantidadPptoProy";
-var id_profit_porcentaje_ppto_proy = "profitPorcentajePptoProy";
+var id_profit_cantidad_ppto_adic = "profitCantidadPptoAdic";
+var id_profit_porcentaje_ppto_adic = "profitPorcentajePptoAdic";
 
-var id_precio_venta_ppto_proy = "precioVentaPptoProy";
+var id_precio_venta_ppto_adic = "precioVentaPptoAdic";
 
-var id_existente_check_ppto_proy = "existenteCheckPptoProy";
-var id_proc_ddl_ppto_proy = "procDdlPptoProy";
-var id_proc_group_ppto_proy = "procGroupPptoProy";
+var id_existente_check_ppto_adic = "existenteCheckPptoAdic";
+var id_proc_ddl_ppto_adic = "procDdlPptoAdic";
+var id_proc_group_ppto_adic = "procGroupPptoAdic";
 
-var id_registrar_button_ppto_proy = "registrarPptoProy";
-var id_vistaPrevia_button_ppto_proy = "vistaPreviaPptoProy";
-var id_borrar_todo_ppto_proy = "borrarTodoPptoProy";
+var id_registrar_button_ppto_adic = "registrarPptoAdic";
+var id_vistaPrevia_button_ppto_adic = "vistaPreviaPptoAdic";
+var id_borrar_todo_ppto_adic = "borrarTodoPptoAdic";
 
-var rama_bd_categorias = "categorias";
 var rama_bd_obras = "obras";
 var rama_bd_reqs = "proyectos/reqs";
 var rama_bd_exclusiones = "proyectos/exclusiones";
@@ -62,28 +60,21 @@ var obra_global_snap;
 
 var porcentaje_anticipo;
 
-$('#tabPresupuesto').click(function() {
-    $("#" + id_existente_check_ppto_proy).prop('checked', false);
-    $('#' + id_proc_ddl_ppto_proy).empty();    
-    $('#' + id_obra_ddl_ppto_proy).empty();
-    $('#' + id_categoria_ddl_ppto_proy).empty();
+$('#tabPresupuestoAdic').click(function() {
+    $("#" + id_existente_check_ppto_adic).prop('checked', false);
+    $('#' + id_proc_ddl_ppto_adic).empty();    
+    $('#' + id_obra_ddl_ppto_adic).empty();
 
-    document.getElementById(id_anticipo1_rb_ppto_proy).checked = true;
+    document.getElementById(id_anticipo1_rb_ppto_adic).checked = true;
 
-    var select = document.getElementById(id_obra_ddl_ppto_proy);   
+    var select = document.getElementById(id_obra_ddl_ppto_adic);   
     var option = document.createElement('option');
     option.style = "display:none";
     option.text = option.value = "";
     select.appendChild(option);
 
-    var select2 = document.getElementById(id_categoria_ddl_ppto_proy);   
-    var option2 = document.createElement('option');
-    option2.style = "display:none";
-    option2.text = option2.value = "";
-    select2.appendChild(option2);
-    
     var myDataReq = [];
-    $("#" + id_reqs_ddl_check_ppto_proy).dropdownCheckbox({
+    $("#" + id_reqs_ddl_check_ppto_adic).dropdownCheckbox({
         data: myDataReq,
         templateButton: '\
             <button class="dropdown-checkbox-toggle form-control" data-toggle="dropdown" href="#">Requisitos</button>\
@@ -97,12 +88,12 @@ $('#tabPresupuesto').click(function() {
     firebase.database().ref(rama_bd_reqs).orderByChild('nombre').on('child_added',function(snapshot){
         var req = snapshot.val();
         myDataReq.push({id: snapshot.key, label: req.nombre}); 
-        $('#' + id_reqs_ddl_check_ppto_proy).dropdownCheckbox("reset",myDataReq);
+        $('#' + id_reqs_ddl_check_ppto_adic).dropdownCheckbox("reset",myDataReq);
     });
 
 
     var myDataExc = [];
-    $("#" + id_excs_ddl_check_ppto_proy).dropdownCheckbox({
+    $("#" + id_excs_ddl_check_ppto_adic).dropdownCheckbox({
         data: myDataExc,
         templateButton: '\
             <button class="dropdown-checkbox-toggle form-control" data-toggle="dropdown" href="#">Exclusiones</button>\
@@ -116,7 +107,7 @@ $('#tabPresupuesto').click(function() {
     firebase.database().ref(rama_bd_exclusiones).orderByChild('nombre').on('child_added',function(snapshot){
         var exc = snapshot.val();
         myDataExc.push({id: snapshot.key, label: exc.nombre});
-        $('#' + id_excs_ddl_check_ppto_proy).dropdownCheckbox("reset",myDataExc);
+        $('#' + id_excs_ddl_check_ppto_adic).dropdownCheckbox("reset",myDataExc);
     });
 
     firebase.database().ref(rama_bd_obras).orderByChild('nombre').on('child_added',function(snapshot){
@@ -126,24 +117,15 @@ $('#tabPresupuesto').click(function() {
         option3.value = obra.clave; 
         select.appendChild(option3);
     });
-
-    firebase.database().ref(rama_bd_categorias).orderByChild('nombre').on('child_added',function(snapshot){
-        var cat = snapshot.val();
-        var option4 = document.createElement('OPTION');
-        option4.text = cat.nombre; 
-        option4.value = cat.clave;
-        select2.appendChild(option4);
-    });
 });
 
-$("#" + id_anticipo_ppto_proy).click(function() {
-    document.getElementById(id_anticipo2_rb_ppto_proy).checked = true;
+$("#" + id_anticipo_ppto_adic).click(function() {
+    document.getElementById(id_anticipo2_rb_ppto_adic).checked = true;
 });
 
-$("#" + id_obra_ddl_ppto_proy).change(function() {
+$("#" + id_obra_ddl_ppto_adic).change(function() {
     var myDataAtn = [];
-    document.getElementById(id_categoria_ddl_ppto_proy).disabled = false;
-    $("#" + id_atn_ddl_check_ppto_proy).dropdownCheckbox({
+    $("#" + id_atn_ddl_check_ppto_adic).dropdownCheckbox({
         data: myDataAtn,
         templateButton: '\
             <button class="dropdown-checkbox-toggle form-control" data-toggle="dropdown" href="#">Atn</button>\
@@ -154,7 +136,7 @@ $("#" + id_obra_ddl_ppto_proy).change(function() {
               <ul class="dropdown-checkbox-menu"></ul>\
             </div>',
     })
-    firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_ppto_proy + " option:selected").text()).once('value').then(function(snapshot){
+    firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_ppto_adic + " option:selected").text()).once('value').then(function(snapshot){
         obra_global = snapshot.val();
         obra_global_snap = snapshot;
         var cliente = snapshot.child("cliente").val();
@@ -164,136 +146,124 @@ $("#" + id_obra_ddl_ppto_proy).change(function() {
                 var atn = atnArray[i];
                 myDataAtn.push({id: atn.nombre, label: atn.nombre});
             }
-            $('#' + id_atn_ddl_check_ppto_proy).dropdownCheckbox("reset",myDataAtn);
+            $('#' + id_atn_ddl_check_ppto_adic).dropdownCheckbox("reset",myDataAtn);
         });
     });
-    $("#" + id_existente_check_ppto_proy).prop('checked', false);
+    $("#" + id_existente_check_ppto_adic).prop('checked', false);
 });
 
-$('#' + id_add_entrada_button_ppto_proy).click(function () {
+$('#' + id_add_entrada_button_ppto_adic).click(function () {
     if(alcance.length < 10){
         var node = document.createElement("LI");
         node.classList.add("list-group-item");// Create a <li> node
-        var textnode = document.createTextNode($('#' + id_descripcion_entrada_ppto_proy).val() + "\n   - Precio: " + formatMoney(parseFloat($('#' + id_precio_entrada_ppto_proy).val())));// Create a text node
+        var textnode = document.createTextNode($('#' + id_descripcion_entrada_ppto_adic).val() + "\n   - Precio: " + formatMoney(parseFloat($('#' + id_precio_entrada_ppto_adic).val())));// Create a text node
         node.appendChild(textnode);// Append the text to <li>
-        document.getElementById(id_entrada_lista_ppto_proy).appendChild(node);  
+        document.getElementById(id_entrada_lista_ppto_adic).appendChild(node);  
         alcance.push({
-            texto: "" + $('#' + id_descripcion_entrada_ppto_proy).val(),
-            precio: $('#' + id_precio_entrada_ppto_proy).val(),
+            texto: "" + $('#' + id_descripcion_entrada_ppto_adic).val(),
+            precio: $('#' + id_precio_entrada_ppto_adic).val(),
         });
     } else {
         alert('Maximo 10 entradas');
     }
 });
 
-$('#' + id_del_entrada_button_ppto_proy).click(function () {
-    var list = document.getElementById(id_entrada_lista_ppto_proy);   // Get the <ul> element with id="myList"
+$('#' + id_del_entrada_button_ppto_adic).click(function () {
+    var list = document.getElementById(id_entrada_lista_ppto_adic);   // Get the <ul> element with id="myList"
     list.removeChild(list.lastChild);
     alcance.pop(); 
 });
 
-$('#' + id_borrar_todo_ppto_proy).click(function () {
-   var list = document.getElementById(id_entrada_lista_ppto_proy);   // Get the <ul> element with id="myList"
+$('#' + id_borrar_todo_ppto_adic).click(function () {
+   var list = document.getElementById(id_entrada_lista_ppto_adic);   // Get the <ul> element with id="myList"
    while (list.firstChild) {
        list.removeChild(list.firstChild);
    }
    alcance = [];
 });
 
-$("#" + id_existente_check_ppto_proy).change(function(){
+$("#" + id_existente_check_ppto_adic).change(function(){
     if(this.checked){
-        $('#' + id_proc_ddl_ppto_proy).empty();
-        var select = document.getElementById(id_proc_ddl_ppto_proy);
+        $('#' + id_proc_ddl_ppto_adic).empty();
+        var select = document.getElementById(id_proc_ddl_ppto_adic);
         var option = document.createElement('option');
         option.style = "display:none";
         option.text = option.value = "";
         select.appendChild(option);
 
-        firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_ppto_proy + " option:selected").text() + "/procesos/PC00/subprocesos").orderByKey().on('child_added',function(snapshot){
+        firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_ppto_adic + " option:selected").text() + "/procesos/ADIC/subprocesos").orderByKey().on('child_added',function(snapshot){
             var proc = snapshot.val();
-            if(!proc.terminado && snapshot.key.substring(5, snapshot.key.length) != "MISC"){
+            if(!proc.terminado){
                 var option2 = document.createElement('OPTION');
                 option2.text = proc.clave;
                 option2.value = proc.clave;
                 select.appendChild(option2);
             }
         });
-        $('#' + id_proc_group_ppto_proy).removeClass("hidden");
+        $('#' + id_proc_group_ppto_adic).removeClass("hidden");
     } else {
-        document.getElementById(id_categoria_ddl_ppto_proy).disabled = false;
-        $('#' + id_proc_group_ppto_proy).addClass("hidden");
+        $('#' + id_proc_group_ppto_adic).addClass("hidden");
     }
 });
 
-$('#' + id_proc_ddl_ppto_proy).change(function(){
-    var cate = obra_global_snap.child("procesos/PC00/subprocesos/" + $('#' + id_proc_ddl_ppto_proy + " option:selected").val() + "/categoria").val();
-    var ddl = document.getElementById(id_categoria_ddl_ppto_proy);
-    for(var i = 0; i < ddl.length; i++){
-        if(ddl[i].text == cate){
-            ddl.selectedIndex = i;
-        }
-    }
-    ddl.disabled = true;
-});
+function loadProfitsPptoAdic(){
+    var costos = parseFloat($('#' + id_proyectos_ppto_adic).val() == "" ? 0 : $('#' + id_proyectos_ppto_adic).val()) + parseFloat($('#' + id_copeo_ppto_adic).val() == "" ? 0 : $('#' + id_copeo_ppto_adic).val()) + parseFloat($('#' + id_suministros_ppto_adic).val() == "" ? 0 : $('#' + id_suministros_ppto_adic).val());
+    var precio = parseFloat($('#' + id_precio_venta_ppto_adic).val() == "" ? 0 : $('#' + id_precio_venta_ppto_adic).val())*1.16;
 
-function loadProfitsPptoProy(){
-    var costos = parseFloat($('#' + id_proyectos_ppto_proy).val() == "" ? 0 : $('#' + id_proyectos_ppto_proy).val()) + parseFloat($('#' + id_copeo_ppto_proy).val() == "" ? 0 : $('#' + id_copeo_ppto_proy).val()) + parseFloat($('#' + id_suministros_ppto_proy).val() == "" ? 0 : $('#' + id_suministros_ppto_proy).val());
-    var precio = parseFloat($('#' + id_precio_venta_ppto_proy).val() == "" ? 0 : $('#' + id_precio_venta_ppto_proy).val())*1.16;
-
-    $('#' + id_profit_cantidad_ppto_proy).val(precio*(1-porcentaje_indirectos)-costos);
-    $('#' + id_profit_porcentaje_ppto_proy).val(100*parseFloat($('#' + id_profit_cantidad_ppto_proy).val())/(porcentaje_indirectos*precio + costos));
-    highLight(id_profit_porcentaje_ppto_proy);
-    highLight(id_profit_cantidad_ppto_proy);
+    $('#' + id_profit_cantidad_ppto_adic).val(precio*(1-porcentaje_indirectos)-costos);
+    $('#' + id_profit_porcentaje_ppto_adic).val(100*parseFloat($('#' + id_profit_cantidad_ppto_adic).val())/(porcentaje_indirectos*precio + costos));
+    highLight(id_profit_porcentaje_ppto_adic);
+    highLight(id_profit_cantidad_ppto_adic);
 }
 
-$("#" + id_copeo_ppto_proy).change(function(){
-    loadProfitsPptoProy();
+$("#" + id_copeo_ppto_adic).change(function(){
+    loadProfitsPptoAdic();
 });
 
-$("#" + id_suministros_ppto_proy).change(function(){
-    loadProfitsPptoProy();
+$("#" + id_suministros_ppto_adic).change(function(){
+    loadProfitsPptoAdic();
 });
 
-$("#" + id_proyectos_ppto_proy).change(function(){
-    loadProfitsPptoProy();
+$("#" + id_proyectos_ppto_adic).change(function(){
+    loadProfitsPptoAdic();
 });
 
-$("#" + id_precio_venta_ppto_proy).change(function(){
-    loadProfitsPptoProy();
+$("#" + id_precio_venta_ppto_adic).change(function(){
+    loadProfitsPptoAdic();
 });
 
-$("#" + id_profit_porcentaje_ppto_proy).change(function(){
-    var costos = parseFloat($('#' + id_proyectos_ppto_proy).val()) + parseFloat($('#' + id_copeo_ppto_proy).val()) + parseFloat($('#' + id_suministros_ppto_proy).val());
-    $('#' + id_precio_venta_ppto_proy).val((costos * (1 + parseFloat($("#" + id_profit_porcentaje_ppto_proy).val())/100))/(1 - porcentaje_indirectos * (1 + parseFloat($("#" + id_profit_porcentaje_ppto_proy).val())/100)));
-    $('#' + id_profit_cantidad_ppto_proy).val(parseFloat($('#' + id_precio_venta_ppto_proy).val())*(1 - porcentaje_indirectos) - costos);
-    highLight(id_precio_venta_ppto_proy);
-    highLight(id_profit_cantidad_ppto_proy);
+$("#" + id_profit_porcentaje_ppto_adic).change(function(){
+    var costos = parseFloat($('#' + id_proyectos_ppto_adic).val()) + parseFloat($('#' + id_copeo_ppto_adic).val()) + parseFloat($('#' + id_suministros_ppto_adic).val());
+    $('#' + id_precio_venta_ppto_adic).val((costos * (1 + parseFloat($("#" + id_profit_porcentaje_ppto_adic).val())/100))/(1 - porcentaje_indirectos * (1 + parseFloat($("#" + id_profit_porcentaje_ppto_adic).val())/100)));
+    $('#' + id_profit_cantidad_ppto_adic).val(parseFloat($('#' + id_precio_venta_ppto_adic).val())*(1 - porcentaje_indirectos) - costos);
+    highLight(id_precio_venta_ppto_adic);
+    highLight(id_profit_cantidad_ppto_adic);
 });
 
-$("#" + id_profit_cantidad_ppto_proy).change(function(){
-    var costos = parseFloat($('#' + id_proyectos_ppto_proy).val()) + parseFloat($('#' + id_copeo_ppto_proy).val()) + parseFloat($('#' + id_suministros_ppto_proy).val());
-    $('#' + id_precio_venta_ppto_proy).val((parseFloat($("#" + id_profit_cantidad_ppto_proy).val()) + costos)/(1-porcentaje_indirectos)/1.16);
-    $('#' + id_profit_porcentaje_ppto_proy).val(100*parseFloat($("#" + id_profit_cantidad_ppto_proy).val())/(parseFloat($('#' + id_precio_venta_ppto_proy).val()*1.16) - parseFloat($("#" + id_profit_cantidad_ppto_proy).val())));
-    highLight(id_precio_venta_ppto_proy);
-    highLight(id_profit_porcentaje_ppto_proy);
+$("#" + id_profit_cantidad_ppto_adic).change(function(){
+    var costos = parseFloat($('#' + id_proyectos_ppto_adic).val()) + parseFloat($('#' + id_copeo_ppto_adic).val()) + parseFloat($('#' + id_suministros_ppto_adic).val());
+    $('#' + id_precio_venta_ppto_adic).val((parseFloat($("#" + id_profit_cantidad_ppto_adic).val()) + costos)/(1-porcentaje_indirectos)/1.16);
+    $('#' + id_profit_porcentaje_ppto_adic).val(100*parseFloat($("#" + id_profit_cantidad_ppto_adic).val())/(parseFloat($('#' + id_precio_venta_ppto_adic).val()*1.16) - parseFloat($("#" + id_profit_cantidad_ppto_adic).val())));
+    highLight(id_precio_venta_ppto_adic);
+    highLight(id_profit_porcentaje_ppto_adic);
 });
 
-$('#' + id_vistaPrevia_button_ppto_proy).click(function () {
-    if((document.getElementById(id_existente_check_ppto_proy).checked && $('#' + id_proc_ddl_ppto_proy + " option:selected").val() == "") || !$('#' + id_nombre_ppto_proy).val() || $('#' + id_obra_ddl_ppto_proy + " option:selected").val() == "" ||  $('#' + id_categoria_ddl_ppto_proy + " option:selected").val() == "" || alcance.length == 0){
+$('#' + id_vistaPrevia_button_ppto_adic).click(function () {
+    if((document.getElementById(id_existente_check_ppto_adic).checked && $('#' + id_proc_ddl_ppto_adic + " option:selected").val() == "") || !$('#' + id_nombre_ppto_adic).val() || $('#' + id_obra_ddl_ppto_adic + " option:selected").val() == "" || alcance.length == 0){
         alert("Llena todos los campos requeridos");
     } else {
-        var ppto = generaPptoProy(true);
+        var ppto = generaPptoAdic(true);
         var pdfPresupuesto = ppto[0];
         const pdfDocGenerator = pdfMake.createPdf(pdfPresupuesto)
         pdfDocGenerator.open();
     }
 });
 
-$('#' + id_registrar_button_ppto_proy).click(function () {
-    if((document.getElementById(id_existente_check_ppto_proy).checked && $('#' + id_proc_ddl_ppto_proy + " option:selected").val() == "") || !$('#' + id_nombre_ppto_proy).val() || $('#' + id_obra_ddl_ppto_proy + " option:selected").val() == "" ||  $('#' + id_categoria_ddl_ppto_proy + " option:selected").val() == "" || alcance.length == 0){
+$('#' + id_registrar_button_ppto_adic).click(function () {
+    if((document.getElementById(id_existente_check_ppto_adic).checked && $('#' + id_proc_ddl_ppto_adic + " option:selected").val() == "") || !$('#' + id_nombre_ppto_adic).val() || $('#' + id_obra_ddl_ppto_adic + " option:selected").val() == "" || alcance.length == 0){
         alert("Llena todos los campos requeridos");
     } else {
-        var ppto = generaPptoProy(true);
+        var ppto = generaPptoAdic(true);
         var pdfPresupuesto = ppto[0];
         var clave_presu = ppto[1];
         const pdfDocGenerator = pdfMake.createPdf(pdfPresupuesto)
@@ -308,36 +278,36 @@ $('#' + id_registrar_button_ppto_proy).click(function () {
                 pda: pistaDeAuditoria(),
             }
             var precio_venta = parseFloat(ppto[2]);
-            var proy_kaiz = parseFloat($('#' + id_proyectos_ppto_proy).val());
-            var mate_kaiz = parseFloat($('#' + id_suministros_ppto_proy).val());
-            var mdeo_kaiz = parseFloat($('#' + id_copeo_ppto_proy).val());
+            var proy_kaiz = parseFloat($('#' + id_proyectos_ppto_adic).val());
+            var mate_kaiz = parseFloat($('#' + id_suministros_ppto_adic).val());
+            var mdeo_kaiz = parseFloat($('#' + id_copeo_ppto_adic).val());
             var anti_kaiz = precio_venta * porcentaje_anticipo;
             var esti_kaiz = precio_venta * (1 - porcentaje_anticipo);
             var brut_kaiz = precio_venta * (1 - porcentaje_indirectos) - proy_kaiz - mate_kaiz - mdeo_kaiz;
             var neto_kaiz = brut_kaiz * 0.6;            
 
-            if(document.getElementById(id_existente_check_ppto_proy).checked && obra_global_snap.child("procesos/PC00/subprocesos/" + $('#' + id_proc_ddl_ppto_proy + " option:selected").text() + "/presupuesto").exists()){
-                var subp_clave = $('#' + id_proc_ddl_ppto_proy + " option:selected").text();
-                var nombre = $('#' + id_nombre_ppto_proy).val();
-                var consecutivo = parseInt(obra_global_snap.child("procesos/PC00/subprocesos/" + subp_clave + "/presupuesto/archivos").numChildren()) + 1;
+            if(document.getElementById(id_existente_check_ppto_adic).checked && obra_global_snap.child("procesos/ADIC/subprocesos/" + $('#' + id_proc_ddl_ppto_adic + " option:selected").text() + "/presupuesto").exists()){
+                var subp_clave = $('#' + id_proc_ddl_ppto_adic + " option:selected").text();
+                var nombre = $('#' + id_nombre_ppto_adic).val();
+                var consecutivo = parseInt(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/presupuesto/archivos").numChildren()) + 1;
                 console.log(consecutivo);
 
-                proy_kaiz -= parseFloat(obra_global_snap.child("procesos/PC00/subprocesos/" + subp_clave + "/kaizen/PROYECTOS/PPTO").val());
-                mate_kaiz -= parseFloat(obra_global_snap.child("procesos/PC00/subprocesos/" + subp_clave + "/kaizen/PRODUCCION/SUMINISTROS/CUANT").val());
-                mdeo_kaiz -= parseFloat(obra_global_snap.child("procesos/PC00/subprocesos/" + subp_clave + "/kaizen/PRODUCCION/COPEO/PREC").val());
-                anti_kaiz -= parseFloat(obra_global_snap.child("procesos/PC00/subprocesos/" + subp_clave + "/kaizen/ADMINISTRACION/ESTIMACIONES/PPTO").val());
-                esti_kaiz -= parseFloat(obra_global_snap.child("procesos/PC00/subprocesos/" + subp_clave + "/kaizen/ADMINISTRACION/ANTICIPOS/PPTO").val());
-                brut_kaiz -= parseFloat(obra_global_snap.child("procesos/PC00/subprocesos/" + subp_clave + "/kaizen/PROFIT/PROG/BRUTO").val());
-                neto_kaiz -= parseFloat(obra_global_snap.child("procesos/PC00/subprocesos/" + subp_clave + "/kaizen/PROFIT/PROG/NETO").val());
+                proy_kaiz -= parseFloat(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/kaizen/PROYECTOS/PPTO").val());
+                mate_kaiz -= parseFloat(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/kaizen/PRODUCCION/SUMINISTROS/CUANT").val());
+                mdeo_kaiz -= parseFloat(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/kaizen/PRODUCCION/COPEO/PREC").val());
+                anti_kaiz -= parseFloat(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/kaizen/ADMINISTRACION/ESTIMACIONES/PPTO").val());
+                esti_kaiz -= parseFloat(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/kaizen/ADMINISTRACION/ANTICIPOS/PPTO").val());
+                brut_kaiz -= parseFloat(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/kaizen/PROFIT/PROG/BRUTO").val());
+                neto_kaiz -= parseFloat(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/kaizen/PROFIT/PROG/NETO").val());
                 var updates = {};
                 updates["presupuesto/nombre"] = nombre;
                 updates["presupuesto/archivos/" + consecutivo] = cons;
                 updates["alcance"] = ppto[3];
                 updates["nombre"] = nombre;
 
-                firebase.database().ref(rama_bd_obras + "/" + obra_global.nombre + "/procesos/PC00/subprocesos/" + subp_clave).update(updates);
+                firebase.database().ref(rama_bd_obras + "/" + obra_global.nombre + "/procesos/ADIC/subprocesos/" + subp_clave).update(updates);
 
-                var query_subp = rama_bd_obras + "/" + obra_global.nombre + "/procesos/PC00/subprocesos/" + subp_clave + "/kaizen";
+                var query_subp = rama_bd_obras + "/" + obra_global.nombre + "/procesos/ADIC/subprocesos/" + subp_clave + "/kaizen";
                 sumaEnFirebase(query_subp + "/PROYECTOS/PPTO", proy_kaiz);
                 sumaEnFirebase(query_subp + "/PRODUCCION/SUMINISTROS/CUANT", mate_kaiz);
                 sumaEnFirebase(query_subp + "/PRODUCCION/COPEO/PREC", mdeo_kaiz);
@@ -346,9 +316,8 @@ $('#' + id_registrar_button_ppto_proy).click(function () {
                 sumaEnFirebase(query_subp + "/PROFIT/PROG/BRUTO", brut_kaiz);
                 sumaEnFirebase(query_subp + "/PROFIT/PROG/NETO", neto_kaiz);
             } else {
-                var clave_cat = $('#' + id_categoria_ddl_ppto_proy + " option:selected").val();
-                var subp_num = parseInt(obra_global.procesos.PC00.num_subprocesos) + 1;
-                var subp = "PC00-" + clave_cat + ("0" + subp_num).slice(-2);
+                var subp_num = parseInt(obra_global.procesos.ADIC.num_subprocesos) + 1;
+                var subp = "ADIC-" + ("00" + subp_num).slice(-3);
                 var kaiz_nuevo = JSON.parse(JSON.stringify(kaiz));//Saca copia de kaiz sin modificarlo
 
                 kaiz_nuevo.PROYECTOS.PPTO = proy_kaiz;
@@ -361,14 +330,14 @@ $('#' + id_registrar_button_ppto_proy).click(function () {
                 console.log(kaiz);
                 var subproc = {
                     alcance: ppto[3],
-                    categoria: $('#' + id_categoria_ddl_ppto_proy + " option:selected").text(),
+                    categoria: "",
                     clave: subp,
                     fecha_inicio: "",
                     fecha_final: "",
                     kaizen: kaiz_nuevo,
                     terminado: false,
                     contrato: "",
-                    nombre: $('#' + id_nombre_ppto_proy).val(),
+                    nombre: $('#' + id_nombre_ppto_adic).val(),
                     OdeC: "",
                     SCORE: {
                         total_prog: "",
@@ -377,23 +346,23 @@ $('#' + id_registrar_button_ppto_proy).click(function () {
                         inges: "",
                     }, 
                     presupuesto: {
-                        nombre: $('#' + id_nombre_ppto_proy).val(),
+                        nombre: $('#' + id_nombre_ppto_adic).val(),
                         terminado: false,
                         archivos: {
                             0: cons,
                         },
                     },
                 }
-                console.log(rama_bd_obras + "/" + obra_global.nombre + "/procesos/PC00/subprocesos/" + subp);
+                console.log(rama_bd_obras + "/" + obra_global.nombre + "/procesos/ADIC/subprocesos/" + subp);
                 console.log(subproc);
-                console.log(rama_bd_obras + "/" + obra_global.nombre + "/procesos/PC00/num_subprocesos");
+                console.log(rama_bd_obras + "/" + obra_global.nombre + "/procesos/ADIC/num_subprocesos");
                 console.log(subp_num);
 
-                firebase.database().ref(rama_bd_obras + "/" + obra_global.nombre + "/procesos/PC00/subprocesos/" + subp).set(subproc);
-                firebase.database().ref(rama_bd_obras + "/" + obra_global.nombre + "/procesos/PC00/num_subprocesos").set(subp_num);
+                firebase.database().ref(rama_bd_obras + "/" + obra_global.nombre + "/procesos/ADIC/subprocesos/" + subp).set(subproc);
+                firebase.database().ref(rama_bd_obras + "/" + obra_global.nombre + "/procesos/ADIC/num_subprocesos").set(subp_num);
             };
             var query_proc = rama_bd_obras + "/" + obra_global.nombre + "/kaizen";
-            var query_obra = rama_bd_obras + "/" + obra_global.nombre + "/procesos/PC00/kaizen";
+            var query_obra = rama_bd_obras + "/" + obra_global.nombre + "/procesos/ADIC/kaizen";
             sumaEnFirebase(query_proc + "/PROYECTOS/PPTO", proy_kaiz);
             sumaEnFirebase(query_proc + "/PRODUCCION/SUMINISTROS/CUANT", mate_kaiz);
             sumaEnFirebase(query_proc + "/PRODUCCION/COPEO/PREC", mdeo_kaiz);
@@ -413,36 +382,35 @@ $('#' + id_registrar_button_ppto_proy).click(function () {
     }
 });
 
-function generaPptoProy(genera){
+function generaPptoAdic(genera){
     var clave_presu;
-    var existente = document.getElementById(id_existente_check_ppto_proy).checked;
+    var existente = document.getElementById(id_existente_check_ppto_adic).checked;
     if(!existente){
         var codigo_obra = obra_global.clave;
-        var codigo_categoria = $('#' + id_categoria_ddl_ppto_proy + " option:selected").val();
-        var num_proc = parseInt(obra_global.procesos.PC00.num_subprocesos) + 1;
-        clave_presu = codigo_obra + "/PC00-" + codigo_categoria + ("0" + num_proc).slice(-2);
+        var num_proc = parseInt(obra_global.procesos.ADIC.num_subprocesos) + 1;
+        clave_presu = codigo_obra + "/ADIC-" + ("00" + num_proc).slice(-3);
     } else {
-        clave_presu = codigo_obra + "/" + $('#' + id_proc_ddl_ppto_proy + " option:selected").text();
+        clave_presu = codigo_obra + "/" + $('#' + id_proc_ddl_ppto_adic + " option:selected").text();
     }
 
     var anticipo;
     var anticipo_str;
-    if(document.getElementById(id_anticipo1_rb_ppto_proy).checked === true){
+    if(document.getElementById(id_anticipo1_rb_ppto_adic).checked === true){
         anticipo = 0;
         anticipo_str = "100% contra entrega";
     }
-    else if(document.getElementById(id_anticipo2_rb_ppto_proy).checked === true){
-        anticipo = $('#' + id_anticipo_ppto_proy).val();
+    else if(document.getElementById(id_anticipo2_rb_ppto_adic).checked === true){
+        anticipo = $('#' + id_anticipo_ppto_adic).val();
         anticipo_str = anticipo + "% anticipo, resto contra avance";
     }
-    else if(document.getElementById(id_anticipo3_rb_ppto_proy).checked === true){
+    else if(document.getElementById(id_anticipo3_rb_ppto_adic).checked === true){
         anticipo = 100;
         anticipo_str = "100% anticipo";
     }
 
     porcentaje_anticipo = parseFloat(anticipo) / 100;
 
-    var reqs_lista = $('#' + id_reqs_ddl_check_ppto_proy).dropdownCheckbox("checked");
+    var reqs_lista = $('#' + id_reqs_ddl_check_ppto_adic).dropdownCheckbox("checked");
     var reqs_str = "";
     if(reqs_lista.length == 0){
         reqs_str = "NA";
@@ -452,7 +420,7 @@ function generaPptoProy(genera){
         }
     }
 
-    var exc_lista = $('#' + id_excs_ddl_check_ppto_proy).dropdownCheckbox("checked");
+    var exc_lista = $('#' + id_excs_ddl_check_ppto_adic).dropdownCheckbox("checked");
     var exc_str = "";
     if(exc_lista.length == 0){
         exc_str = "NA";
@@ -462,7 +430,7 @@ function generaPptoProy(genera){
         }
     }
 
-    var atn_lista = $('#' + id_atn_ddl_check_ppto_proy).dropdownCheckbox("checked");
+    var atn_lista = $('#' + id_atn_ddl_check_ppto_adic).dropdownCheckbox("checked");
     var atn_str = "";
     for(i=0;i<atn_lista.length;i++){
         atn_str = atn_str + atn_lista[i].label + "\n";
@@ -550,7 +518,7 @@ function generaPptoProy(genera){
     }
 
     //________________________________________________________________________________________
-    var tiempoEntrega = $('#' + id_tiempoEntrega_ppto_proy).val();
+    var tiempoEntrega = $('#' + id_tiempoEntrega_ppto_adic).val();
 
     var tituloF = "";
     var tituloB = "";
@@ -559,7 +527,7 @@ function generaPptoProy(genera){
     var fiscales = "\n" + "\n" +"\n" +"\n" +"\n" +"\n" +"\n" + "\n";
     var bancarios = "\n" + "\n" +"\n" +"\n" +"\n" +"\n" +"\n" + "\n"; 
 
-    if(document.getElementById(id_fiscales_check_ppto_proy).checked == true){
+    if(document.getElementById(id_fiscales_check_ppto_adic).checked == true){
         tituloF = "Datos de Facturación"
         terminosFiscales = "Nombre de la empresa:" + "\n" +
         "Contacto:" + "\n" +
@@ -576,7 +544,7 @@ function generaPptoProy(genera){
         "HAD160523HH3";
     }
 
-    if(document.getElementById(id_bancarios_check_ppto_proy).checked == true){
+    if(document.getElementById(id_bancarios_check_ppto_adic).checked == true){
         tituloB = "Datos Bancarios"
         terminosBancarios ="Nombre del beneficiaro:" + "\n" +
         "Banco:" + "\n" +
@@ -596,7 +564,7 @@ function generaPptoProy(genera){
     
         // [left, top, right, bottom] or [horizontal, vertical] or just a number for equal margins
         pageMargins: [ 40, 72, 23, 40],
-        footer: { fontSize:8,alignment: 'center', text:'Av. Constituyentes 561 Int. 101a, Col. América, Miguel Hidalgo, Ciudad de México, C.P. 11820, Tel. 6273 7900 , email: proyectos@headingenieria.mx'},
+        footer: { fontSize:8,alignment: 'center', text:'Av. Constituyentes 561 Int. 101a, Col. América, Miguel Hidalgo, Ciudad de México, C.P. 11820, Tel. 6273 7900'},
         header:function(currentPage, pageCount) {
             return{
                 columns: [
@@ -670,7 +638,7 @@ function generaPptoProy(genera){
                             {   
                                 colSpan:4,
                                 border: [false, false, false, false],
-                                text: $('#' + id_nombre_ppto_proy).val().toUpperCase(),
+                                text: $('#' + id_nombre_ppto_adic).val().toUpperCase(),
                                 bold: true,
                                 margin: [0,5],
                                 fontSize: 8,
@@ -760,7 +728,7 @@ function generaPptoProy(genera){
                                 colSpan:6,
                                 border: [false, false, false, false],
                                 text: ['A continuacion enviamos a su amable consideración el presupuesto ',
-                                 {text: $('#' + id_titulo_ppto_proy).val().toUpperCase(), bold: true},
+                                 {text: $('#' + id_titulo_ppto_adic).val().toUpperCase(), bold: true},
                                  " a efectuarse en el edificio ubicado en la dirección arriba indicada."],
                                 margin: [0,5],
                                 fontSize: 8,

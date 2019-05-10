@@ -93,6 +93,7 @@ $('#' + id_registrar_button_obra).click(function () {
             kaizen: kaiz,
             fecha_inicio: f_i,
             fecha_final: f_f,
+            presupuesto: "",
         }
         procesos["PC00"] = {
             terminado: false,

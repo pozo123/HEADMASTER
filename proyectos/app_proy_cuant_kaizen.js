@@ -109,8 +109,15 @@ $("#" + id_subp_ddl_cuant_kaizen).change(function(){
 });
 
 $('#' + id_cantidad_cuant_kaizen).change(function(){
-	nuevo = deformatMoney($('#' + id_valor_anterior_cuant_kaizen).text()) + parseFloat($('#' + id_cantidad_cuant_kaizen).val());
-	$('#' + id_valor_nuevo_cuant_kaizen).text(formatMoney(nuevo));
+	if(isNaN(parseFloat($('#' + id_cantidad_cuant_kaizen).val())) && $('#' + id_cantidad_cuant_kaizen).val() != ""){
+		$('#' + id_cantidad_cuant_kaizen).val("");
+		$('#' + id_valor_nuevo_cuant_kaizen).text($('#' + id_valor_anterior_cuant_kaizen).text());
+		alert("El valor ingresado debe ser numérico");
+	} else {
+		var cant = ($('#' + id_cantidad_cuant_kaizen).val() == "")? 0 : parseFloat($('#' + id_cantidad_cuant_kaizen).val());
+		nuevo = deformatMoney($('#' + id_valor_anterior_cuant_kaizen).text()) + parseFloat(cant);
+		$('#' + id_valor_nuevo_cuant_kaizen).text(formatMoney(nuevo));
+	}
 });
 
 $('#' + id_actualizar_valor_cuant_kaizen).click(function(){

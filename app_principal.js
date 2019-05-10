@@ -1,9 +1,9 @@
 var version;
 // Necesitamos cambiar a rama personal
-var rama_bd_personal = "test/personal";
+var rama_bd_personal = "personal";
 var userPro = ""
 var fotoSeleccionada = ""
-var rama_storage_personal  = "test/personal"
+var rama_storage_personal  = "personal"
 var id_newpassword_perfil = "newpass";
 var id_confirmpass_perfil = "confirm";
 var id_cambiarpassword_button_perfil = "button_cambio_contraseña";

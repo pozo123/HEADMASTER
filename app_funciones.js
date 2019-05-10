@@ -1,10 +1,28 @@
 
 
-var rama_bd_obras_magico = "test/obras";
-var rama_bd_obras = "test/obras";
-var rama_bd_personal = "test/personal";
+var rama_bd_obras_magico = "obras";
+var rama_bd_obras = "obras";
+var rama_bd_personal = "personal";
 var rama_bd_mensajes = "mensajes";
+var rama_bd_version = "info_web/version";
 
+
+function gcd_two_numbers(x, y) {
+  if ((typeof x !== 'number') || (typeof y !== 'number')) 
+    return false;
+  x = Math.abs(x);
+  y = Math.abs(y);
+  while(y) {
+    var t = y;
+    y = x % y;
+    x = t;
+  }
+  return x;
+}
+
+function refreshAll(){
+  sumaEnFirebase(rama_bd_version, 0.001);
+}
 
 function sendMessage(uid_destinatario, uid_remitente, message){
   var message = {
@@ -238,6 +256,19 @@ function calculaUtilidad(costos, criterio, valor){
   }
 }
 
+function descargaRespaldo(){
+  var d = new Date();
+  firebase.database().ref().once('value').then(function(snapshot){
+    var rama = snapshot.val();
+    snapshot.forEach(function(childSnap){
+      downloadObjectAsJson(childSnap.val(),childSnap.key + "-respaldoHEAD-" + d.getDate() + "-" + parseInt(d.getMonth() + 1) + "-" + d.getFullYear());
+      console.log(childSnap.key);
+    });
+    //downloadObjectAsJson(rama);
+    //alert("Descarga exitosa");
+  });
+}
+
 function downloadObjectAsJson(exportObj, exportName){
   var d = new Date();
   exportName = exportName == undefined ? "respaldoHEAD-" + d.getDate() + "-" + parseInt(d.getMonth() + 1) + "-" + d.getFullYear() : exportName;
@@ -331,7 +362,15 @@ function formatMoney(n, c, d, t) {
   //return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 };
 
-var kaiz = {
+function highLight(id){
+  document.getElementById(id).style.background = "#e6fff2";
+  //console.log("Gray: " + id);
+    setTimeout(function(){  document.getElementById(id).style.background = "white";}, 1000);
+}
+
+const porcentaje_indirectos = 0.2;
+
+const kaiz = {
     PROYECTOS: {
         PPTO: 0,
         PAG: 0,

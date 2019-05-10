@@ -106,10 +106,10 @@ $("#" + id_proceso_ddl_editar_proceso).change(function(){
     select.appendChild(option);
 
     firebase.database().ref(rama_bd_obras_magico + "/" + obra + "/procesos/" + proc).orderByKey().once('value').then(function(snapshot){
-        var subproc = snapshot.child("subprocesos").val();
-        if(subproc != null && !subproc.terminado){
+        var proc = snapshot.val();
+        if(proc != null && !proc.terminado && proc.num_subprocesos > 0){
             $('#' + id_sub_group_editar_proceso).removeClass("hidden");
-            snapshot.forEach(function(childSnap){
+            snapshot.child("subprocesos").forEach(function(childSnap){
                 var sp = childSnap.val();
                 var option2 = document.createElement('OPTION');
                 option2.text = sp.clave;
@@ -120,7 +120,6 @@ $("#" + id_proceso_ddl_editar_proceso).change(function(){
             $('#' + id_sub_group_editar_proceso).addClass("hidden");
         }
 
-        var proc = snapshot.val();
         var nom = proc.nombre ? proc.nombre : "";
 
         $('#' + id_nombre_editar_proceso).val(nom);

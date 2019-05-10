@@ -2,35 +2,26 @@
 Depto. de Innovacion y Optimizacion
 
 REESTRUCTURA_BD:
- - admon: 
-    - app_admon_pago -> ya no va a ppto
-    - app_procesos -> no se puede dar adics ni pc00, esos son con pptos
+ - admon: check
  - compras: check
  - rrhh: check
  - prod: check
  - proy
     - bibliotecas -> definir areas (en donde como catalogo y en donde editar), definir ediciones y eliminados, cambiar las ramas adecuadsa
-    - dashboard -> checar cual es la ultima version, definir formato y datos. Mandar a obsoletos
     - gestionar_presu -> depende de def_ppto. Tambien gestiona procs, no?
-    - presupuesto -> definir que si lleva y que no, separar pdf de crear elemento en bd
     - reporte_ppto -> depende de def_ppto   
-    - imprimir_ppto -> ppto ya esta en subprocs 
-    - actualizar_Regs
-    
+    - imprimir_ppto -> ppto ya esta en subprocs     
 
+  - Merge pdf para anexos
+  - Poner nota en registro si creden == 2
 
  HTMLs:
  - app_admin_registro
  - app_admon_pago_kaizen -> (REVISAR HTML) nueva app + pad + checo si obra terminada
- - app_obra -> cambio de rama a administracion
- - app_proy_scoreboard -> nueva app 
  - app_proy_actualizar_esp -> (REVISAR HTML) nueva app. 2 radio buttons y un botón nada más.
- - app_proy_registros -> (REVISAR HTML) ya no pptos ni equipos, PC00-MISC, (+ comenté que alimentara a kaizen + corregí error + nuevos registros usando el nuevo uml)
  - app_reporte_obras -> (REVISAR HTML, faltan divs y sobran dropdown checkboxes) reestructura_bd. 
  - app_distribucion_supervisores (los pagos de la pagadora)
  - app_gestionar_supervisores -> (REVISAR HTML) reestructura_bd, solo se asigna por obra, se comenta un ddl
- - app_rrhh_horas_extra -> (REVISAR HTML) reestructura_bd, contemplo terminados, si obra simple mete a misc, simple también considera adicionales, botón carga semana anterior, trab y pagos a rrhh
-  - app_rrhh_pagos_diversos -> (REVISAR HTML) si mismo trab, obra y proc, actualiza valor ahí, en impuestos y en total de nom y trab Y lo mismo que horas_extra, botón "Carga semana anterior" con id = "semanaAnteriorButtonDiversos" en hidden, contempla terminados, reestructura_bd, trab y pagos a rrhh
  - app_rrhh_editar_trabajadores
  - app_atributo
  - app_areas
@@ -73,14 +64,12 @@ DIEGO:
  - Definir c�mo terminar OdeC
  - Desplegar Proveedores y OdeC, como bibliotecas
  - En Odec revisar proveedor en on change (compararlo con la bd) 
- - Cierre maestro no creo que quite la modalidad de picar "salida"
  - Definir quién llena las horas ppto de SCORE en los procs/pptos, y cómo (no sólo en kaizen)
- - desplegar kaizen lo del cambio de obra
+ - desplegar kaizen lo del cambio de obra, cargarKaizen hay que descomentarlo de funciones y probarlo, que se sumen en totales y asi todo bien
  - app_prod_entrada_estimacion
- - app_presupuesto -> cargar datos a kaizen/proy/ppto (subp, proc y obra) y manejo correcto de ddls y hiddens (empty y hide proc y clase de ppto cuando cambio de obra). Simplificacion de formato si clase == prod?
  - Todo lo de Gantt
  - Desplegar CC
- - Botón respaldo (aunque baje solo el json)
+ - Boton respaldo (aunque baje solo el json)
  - Manual de usuario
  - diversos en bd, alta, editar, etc, hacer todo en una tabla
  - app_cuenta_cc 
@@ -156,7 +145,6 @@ TO DO:
    - Dashcards nuevo diseño
    - Amarillo y rojo en dashcards y graphs para cuando esten al 90% o se hayan pasado de las horas programadas
    - Update uml
-   - En ppto si algo está vacio (req/exc/anexo) poner "no aplica"
    - Los editar en bibliotecas ya no solo afectan la bd de proyectos. Checar que si se cambia el nombre de cliente, por ejemplo, se cambie también en obra magico y en todos los lugares que sean correspondientes
 
 dudas:
@@ -199,6 +187,3 @@ OBRAS:
       - MINAS
       - LAS VENTANAS
       - CENTRAL PARK T-A/T-B
-HOLA ARTURO! 3/5/19
-
-QU� ONDA DIEGO?

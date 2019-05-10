@@ -574,7 +574,8 @@
                         <a href="#pageSubmenu4" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Dashboard</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu4">
                             <li class="tab" id="tabDashboard"><a href="#" onclick="openTabs('tabDashboard','dashboard')">Dashboard</a></li>
-                            <li class="tab" id="tabDashgrid"><a href="#" onclick="openTabs('tabDashgrid','dashgrid')">Gestionar Dashgrid</a></li>
+                            <li class="tab" id="tabActualizarEsp"><a href="#" onclick="openTabs('tabActualizarEsp','actualizarEsp')">Actualizar Especializacion</a></li>
+                            <!--<li class="tab" id="tabDashgrid"><a href="#" onclick="openTabs('tabDashgrid','dashgrid')">Gestionar Dashgrid</a></li>-->
                             <li class="tab" id="tabCuant"><a href="#" onclick="openTabs('tabCuant','suministros')">Suministros</a></li>
                             <li class="tab tabCatalogoProceso" id="tabCatalogoProceso"><a href="#" onclick="openTabs('tabCatalogoProceso','catalogoProceso')">Catálogo de procesos</a></li>
                         </ul>
@@ -594,8 +595,7 @@
                         <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Dar de alta</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu2">
                             <li class="tab" id="tabAltaColaborador"><a href="#" onclick="openTabs('tabAltaColaborador','altaColaborador')">Colaborador HEAD</a></li>
-                            <li class="tab" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Obra</a></li>
-                            <li class="tab" id="tabAltaCliente"><a href="#" onclick="openTabs('tabAltaCliente','altaCliente')">Despachos</a></li>
+                            <!--<li class="tab" id="tabAltaCliente"><a href="#" onclick="openTabs('tabAltaCliente','altaCliente')">Despachos</a></li>-->
                             <li class="tab" id="tabAltaAtencion"><a href="#" onclick="openTabs('tabAltaAtencion','altaAtencion')">AT'N</a></li>
                             <li class="tab" id="tabAltaReqsExcs"><a href="#" onclick="openTabs('tabAltaReqsExcs','altaReqsExcs')">Requisitos/Exclusiones</a></li>
                             <li class="tab" id="tabAltaTiposGens"><a href="#" onclick="openTabs('tabAltaTiposGens','altaTiposGens')">Tipos de presupuesto/Géneros</a></li>
@@ -611,7 +611,7 @@
                         </ul>
                     </li>
                     <li class="tab"><a href="#" data-toggle="modal" data-target="#contraseñaModal">Cambiar contraseña</a></li>
-                    <li class="tab" id="tabPermisos"><a href="#" onclick="openTabs('tabPermisos','permisos')">Permisos de usuario</a></li>
+                    <!--<li class="tab" id="tabPermisos"><a href="#" onclick="openTabs('tabPermisos','permisos')">Permisos de usuario</a></li>-->
                     <li>
                         <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Bibliotecas</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu3">
@@ -695,12 +695,12 @@
                             </div>
                         </div>
 
-                         <div id="dashgrid" class="tabcontent hidden">
+                        <!--<div id="dashgrid" class="tabcontent hidden">
                                 <h1>Gestionar DashGrid</h1>
                                 <p>Selecciona la manera en la que deseas ordenar a los ingenieros que aparecen en el dashboard</p>
-                             <div class="container-fluid">
-                                 <div class="row align-items-center">
-                                     <div class="col-lg-3">
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3">
                                          
                                     </div>
                                     <div class="col-lg-6">
@@ -734,7 +734,36 @@
                                     <div id = "divDashgrid"></div>
                                 </div>
                             </div>
-                         </div>
+                         </div>-->
+                         <div id="actualizarEsp" class="tabcontent hidden">
+                            <h1>Actualizar Especializacion</h1>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">                   
+                                                <label for="rbEspActEsp">Especializacion:</label>
+                                                <div class="form-group" id="rbEspActEsp">
+                                                    <input class="form-check-input" type="radio" name="espActEsp" id="ieRbEsp" value="ie">
+                                                    <label class="form-check-label" for="ieRbEsp">IE</label>
+                                                    <br/>
+                                                    <input class="form-check-input" type="radio" name="espActEsp" id="ihsRbEsp" value="ihs">
+                                                    <label class="form-check-label" for="ihsRbEsp">IHS</label>
+                                                </div>
+                                            
+                                                <br/>
+                                                <div class="form-row">
+                                                    <div class= "col-lg-6">
+                                                        <button id="actualizarButtonEsp" type="button" class="btn btn-outline-success btn-block">Actualizar</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <br/>
+                                        </div>
+                                        <div class="col-lg-3"></div>
+                                    </div>
+                                </div>
+                        </div>
 
                          <div id="suministros" class="tabcontent hidden">
                             <h1>Dar de altas Suministros</h1>
@@ -769,8 +798,12 @@
                                                 </div>
 
                                                 <div class="form-row">
-                                                    <label id="anteriorCuant">$ Cantidad Anterior:</label>
-                                                    <label id="nuevoCuant">$ Cantidad Actualizada:</label>
+                                                    <label for="anteriorCuant">Cantidad Anterior:</label>
+                                                    <label id="anteriorCuant">$--.--</label>
+                                                </div>
+                                                <div class="form-row">
+                                                    <label for="nuevoCuant">Cantidad Actualizada:</label>
+                                                    <label id="nuevoCuant">$--.--</label>
                                                 </div>
                                             
                                                 <br/>
@@ -834,70 +867,53 @@
                                  <div class="row align-items-center">
                                      <div class="col-lg-12">
                                          <form action="#" onsubmit="return false;">
-                                                <div class="form-group">
-                                                    <label for="presupuestoNombre">Nombre:</label>
-                                                    <input type="text" name="" id="presupuestoNombre"class="form-control" placeholder="Nombre del presupuesto">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="obraPresupuesto">Obra:</label>
-                                                    <select class="form-control" name="" id="obraPresupuesto" onChange="loadAtn()"></select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="atn"> AT'N:</label>
-                                                    <div class="form-control myDropdownCheckbox" name="" id="atn"></div>
-                                                    <!--<div class="myDropdownCheckbox" id="reqs"></div>-->
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="DDLclase">*Clase de Presupuesto:</label>
-                                                    <select class="form-control" name="" id="DDLclase" onChange="loadPrecioHora()"></select>
-                                                </div>
-
-                                                <div class="form-group hidden" id = "groupProceso">
-                                                    <label for="DDLproceso">Proceso:</label>
-                                                    <select class="form-control" name="" id="DDLproceso"></select>
-                                                </div>
-                                                
-                                                <div class="form-group">
-                                                    <label for="DDLtipoPresupuesto">*Tipo de Presupuesto:</label>
-                                                    <select class="form-control" name="" id="DDLtipoPresupuesto"></select>
-                                                </div>
-                                                
-                                                <div class="form-group">
-                                                    <label for="DDLGenero">*Género:</label>
-                                                    <select class="form-control" name="" id="DDLgenero"></select>
-                                                </div>
+                                            <br/>
+                                                <h3>Header</h3>
                                                 <hr class="style2">
-                                                
+
                                                 <div class="form-group">
-                                                    <label for="alcance">*Descripción del presupuesto:</label>
-                                                    <textarea class="form-control" rows="6" id="alcance"></textarea>
+                                                    <label for="nombrePptoProy">Nombre:</label>
+                                                    <input type="text" id="nombrePptoProy"class="form-control" placeholder="Nombre del presupuesto">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="tituloPptoProy">Titulo:</label>
+                                                    <input type="text" id="tituloPptoProy"class="form-control" placeholder="Titulo del presupuesto">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="obraDdlPptoProy">Obra:</label>
+                                                    <select class="form-control" id="obraDdlPptoProy"></select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <!--<label for="atnDdlCbPptoProy">AT'N:</label>-->
+                                                    <div class="myDropdownCheckbox" id="atnDdlCbPptoProy"></div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="categoriaDdlPptoProy">Categoria</label>
+                                                    <select class="form-control" id="categoriaDdlPptoProy"></select>
+                                                </div>
+                                                <br/>
+                                                <h3>Body</h3>
+                                                <hr class="style2">
+
+                                                <div class="form-group">
+                                                    <label for="descripcionEntradaPptoProy">Descripción de la entrada:</label>
+                                                    <textarea class="form-control" rows="6" id="descripcionEntradaPptoProy"></textarea>
                                                 </div>
                                                 
-                                                <div class="form-row">
-                                                    <div class="col-lg-6">
-                                                        <label for="horasProgramadasIe">*Horas Programadas IE:</label>
-                                                        <input class="form-control" name="" id="horasProgramadasIe">
-                                                    </div>
-                                                    
-                                                    <div class="col-lg-6">
-                                                        <label for="horasProgramadasIhs">*Horas Programadas IHS:</label>
-                                                        <input class="form-control" name="" id="horasProgramadasIhs">
-                                                    </div>
-                                                    
-                                                    <div class="col-lg-6">
-                                                        <label for="precioPresupuesto">*Precio Presupuesto:</label>
-                                                        <input type="text"  id="precioPresupuesto" class="form-control" placeholder="" aria-describedby="helpId">
-                                                        <small id="labelCash" class="text-muted">*Precio mínimo sugerido</small>
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-lg-12">
+                                                        <label for="precioEntradaPptoProy">Precio de venta de la entrada (sin IVA):</label>
+                                                        <input type="text"  id="precioEntradaPptoProy" class="form-control" placeholder="" aria-describedby="helpId">
                                                     </div>
                                                 </div>
                                                 
                                                 <div class="form-row align-items-center">
                                                     <div class="col-md-6 col-sm-12">
-                                                        <button id="addAlcance" type="button" class="btn btn-outline-danger btn-lg btn-block">Partida número 1.x</button>
+                                                        <button id="addEntradaButtonPptoProy" type="button" class="btn btn-outline-danger btn-lg btn-block">Agregar Entrada</button>
                                                     </div>
                                                     <div class="col-md-6 col-sm-12">
-                                                        <button id="delAlcance" type="button" class="btn btn-outline-secondary btn-lg btn-block">Eliminar último</button>
+                                                        <button id="delEntradaButtonPptoProy" type="button" class="btn btn-outline-secondary btn-lg btn-block">Eliminar última</button>
                                                     </div>
                                                 </div>
                                                 
@@ -907,86 +923,119 @@
                                                             Descripción
                                                         </div>
                                                         <div class="card-body">
-                                                            <ul id="ListaAlcance"class="list-group list-group-flush">
+                                                            <ul id="entradasListaPptoProy"class="list-group list-group-flush">
                                                             </ul>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
+                                                <br/>
+                                                <h3>Footer</h3>
+                                                <hr class="style2">
+
                                                 <div class="form-group">
-                                                    <label for="reqs"> Requisitos:</label>
-                                                    <div class="form-control myDropdownCheckbox" name="" id="reqs"></div>
-                                                    <!--<div class="myDropdownCheckbox" id="reqs"></div>-->               
+                                                    <!--<label for="reqsDdlCbPptoProy"> Requisitos:</label>-->
+                                                    <div class="myDropdownCheckbox" id="reqsDdlCbPptoProy"></div>
                                                 </div>
                                                 
                                                 <div class="form-group">
-                                                    <label for="exc">Exclusiones:</label>
-                                                    <div class="form-control myDropdownCheckbox" name="" id="exc"></div>
+                                                    <!--<label for="excDdlCbPptoProy">Exclusiones:</label>-->
+                                                    <div class="myDropdownCheckbox" id="excDdlCbPptoProy"></div>
                                                     <!-- <button id ="exc" class="dropdown-checkbox-toggle btn btn-danger" data-toggle="dropdown" href="#">Holi</button> -->
-                                                    <!-- <select class="form-control" name="" id="exc"></select> -->
+                                                    <!-- <select class="form-control" name="" id="exc"></select> AQUI-->
                                                 </div>
                                                 
-                                                <div class="form-group">
-                                                    <label for="anexos">Anexos:</label>
-                                                    <textarea class="form-control" rows="6" id="anexos" placeholder='Separa cada anexo con un "Enter"'></textarea>
-                                                </div>
                                                 <br/>
                                                 <h4>Condiciones Comerciales</h4>
                                                 <br/>
                                                 <div class="form-group">
                                                     <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="rb1anticipo" value="option1">
-                                                        <label class="form-check-label" for="rb1anticipo">100% contra entrega</label>
+                                                        <input class="form-check-input" type="radio" name="anticipoRbPptoProy" id="anticipo1RbPptoProy" value="option1">
+                                                        <label class="form-check-label" for="anticipo1RbPptoProy">100% contra entrega</label>
                                                     </div>
                                                     <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="rb2anticipo" value="option2">
-                                                        <label class="form-check-label" for="rb2anticipo">Elige el % de anticipo</label>
-                                                        <input type="text"  for="rb2anticipo" id="anticipo" class="form-control">
+                                                        <input class="form-check-input" type="radio" name="anticipoRbPptoProy" id="anticipo2RbPptoProy" value="option2">
+                                                        <label class="form-check-label" for="anticipo2RbPptoProy">Elige el % de anticipo</label>
+                                                        <input type="text"  for="anticipo2RbPptoProy" id="anticipoPptoProy" class="form-control">
                                                     </div>
                                                     <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="rb3anticipo" value="option3">
-                                                        <label class="form-check-label" for="rb3anticipo">100% anticipo</label>
+                                                        <input class="form-check-input" type="radio" name="anticipoRbPptoProy" id="anticipo3RbPptoProy" value="option3">
+                                                        <label class="form-check-label" for="anticipo3RbPptoProy">100% anticipo</label>
                                                     </div>
                                                 </div>
                                                 
                                                 <div class="form-group">
-                                                    <label for="tiempoEntrega">Tiempo de Entrega:</label>
-                                                    <textarea class="form-control" rows="6" id="tiempoEntrega"></textarea>
+                                                    <label for="tiempoEntregaPptoProy">Tiempo de Entrega:</label>
+                                                    <textarea class="form-control" rows="6" id="tiempoEntregaPptoProy"></textarea>
                                                 </div>
                                                 
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="bancarios">
-                                                    <label class="custom-control-label" for="bancarios">Agregar datos bancarios</label>
+                                                    <input type="checkbox" class="custom-control-input" id="bancariosCheckPptoProy">
+                                                    <label class="custom-control-label" for="bancariosCheckPptoProy">Agregar datos bancarios</label>
                                                 </div>
                                                 
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="fiscales">
-                                                    <label class="custom-control-label" for="fiscales">Agregar datos fiscales</label>
+                                                    <input type="checkbox" class="custom-control-input" id="fiscalesCheckPptoProy">
+                                                    <label class="custom-control-label" for="fiscalesCheckPptoProy">Agregar datos fiscales</label>
                                                 </div>
-                                                
                                                 <br/>
-                                                <h4>Notas</h4>
+                                                <h3>Kaizen</h3>
+                                                <hr class="style2">
                                                 
                                                 <div class="form-row align-items-center">
-                                                    <div class="col-lg-9 col-sm-12">
-                                                        <label for="fechaNota">Todas las cantidades o volumetrías fueron tomadas de acuerdo al proyecto enviado por el cliente el día </label>
+                                                    <div class="col-lg-4">
+                                                        <label for="proyectosPptoProy">Costo Proyecto:</label>
+                                                        <input type="text"  id="proyectosPptoProy" class="form-control" placeholder="" aria-describedby="helpId">
                                                     </div>
-                                                    <div class="col-lg-3 col-sm-12">
-                                                        <input class="form-control" type="text" id="fechaNota" placeholder="" readonly="readonly">
+                                                    <div class="col-lg-4">
+                                                        <label for="suministrosPptoProy">Costo Suministros:</label>
+                                                        <input type="text"  id="suministrosPptoProy" class="form-control" placeholder="" aria-describedby="helpId">
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <label for="copeoPptoProy">Costo Copeo:</label>
+                                                        <input type="text"  id="copeoPptoProy" class="form-control" placeholder="" aria-describedby="helpId">
                                                     </div>
                                                 </div>
-                                                
                                                 <br/>
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-lg-6">
+                                                        <label for="profitCantidadPptoProy">Utilidad ($):</label>
+                                                        <input type="text"  id="profitCantidadPptoProy" class="form-control" placeholder="" aria-describedby="helpId">
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <label for="profitPorcentajePptoProy">Utilidad (%):</label>
+                                                        <input type="text"  id="profitPorcentajePptoProy" class="form-control" placeholder="" aria-describedby="helpId">
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-lg-12">
+                                                        <label for="precioVentaPptoProy">Precio de Venta (No incluye IVA):</label>
+                                                        <input type="text"  id="precioVentaPptoProy" class="form-control" placeholder="" aria-describedby="helpId">
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="existenteCheckPptoProy">
+                                                    <label class="custom-control-label" for="existenteCheckPptoProy">Proceso existente</label>
+                                                </div>
+                                                <div class="form-group hidden" id="procGroupPptoProy">
+                                                    <label for="procDdlPptoProy">Proceso:</label>
+                                                    <select class="form-control" id="procDdlPptoProy"></select>
+                                                </div>
+
+                                                <br/>
+                                                <br/>
+
                                                 <div class="form-group">
                                                     <div class="row">
                                                         <div class="col-lg-4">
-                                                            <button id="registrarPresupuesto" type="button" class="btn btn-outline-success btn-lg btn-block">Generar Presupuesto</button>
+                                                            <button id="registrarPptoProy" type="button" class="btn btn-outline-success btn-lg btn-block">Generar Presupuesto</button>
                                                         </div>
                                                         <div class="col-lg-4">
-                                                            <button id="vistaPreviaPresupuesto" type="button" class="btn btn-outline-warning btn-lg btn-block">Vista Previa</button>
+                                                            <button id="vistaPreviaPptoProy" type="button" class="btn btn-outline-warning btn-lg btn-block">Vista Previa</button>
                                                         </div>
                                                         <div class="col-lg-4">
-                                                            <button id="borrarTodoPresupuesto" type="reset" class="btn btn-outline-danger btn-lg btn-block">Borrar Todo</button>
+                                                            <button id="borrarTodoPptoProy" type="reset" class="btn btn-outline-danger btn-lg btn-block">Borrar Todo</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1171,7 +1220,7 @@
                             </div>
                         </div>
 
-                        <div id="altaObra" class="tabcontent hidden">
+                        <!--<div id="altaObra" class="tabcontent hidden">
                             <h1>Obra</h1><br/>
                             <p>* Los campos son obligatorios</p>
                             <div class="container-fluid">
@@ -1227,9 +1276,9 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
 
-                        <div id="altaCliente" class="tabcontent hidden">
+                        <!--<div id="altaCliente" class="tabcontent hidden">
                             <h1>Cliente</h1>
                             <p>* Los campos son obligatorios</p>
                             <div class="container-fluid">
@@ -1332,7 +1381,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
 
                         <div id="altaAtencion" class="tabcontent hidden">
                             <h1>AT'N</h1>
@@ -1635,7 +1684,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        <!--
                         <div id="permisos" class="tabcontent hidden">
                             <h1>Permisos de usuario</h1>
                             <p>Otorga permisos de acceso a el usuario seleccionado</p>
@@ -1717,7 +1766,7 @@
                                     </div>
                                 </form>
                             </div>
-                        </div>
+                        </div>-->
 
                         <div id= "bibClientes" class="tabcontent hidden">
                             <div class="container-fluid">
@@ -1959,19 +2008,17 @@
         <script src="numeroLetras.js"></script>
         <script src="app_principal.js"></script>        
         <!--<script src="proyectos/app_inge.js"></script>-->
-        <!--<script src="proyectos/app_obra.js"></script>-->
         <!--<script src="proyectos/app_perfil.js"></script>-->
         <script src="proyectos/app_presupuesto.js"></script>
-        <script src="proyectos/app_cliente.js"></script>
+        <!--<script src="proyectos/app_cliente.js"></script>-->
         <script src="proyectos/app_atn.js"></script>
         <script src="proyectos/app_reporte.js"></script>
-        <script src="proyectos/app_reporte_obras.js"></script>
-        <script src="proyectos/app_dashboard.js"></script>
+        <!--<script src="proyectos/app_dashboard.js"></script>-->
         <script src="proyectos/score.js"></script>
         <script src="proyectos/app_gestionar_presu.js"></script>
         <!--<script src="proyectos/app_permisos.js"></script>-->
         <script src="proyectos/app_imprimir_presupuesto.js"></script>
-        <script src="proyectos/app_bibliotecas.js"></script>
+        <!--<script src="proyectos/app_bibliotecas.js"></script>-->
         <script src="proyectos/app_exc_reqs.js"></script>
         <script src="proyectos/app_cierre_maestro.js"></script>
         <!--<script src="proyectos/app_graphs.js"></script>-->
@@ -1985,6 +2032,7 @@
         <!--<script src="proyectos/app_proy_asigna_proc.js"></script>-->
         <script src="app_funciones.js"></script>
         <script src="proyectos/app_proy_scoreboard.js"></script>
+        <script src="proyectos/app_proy_actualizar_esp.js"></script>
 
         
 

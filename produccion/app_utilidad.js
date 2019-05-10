@@ -87,8 +87,8 @@ function loadValuesObra(){
     		var precio = obra.kaizen.ADMINISTRACION.ESTIMACIONES.PPTO + obra.kaizen.ADMINISTRACION.ANTICIPOS.PPTO;
     		$('#' + id_precio_venta_utilidad).val(precio);
 
-    		$('#' + id_profit_cantidad_utilidad).val(precio*0.8-costos);
-    		$('#' + id_profit_porcentaje_utilidad).val(100*parseFloat($('#' + id_profit_cantidad_utilidad).val())/(0.2*precio + costos));
+    		$('#' + id_profit_cantidad_utilidad).val(precio*(1-porcentaje_indirectos)-costos);
+    		$('#' + id_profit_porcentaje_utilidad).val(100*parseFloat($('#' + id_profit_cantidad_utilidad).val())/(porcentaje_indirectos*precio + costos));
     	});
     });
 };
@@ -116,8 +116,8 @@ function loadValuesProceso(){
 	    		var precio = obra.kaizen.ADMINISTRACION.ESTIMACIONES.PPTO + obra.kaizen.ADMINISTRACION.ANTICIPOS.PPTO;
 	    		$('#' + id_precio_venta_utilidad).val(precio);
 
-	    		$('#' + id_profit_cantidad_utilidad).val(precio*0.8-costos);
-	    		$('#' + id_profit_porcentaje_utilidad).val(100*parseFloat($('#' + id_profit_cantidad_utilidad).val())/(0.2*precio + costos));
+	    		$('#' + id_profit_cantidad_utilidad).val(precio*(1-porcentaje_indirectos)-costos);
+	    		$('#' + id_profit_porcentaje_utilidad).val(100*parseFloat($('#' + id_profit_cantidad_utilidad).val())/(porcentaje_indirectos*precio + costos));
 	    	});
 	    });
 	} else {
@@ -139,8 +139,8 @@ function loadValuesProceso(){
 	    		var precio = proc.kaizen.ADMINISTRACION.ESTIMACIONES.PPTO + proc.kaizen.ADMINISTRACION.ANTICIPOS.PPTO;
 	    		$('#' + id_precio_venta_utilidad).val(precio);
 
-	    		$('#' + id_profit_cantidad_utilidad).val(precio*0.8-costos);
-	    		$('#' + id_profit_porcentaje_utilidad).val(100*parseFloat($('#' + id_profit_cantidad_utilidad).val())/(0.2*precio + costos);
+	    		$('#' + id_profit_cantidad_utilidad).val(precio*(1-porcentaje_indirectos)-costos);
+	    		$('#' + id_profit_porcentaje_utilidad).val(100*parseFloat($('#' + id_profit_cantidad_utilidad).val())/(porcentaje_indirectos*precio + costos));
 	    	});
 	    });
 	}
@@ -158,8 +158,8 @@ function loadProfits(){
 	var costos = parseFloat($('#' + id_proyectos_utilidad).val()) + parseFloat($('#' + id_copeo_utilidad).val()) + parseFloat($('#' + id_suministros_utilidad).val());
 	var precio = parseFloat($('#' + id_precio_venta_utilidad).val());
 
-	$('#' + id_profit_cantidad_utilidad).val(precio*0.8-costos);
-	$('#' + id_profit_porcentaje_utilidad).val(100*parseFloat($('#' + id_profit_cantidad_utilidad).val())/(0.2*precio + costos));
+	$('#' + id_profit_cantidad_utilidad).val(precio*(1-porcentaje_indirectos)-costos);
+	$('#' + id_profit_porcentaje_utilidad).val(100*parseFloat($('#' + id_profit_cantidad_utilidad).val())/(porcentaje_indirectos*precio + costos));
 	highLight(id_profit_porcentaje_utilidad);
 	highLight(id_profit_cantidad_utilidad);
 }
@@ -182,22 +182,16 @@ $("#" + id_precio_venta_utilidad).change(function(){
 
 $("#" + id_profit_porcentaje_utilidad).change(function(){
 	var costos = parseFloat($('#' + id_proyectos_utilidad).val()) + parseFloat($('#' + id_copeo_utilidad).val()) + parseFloat($('#' + id_suministros_utilidad).val());
-	$('#' + id_precio_venta_utilidad).val((costos * (1 + parseFloat($("#" + id_profit_porcentaje_utilidad).val())/100))/(0.8-0.2 * parseFloat($("#" + id_profit_porcentaje_utilidad).val())/100));
-	$('#' + id_profit_cantidad_utilidad).val(parseFloat($('#' + id_precio_venta_utilidad).val())*.8-costos);
+	$('#' + id_precio_venta_utilidad).val((costos * (1 + parseFloat($("#" + id_profit_porcentaje_utilidad).val())/100))/(1 - porcentaje_indirectos * (1 + parseFloat($("#" + id_profit_porcentaje_utilidad).val())/100)));
+	$('#' + id_profit_cantidad_utilidad).val(parseFloat($('#' + id_precio_venta_utilidad).val())*(1 - porcentaje_indirectos) - costos);
 	highLight(id_precio_venta_utilidad);
 	highLight(id_profit_cantidad_utilidad);
 });
 
 $("#" + id_profit_cantidad_utilidad).change(function(){
 	var costos = parseFloat($('#' + id_proyectos_utilidad).val()) + parseFloat($('#' + id_copeo_utilidad).val()) + parseFloat($('#' + id_suministros_utilidad).val());
-	$('#' + id_precio_venta_utilidad).val((parseFloat($("#" + id_profit_cantidad_utilidad).val()) + costos)/0.8);
+	$('#' + id_precio_venta_utilidad).val((parseFloat($("#" + id_profit_cantidad_utilidad).val()) + costos)/(1-porcentaje_indirectos));
 	$('#' + id_profit_porcentaje_utilidad).val(100*parseFloat($("#" + id_profit_cantidad_utilidad).val())/(parseFloat($('#' + id_precio_venta_utilidad).val()) - parseFloat($("#" + id_profit_cantidad_utilidad).val())));
 	highLight(id_precio_venta_utilidad);
 	highLight(id_profit_porcentaje_utilidad);
 });
-
-function highLight(id){
-	document.getElementById(id).style.background = "#e6fff2";
-	console.log("Gray: " + id);
-  	setTimeout(function(){	document.getElementById(id).style.background = "white";}, 1000);
-}

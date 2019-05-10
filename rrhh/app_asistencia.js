@@ -12,9 +12,9 @@ var id_lista_table_asistencia = "divAsistencia";
 
 var id_tab_asistencia = "tabAsistencia";
 
-var rama_bd_pagos_nomina = "test/rrhh/pagos_nomina";
-var rama_bd_obras_magico = "test/obras";
-var rama_bd_trabajadores = "test/rrhh/trabajadores";
+var rama_bd_pagos_nomina = "rrhh/pagos_nomina";
+var rama_bd_obras_magico = "obras";
+var rama_bd_trabajadores = "rrhh/trabajadores";
 
 var nuevo;
 var trabajadores = [];

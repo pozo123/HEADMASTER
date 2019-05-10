@@ -1,10 +1,289 @@
 
 var id_boton_chido = "botonChidoRegs";
-var rama_bd_registros = "test/proyectos/registros";
-var rama_bd_obras = "test/obras";
+var rama_bd_registros = "proyectos/registros";
+var rama_bd_obras = "obras";
+var rama_bd_obras_proy_obsoleto = "test/proyectos/obras";
 
 $('#' + id_boton_chido).click(function(){
-    
+
+    //Jalar horas programadas de pptos en obsoleto a SCORE procs
+    /*var horas = {};
+    var sinproc = {};
+    firebase.database().ref(rama_bd_obras_proy_obsoleto).once('value').then(function(snapshot){
+        snapshot.forEach(function(obraSnap){
+            horas[obraSnap.key] = {};
+            sinproc[obraSnap.key] = {};
+            obraSnap.child("presupuestos").forEach(function(pptoSnap){
+                var ppto = pptoSnap.val();
+                if(!ppto.proceso || ppto.proceso == ""){
+                    sinproc[obraSnap.key][pptoSnap.key] = true;
+                } else {
+                    horas[obraSnap.key][ppto.proceso] = horas[obraSnap.key][ppto.proceso] ? horas[obraSnap.key][ppto.proceso] + parseFloat(ppto.horas_programadas) : parseFloat(ppto.horas_programadas);
+                }
+            });
+        });
+        console.log(sinproc);
+        console.log(horas);
+        for(key in horas){
+            for(pkey in horas[key]){
+                if(horas[key][pkey] != 0){
+                    var proc = pkey.split("-");
+                    proc = proc.length > 1 ? proc[0] + "/subprocesos/" + pkey : pkey;
+                    proc = proc == "PC00" ? "PC00/subprocesos/PC00-MISC" : proc;
+                    var query = rama_bd_obras + "/" + key + "/procesos/" + proc + "/SCORE/total_prog";
+                    console.log(query + ": " + horas[key][pkey]);
+                    //firebase.database().ref(query).set(horas[key][pkey]);
+                }
+            }
+        }
+    });*/
+
+    /*//Ponerle atributo "activo" a los trabajadores
+    firebase.database().ref("rrhh/trabajadores").once('value').then(function(snapshot){
+        var trabajadores = snapshot.val();
+        for(key in trabajadores){
+            trabajadores[key]["activo"] = true;
+        }
+        console.log(trabajadores);
+        //firebase.database().ref("rrhh/trabajadores").update(trabajadores);
+    });*/
+
+ /*   //Sumar horas previas a hoy a los procesos adecuados, generando un registro de SCORE
+ //No lo uses, porque con los cambios en la bd ya no jala
+    firebase.database().ref("obras").once('value').then(function(obrasSnap){
+        var horas = [];
+        var updates = obrasSnap.val();
+        horas["Otros"] = {};
+        horas["Otros"]["ie"] = 0;
+        horas["Otros"]["ihs"] = 0;
+        obrasSnap.forEach(function(oSnap){
+            horas[oSnap.key] = {};
+            oSnap.child("procesos").forEach(function(pSnap){
+                if(pSnap.child("num_subprocesos").val() > 0){
+                    horas[oSnap.key][pSnap.key] = [];
+                    pSnap.child("subprocesos").forEach(function(sSnap){
+                        horas[oSnap.key][pSnap.key][sSnap.key] = {};
+                        horas[oSnap.key][pSnap.key][sSnap.key]["ie"] = 0;
+                        horas[oSnap.key][pSnap.key][sSnap.key]["ihs"] = 0;
+                    });
+                } else {
+                    horas[oSnap.key][pSnap.key] = {};
+                    horas[oSnap.key][pSnap.key]["ie"] = 0;
+                    horas[oSnap.key][pSnap.key]["ihs"] = 0;
+                }
+            });
+            horas[oSnap.key]["PC00"] = {};
+            horas[oSnap.key]["PC00"]["PC00-MISC"] = {};
+            horas[oSnap.key]["PC00"]["PC00-MISC"]["ie"] = 0;
+            horas[oSnap.key]["PC00"]["PC00-MISC"]["ihs"] = 0;
+        });
+        firebase.database().ref("proyectos/obras").once('value').then(function(opSnap){
+            var obras = opSnap.val();
+            var sinproc = {};
+            firebase.database().ref("proyectos/registros").once('value').then(function(registrosSnap){
+                //var i = 0;
+                registrosSnap.forEach(function(regSnap){
+                    var reg = regSnap.val();
+                    var esp = reg.esp == "ie" ? "ie" : "ihs";
+                    if(reg.obra == "Otros"){
+                        horas["Otros"][esp] += parseFloat(reg.horas);
+                    } else {
+                        var obr = obras[reg.obra];
+                        if(obr == undefined){
+                            console.log(reg);
+                            console.log("UNDEFINED: " + reg.obra)
+                        } else {
+                            var proc = obr["presupuestos"][reg.presupuesto]["proceso"];
+                            if(proc != undefined){
+                                var path = proc.split("-");
+                                //console.log(i);
+                                //i++;
+                                if(path.length > 1){
+                                    horas[reg.obra][path[0]][proc][esp] += parseFloat(reg.horas);
+                                } else {
+                                    if(proc == "PC00"){
+                                        horas[reg.obra][proc]["PC00-MISC"][esp] += parseFloat(reg.horas);
+                                    } else {
+                                        if(proc == ""){
+                                            console.log(reg);
+                                        }
+                                        horas[reg.obra][proc][esp] += parseFloat(reg.horas);
+                                    }
+                                }
+                            } else {
+                                if(!sinproc[reg.obra]){
+                                    sinproc[reg.obra] = {};
+                                }
+                                if(!sinproc[reg.obra][reg.presupuesto]){
+                                    sinproc[reg.obra][reg.presupuesto] = 0;
+                                }
+                                sinproc[reg.obra][reg.presupuesto] += 1; 
+                                //console.log("El ppto " + reg.obra + "/" + reg.presupuesto + " no tiene proceso asignado");
+                            }
+                        }
+                    }
+                });
+                console.log(sinproc);
+                console.log(horas);
+                var hoy = getWeek(new Date().getTime());
+                for(key in horas){
+                    for(pkey in horas[key]){
+                        if(horas[key][pkey]["ie"] == undefined){
+                            for(skey in horas[key][pkey]){
+                                if(horas[key][pkey][skey]["ie"] != ""){
+                                    console.log(key + "/" + pkey + "/" + skey + "/ie: " + horas[key][pkey][skey]["ie"]);
+                                    updates[key]["procesos"][pkey]["subprocesos"][skey]["SCORE"]["total_trabajado"] = 0;//parseFloat(horas[key][pkey][skey]["ie"]) / 3600000;
+                                    updates[key]["procesos"][pkey]["subprocesos"][skey]["SCORE"]["inges"]["ddwrspraE4P4JSc0DsjfGHG29qO2"]["horas_trabajadas"] = 0;//parseFloat(horas[key][pkey][skey]["ie"]) / 3600000;
+                                    var newreg = {
+                                        checkin: new Date().getTime(),
+                                        esp: "ie",
+                                        horas: horas[key][pkey][skey]["ie"],
+                                        inge: "ddwrspraE4P4JSc0DsjfGHG29qO2",
+                                        obra: key,
+                                        proceso: skey,
+                                        status: true,
+                                    }
+                                    firebase.database().ref("proyectos/registros" + "/" + hoy[1] + "/" + hoy[0]).push(newreg);
+                                }
+                                if(horas[key][pkey][skey]["ihs"] != ""){
+                                    console.log(key + "/" + pkey + "/" + skey + "/ihs: " + horas[key][pkey][skey]["ihs"]);
+                                    updates[key]["procesos"][pkey]["subprocesos"][skey]["SCORE"]["total_trabajado"] = 0;//parseFloat(horas[key][pkey][skey]["ihs"]) / 3600000;
+                                    updates[key]["procesos"][pkey]["subprocesos"][skey]["SCORE"]["inges"]["ddwrspraE4P4JSc0DsjfGHG29qO2"]["horas_trabajadas"] = 0;//parseFloat(horas[key][pkey][skey]["ihs"]) / 3600000;
+                                    var newreg = {
+                                        checkin: new Date().getTime(),
+                                        esp: "ihs",
+                                        horas: horas[key][pkey][skey]["ihs"],
+                                        inge: "ddwrspraE4P4JSc0DsjfGHG29qO2",
+                                        obra: key,
+                                        proceso: skey,
+                                        status: true,
+                                    }
+                                    firebase.database().ref("proyectos/registros" + "/" + hoy[1] + "/" + hoy[0]).push(newreg);
+                                }
+                            }
+                        } else {
+                            if(pkey == "PC00"){
+                                if(horas[key][pkey]["PC00-MISC"]["ie"] != ""){
+                                    console.log(key + "/" + pkey + "/ie/PC00-MISC: " + horas[key][pkey]["PC00-MISC"]["ie"]);
+                                    updates[key]["procesos"][pkey]["subprocesos"]["PC00-MISC"]["SCORE"]["total_trabajado"] += parseFloat(horas[key][pkey]["PC00-MISC"]["ie"]) / 3600000;
+                                    updates[key]["procesos"][pkey]["subprocesos"]["PC00-MISC"]["SCORE"]["inges"]["ddwrspraE4P4JSc0DsjfGHG29qO2"]["horas_trabajadas"] += parseFloat(horas[key][pkey]["PC00-MISC"]["ie"]) / 3600000;
+                                    var newreg = {
+                                        checkin: new Date().getTime(),
+                                        esp: "ie",
+                                        horas: horas[key][pkey]["PC00-MISC"]["ie"],
+                                        inge: "ddwrspraE4P4JSc0DsjfGHG29qO2",
+                                        obra: key,
+                                        proceso: "PC00-MISC",
+                                        status: true,
+                                    }
+                                    firebase.database().ref("proyectos/registros" + "/" + hoy[1] + "/" + hoy[0]).push(newreg);
+                                }
+                                if(horas[key][pkey]["PC00-MISC"]["ihs"] != ""){
+                                    console.log(key + "/" + pkey + "/ihs/PC00-MISC: " + horas[key][pkey]["PC00-MISC"]["ihs"]);
+                                    updates[key]["procesos"][pkey]["subprocesos"]["PC00-MISC"]["SCORE"]["total_trabajado"] += parseFloat(horas[key][pkey]["PC00-MISC"]["ihs"]) / 3600000;
+                                    updates[key]["procesos"][pkey]["subprocesos"]["PC00-MISC"]["SCORE"]["inges"]["ddwrspraE4P4JSc0DsjfGHG29qO2"]["horas_trabajadas"] += parseFloat(horas[key][pkey]["PC00-MISC"]["ihs"]) / 3600000;
+                                    var newreg = {
+                                        checkin: new Date().getTime(),
+                                        esp: "ihs",
+                                        horas: horas[key][pkey]["PC00-MISC"]["ihs"],
+                                        inge: "ddwrspraE4P4JSc0DsjfGHG29qO2",
+                                        obra: key,
+                                        proceso: "PC00-MISC",
+                                        status: true,
+                                    }
+                                    firebase.database().ref("proyectos/registros" + "/" + hoy[1] + "/" + hoy[0]).push(newreg);
+                                }
+                            } else {
+                                if(horas[key][pkey]["ie"] != ""){
+                                    console.log(key + "/" + pkey + "/ie: " + horas[key][pkey]["ie"]);
+                                    updates[key]["procesos"][pkey]["SCORE"]["total_trabajado"] += parseFloat(horas[key][pkey]["ie"]) / 3600000;
+                                    updates[key]["procesos"][pkey]["SCORE"]["inges"]["ddwrspraE4P4JSc0DsjfGHG29qO2"]["horas_trabajadas"] += parseFloat(horas[key][pkey]["ie"]) / 3600000;
+                                    var newreg = {
+                                        checkin: new Date().getTime(),
+                                        esp: "ie",
+                                        horas: horas[key][pkey]["ie"],
+                                        inge: "ddwrspraE4P4JSc0DsjfGHG29qO2",
+                                        obra: key,
+                                        proceso: pkey,
+                                        status: true,
+                                    }
+                                    firebase.database().ref("proyectos/registros" + "/" + hoy[1] + "/" + hoy[0]).push(newreg);
+                                }
+                                if(horas[key][pkey]["ihs"] != ""){
+                                    console.log(key + "/" + pkey + "/ihs: " + horas[key][pkey]["ihs"]);
+                                    updates[key]["procesos"][pkey]["SCORE"]["total_trabajado"] += parseFloat(horas[key][pkey]["ihs"]) / 3600000;
+                                    updates[key]["procesos"][pkey]["SCORE"]["inges"]["ddwrspraE4P4JSc0DsjfGHG29qO2"]["horas_trabajadas"] += parseFloat(horas[key][pkey]["ihs"]) / 3600000;
+                                    var newreg = {
+                                        checkin: new Date().getTime(),
+                                        esp: "ihs",
+                                        horas: horas[key][pkey]["ihs"],
+                                        inge: "ddwrspraE4P4JSc0DsjfGHG29qO2",
+                                        obra: key,
+                                        proceso: pkey,
+                                        status: true,
+                                    }
+                                    firebase.database().ref("proyectos/registros" + "/" + hoy[1] + "/" + hoy[0]).push(newreg);
+                                }
+                            }
+                        }
+                    }
+                }
+                console.log(updates);
+                //firebase.database().ref("obras").update(updates);
+                //horas[reg.obra]["procesos"][path[0]]["subprocesos"][path[1]]["SCORE"]["total_trabajado"] 
+            });
+        });
+    });
+*/
+
+    //Agregar atributos SCORE, y cambiar el formato de fechas en todas las obras/procesos/subps
+    /*firebase.database().ref(rama_bd_obras).once('value').then(function(snapshot){
+        var score = {
+            total_prog: 0,
+            total_trabajado: 0,
+            programado: false,
+            inges: "",
+        }
+        var pc00misc = {
+            terminado: false,
+            nombre: "Miescelaneos preproyecto",
+            alcance: "Miscelaneos preproyecto",
+            clave: "PC00-MISC",
+            SCORE: score,
+            categoria: "MISCELANEO",
+            kaizen: kaiz,
+            fecha_inicio: 0,
+            fecha_final: 0,
+            presupuesto: "",
+        }
+        var updates = snapshot.val();
+        snapshot.forEach(function(childSnap){
+            updates[childSnap.key]["terminada"] = false;
+            updates[childSnap.key]["procesos"]["PC00"]["subprocesos"] = {};
+            updates[childSnap.key]["procesos"]["PC00"]["subprocesos"]["PC00-MISC"] = pc00misc;
+            childSnap.child("procesos").forEach(function(procSnap){
+                console.log(childSnap.key)
+                updates[childSnap.key]["procesos"][procSnap.key]["terminado"] = false;
+                updates[childSnap.key]["procesos"][procSnap.key]["fecha_inicio"] = procSnap.child("fechas/fecha_inicio_teorica").val();
+                updates[childSnap.key]["procesos"][procSnap.key]["fecha_final"] = procSnap.child("fechas/fecha_final_teorica").val();
+                updates[childSnap.key]["procesos"][procSnap.key]["fechas"] = null;
+                if(procSnap.child("num_subprocesos").val() > 0){
+                    procSnap.child("subprocesos").forEach(function(subpSnap){
+                        updates[childSnap.key]["procesos"][procSnap.key]["subprocesos"][subpSnap.key]["terminado"] = false;
+                        updates[childSnap.key]["procesos"][procSnap.key]["subprocesos"][subpSnap.key]["SCORE"] = score;
+                        updates[childSnap.key]["procesos"][procSnap.key]["subprocesos"][subpSnap.key]["fecha_inicio"] = subpSnap.child("fechas/fecha_inicio_teorica").val();
+                        updates[childSnap.key]["procesos"][procSnap.key]["subprocesos"][subpSnap.key]["fecha_final"] = subpSnap.child("fechas/fecha_final_teorica").val();
+                        updates[childSnap.key]["procesos"][procSnap.key]["subprocesos"][subpSnap.key]["fechas"] = null;
+                    });
+                } else {
+                    updates[childSnap.key]["procesos"][procSnap.key]["SCORE"] = score;
+                }
+            });
+        });
+        console.log(updates);
+        //firebase.database().ref(rama_bd_obras).update(updates);
+    });*/
+
     /*
     //PRORRATEAR MISCELANEOS
     //FALTA DEFINIR LALA Y LELE
