@@ -20,14 +20,46 @@ var inges = [];
 var myInterval;
 var modo_display = false; //true si en pantalla completa (con el botón), false si no. Ponerle un listener para si cambia
 
+var elem = document.documentElement;
+
 $(document).ready(function() {
     unidad_t = parseFloat(gcd_two_numbers(wait_long,wait_short));
     wait_short = wait_short / unidad_t;
     wait_long = wait_long / unidad_t;
     unidad_t = unidad_t * 1000;
+    scoreboardGrupal();
 });
 
+/* View in fullscreen */
+function openFullscreen() {
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) { /* Firefox */
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE/Edge */
+      elem.msRequestFullscreen();
+    }
+  }
+  
+  /* Close fullscreen */
+  function closeFullscreen() {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) { /* Firefox */
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { /* IE/Edge */
+      document.msExitFullscreen();
+    }
+  }
+
 $('#' + id_fullscreen_scoreboard).click(function(){
+    openFullscreen();
+    $('#' + id_notFullscreen_scoreboard).removeClass('hidden');
+    $('#' + id_fullscreen_scoreboard).addClass('hidden');
     $('#' + id_div_graphs_scoreboard).empty();
     $('#' + id_div_cards_ind_scoreboard).empty();
     $('#' + id_div_cards_grupales_scoreboard).empty();
@@ -44,9 +76,13 @@ $('#' + id_fullscreen_scoreboard).click(function(){
 });
 
 $('#' + id_notFullscreen_scoreboard).click(function(){
+    closeFullscreen()
+    $('#' + id_notFullscreen_scoreboard).addClass('hidden');
+    $('#' + id_fullscreen_scoreboard).removeClass('hidden');
     i = 0;
     j = 0;
     clearInterval(myInterval);
+    scoreboardGrupal();
     inges = [];
     modo_display = false;
     console.log("clear");
@@ -213,17 +249,17 @@ function loadDashcard(nickname, activo, div_cards, reg, horas_programadas, horas
     var card = document.createElement('div');
     if(reg != undefined){
         if(reg.esp === "ie"){
-            card.className = "card card_dash border-danger mb-3";
+            card.className = "card card_dash .mx-auto border-danger mb-3";
             font="danger";
         } else if(reg.esp = "ihs"){
-            card.className = "card card_dash border-info mb-3";
+            card.className = "card card_dash .mx-auto border-info mb-3";
             font="info";
         } else {
-            card.className = "card card_dash border-secondary mb-3";
+            card.className = "card card_dash .mx-auto border-secondary mb-3";
             font = "";
         }
     } else {
-        card.className = "card card_dash border-secondary mb-3";
+        card.className = "card card_dash .mx-auto border-secondary mb-3";
         font = "";
     }
 
