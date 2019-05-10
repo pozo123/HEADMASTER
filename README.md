@@ -1,6 +1,6 @@
 # Head
 Depto. de Innovacion y Optimizacion
-
+//prueba merge
 REESTRUCTURA_BD:
  - admon: check
  - compras: check
