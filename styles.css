@@ -42,6 +42,8 @@ tr.subgroupDesplegarProcesos {
   margin: 0 auto; /* Added */
   float: none; /* Added */
   margin-bottom: 10px; /* Added */
+  min-height: 300px;
+  min-height: 500px;
 }
 
 .card_graph {
