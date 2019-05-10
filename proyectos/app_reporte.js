@@ -49,13 +49,14 @@ $('#tabReporte').click(function() {
     select2.appendChild(option5);
 
     firebase.database().ref(rama_bd_personal).once('value').then(function(snapshot){
-        var inge = snapshot.val();
-        if(snapshot.child("areas/proyectos")){
-            var option3 = document.createElement('option');
-            option3.text = inge.nombre; 
-            option3.value = snapshot.key;
-            select.appendChild(option3);
-        }
+        snapshot.forEach(function(childSnap){
+            if(childSnap.child("areas/proyectos").val()){
+                var option3 = document.createElement('option');
+                option3.text = childSnap.child("nickname").val(); 
+                option3.value = childSnap.key;
+                select.appendChild(option3);
+            }
+        })
     });
 
     firebase.database().ref(rama_bd_obras).orderByChild('nombre').on('child_added',function(snapshot){
@@ -123,63 +124,10 @@ $('#' + id_proc_ddl_reporte).change(function(){
 
 $('#' + id_tabla_button_reporte).click(function() {
     var datos_reporte = [];
-    var selec_inge = $('#' + id_inge_ddl_reporte).val();
-    var selec_obra = $('#' + id_obra_ddl_reporte).val();
-    var selec_proc = $('#' + id_proc_ddl_reporte).val();
-    var selec_subp = $('#' + id_subproc_ddl_reporte).val();
-
-    var filtro_inges = selec_inge == "Todos";
-    var filtro_obras = selec_obra == "Todos";
-    var filtro_proc = selec_proc == "Todos";
-    var filtro_subp = selec_subp == "Todos";
 
     firebase.database().ref(rama_bd_registros).once('value').then(function(data){
-        var registros_db = data.val();
-        var fecha_i;// = new Date($('#' + id_fecha_inicio_reporte).val());
-        var fecha_i_timestamp;// = fecha_i.getTime();
-        var fecha_f;
-        var fecha_f_timestamp;
 
-        if($('#' + id_fecha_final_reporte).val() === ""){
-            if($('#' + id_fecha_inicio_reporte).val() === ""){
-                //Si no se selecciona ninguna fecha se hacen los reportes con todos los valores
-                fecha_i = new Date(2018,8,1);//Tiempo 0, no hay registros anteriores
-                fecha_i_timestamp = fecha_i.getTime();
-                fecha_f = new Date();
-                fecha_f_timestamp = fecha_f.getTime();
-            } else {
-                //Si sólo se selecciona un día se utiliza la info de ese día en particular
-                fecha_i = new Date($('#' + id_fecha_inicio_reporte).val());
-                fecha_i_timestamp = fecha_i.getTime();
-                fecha_f = "";
-                fecha_f_timestamp = fecha_i_timestamp + (24*3600*1000);
-            }
-        } else {
-            fecha_i = new Date($('#' + id_fecha_inicio_reporte).val());
-            fecha_i_timestamp = fecha_i.getTime();
-            fecha_f = new Date($('#' + id_fecha_final_reporte).val());
-            fecha_f_timestamp = fecha_f.getTime() + (24*3600*1000); 
-        }
-        data.forEach(function(yearSnap){
-            yearSnap.forEach(function(weekSnap){
-                weekSnap.forEach(function(regSnap){
-                    var reg = regSnap.val();
-                    var proc_adecuado = filtro_proc || (reg.proceso.split("-")[0] == selec_proc && (filtro_subp || selec_subp == reg.proceso));
-                    if((filtro_inges || selec_inge == reg.inge) && (filtro_obras || (selec_obra == reg.obra)) && (proc_adecuado) && (fecha_i_timestamp < reg.checkin && reg.checkin < fecha_f_timestamp)){
-                        datos_reporte.push([
-                            regSnap.key,
-                            reg.status,
-                            new Date(reg.checkin).toLocaleDateString("es-ES", options),
-                            (parseFloat(reg.horas)/3600000).toFixed(3),
-                            reg.inge, 
-                            reg.obra,
-                            reg.proceso,
-                            reg.esp,
-                        ]);
-                    }
-                });
-            });
-        });
+        getRegsReporte(datos_reporte, data, false);
 
         tabla_registros = $('#'+ id_datatable_reporte).DataTable({
             destroy: true,
@@ -187,88 +135,103 @@ $('#' + id_tabla_button_reporte).click(function() {
             dom: 'Bfrtip',
             buttons: ['excel'],
             columns: [
-                {title: "clave"},
-                {title: "estatus"},              
+                {title: "Clave"},
+                {title: "Estatus"},              
                 {title: "Fecha"},
                 {title: "Horas trabajadas"},
                 {title: "Colaborador"},
                 {title: "Obra"},
-                {title: "Presupuesto / Proceso"},
+                {title: "Proceso"},
+                {title: "Especialidad"},
             ],
             language: idioma_espanol, // Esta en app_bibliotecas
         });
     });
 });
 
-$('#' + id_imprime_button_reporte).click(function () {
-    var doc;
-    var selec_inge = $('#' + id_inge_ddl_reporte).val();
-    var selec_obra = $('#' + id_obra_ddl_reporte).val();
-    var selec_pres;
-    var caso = "";
-    if($('#' + id_proc_ddl_reporte).val() == "presupuesto"){
-        selec_pres = $('#' + id_proc_ddl_reporte).text();
-        caso = "presupuesto";
-    } else { 
-        selec_pres = $('#' + id_proc_ddl_reporte).val();
-        caso = "proceso";
-    }
-    var filtro_inges =  selec_inge === "Todos";
-    var filtro_obras =  selec_obra === "Todos";
-    var filtro_presu =  selec_pres === "Todos";
-    firebase.database().ref(rama_bd_registros).once('value').then(function(data){
-        var registros_db = data.val();
-        var regs = [];
-        regs[0] = [{text:"Fecha", style:"tableHeader"},{text:"Horas trabajadas", style:"tableHeader"},{text:"Colaborador", style:"tableHeader"},{text:"Obra", style:"tableHeader"},{text:"Presupuesto / Proceso", style:"tableHeader"}]
-        var fecha_i = new Date($('#' + id_fecha_inicio_reporte).val());
-        var fecha_i_timestamp = fecha_i.getTime();
-        var fecha_f;
-        var fecha_f_timestamp;
-        var horas_totales = 0;
-        
-        if($('#' + id_fecha_final_reporte).val() === ""){
-            if($('#' + id_fecha_inicio_reporte).val() === ""){
-                //Si no se selecciona ninguna fecha se hacen los reportes con todos los valores
-                fecha_i = new Date(2018,8,1);
-                fecha_i_timestamp = fecha_i.getTime();
-                fecha_f = new Date();
-                fecha_f_timestamp = fecha_f.getTime();
-            } else {
-                //Si sólo se selecciona un día se utiliza la info de ese día en particular
-                fecha_i = new Date($('#' + id_fecha_inicio_reporte).val());
-                fecha_i_timestamp = fecha_i.getTime();
-                fecha_f = "";
-                fecha_f_timestamp = fecha_i_timestamp + (24*3600*1000);
-            }
+
+function getRegsReporte(datos_reporte, data, imprime){
+    var horas_totales = 0;
+    var selec_inge = $('#' + id_inge_ddl_reporte + " option:selected").val();
+    var selec_obra = $('#' + id_obra_ddl_reporte + " option:selected").val();
+    var selec_proc = $('#' + id_proc_ddl_reporte + " option:selected").val();
+    var selec_subp = $('#' + id_subproc_ddl_reporte + " option:selected").val();
+
+    var filtro_inges = selec_inge == "Todos";
+    var filtro_obras = selec_obra == "Todos";
+    var filtro_proc = selec_proc == "Todos" || selec_proc == undefined;
+    var filtro_subp = selec_subp == "Todos" || selec_subp == undefined;
+
+    var registros_db = data.val();
+    var fecha_i;// = new Date($('#' + id_fecha_inicio_reporte).val());
+    var fecha_i_timestamp;// = fecha_i.getTime();
+    var fecha_f;
+    var fecha_f_timestamp;
+
+    if($('#' + id_fecha_final_reporte).val() === ""){
+        if($('#' + id_fecha_inicio_reporte).val() === ""){
+            //Si no se selecciona ninguna fecha se hacen los reportes con todos los valores
+            fecha_i = new Date(2018,8,1);//Tiempo 0, no hay registros anteriores
+            fecha_i_timestamp = fecha_i.getTime();
+            fecha_f = new Date();
+            fecha_f_timestamp = fecha_f.getTime();
         } else {
+            //Si sólo se selecciona un día se utiliza la info de ese día en particular
             fecha_i = new Date($('#' + id_fecha_inicio_reporte).val());
             fecha_i_timestamp = fecha_i.getTime();
-            fecha_f = new Date($('#' + id_fecha_final_reporte).val());
-            fecha_f_timestamp = fecha_f.getTime() + (24*3600*1000); 
+            fecha_f = "";
+            fecha_f_timestamp = fecha_i_timestamp + (24*3600*1000);
         }
-        data.forEach(function(yearSnap){
-            yearSnap.forEach(function(weekSnap){
-                weekSnap.forEach(function(regSnap){
-                    var reg = regSnap.val();
-                    if((filtro_inges || selec_inge == reg.ing) && (filtro_obras || (selec_obra == reg.obra) && (filtro_presu || selec_pres == regSnap.child(caso).val())) && (fecha_i_timestamp < reg.checkin && reg.checkin < fecha_f_timestamp)){
-                        var horas = (parseFloat(reg.horas)/3600000).toFixed(3);
-                        //REGISTRAR
-                        regs[regs.length] = [
+    } else {
+        fecha_i = new Date($('#' + id_fecha_inicio_reporte).val());
+        fecha_i_timestamp = fecha_i.getTime();
+        fecha_f = new Date($('#' + id_fecha_final_reporte).val());
+        fecha_f_timestamp = fecha_f.getTime() + (24*3600*1000); 
+    }
+    data.forEach(function(yearSnap){
+        yearSnap.forEach(function(weekSnap){
+            weekSnap.forEach(function(regSnap){
+                var reg = regSnap.val();
+
+                var proc_adecuado = filtro_proc || (reg.proceso.split("-")[0] == selec_proc && (filtro_subp || selec_subp == reg.proceso));
+                if((filtro_inges || selec_inge == reg.inge) && (filtro_obras || (selec_obra == reg.obra)) && (proc_adecuado) && (fecha_i_timestamp < reg.checkin && reg.checkin < fecha_f_timestamp)){
+                    var horas =(parseFloat(reg.horas)/3600000).toFixed(3);
+                    if(imprime){
+                        datos_reporte.push([
                             new Date(reg.checkin).toLocaleDateString("es-ES", options),
                             "" + horas,
                             reg.inge, 
                             reg.obra,
-                            regSnap.child(caso).val(),
-                        ];
-                        //REGISTRAR end
-                        horas_totales = horas_totales + horas;
+                            reg.proceso,
+                        ]);
+                    } else {
+                        datos_reporte.push([
+                            regSnap.key,
+                            reg.status,
+                            new Date(reg.checkin).toLocaleDateString("es-ES", options),
+                            horas,
+                            reg.inge, 
+                            reg.obra,
+                            reg.proceso,
+                            reg.esp,
+                        ]);
                     }
-                });
+                    horas_totales += parseFloat(horas);
+                }
             });
         });
+    });
+    return horas_totales;
+}
+$('#' + id_imprime_button_reporte).click(function () {
+    var doc;
+    var regs = [];
+    regs[0] = [{text:"Fecha", style:"tableHeader"},{text:"Horas trabajadas", style:"tableHeader"},{text:"Colaborador", style:"tableHeader"},{text:"Obra", style:"tableHeader"},{text:"Presupuesto / Proceso", style:"tableHeader"}]
 
+    firebase.database().ref(rama_bd_registros).once('value').then(function(data){
+        var horas_totales = getRegsReporte(regs, data, true);
 
-        regs[regs.length] = [{text: "Horas totales: ", style: "totals"}, {text: "" + horas_totales.toFixed(2)},{},{},{}]
+        regs[regs.length] = [{text: "Horas totales: ", style: "totals", colSpan:2}, {}, {text: "" + horas_totales.toFixed(2), style: "totals"},{},{}]
 
         doc = {     
             content: [
@@ -283,7 +246,7 @@ $('#' + id_imprime_button_reporte).click(function () {
                     ]
                 },
                 {text: 'Reporte de registros', style: 'header',alignment: 'center'},
-                'El siguiente reporta muestra los registros de trabajo del ingeniero "' + selec_inge + '" en la obra  "' + selec_obra + '" en el periodo seleccionado.',
+                'El siguiente reporta muestra los registros de trabajo del ingeniero "' + $('#' + id_inge_ddl_reporte + " option:selected").val() + '" en la obra  "' + $('#' + id_obra_ddl_reporte + " option:selected").val() + '" en el periodo seleccionado.',
                 " ",
                 " ",
                 {text: 'Periodo:', alignment: 'center'},
