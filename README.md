@@ -9,7 +9,6 @@ REESTRUCTURA_BD:
  - proy
     - bibliotecas -> definir areas (en donde como catalogo y en donde editar), definir ediciones y eliminados, cambiar las ramas adecuadsa
     - gestionar_presu -> depende de def_ppto. Tambien gestiona procs, no?
-    - presupuesto -> definir que si lleva y que no, separar pdf de crear elemento en bd
     - reporte_ppto -> depende de def_ppto   
     - imprimir_ppto -> ppto ya esta en subprocs     
 

@@ -111,7 +111,8 @@
                         <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Obras</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu2">
                             <li class="tab tabCatalogoProceso" id="tabCatalogoProceso"><a href="#" onclick="openTabs('tabCatalogoProceso','catalogoProceso')">Catálogo de procesos</a></li>
-                            <li class="tab" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Alta Obra</a></li>
+                            <li class="tab" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Generar Ppto Adic</a></li>
+                            <li class="tab" id="tabPresupuestoAdic"><a href="#" onclick="openTabs('tabPresupuestoAdic','presupuestoAdic')">Alta Obra</a></li>
                         </ul>
                     </li>
                     <li>
@@ -397,6 +398,186 @@
                                     </div>
                                 </div>
                         </div>
+                        <!-- Presupuestos Adicionales -->
+                        <div id="presupuestoAdic" class="tabcontent hidden">
+                             <h1>Generador de Presupuesto Adicional</h1>
+                             <div class="container-fluid">
+                                 <div class="row align-items-center">
+                                     <div class="col-lg-12">
+                                         <form action="#" onsubmit="return false;">
+                                            <br/>
+                                                <h3>Header</h3>
+                                                <hr class="style2">
+
+                                                <div class="form-group">
+                                                    <label for="nombrePptoAdic">Nombre:</label>
+                                                    <input type="text" id="nombrePptoAdic"class="form-control" placeholder="Nombre del presupuesto">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="tituloPptoAdic">Titulo:</label>
+                                                    <input type="text" id="tituloPptoAdic"class="form-control" placeholder="Titulo del presupuesto">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="obraDdlPptoAdic">Obra:</label>
+                                                    <select class="form-control" id="obraDdlPptoAdic"></select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <!--<label for="atnDdlCbPptoProy">AT'N:</label>-->
+                                                    <div class="myDropdownCheckbox" id="atnDdlCbPptoAdic"></div>
+                                                </div>
+                                                <br/>
+                                                <h3>Body</h3>
+                                                <hr class="style2">
+
+                                                <div class="form-group">
+                                                    <label for="descripcionEntradaPptoAdic">Descripción de la entrada:</label>
+                                                    <textarea class="form-control" rows="6" id="descripcionEntradaPptoAdic"></textarea>
+                                                </div>
+                                                
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-lg-12">
+                                                        <label for="precioEntradaPptoAdic">Precio de venta de la entrada (sin IVA):</label>
+                                                        <input type="text"  id="precioEntradaPptoAdic" class="form-control" placeholder="" aria-describedby="helpId">
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-md-6 col-sm-12">
+                                                        <button id="addEntradaButtonPptoAdic" type="button" class="btn btn-outline-danger btn-lg btn-block">Agregar Entrada</button>
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-12">
+                                                        <button id="delEntradaButtonPptoAdic" type="button" class="btn btn-outline-secondary btn-lg btn-block">Eliminar última</button>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="form-group pt-3">
+                                                    <div class="card w-100 scrollbar scrollbar-danger">
+                                                        <div class="card-header text-center">
+                                                            Descripción
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <ul id="entradasListaPptoAdic"class="list-group list-group-flush">
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <h3>Footer</h3>
+                                                <hr class="style2">
+
+                                                <div class="form-group">
+                                                    <!--<label for="reqsDdlCbPptoAdic"> Requisitos:</label>-->
+                                                    <div class="myDropdownCheckbox" id="reqsDdlCbPptoAdic"></div>
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <!--<label for="excDdlCbPptoAdic">Exclusiones:</label>-->
+                                                    <div class="myDropdownCheckbox" id="excDdlCbPptoAdic"></div>
+                                                    <!-- <button id ="exc" class="dropdown-checkbox-toggle btn btn-danger" data-toggle="dropdown" href="#">Holi</button> -->
+                                                    <!-- <select class="form-control" name="" id="exc"></select> AQUI-->
+                                                </div>
+                                                
+                                                <br/>
+                                                <h4>Condiciones Comerciales</h4>
+                                                <br/>
+                                                <div class="form-group">
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="anticipoRbPptoAdic" id="anticipo1RbPptoAdic" value="option1">
+                                                        <label class="form-check-label" for="anticipo1RbPptoAdic">100% contra entrega</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="anticipoRbPptoAdic" id="anticipo2RbPptoAdic" value="option2">
+                                                        <label class="form-check-label" for="anticipo2RbPptoAdic">Elige el % de anticipo</label>
+                                                        <input type="text"  for="anticipo2RbPptoAdic" id="anticipoPptoAdic" class="form-control">
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="anticipoRbPptoAdic" id="anticipo3RbPptoAdic" value="option3">
+                                                        <label class="form-check-label" for="anticipo3RbPptoAdic">100% anticipo</label>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="tiempoEntregaPptoAdic">Tiempo de Entrega:</label>
+                                                    <textarea class="form-control" rows="6" id="tiempoEntregaPptoAdic"></textarea>
+                                                </div>
+                                                
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="bancariosCheckPptoAdic">
+                                                    <label class="custom-control-label" for="bancariosCheckPptoAdic">Agregar datos bancarios</label>
+                                                </div>
+                                                
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="fiscalesCheckPptoAdic">
+                                                    <label class="custom-control-label" for="fiscalesCheckPptoAdic">Agregar datos fiscales</label>
+                                                </div>
+                                                <br/>
+                                                <h3>Kaizen</h3>
+                                                <hr class="style2">
+                                                
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-lg-4">
+                                                        <label for="proyectosPptoAdic">Costo Proyecto:</label>
+                                                        <input type="text"  id="proyectosPptoAdic" class="form-control" placeholder="" aria-describedby="helpId">
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <label for="suministrosPptoAdic">Costo Suministros:</label>
+                                                        <input type="text"  id="suministrosPptoAdic" class="form-control" placeholder="" aria-describedby="helpId">
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <label for="copeoPptoAdic">Costo Copeo:</label>
+                                                        <input type="text"  id="copeoPptoAdic" class="form-control" placeholder="" aria-describedby="helpId">
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-lg-6">
+                                                        <label for="profitCantidadPptoAdic">Utilidad ($):</label>
+                                                        <input type="text"  id="profitCantidadPptoAdic" class="form-control" placeholder="" aria-describedby="helpId">
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <label for="profitPorcentajePptoAdic">Utilidad (%):</label>
+                                                        <input type="text"  id="profitPorcentajePptoAdic" class="form-control" placeholder="" aria-describedby="helpId">
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-lg-12">
+                                                        <label for="precioVentaPptoAdic">Precio de Venta (No incluye IVA):</label>
+                                                        <input type="text"  id="precioVentaPptoAdic" class="form-control" placeholder="" aria-describedby="helpId">
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="existenteCheckPptoAdic">
+                                                    <label class="custom-control-label" for="existenteCheckPptoAdic">Proceso existente</label>
+                                                </div>
+                                                <div class="form-group hidden" id="procGroupPptoAdic">
+                                                    <label for="procDdlPptoAdic">Proceso:</label>
+                                                    <select class="form-control" id="procDdlPptoAdic"></select>
+                                                </div>
+
+                                                <br/>
+                                                <br/>
+
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-lg-4">
+                                                            <button id="registrarPptoAdic" type="button" class="btn btn-outline-success btn-lg btn-block">Generar Presupuesto</button>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <button id="vistaPreviaPptoAdic" type="button" class="btn btn-outline-warning btn-lg btn-block">Vista Previa</button>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <button id="borrarTodoPptoAdic" type="reset" class="btn btn-outline-danger btn-lg btn-block">Borrar Todo</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                         </div>
+
                         <!-- Clientes -->
                         <div id="altaCliente" class="tabcontent hidden">
                             <h1>Cliente</h1>

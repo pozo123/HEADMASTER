@@ -319,7 +319,7 @@ $('#' + id_registrar_button_ppto_proy).click(function () {
             if(document.getElementById(id_existente_check_ppto_proy).checked && obra_global_snap.child("procesos/PC00/subprocesos/" + $('#' + id_proc_ddl_ppto_proy + " option:selected").text() + "/presupuesto").exists()){
                 var subp_clave = $('#' + id_proc_ddl_ppto_proy + " option:selected").text();
                 var nombre = $('#' + id_nombre_ppto_proy).val();
-                var consecutivo = parseInt(obra_global_snap.child("procesos/PC00/presupuesto/archivos").numChildren()) + 1;
+                var consecutivo = parseInt(obra_global_snap.child("procesos/PC00/subprocesos/" + subp_clave + "/presupuesto/archivos").numChildren()) + 1;
                 console.log(consecutivo);
 
                 proy_kaiz -= parseFloat(obra_global_snap.child("procesos/PC00/subprocesos/" + subp_clave + "/kaizen/PROYECTOS/PPTO").val());
