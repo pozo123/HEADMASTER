@@ -1,12 +1,14 @@
-var id_imprime_button_reporte = "button_generar_reporte";
-var id_inge_ddl_reporte = "reporte_DDL_ingeniero";
-var id_obra_ddl_reporte = "reporte_DDL_proyecto";
-var id_pres_ddl_reporte = "reporte_DDL_presupuesto";
-var id_presupuestosgroup_reporte = "id_presupuestosgroup_reporte";
-var id_tabla_button_reporte = "llenarTabla";
-var id_fecha_inicio_reporte = "fechaInicio";
-var id_fecha_final_reporte = "fichaFinal";
-var id_datatable_reporte =  "dataTableReporte"
+var id_imprime_button_reporte = "generarButtonReporte";
+var id_inge_ddl_reporte = "ingeDdlReporte";
+var id_obra_ddl_reporte = "obraDdlReporte";
+var id_proc_ddl_reporte = "procDdlReporte";
+var id_proc_group_reporte = "procGroupReporte";
+var id_subproc_ddl_reporte = "subprocDdlReporte";
+var id_subproc_group_reporte = "subprocDdlReporte";
+var id_tabla_button_reporte = "tablaButtonReporte";
+var id_fecha_inicio_reporte = "fechaInicioReporte";
+var id_fecha_final_reporte = "fichaFinalReporte";
+var id_datatable_reporte =  "dataTableReporte";
 
 var rama_bd_registros = "proyectos/registros";
 var rama_bd_personal = "prersonal";
@@ -19,7 +21,12 @@ var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
 jQuery.datetimepicker.setLocale('es');
 
 $('#tabReporte').click(function() {
-
+    $('#' + id_obra_ddl_reporte).empty();
+    $('#' + id_inge_ddl_reporte).empty();
+    $('#' + id_proc_ddl_reporte).empty();
+    $('#' + id_proc_group_reporte).addClass("hidden");
+    $('#' + id_subproc_ddl_reporte).empty();
+    $('#' + id_subproc_group_reporte).addClass("hidden");
     
     jQuery('#' + id_fecha_inicio_reporte).datetimepicker(
         {timepicker:false, weeks:true,format:'m.d.Y'}
@@ -59,68 +66,73 @@ $('#tabReporte').click(function() {
     });
 });
 
-//Aqui tenia una funcion en un ddl, ahora con jquery
 $('#' + id_obra_ddl_reporte).change(function(){
-    $('#' + id_pres_ddl_reporte).empty();
-
-    var select = document.getElementById(id_pres_ddl_reporte);
-    var option = document.createElement('option');
-    option.text = option.value = "Todos";
-    select.appendChild(option);
+    $('#' + id_proc_ddl_reporte).empty();
+    $('#' + id_subproc_ddl_reporte).empty();
+    $('#' + id_subproc_group_reporte).addClass("hidden");
 
     if($('#' + id_obra_ddl_reporte + " option:selected").val() === "Todos" || $('#' + id_obra_ddl_reporte + " option:selected").val() === "Otros"){
-        $('#' + id_presupuestosgroup_reporte).addClass("hidden");
+        $('#' + id_proc_group_reporte).addClass("hidden");
     }
     else{
-        $('#' + id_presupuestosgroup_reporte).removeClass("hidden");
+        var select = document.getElementById(id_proc_ddl_reporte);
+        var option = document.createElement('option');
+        option.text = option.value = "Todos";
+        select.appendChild(option);
+
+        $('#' + id_proc_group_reporte).removeClass("hidden");
+
         firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_reporte + " option:selected").val()).once('value').then(function(snapshot){
-            snapshot.child("presupuestos").forEach(function(childSnap){
-                var presu = childSnap.key;
-                var option2 = document.createElement('option');
-                option2.text = presu;
-                option2.value = "presupuesto"; 
-                select.appendChild(option2);
-            });
-            if(snapshot.child("num_procesos").val() > 1 || snapshot.child("procesos/ADIC/num_subprocesos").val() > 1){
-                snapshot.child("procesos").forEach(function(childSnap){
-                    var proc = childSnap.val();
-                    if(proc.num_subprocesos == 0){
-                        var option3 = document.createElement('option');
-                        option3.text = proc.clave + " (" + proc.nombre + ")";
-                        option3.value = proc.clave; 
-                        select.appendChild(option3);
-                    } else {
-                        childSnap.child("subprocesos").forEach(function(subpSnap){
-                            var subp = subpSnap.val();
-                            var option4 = document.createElement('option');
-                            option4.text = subp.clave + " (" + subp.nombre + ")";
-                            option4.value = subp.clave;
-                            select.appendChild(option4);
-                        });
-                    }
-                });    
+            snapshot.child("procesos").forEach(function(childSnap){
+                var proc = childSnap.val();
+                var option3 = document.createElement('option');
+                option3.text = proc.clave + " (" + proc.nombre + ")";
+                option3.value = proc.clave; 
+                select.appendChild(option3);
+            });    
+        });
+    }
+});
+
+$('#' + id_proc_ddl_reporte).change(function(){
+    $('#' + id_subproc_ddl_reporte).empty();
+    $('#' + id_subproc_group_reporte).addClass("hidden");
+
+    if($('#' + id_proc_ddl_reporte + " option:selected").val() != "Todos"){
+        var select = document.getElementById(id_subproc_ddl_reporte);
+        var option = document.createElement('option');
+        option.text = option.value = "Todos";
+        select.appendChild(option);
+
+
+        firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_reporte + " option:selected").val() + "/procesos/" + $('#' + id_proc_ddl_reporte + " option:selected").val()).once('value').then(function(snapshot){
+            var proc = snapshot.val();
+            if(proc.num_subprocesos > 0){
+                $('#' + id_subproc_group_reporte).removeClass("hidden");
+                snapshot.child("subprocesos").forEach(function(subpSnap){
+                    var subp = subpSnap.val();
+                    var option4 = document.createElement('option');
+                    option4.text = subp.clave + " (" + subp.nombre + ")";
+                    option4.value = subp.clave;
+                    select.appendChild(option4);
+                });
             }
         });
     }
-    
-})
+});
 
 $('#' + id_tabla_button_reporte).click(function() {
     var datos_reporte = [];
     var selec_inge = $('#' + id_inge_ddl_reporte).val();
     var selec_obra = $('#' + id_obra_ddl_reporte).val();
-    var selec_pres;
-    var caso = "";
-    if($('#' + id_pres_ddl_reporte).val() == "presupuesto"){
-        selec_pres = $('#' + id_pres_ddl_reporte).text();
-        caso = "presupuesto";
-    } else { 
-        selec_pres = $('#' + id_pres_ddl_reporte).val();
-        caso = "proceso";
-    }
-    var filtro_inges = selec_inge === "Todos";
-    var filtro_obras = selec_obra === "Todos";
-    var filtro_presu = selec_pres === "Todos";
+    var selec_proc = $('#' + id_proc_ddl_reporte).val();
+    var selec_subp = $('#' + id_subproc_ddl_reporte).val();
+
+    var filtro_inges = selec_inge == "Todos";
+    var filtro_obras = selec_obra == "Todos";
+    var filtro_proc = selec_proc == "Todos";
+    var filtro_subp = selec_subp == "Todos";
+
     firebase.database().ref(rama_bd_registros).once('value').then(function(data){
         var registros_db = data.val();
         var fecha_i;// = new Date($('#' + id_fecha_inicio_reporte).val());
@@ -131,7 +143,7 @@ $('#' + id_tabla_button_reporte).click(function() {
         if($('#' + id_fecha_final_reporte).val() === ""){
             if($('#' + id_fecha_inicio_reporte).val() === ""){
                 //Si no se selecciona ninguna fecha se hacen los reportes con todos los valores
-                fecha_i = new Date(2018,8,1);
+                fecha_i = new Date(2018,8,1);//Tiempo 0, no hay registros anteriores
                 fecha_i_timestamp = fecha_i.getTime();
                 fecha_f = new Date();
                 fecha_f_timestamp = fecha_f.getTime();
@@ -152,15 +164,17 @@ $('#' + id_tabla_button_reporte).click(function() {
             yearSnap.forEach(function(weekSnap){
                 weekSnap.forEach(function(regSnap){
                     var reg = regSnap.val();
-                    if((filtro_inges || selec_inge == reg.ing) && (filtro_obras || (selec_obra == reg.obra) && (filtro_presu || selec_pres == regSnap.child(caso).val())) && (fecha_i_timestamp < reg.checkin && reg.checkin < fecha_f_timestamp)){
+                    var proc_adecuado = filtro_proc || (reg.proceso.split("-")[0] == selec_proc && (filtro_subp || selec_subp == reg.proceso));
+                    if((filtro_inges || selec_inge == reg.inge) && (filtro_obras || (selec_obra == reg.obra)) && (proc_adecuado) && (fecha_i_timestamp < reg.checkin && reg.checkin < fecha_f_timestamp)){
                         datos_reporte.push([
-                            reg.cu,
+                            regSnap.key,
                             reg.status,
                             new Date(reg.checkin).toLocaleDateString("es-ES", options),
                             (parseFloat(reg.horas)/3600000).toFixed(3),
                             reg.inge, 
                             reg.obra,
-                            regSnap.child(caso).val(),
+                            reg.proceso,
+                            reg.esp,
                         ]);
                     }
                 });
@@ -192,11 +206,11 @@ $('#' + id_imprime_button_reporte).click(function () {
     var selec_obra = $('#' + id_obra_ddl_reporte).val();
     var selec_pres;
     var caso = "";
-    if($('#' + id_pres_ddl_reporte).val() == "presupuesto"){
-        selec_pres = $('#' + id_pres_ddl_reporte).text();
+    if($('#' + id_proc_ddl_reporte).val() == "presupuesto"){
+        selec_pres = $('#' + id_proc_ddl_reporte).text();
         caso = "presupuesto";
     } else { 
-        selec_pres = $('#' + id_pres_ddl_reporte).val();
+        selec_pres = $('#' + id_proc_ddl_reporte).val();
         caso = "proceso";
     }
     var filtro_inges =  selec_inge === "Todos";
