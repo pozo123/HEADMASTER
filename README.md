@@ -1,13 +1,48 @@
 # Head
 Depto. de Innovacion y Optimizacion
-
+//prueba merge
 REESTRUCTURA_BD:
  - admon: check
  - compras: check
  - rrhh: check
  - prod: check
  - proy
-    - bibliotecas -> definir areas (en donde como catalogo y en donde editar), definir ediciones y eliminados, cambiar las ramas adecuadsa
+    - bibliotecas -> cambiar a "catalogos"
+       - Total
+          - Obras, editable
+          - Categorias, editable
+          - Clientes, editable
+          - Atencion, editable, eliminable
+          - Personal, editable
+          - Proveedores, editable
+          - Odec
+          - Destajistas, editable
+          - Diversos, editable
+       - Admon
+          - Obras (editar: cliente, clave, terminada, direccion)
+          - Categorias (editar: nombre)
+          - Clientes (editar: Todo)
+          - Atencion (editar: Todo, eliminar)
+          - Personal (editar -> No, se hace desde app_personal)
+       - Compras
+          - Obras
+          - Atencion
+          - Proveedores (editar: Todo)
+          - OdeC
+       - Produccion
+          - Obras
+          - Categorias
+          - Atencion 
+          - destajistas
+          - Diversos
+       - Proyectos
+          - Obras
+          - Clientes (editar: Todo)
+          - Atencion (editar: Todo, eliminar)
+       - RRHH
+          - Obras
+          - destajistas (editar: Todo (creo, checar funcionalidad))
+          - Diversos (editar: distribuible)
     - gestionar_presu -> depende de def_ppto. Tambien gestiona procs, no?
     - reporte_ppto -> depende de def_ppto   
     - imprimir_ppto -> ppto ya esta en subprocs     

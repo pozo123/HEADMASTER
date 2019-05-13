@@ -1558,36 +1558,40 @@
                                     <form action="#" onsubmit="return false;">
                                         <div class="form-row align-items-center">
                                             <div class="col-lg-3 col-sm-12">
-                                                <label for="fechaInicio">Fecha inicio de reporte:</label>
+                                                <label for="fechaInicioReporte">Fecha inicio de reporte:</label>
                                             </div>
                                             <div class="col-lg-3 col-sm-12">
-                                                <input class="form-control" type="text" id="fechaInicio" placeholder="" readonly="readonly">
+                                                <input class="form-control" type="text" id="fechaInicioReporte" placeholder="" readonly="readonly">
                                             </div>
                                             <div class="col-lg-3 col-sm-12">
-                                                <label for="fechaFinal">Fecha final del reporte:</label>
+                                                <label for="fichaFinalReporte">Fecha final del reporte:</label>
                                             </div>
                                             <div class="col-lg-3 col-sm-12">
-                                                <input class="form-control" type="text" id="fechaFinal" placeholder="" readonly="readonly">
+                                                <input class="form-control" type="text" id="fichaFinalReporte" placeholder="" readonly="readonly">
                                             </div>
                                         </div>
                                         <br/>
                                         <p>*Para generar reporte de un solo día coloca en "Fecha inicio de reporte" el día deseado y deja en blanco "Fecha final del reporte"</p>
                                         <div class="form-group">
-                                            <label for="reporte_DDL_ingeniero">Colaborador:</label>
-                                            <select id ="reporte_DDL_ingeniero" class="form-control"></select>
+                                            <label for="ingeDdlReporte">Colaborador:</label>
+                                            <select id ="ingeDdlReporte" class="form-control"></select>
                                         </div>
                                         <div class="form-group">
-                                            <label for="reporte_DDL_proyecto">Obra:</label>
-                                            <select id ="reporte_DDL_proyecto" class="form-control" onChange="loadDDLPresupuestosReporte()"></select>
+                                            <label for="obraDdlReporte">Obra:</label>
+                                            <select id ="obraDdlReporte" class="form-control"></select>
                                         </div>
-                                        <div class="form-group hidden" id="id_presupuestosgroup_reporte">
-                                            <label for="reporte_DDL_presupuesto">Presupuesto:</label>
-                                            <select id ="reporte_DDL_presupuesto" class="form-control"></select>
+                                        <div class="form-group hidden" id="procGroupReporte">
+                                            <label for="procDdlReporte">Proceso:</label>
+                                            <select id ="procDdlReporte" class="form-control"></select>
+                                        </div>
+                                        <div class="form-group hidden" id="subprocDdlReporte">
+                                            <label for="subprocDdlReporte">Subroceso:</label>
+                                            <select id ="subprocDdlReporte" class="form-control"></select>
                                         </div>
                                         <div class="row">
                                             <button type="reset" name="" class="btn btn-danger">Limpiar campos</button>
-                                            <button type="button" name="" id="button_generar_reporte" class="btn btn-primary">Generar PDF</button>
-                                            <button type="button" name="" id="llenarTabla" class="btn btn-info">Ver tabla en esta página</button>                                                                           
+                                            <button type="button" name="" id="generarButtonReporte" class="btn btn-primary">Generar PDF</button>
+                                            <button type="button" name="" id="tablaButtonReporte" class="btn btn-info">Ver tabla en esta página</button>                                                                           
                                         </div>     
                                     </form>
 
@@ -1662,7 +1666,7 @@
                                         <form action="#" onsubmit="return false;">
                                             <div class="form-group">
                                                 <label for="ddlObraReportePpto">Obra:</label>
-                                                <select id="ddlObraReportePpto" class="form-control" onChange="loadDDLPresupuestosReportePpto()"></select>
+                                                <select id="ddlObraReportePpto" class="form-control"></select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="ddlPptoReportePpto">Presupuesto:</label>

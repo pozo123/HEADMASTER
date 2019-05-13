@@ -424,7 +424,7 @@
   - ADMINISTRACION:
      - ESTIMACIONES:
         - PPTO -> admin
-        - EST -> admin
+        - EST -> supervisor
         - PAG -> admin
      - ANTICIPOS:
         - PPTO -> admin
