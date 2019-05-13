@@ -55,6 +55,7 @@ $(document).ready(function() {
 });
 
 function modoActivoRegistros(){
+    $('#tabActualizarEsp').addClass('hidden');
     $('#' + id_entrada_group_registros).addClass("hidden");
     $('#' + id_salida_button_registros).removeClass("hidden");
 }

@@ -49,6 +49,9 @@ REESTRUCTURA_BD:
 
   - Merge pdf para anexos
   - Poner nota en registro si creden == 2
+  - generador de pptos (solo pdf) -> contratos de obra
+  - Reporte fecha not a funct?
+  - hacer reporte diario para flora
 
  HTMLs:
  - app_admin_registro
@@ -62,7 +65,20 @@ REESTRUCTURA_BD:
  - app_areas
 
  Obsoletos: 
- - app_prod_gestionar_pptos, app_colaboradores_compras, app_colaboradores_produccion, app_colaboradores_rrhh, app_datos_kaizen, app_obra_prod, app_personal, app_inge, app_permisos, dashgrid, pagos (todo se va a hacer con el admon), perfil, app_proy_asigna_proc, app_graphs (hice funcion nueva en app_proy_scoreboard)
+ - app_prod_gestionar_pptos
+ - app_colaboradores_compras
+ - app_colaboradores_produccion
+ - app_colaboradores_rrhh
+ - app_datos_kaizen
+ - app_obra_prod
+ - app_personal
+ - app_inge
+ - app_permisos
+ - dashgrid
+ - pagos (todo se va a hacer con el admon)
+ - perfil
+ - app_proy_asigna_proc
+ - app_graphs (hice funcion nueva en app_proy_scoreboard)
      
  Por probar:
  - app_pagos_nomina

@@ -171,7 +171,7 @@ $("#" + id_obra_ddl_ppto_proy).change(function() {
 });
 
 $('#' + id_add_entrada_button_ppto_proy).click(function () {
-    if(alcance.length < 10){
+    if(alcance.length < 15){
         var node = document.createElement("LI");
         node.classList.add("list-group-item");// Create a <li> node
         var textnode = document.createTextNode($('#' + id_descripcion_entrada_ppto_proy).val() + "\n   - Precio: " + formatMoney(parseFloat($('#' + id_precio_entrada_ppto_proy).val())));// Create a text node
@@ -182,7 +182,7 @@ $('#' + id_add_entrada_button_ppto_proy).click(function () {
             precio: $('#' + id_precio_entrada_ppto_proy).val(),
         });
     } else {
-        alert('Maximo 10 entradas');
+        alert('Maximo 15 entradas');
     }
 });
 
@@ -282,7 +282,7 @@ $('#' + id_vistaPrevia_button_ppto_proy).click(function () {
     if((document.getElementById(id_existente_check_ppto_proy).checked && $('#' + id_proc_ddl_ppto_proy + " option:selected").val() == "") || !$('#' + id_nombre_ppto_proy).val() || $('#' + id_obra_ddl_ppto_proy + " option:selected").val() == "" ||  $('#' + id_categoria_ddl_ppto_proy + " option:selected").val() == "" || alcance.length == 0){
         alert("Llena todos los campos requeridos");
     } else {
-        var ppto = generaPptoProy(true);
+        var ppto = generaPptoProy(false);
         var pdfPresupuesto = ppto[0];
         const pdfDocGenerator = pdfMake.createPdf(pdfPresupuesto)
         pdfDocGenerator.open();
@@ -491,7 +491,7 @@ function generaPptoProy(genera){
     var precio_total = 0;
     var alcance_pdf = [];
     var alcance_string = "";
-    for(i = 0; i < 10; i++){
+    for(i = 0; i < 15; i++){
         var num = i+1;
         if(i<alcance.length){
             alcance_string = alcance_string + alcance[i].texto + '. ';
@@ -800,7 +800,7 @@ function generaPptoProy(genera){
                             '',
                         ],
 
-                        alcance_pdf[0],alcance_pdf[1],alcance_pdf[2],alcance_pdf[3],alcance_pdf[4],alcance_pdf[5],alcance_pdf[6],alcance_pdf[7],alcance_pdf[8],alcance_pdf[9],// alcance_pdf[10],alcance_pdf[11],alcance_pdf[12],alcance_pdf[13],alcance_pdf[14],
+                        alcance_pdf[0],alcance_pdf[1],alcance_pdf[2],alcance_pdf[3],alcance_pdf[4],alcance_pdf[5],alcance_pdf[6],alcance_pdf[7],alcance_pdf[8],alcance_pdf[9], alcance_pdf[10],alcance_pdf[11],alcance_pdf[12],alcance_pdf[13],alcance_pdf[14],
                         [
                             {  
                                 colSpan: 6,
