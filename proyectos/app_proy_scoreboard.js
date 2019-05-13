@@ -21,6 +21,12 @@ var myInterval;
 var modo_display = false; //true si en pantalla completa (con el botón), false si no. Ponerle un listener para si cambia
 
 var elem = document.documentElement;
+var div_grupal = document.getElementById(id_div_cards_grupales_scoreboard);
+var div_individual = document.getElementById(id_div_cards_ind_scoreboard);
+var div_graph = document.getElementById(id_div_graphs_scoreboard);
+
+var style_grupales = ["max-width: 28%;", "min-width: 28%;", "min-height: 30%;"];
+var style_individual = ["max-width: 90%;", "min-width: 90%;", "min-height: 50%;"];
 
 $(document).ready(function() {
     unidad_t = parseFloat(gcd_two_numbers(wait_long,wait_short));
@@ -63,16 +69,8 @@ $('#' + id_fullscreen_scoreboard).click(function(){
     $('#' + id_div_graphs_scoreboard).empty();
     $('#' + id_div_cards_ind_scoreboard).empty();
     $('#' + id_div_cards_grupales_scoreboard).empty();
-    firebase.database().ref(rama_bd_personal).once('value').then(function(snapshot){
-        inges[0] = "Todos";
-        snapshot.forEach(function(childSnap){
-            if(childSnap.child("areas/proyectos").val() && !childSnap.child("areas/administracion").val() && childSnap.child("activo").val() && childSnap.child("nickname").val() != "SCORE"){
-                inges[inges.length] = childSnap;
-            }
-        });
-        myInterval = setInterval(cyclePresentation,unidad_t);
-        modo_display = true;
-    });
+    myInterval = setInterval(cyclePresentation,unidad_t);
+    modo_display = true;
 });
 
 $('#' + id_notFullscreen_scoreboard).click(function(){
@@ -117,33 +115,51 @@ function scoreboardGrupal(){
     $('#' + id_div_graphs_scoreboard).empty();
     $('#' + id_div_cards_ind_scoreboard).empty();
     $('#' + id_div_cards_grupales_scoreboard).empty();
-    console.log("TODOS");
-    for(var i=1;i<inges.length;i++){
-        var inge = inges[i].val();
-        if(inge.status){
-            getRegScoreboard(inges[i],id_div_cards_grupales_scoreboard);
-        } else {
-            loadDashcard(inges[i].child("nickname").val(), false,id_div_cards_grupales_scoreboard);
+    console.log("Hola");
+    div_grupal.setAttribute("style", "height: 100vh;");
+    div_individual.setAttribute("style", "height: 0vh;");
+    div_graph.setAttribute("style", "height: 0vh;");
+    inges = [];
+    firebase.database().ref(rama_bd_personal).once('value').then(function(snapshot){
+        inges[0] = "Todos";
+        snapshot.forEach(function(childSnap){
+            if(childSnap.child("areas/proyectos").val() && !childSnap.child("areas/administracion").val() && childSnap.child("activo").val() && childSnap.child("nickname").val() != "SCORE"){
+                inges[inges.length] = childSnap;
+            }
+        });
+        console.log("TODOS");
+        for(var i=1;i<inges.length;i++){
+            var inge = inges[i].val();
+            if(inge.status){
+                getRegScoreboard(inges[i],id_div_cards_grupales_scoreboard, style_grupales);
+            } else {
+                loadDashcard(style_grupales, inges[i].child("nickname").val(), false,id_div_cards_grupales_scoreboard);
+            }
         }
-    }
-    console.log("FIN TODOS");
+        console.log("FIN TODOS");
+    });
 }
 
 function scoreboardIndividual(ingeSnap){
     $('#' + id_div_graphs_scoreboard).empty();
     $('#' + id_div_cards_ind_scoreboard).empty();
     $('#' + id_div_cards_grupales_scoreboard).empty();
+
+    div_grupal.setAttribute("style", "height: 0vh;");
+    div_individual.setAttribute("style", "height: 100vh;");
+    div_graph.setAttribute("style", "height: 100vh;");
+
     //console.log(ingeSnap.child("nickname").val())
     var inge = ingeSnap.val();
     if(inge.status){
-        getRegScoreboard(ingeSnap,id_div_cards_ind_scoreboard);
+        getRegScoreboard(ingeSnap,id_div_cards_ind_scoreboard, style_individual);
     } else {
-        loadDashcard(ingeSnap.child("nickname").val(), false,id_div_cards_ind_scoreboard);
+        loadDashcard(style_individual,ingeSnap.child("nickname").val(), false,id_div_cards_ind_scoreboard);
         //console.log(inge.nickname + ", No Activo");
     }
 }
 
-function getRegScoreboard(ingeSnap, div_cards){
+function getRegScoreboard(ingeSnap, div_cards,styles){
     var hoy = getWeek(new Date().getTime());
     firebase.database().ref(rama_bd_registros + "/" + hoy[1] + "/" + hoy[0]).orderByChild("status").equalTo(false).once('value').then(function(snapshot){
         snapshot.forEach(function(regSnap){
@@ -167,7 +183,7 @@ function getRegScoreboard(ingeSnap, div_cards){
                     horas_trab_ind += horas_reg;
                     
                     //console.log(proc_query + ": " + horas_programadas);
-                    loadDashcard(ingeSnap.child("nickname").val(), true, div_cards, reg, horas_programadas, (horas_trabajadas).toFixed(2), horas_prog_ind, (horas_trab_ind).toFixed(2));
+                    loadDashcard(styles, ingeSnap.child("nickname").val(), true, div_cards, reg, horas_programadas, (horas_trabajadas).toFixed(2), horas_prog_ind, (horas_trab_ind).toFixed(2));
                     loadGraph(reg, horas_programadas, (horas_trabajadas).toFixed(2));
                 });
 
@@ -208,7 +224,7 @@ function loadGraph(reg, horas_programadas, horas_trabajadas){
     
     var div_card_graph = document.createElement('div');
     div_card_graph.className = "card card_graph border-light";
-    div_card_graph.setAttribute("style", "max-width: 20rem; min-width:20rem;");
+    div_card_graph.setAttribute("style", "max-width: 90%");
     div_card_graph.appendChild(canvas_container);//canvas_div);
     
     var div_graphs = document.getElementById(id_div_graphs_scoreboard);
@@ -242,11 +258,14 @@ function loadGraph(reg, horas_programadas, horas_trabajadas){
 }
 
                 
-function loadDashcard(nickname, activo, div_cards, reg, horas_programadas, horas_trabajadas, horas_programadas_individuales, horas_trabajadas_individuales){
+function loadDashcard(styles, nickname, activo, div_cards, reg, horas_programadas, horas_trabajadas, horas_programadas_individuales, horas_trabajadas_individuales){
     //console.log(nickname + ": " + activo);
     //console.log(reg);
     var font = "";
     var card = document.createElement('div');
+    console.log(styles[0]);
+    card.setAttribute("style", styles[0] + styles[1] + styles[2]);
+    console.log(card);
     if(reg != undefined){
         if(reg.esp === "ie"){
             card.className = "card card_dash .mx-auto border-danger mb-3";
@@ -276,7 +295,7 @@ function loadDashcard(nickname, activo, div_cards, reg, horas_programadas, horas
 
         //1ra columna con obra.
         var col_obra = document.createElement('div');
-        col_obra.className = "col-md-6";
+        col_obra.className = "col-6";
         var p_obra = document.createElement("p")
         p_obra.setAttribute("style", "font-size: 1em; color:black;");
         var node_obra = document.createTextNode(reg.obra);
@@ -285,7 +304,7 @@ function loadDashcard(nickname, activo, div_cards, reg, horas_programadas, horas
 
         //2da columna con horas.
         var col_horas = document.createElement('div');
-        col_horas.className = "col-md-6";
+        col_horas.className = "col-6";
         var p_horas = document.createElement("p")
         p_horas.setAttribute("style", "font-size: 1em; font-weight: bold;");
         var node_horas = document.createTextNode(horas_trabajadas + "/ ");
@@ -311,7 +330,7 @@ function loadDashcard(nickname, activo, div_cards, reg, horas_programadas, horas
         row.className = "row";
 
         var col_nickname = document.createElement('div');
-        col_nickname.className = "col-md-4";
+        col_nickname.className = "col-4";
         var p_nickname = document.createElement("p")
         p_nickname.setAttribute("style", "font-size: 0.9em; color:black;");
         var node_nickname = document.createTextNode(nickname);
@@ -319,7 +338,7 @@ function loadDashcard(nickname, activo, div_cards, reg, horas_programadas, horas
         col_nickname.appendChild(p_nickname);
 
         var col_proceso = document.createElement('div');
-        col_proceso.className = "col-md-4";
+        col_proceso.className = "col-4";
         var p_proceso = document.createElement("p")
         p_proceso.setAttribute("style", "font-size: 1em; color:black;");
         var node_proceso = document.createTextNode(reg.proceso);
@@ -339,7 +358,7 @@ function loadDashcard(nickname, activo, div_cards, reg, horas_programadas, horas
         row_footer.className = "row";
         
         var col3 = document.createElement('div');
-        col3.className = "col-md-6";
+        col3.className = "col-6";
         var p_horas_inge_ejecutadas = document.createElement('p');
         p_horas_inge_ejecutadas.setAttribute("style", "font-size: 0.7em;");
         var node_horas_ejecutadas = document.createTextNode("Ejec: ");
@@ -353,7 +372,7 @@ function loadDashcard(nickname, activo, div_cards, reg, horas_programadas, horas
         col3.appendChild(p_horas_inge_ejecutadas);
         
         var col4 = document.createElement('div');
-        col4.className = "col-md-6";
+        col4.className = "col-6";
         var p_horas_inge_presupuestadas = document.createElement('p');
         p_horas_inge_presupuestadas.setAttribute("style", "font-size: 0.7em;");
         var node_horas_presupuestadas = document.createTextNode("Prog: ");
@@ -388,7 +407,7 @@ function loadDashcard(nickname, activo, div_cards, reg, horas_programadas, horas
 
         //1ra columna con obra.
         var col_inactivo = document.createElement('div');
-        col_inactivo.className = "col-md-12";
+        col_inactivo.className = "col-12";
         var p_inactivo = document.createElement("p")
         p_inactivo.setAttribute("style", "font-size: 1em; color:red;");
         var node_inactivo = document.createTextNode("");
@@ -401,13 +420,13 @@ function loadDashcard(nickname, activo, div_cards, reg, horas_programadas, horas
         header.append(row)
 
         var body = document.createElement('div');
-        body.className = "card-body text-center text-"+ font;
+        body.className = "card-body text-center text-" + font;
         
         var row = document.createElement('div');
         row.className = "row";
 
         var col_nickname = document.createElement('div');
-        col_nickname.className = "col-md-12";
+        col_nickname.className = "col-12";
         var p_nickname = document.createElement("p")
         p_nickname.setAttribute("style", "font-size: 0.9em; color:black;");
         var node_nickname = document.createTextNode(nickname);

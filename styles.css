@@ -40,23 +40,46 @@ tr.subgroupDesplegarProcesos {
   border-radius: 5px;
 }
 
+/* Responsive columns */
+@media screen and (max-width: 600px) {
+  .card_graph {
+    width: 100%;
+    min-height: 30%;
+    display: inline-flex;
+    background: #fafafa;
+  }
+
+  .card_dash {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 5px;
+    max-width: 90% !important;
+    min-width: 90% !important;
+  } 
+}
+
 .card_graph {
   width: 100%;
-  height: 300px;
+  min-height: 30%;
   display: inline-flex;
   background: #fafafa;
 }
 
-.subDash {
-  margin-bottom: 20px;
-  margin-top: 20px;
-  display: inline-block;
+.card-deck {
+height: 100vh;
+vertical-align: middle;
 }
 
 .dashboard{
   width: 90%;
   margin-left: 50px;
   margin-right: 0px;
+  
+}
+
+.cardIndividual {
+    display: flex;
+    align-items: center;
 }
 
 
