@@ -14,8 +14,6 @@ REESTRUCTURA_BD:
           - Clientes, editable
           - Atencion, editable, eliminable
           - Personal, editable
-          - Proveedores, editable
-          - Odec
           - Destajistas, editable
           - Diversos, editable
        - Admon
@@ -27,8 +25,6 @@ REESTRUCTURA_BD:
        - Compras
           - Obras
           - Atencion
-          - Proveedores (editar: Todo)
-          - OdeC
        - Produccion
           - Obras
           - Categorias
