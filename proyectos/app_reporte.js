@@ -11,7 +11,7 @@ var id_fecha_final_reporte = "fichaFinalReporte";
 var id_datatable_reporte =  "dataTableReporte";
 
 var rama_bd_registros = "proyectos/registros";
-var rama_bd_personal = "prersonal";
+var rama_bd_personal = "personal";
 var rama_bd_obras = "obras";
 
 var inges = {};

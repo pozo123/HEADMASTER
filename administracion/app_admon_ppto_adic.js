@@ -109,7 +109,6 @@ $('#tabPresupuestoAdic').click(function() {
         myDataExc.push({id: snapshot.key, label: exc.nombre});
         $('#' + id_excs_ddl_check_ppto_adic).dropdownCheckbox("reset",myDataExc);
     });
-
     firebase.database().ref(rama_bd_obras).orderByChild('nombre').on('child_added',function(snapshot){
         var obra = snapshot.val();
         var option3 = document.createElement('OPTION');
