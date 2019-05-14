@@ -41,9 +41,8 @@ REESTRUCTURA_BD:
           - Diversos (editar: distribuible)
     - gestionar_presu -> depende de def_ppto. Tambien gestiona procs, no?
     - reporte_ppto -> depende de def_ppto   
-    - imprimir_ppto -> ppto ya esta en subprocs     
 
-  - Merge pdf para anexos
+  - Para anexos jalar archivos excel y jalar el formato (mezcla apps importar con apps ppto)
   - Poner nota en registro si creden == 2
   - generador de pptos (solo pdf) -> contratos de obra
 

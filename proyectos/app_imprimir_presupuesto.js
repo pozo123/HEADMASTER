@@ -1,12 +1,15 @@
 var id_obra_ddl_imprimir = "DDL_obra_imp";
 var id_proceso_ddl_imprimir = "DDL_presupuesto_imp";
 var id_consecutivo_ddl_imprimir = "DDL_consecutivo_imp";
+var id_consecutivo_group_imprimir = "group_consecutivo_imp";
 var id_imprimir_button_imprimir = "imprimir_presu";
 
 var rama_bd_obras = "obras";
 
 $('#tabImprimirPresupuesto').click(function(){
     var select = document.getElementById(id_obra_ddl_imprimir);
+    $('#' + id_consecutivo_ddl_imprimir).empty();
+    $('#' + id_consecutivo_group_imprimir).addClass("hidden");
     var option = document.createElement('option');
     option.style = "display:none";
     option.text = option.value = "";
@@ -22,6 +25,8 @@ $('#tabImprimirPresupuesto').click(function(){
 
 $('#' + id_obra_ddl_imprimir).change(function(){
     $('#' + id_proceso_ddl_imprimir).empty();
+    $('#' + id_consecutivo_ddl_imprimir).empty();
+    $('#' + id_consecutivo_group_imprimir).addClass("hidden");
     var select = document.getElementById(id_proceso_ddl_imprimir);
     var option = document.createElement('option');
     option.style = "display:none";
@@ -42,12 +47,14 @@ $('#' + id_proceso_ddl_imprimir).change(function(){
         + $('#' + id_proceso_ddl_imprimir + " option:selected").val() + "/presupuesto").once('value').then(function(snapshot){        
         var archivo = snapshot.child("archivos");
         if(parseInt(archivo.numChildren()) > 1){
-            $('#' + id_consecutivo_ddl_imprimir).removeClass("hidden");
+            $('#' + id_consecutivo_group_imprimir).removeClass("hidden");
             var select = document.getElementById(id_consecutivo_ddl_imprimir);
             var option = document.createElement('option');
             option.style = "display:none";
             option.text = option.value = "";
             select.appendChild(option);
+        } else {
+            $('#' + id_consecutivo_group_imprimir).addClass("hidden");
         }
         archivo.forEach(function(childSnap){
             var option2 = document.createElement('option');
@@ -59,7 +66,8 @@ $('#' + id_proceso_ddl_imprimir).change(function(){
 });
 
 $('#' + id_imprimir_button_imprimir).click(function () {
-    firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_imprimir + " option:selected").val() + "/procesos/PC00/subprocesos/" + $('#' + id_proceso_ddl_imprimir + " option:selected").val() + "/presupuesto/archivo/" + $('#' + id_consecutivo_ddl_imprimir + " option:selected").val() + "/pdf").once('value').then(function(snapshot){
+    var consec = $('#' + id_consecutivo_ddl_imprimir + " option:selected").val() == undefined ? 0 : $('#' + id_consecutivo_ddl_imprimir + " option:selected").val();
+    firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_imprimir + " option:selected").val() + "/procesos/PC00/subprocesos/" + $('#' + id_proceso_ddl_imprimir + " option:selected").val() + "/presupuesto/archivos/" + consec + "/pdf").once('value').then(function(snapshot){
         var pdf = snapshot.val();
 
         var downloadLink = document.createElement('a');
