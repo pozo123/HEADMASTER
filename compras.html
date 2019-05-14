@@ -18,7 +18,6 @@
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
         <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css">
         
-        
         <!-- My styles-->
         <link rel="stylesheet" type="text/css" href="styles.css">
         <link rel="stylesheet" type="text/css" href="sidebar.css">
@@ -106,12 +105,25 @@
                             <li class="tab" id="tabOdeC"><a href="#" onclick="openTabs('tabOdeC','OdeC')">Ordenes de Compra</a></li>
                             <li class="tab" id="tabPagSum"><a href="#" onclick="openTabs('tabPagSum','pagos')">Pagos de OdeC</a></li>
                         </ul>
+                    </li>  
+                    <li>
+                        <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Proveedores</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu2">
+                            <li class="tab" id="tabImportarProveedores"><a href="#" onclick="openTabs('tabImportarProveedores','importarProveedores')">Importar Proveedores</a></li>
+                            <li class="tab" id="tabProveedores"><a href="#" onclick="openTabs('tabProveedores','proveedores')">Alta Proveedor</a></li>
+                        </ul>
                     </li>                  
                     <li>
-                        <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Obras</a>
-                        <ul class="collapse list-unstyled" id="pageSubmenu2">
+                        <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Obras</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu3">
                             <li class="tab tabCatalogoProceso" id="tabCatalogoProceso"><a href="#" onclick="openTabs('tabCatalogoProceso','catalogoProceso')">Catálogo de procesos</a></li>
                             <li class="tab tabAsignaContrato" id="tabAsignaContrato"><a href="#" onclick="openTabs('tabAsignaContrato','asignaContrato')">Asigna contrato a proceso</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#pageSubmenu4" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Catálogos</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu4">
+                            <li class="tab" id="tabCatalogoOdeC"><a href="#" onclick="openTabs('tabCatalogoOdeC','catalogoOdeC')">Catálogo de OdeC</a></li>
                         </ul>
                     </li>
                     <li class="tab"><a href="#" data-toggle="modal" data-target="#contraseñaModal">Cambiar contraseña</a></li>
@@ -318,6 +330,91 @@
                                     </div>
                                 </div>
                         </div>
+                        <div id="importarProveedores" class="tabcontent hidden">
+                            <h1>Importar Proveedores</h1>
+                            <p>Subir proveedores de un archivo de excel a la base de datos</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">
+
+                                            <div class="form-group">
+                                                <label for="importarProveedoresFile">Selecciona archivo de Excel en el formato deseado</label>
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="importarProveedoresFile" accept=".xlsx, .xls, .csv">
+                                                    <label class = "custom-file-label" id="importarProveedoresLabelFile"> Archivo no seleccionado</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-row">
+                                                <button id="importarProveedoresButton" type="button" class="btn btn-outline-success btn-block">Aceptar</button>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class="col-lg-3"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="proveedores" class="tabcontent hidden">
+                            <h1>Alta de proveedores</h1>
+                            <p>Página para dar de alta a los proveedores</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">
+                                            <div class="form-group">
+                                                <label for="refProveedor">Referencia:</label>
+                                                <input type="text" name="" id="refProveedor"class="form-control" placeholder="Nombre del trabajador">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="razonProveedor">Razon:</label>
+                                                <input type="text" name="" id="razonProveedor"class="form-control" placeholder="Nombre del trabajador">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="rfcProveedor">RFC:</label>
+                                                <input type="text" name="" id="rfcProveedor"class="form-control" placeholder="Nombre del trabajador">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="direccionProveedor">Direccion:</label>
+                                                <input type="text" name="" id="direccionProveedor"class="form-control" placeholder="Nombre del trabajador">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="atiendeProveedor">Atiende:</label>
+                                                <input type="text" name="" id="atiendeProveedor"class="form-control" placeholder="Nombre del trabajador">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="telefonoProveedor">Telefono:</label>
+                                                <input type="text" name="" id="telefonoProveedor"class="form-control" placeholder="Nombre del trabajador">
+                                            </div>
+                                            <div class="form-row">
+                                                <div class= "col-lg-6">
+                                                    <button id="registrarButtonProveedor" type="button" class="btn btn-outline-success btn-block">Registrar</button>
+                                                    <button id="editarButtonProveedor" type="button" class="btn btn-outline-warning btn-block hidden">Editar</button>
+                                                    <button type="reset" id = "" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class="col-lg-3"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Catalogo OdeC -->
+                        <div id= "catalogoOdeC" class="tabcontent hidden dataTables_wrapper">
+                                <div class="container-fluid">
+                                    <h1>Catálogo de Órdenes de Compra</h1>
+                                    <p>Despliegue de todas las órdenes de compra dadas de alta</p>
+                                    <div class="row mt-3">
+                                        <div class="container-fluid">
+                                            <table id="dataTableCatalogoOdeC" class="display" style="width:100%"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -380,6 +477,8 @@
 <script src="compras/app_compras_odec_kaizen.js"></script>
 <script src="compras/app_compras_pag_kaizen.js"></script>
 <script src="app_funciones.js"></script>
+<script src="compras/app_compras_importar_proveedores.js"></script>
+<script src="catalogos/app_catalogo_odec.js"></script>
 <!-- PdfMaker-->
 
 <script src="pdfMake/pdfmake.min.js"></script>

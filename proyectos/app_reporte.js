@@ -252,7 +252,7 @@ $('#' + id_imprime_button_reporte).click(function () {
                     ]
                 },
                 {text: 'Reporte de registros', style: 'header',alignment: 'center'},
-                'El siguiente reporta muestra los registros de trabajo del ingeniero "' + $('#' + id_inge_ddl_reporte + " option:selected").val() + '" en la obra  "' + $('#' + id_obra_ddl_reporte + " option:selected").val() + '" en el periodo ',// + fecha_i.toLocaleDateString() + " - " + fecha_f.toLocaleDateString(),
+                'El siguiente reporta muestra los registros de trabajo del ingeniero "' + $('#' + id_inge_ddl_reporte + " option:selected").val() + '" en la obra  "' + $('#' + id_obra_ddl_reporte + " option:selected").val() + '" en el periodo ' + new Date(fecha_i).toLocaleDateString() + " - " + new Date(fecha_f).toLocaleDateString(),
                 " ",
                 " ",
                 //{text: 'Periodo:', alignment: 'center'},

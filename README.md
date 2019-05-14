@@ -50,8 +50,6 @@ REESTRUCTURA_BD:
   - Merge pdf para anexos
   - Poner nota en registro si creden == 2
   - generador de pptos (solo pdf) -> contratos de obra
-  - Reporte fecha not a funct?
-  - hacer reporte diario para flora
 
  HTMLs:
  - app_admin_registro
@@ -62,7 +60,6 @@ REESTRUCTURA_BD:
  - app_gestionar_supervisores -> (REVISAR HTML) reestructura_bd, solo se asigna por obra, se comenta un ddl
  - app_rrhh_editar_trabajadores
  - app_atributo
- - app_areas
 
  Obsoletos: 
  - app_prod_gestionar_pptos
@@ -94,7 +91,7 @@ REESTRUCTURA_BD:
 
  Errores:
  - Gantt fecha inicial
- - Gantt no saca inicio (sem) pero sÃ­ final (sem)
+ - Gantt no saca inicio (sem) pero sí final (sem)
  - registros con horas 0
  - falta empty a muchos ddls antes de cargarlos
 
@@ -106,16 +103,16 @@ ARTURO:
  - Desplegar Kaizen: TODO en colores por columna, sin el negro
  - Titulos de obra en catalogo de proceso en negritas y mas grandes
  - Poner los labels de anterior y nuevo separados en proy_cuant_kaizen
- - En producciÃ³n revisar quÃ© cosas pueden ver/usar supervisores. Bloquear tabs y cargar ddls sÃ³lo con las asignadas
+ - En producción revisar qué cosas pueden ver/usar supervisores. Bloquear tabs y cargar ddls sólo con las asignadas
  - Poner el filtro de areas adentro de las paginas para que te saque si metes el link directo
  - Ddl para navegar entre pestaÃ±as de areas
- - Poner filtros para pestaÃ±as en prod (gerente/supervisor)
+ - Poner filtros para pestañas en prod (gerente/supervisor)
     
 DIEGO:
  - Definir cómo terminar OdeC
  - Desplegar Proveedores y OdeC, como bibliotecas
  - En Odec revisar proveedor en on change (compararlo con la bd) 
- - Definir quiÃ©n llena las horas ppto de SCORE en los procs/pptos, y cÃ³mo (no sÃ³lo en kaizen)
+ - Definir quién llena las horas ppto de SCORE en los procs/pptos, y cómo (no sólo en kaizen)
  - desplegar kaizen lo del cambio de obra, cargarKaizen hay que descomentarlo de funciones y probarlo, que se sumen en totales y asi todo bien
  - app_prod_entrada_estimacion
  - Todo lo de Gantt

@@ -77,9 +77,3 @@ Cambios en bd:
        - Sumar horas de VIA OFICINAS de registros anteriores.
        - Pasar horas programadas de pptos a procs
     - Pptos -> Darlos de alta
- - proyectos -> Definir si nos quedamos con:
-    - clase
-    - exclusiones
-    - reqs
-    - generos
-    - tipos_prespuesto
