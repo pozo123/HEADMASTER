@@ -7,11 +7,15 @@ var id_obra_ddl_ppto_adic = "obraDdlPptoAdic";
 var id_atn_ddl_check_ppto_adic = "atnDdlCbPptoAdic";
 
 //Body
-var id_descripcion_entrada_ppto_adic = 'descripcionEntradaPptoAdic';
-var id_precio_entrada_ppto_adic = "precioEntradaPptoAdic";
-var id_add_entrada_button_ppto_adic = "addEntradaButtonPptoAdic";
-var id_del_entrada_button_ppto_adic ="delEntradaButtonPptoAdic"
-var id_entrada_lista_ppto_adic = "entradasListaPptoAdic";
+//var id_descripcion_entrada_ppto_adic = 'descripcionEntradaPptoAdic';//AQUI se va?
+//var id_precio_entrada_ppto_adic = "precioEntradaPptoAdic";//AQUI se va?
+//var id_add_entrada_button_ppto_adic = "addEntradaButtonPptoAdic";//AQUI se va?
+//var id_del_entrada_button_ppto_adic ="delEntradaButtonPptoAdic"//AQUI se va?
+//var id_entrada_lista_ppto_adic = "entradasListaPptoAdic";//AQUI se va?
+
+var id_file_ppto_adic = "importarPptoAdic";
+var id_filename_ppto_adic = "importarLabelPptoAdic";
+var id_importar_button_ppto_adic = "importarButtonPptoAdic";
 
 //Footer
 var id_reqs_ddl_check_ppto_adic = "reqsDdlCbPptoAdic";
@@ -54,11 +58,23 @@ var fecha_actual = new Date();
 var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
 
 var alcance = [];
+var alcance_string = "";
 
 var obra_global;
 var obra_global_snap;
 
 var porcentaje_anticipo;
+var subtotal;
+
+var excelSeleccionado = "";
+var fileName = "";
+
+$('#' + id_file_ppto_adic).on("change",(function(event) {
+    //console.log("hola"); 
+    excelSeleccionado = event.target.files[0];
+    fileName = excelSeleccionado.name;
+    $('#' + id_filename_ppto_adic).text(fileName)
+}));
 
 $('#tabPresupuestoAdic').click(function() {
     $("#" + id_existente_check_ppto_adic).prop('checked', false);
@@ -151,7 +167,99 @@ $("#" + id_obra_ddl_ppto_adic).change(function() {
     $("#" + id_existente_check_ppto_adic).prop('checked', false);
 });
 
-$('#' + id_add_entrada_button_ppto_adic).click(function () {
+$('#' + id_importar_button_ppto_adic).on("click",function() {
+    var reader = new FileReader();
+    var result = {};
+    var json = {};
+    reader.onload = function (e) {
+        var data = e.target.result;
+        data = new Uint8Array(data);
+        var workbook = XLSX.read(data, {type: 'array'});
+        json = {};
+        workbook.SheetNames.forEach(function (sheetName) {
+            var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {header: 1});
+            if (roa.length) json = roa;
+        });
+        var titulos = [json[2][0],json[2][1],json[2][2],json[2][3],json[2][4]];
+        alcance = [];
+        var ren = [];
+        var finished = false;
+        console.log(json);
+        for(key in json){
+            if(!finished){
+                if(key > 2){
+                    if(json[key][0] != undefined){
+                        ren = ['1.' + (alcance.length + 1)];
+                        for(i=0;i<titulos.length;i++){
+                            ren.push(json[key][i]);
+                        }
+                        alcance.push(ren);
+                        alcance_string += json[key][2] + "; ";
+                    } else if(!isNaN(deformatMoney(json[key][4]))){
+                        subtotal = parseFloat(deformatMoney(json[key][4]));
+                        finished = true;
+                        console.log(subtotal);
+                    }
+                }
+            }
+        }
+        if(isNaN(subtotal)){
+            alert("Error de formato");
+            //location.reload();
+        }
+            /*ren = [
+                {  
+                    border: [true, false, true, false],
+                    text: num,
+                    margin: [0,5],
+                    alignment: 'center',
+                    fontSize:8,
+                    textAlign: 'center',
+                },
+                {  
+                    colSpan:4,
+                    border: [true, false, true, false],
+                    text: alcance[i].texto,         
+                    margin: [0,5],
+                    fontSize:8,
+                    alignment: 'justify',
+                },
+                '',
+                '',
+                '',
+                {  
+                    border: [true, false, true, false],
+                    text:formatMoney(alcance[i].precio),
+                    margin: [0,5],
+                    alignment: 'center',
+                    fontSize:10,
+                }
+            ];*/
+        console.log(alcance); 
+        /*firebase.database().ref(rama_bd_compras).once('value').then(function(snapshot){
+            var proveedores = snapshot.child("proveedores").val();
+            for(key in resultado){
+                if(key > id_max){
+                    id_max = key;
+                }
+                if(proveedores[key]){
+                    console.log("El proveedor con ID " + key + " ya existe en la base de datos");
+                } else {
+                    console.log(rama_bd_proveedores + "/" + key + ": " + resultado[key]);
+                    firebase.database().ref(rama_bd_proveedores + "/" + key).set(resultado[key]);
+                }
+            }
+            var num_proveedores = parseInt(proveedores.num_proveedores_id);
+            if(id_max > num_proveedores){
+                firebase.database().ref(rama_bd_compras + "/num_proveedores_id").set(id_max);
+            }
+            alert("Importación exitosa");
+        });*/
+    };
+    reader.readAsArrayBuffer(excelSeleccionado);
+});
+
+/*$('#' + id_add_entrada_button_ppto_adic).click(function () {//AQUI se va
     if(alcance.length < 15){
         var node = document.createElement("LI");
         node.classList.add("list-group-item");// Create a <li> node
@@ -167,19 +275,19 @@ $('#' + id_add_entrada_button_ppto_adic).click(function () {
     }
 });
 
-$('#' + id_del_entrada_button_ppto_adic).click(function () {
+$('#' + id_del_entrada_button_ppto_adic).click(function () {//AQUI se va
     var list = document.getElementById(id_entrada_lista_ppto_adic);   // Get the <ul> element with id="myList"
     list.removeChild(list.lastChild);
     alcance.pop(); 
 });
 
-$('#' + id_borrar_todo_ppto_adic).click(function () {
+$('#' + id_borrar_todo_ppto_adic).click(function () {//AQUI se va
    var list = document.getElementById(id_entrada_lista_ppto_adic);   // Get the <ul> element with id="myList"
    while (list.firstChild) {
        list.removeChild(list.firstChild);
    }
    alcance = [];
-});
+});*/
 
 $("#" + id_existente_check_ppto_adic).change(function(){
     if(this.checked){
@@ -253,7 +361,7 @@ $('#' + id_vistaPrevia_button_ppto_adic).click(function () {
     } else {
         var ppto = generaPptoAdic(false);
         var pdfPresupuesto = ppto[0];
-        const pdfDocGenerator = pdfMake.createPdf(pdfPresupuesto)
+        const pdfDocGenerator = pdfMake.createPdf(pdfPresupuesto);
         pdfDocGenerator.open();
     }
 });
@@ -289,7 +397,7 @@ $('#' + id_registrar_button_ppto_adic).click(function () {
                 var subp_clave = $('#' + id_proc_ddl_ppto_adic + " option:selected").text();
                 var nombre = $('#' + id_nombre_ppto_adic).val();
                 var consecutivo = parseInt(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/presupuesto/archivos").numChildren()) + 1;
-                console.log(consecutivo);
+                //console.log(consecutivo);
 
                 proy_kaiz -= parseFloat(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/kaizen/PROYECTOS/PPTO").val());
                 mate_kaiz -= parseFloat(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/kaizen/PRODUCCION/SUMINISTROS/CUANT").val());
@@ -301,7 +409,7 @@ $('#' + id_registrar_button_ppto_adic).click(function () {
                 var updates = {};
                 updates["presupuesto/nombre"] = nombre;
                 updates["presupuesto/archivos/" + consecutivo] = cons;
-                updates["alcance"] = ppto[3];
+                updates["alcance"] = alcance_string;
                 updates["nombre"] = nombre;
 
                 firebase.database().ref(rama_bd_obras + "/" + obra_global.nombre + "/procesos/ADIC/subprocesos/" + subp_clave).update(updates);
@@ -326,7 +434,7 @@ $('#' + id_registrar_button_ppto_adic).click(function () {
                 kaiz_nuevo.ADMINISTRACION.ANTICIPOS.PPTO = esti_kaiz;
                 kaiz_nuevo.PROFIT.PROG.BRUTO = brut_kaiz;
                 kaiz_nuevo.PROFIT.PROG.NETO = neto_kaiz;
-                console.log(kaiz);
+                //console.log(kaiz);
                 var subproc = {
                     alcance: ppto[3],
                     categoria: "",
@@ -352,10 +460,10 @@ $('#' + id_registrar_button_ppto_adic).click(function () {
                         },
                     },
                 }
-                console.log(rama_bd_obras + "/" + obra_global.nombre + "/procesos/ADIC/subprocesos/" + subp);
-                console.log(subproc);
-                console.log(rama_bd_obras + "/" + obra_global.nombre + "/procesos/ADIC/num_subprocesos");
-                console.log(subp_num);
+                //console.log(rama_bd_obras + "/" + obra_global.nombre + "/procesos/ADIC/subprocesos/" + subp);
+                //console.log(subproc);
+                //console.log(rama_bd_obras + "/" + obra_global.nombre + "/procesos/ADIC/num_subprocesos");
+                //console.log(subp_num);
 
                 firebase.database().ref(rama_bd_obras + "/" + obra_global.nombre + "/procesos/ADIC/subprocesos/" + subp).set(subproc);
                 firebase.database().ref(rama_bd_obras + "/" + obra_global.nombre + "/procesos/ADIC/num_subprocesos").set(subp_num);
@@ -455,9 +563,9 @@ function generaPptoAdic(genera){
         }
     }
     //Genero el bloque dinamico de entradas
-    var precio_total = 0;
-    var alcance_pdf = [];
-    var alcance_string = "";
+    var precio_total = subtotal;
+    /*var alcance_pdf = [];
+    var alcance_string = "";//AQUI se va
     for(i = 0; i < 15; i++){
         var num = i+1;
         if(i<alcance.length){
@@ -514,7 +622,7 @@ function generaPptoAdic(genera){
                 },
             ]
         }                   
-    }
+    }*/
 
     //________________________________________________________________________________________
     var tiempoEntrega = $('#' + id_tiempoEntrega_ppto_adic).val();
@@ -557,7 +665,184 @@ function generaPptoAdic(genera){
         "042180016002792181" + "\n" +
         "Moneda Nacional" + "\n";
     }
-
+    var bod = [
+        [
+            {
+                border: [false, false, false, false],
+                text: "Obra:",
+                alignment: 'center',
+                margin: [0,5],
+                fontSize: 8,
+            },
+            {
+                border: [false, false, false, false],
+                text: obra_nombre,
+                bold: true,
+                color:'#2C3F5A',
+                margin: [0,5],
+                fontSize:10,
+            },
+            {   
+                colSpan:2,
+                border: [false, false, false, false],
+                text: 'PRESUPUESTO',
+                color:'#2C3F5A',
+                bold: true,
+                alignment: 'right',
+                margin: [0,5],
+                fontSize: 10,
+            },
+            '',
+            {   
+                colSpan:2,
+                border: [false, false, false, false],
+                text: $('#' + id_nombre_ppto_adic).val().toUpperCase(),
+                bold: true,
+                margin: [0,5],
+                fontSize: 12,
+                alignment: 'center',
+            },
+            '',
+        ],
+        // Tercera línea, falta poner programación de dirección y tipo
+        [
+            {
+                rowSpan:4,
+                border: [false, false, false, false],
+                text: "Dirección:",
+                alignment: 'center',
+                margin: [0,5],
+                fontSize: 8,
+            },
+            {
+                rowSpan:4,
+                border: [false, false, false, false],
+                text: "Calle: " +  obra_global.direccion.calle + ", No. " + obra_global.direccion.numero + "\n" +
+                "COL. " + obra_global.direccion.colonia + "\n" + obra_global.direccion.delegacion + ", \n" + 
+                obra_global.direccion.ciudad,
+                margin: [0,5],
+                fontSize:8,
+            },
+            {  
+                colSpan:2, rowSpan:2,
+                border: [false, false, false, false],
+                text: 'CLAVE: ',
+                margin: [0,1],
+                fontSize: 8,
+                alignment: 'right',
+            },
+            '',
+            {   colSpan:2, rowSpan:2,
+                border: [false, false, false, false],
+                text: clave_presu,
+                bold: true,
+                margin: [0,1],
+                fontSize: 8,
+                alignment: 'center',
+            },
+            '',
+        ],
+        [
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+        ],
+        [
+            '',
+            '',
+            {  
+                colSpan:2,
+                border: [false, false, false, false],
+                text: 'CLIENTE: ',
+                margin: [0,1],
+                fontSize: 8,
+                alignment: 'right',
+            },
+            '',
+            {   colSpan:2,
+                border: [false, false, false, false],
+                text: obra_global.cliente,
+                bold: true,
+                margin: [0,1],
+                fontSize: 8,
+                alignment: 'center',
+            },
+            '',
+        ],
+        [
+            '',
+            '',
+            {  
+                colSpan:2,
+                border: [false, false, false, false],
+                text: 'AT \' N: ',
+                margin: [0,1],
+                fontSize: 8,
+                alignment: 'right',
+            },
+            '',
+            {   colSpan:2,
+                border: [false, false, false, false],
+                text:  atn_str, 
+                bold: true,
+                margin: [0,1],
+                fontSize: 8,
+                alignment: 'center',
+            },
+            '',
+        ],
+        [
+            {  
+                colSpan:6,
+                border: [false, false, false, false],
+                text: ['A continuacion enviamos a su amable consideración el presupuesto ',
+                 {text: $('#' + id_titulo_ppto_adic).val().toUpperCase(), bold: true},
+                 " a efectuarse en el edificio ubicado en la dirección arriba indicada."],
+                margin: [0,5],
+                fontSize: 8,
+                alignment: 'justify',
+            },
+            '',
+            '',
+            '',
+            '',
+            '',
+        ],
+        
+        // segundo bloqu2
+        // alcances 100%
+        [
+            {  
+                border: [true, true, true, true],
+                text: 'I',
+                bold: true,
+                margin: [0,1],
+                fillColor: '#dddddd',
+                alignment: 'center'
+            },
+            {  
+                colSpan:5,
+                border: [true, true, true, true],
+                text: 'DESCRIPCIÓN DEL PRESUPUESTO',
+                bold: true,
+                margin: [0,1],
+                fillColor: '#dddddd',
+                alignment: 'center',
+                fontSize: 10,
+            },
+            '',
+            '',
+            '',
+            '',
+        ],
+    ];
+    bod.push()
+    for(i=0;i<alcance.length;i++){
+        bod.push(alcance[i]);
+    }
     var pdfPresupuesto = {
         pageSize: 'LETTER',
     
@@ -580,194 +865,15 @@ function generaPptoAdic(genera){
         content: [
             { 
                 table:{
+                    widths: ['auto', 'auto', 'auto', '*','auto','auto'],
+                    body: bod,
+                },
+            },
+            {text:' '},
+            {
+                table:{
                     widths: ['*', 120, '*', '*','*',120],
                     body:[
-                        //primer segmento, barra y logo. 50%.
-                        // segunda linea 100%
-                        [
-                            {
-                                border: [false, false, false, false],
-                                text: "Obra:",
-                                alignment: 'center',
-                                margin: [0,5],
-                                fontSize: 8,
-                            },
-                            {
-                                border: [false, false, false, false],
-                                text: obra_nombre,
-                                bold: true,
-                                color:'#2C3F5A',
-                                margin: [0,5],
-                                fontSize:10,
-                            },
-                            {   
-                                colSpan:4,
-                                border: [false, false, false, false],
-                                text: 'PRESUPUESTO',
-                                color:'#2C3F5A',
-                                bold: true,
-                                alignment: 'center',
-                                margin: [0,5],
-                                fontSize: 10,
-                            },
-                            '',
-                            '',
-                            '',
-                        ],
-
-                        // Tercera línea, falta poner programación de dirección y tipo
-                        [
-                            {
-                                rowSpan:5,
-                                border: [false, false, false, false],
-                                text: "Dirección:",
-                                alignment: 'center',
-                                margin: [0,5],
-                                fontSize: 8,
-                            },
-                            {
-                                rowSpan:5,
-                                border: [false, false, false, false],
-                                text: "Calle: " +  obra_global.direccion.calle + ", No. " + obra_global.direccion.numero + "\n" +
-                                "COL. " + obra_global.direccion.colonia + "\n" + obra_global.direccion.delegacion + ", \n" + 
-                                obra_global.direccion.ciudad,
-                                margin: [0,5],
-                                fontSize:8,
-                            },
-                            {   
-                                colSpan:4,
-                                border: [false, false, false, false],
-                                text: $('#' + id_nombre_ppto_adic).val().toUpperCase(),
-                                bold: true,
-                                margin: [0,5],
-                                fontSize: 8,
-                                alignment: 'center',
-                            },
-                            '',
-                            '',
-                            '',
-                        ],
-
-                        [
-                            '',
-                            '',
-                            {  
-                                colSpan:2, rowSpan:2,
-                                border: [false, false, false, false],
-                                text: 'CLAVE: ',
-                                margin: [0,1],
-                                fontSize: 8,
-                                alignment: 'right',
-                            },
-                            '',
-                            {   colSpan:2, rowSpan:2,
-                                border: [false, false, false, false],
-                                text: clave_presu,
-                                bold: true,
-                                margin: [0,1],
-                                fontSize: 8,
-                                alignment: 'center',
-                            },
-                            '',
-                        ],
-                        [
-                            '',
-                            '',
-                            '',
-                            '',
-                            '',
-                            '',
-                        ],
-                        [
-                            '',
-                            '',
-                            {  
-                                colSpan:2,
-                                border: [false, false, false, false],
-                                text: 'CLIENTE: ',
-                                margin: [0,1],
-                                fontSize: 8,
-                                alignment: 'right',
-                            },
-                            '',
-                            {   colSpan:2,
-                                border: [false, false, false, false],
-                                text: obra_global.cliente,
-                                bold: true,
-                                margin: [0,1],
-                                fontSize: 8,
-                                alignment: 'center',
-                            },
-                            '',
-                        ],
-                        [
-                            '',
-                            '',
-                            {  
-                                colSpan:2,
-                                border: [false, false, false, false],
-                                text: 'AT \' N: ',
-                                margin: [0,1],
-                                fontSize: 8,
-                                alignment: 'right',
-                            },
-                            '',
-                            {   colSpan:2,
-                                border: [false, false, false, false],
-                                text:  atn_str, 
-                                bold: true,
-                                margin: [0,1],
-                                fontSize: 8,
-                                alignment: 'center',
-                            },
-                            '',
-                        ],
-                        [
-                            {  
-                                colSpan:6,
-                                border: [false, false, false, false],
-                                text: ['A continuacion enviamos a su amable consideración el presupuesto ',
-                                 {text: $('#' + id_titulo_ppto_adic).val().toUpperCase(), bold: true},
-                                 " a efectuarse en el edificio ubicado en la dirección arriba indicada."],
-                                margin: [0,5],
-                                fontSize: 8,
-                                alignment: 'justify',
-                            },
-                            '',
-                            '',
-                            '',
-                            '',
-                            '',
-                        ],
-                        
-                        // segundo bloqu2
-                        // alcances 100%
-                        [
-                            {  
-                                border: [true, true, true, true],
-                                text: 'I',
-                                bold: true,
-                                margin: [0,1],
-                                fillColor: '#dddddd',
-                                alignment: 'center'
-                            },
-                            {  
-                                colSpan:5,
-                                border: [true, true, true, true],
-                                text: 'DESCRIPCIÓN DEL PRESUPUESTO',
-                                bold: true,
-                                margin: [0,1],
-                                fillColor: '#dddddd',
-                                alignment: 'center',
-                                fontSize: 10,
-                            },
-                            '',
-                            '',
-                            '',
-                            '',
-                        ],
-
-                        alcance_pdf[0],alcance_pdf[1],alcance_pdf[2],alcance_pdf[3],alcance_pdf[4],alcance_pdf[5],alcance_pdf[6],alcance_pdf[7],alcance_pdf[8],alcance_pdf[9], alcance_pdf[10],alcance_pdf[11],alcance_pdf[12],alcance_pdf[13],alcance_pdf[14],
                         [
                             {  
                                 colSpan: 6,
@@ -838,6 +944,16 @@ function generaPptoAdic(genera){
                             '',
                             '',
                         ],
+
+                    ],
+                },
+                unbreakable: true,
+            },
+            {text:' '},
+            {
+                table:{
+                    widths: ['*', 120, '*', '*','*',120],
+                    body:[
                         [
                             {  
                                 border: [true, true, true, true],
@@ -883,12 +999,14 @@ function generaPptoAdic(genera){
                             '',
                             '',
                             '',
-                        ],
-                    ],
+                        ]
+                    ]
                 },
+                unbreakable:true,
             },
-                {text:' '},
-                { table:{
+            {text:' '},
+            {
+                table:{
                     widths: ['*', 120, '*', '*','*',120],
                     body:[
                         [
@@ -1238,8 +1356,17 @@ function generaPptoAdic(genera){
                     ]
                 },
                 unbreakable:true,
+            },
+            /*
+            {text:' '},
+            {
+                table:{
+
+                },
+                unbreakable:true,
             }
+            */ 
         ],       
     };
-    return [pdfPresupuesto, clave_presu, precio_total*1.16, alcance_string];
+    return [pdfPresupuesto, clave_presu, precio_total*1.16];
 }

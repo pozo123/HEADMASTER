@@ -634,24 +634,32 @@ function generaPptoProy(genera){
                                 fontSize:10,
                             },
                             {   
-                                colSpan:4,
+                                colSpan:2,
                                 border: [false, false, false, false],
                                 text: 'PRESUPUESTO',
                                 color:'#2C3F5A',
                                 bold: true,
-                                alignment: 'center',
+                                alignment: 'right',
                                 margin: [0,5],
                                 fontSize: 10,
                             },
                             '',
-                            '',
+                            {   
+                                colSpan:2,
+                                border: [false, false, false, false],
+                                text: $('#' + id_nombre_ppto_proy).val().toUpperCase(),
+                                bold: true,
+                                margin: [0,5],
+                                fontSize: 12,
+                                alignment: 'center',
+                            },
                             '',
                         ],
 
                         // Tercera línea, falta poner programación de dirección y tipo
                         [
                             {
-                                rowSpan:5,
+                                rowSpan:4,
                                 border: [false, false, false, false],
                                 text: "Dirección:",
                                 alignment: 'center',
@@ -659,7 +667,7 @@ function generaPptoProy(genera){
                                 fontSize: 8,
                             },
                             {
-                                rowSpan:5,
+                                rowSpan:4,
                                 border: [false, false, false, false],
                                 text: "Calle: " +  obra_global.direccion.calle + ", No. " + obra_global.direccion.numero + "\n" +
                                 "COL. " + obra_global.direccion.colonia + "\n" + obra_global.direccion.delegacion + ", \n" + 
@@ -667,23 +675,6 @@ function generaPptoProy(genera){
                                 margin: [0,5],
                                 fontSize:8,
                             },
-                            {   
-                                colSpan:4,
-                                border: [false, false, false, false],
-                                text: $('#' + id_nombre_ppto_proy).val().toUpperCase(),
-                                bold: true,
-                                margin: [0,5],
-                                fontSize: 8,
-                                alignment: 'center',
-                            },
-                            '',
-                            '',
-                            '',
-                        ],
-
-                        [
-                            '',
-                            '',
                             {  
                                 colSpan:2, rowSpan:2,
                                 border: [false, false, false, false],
