@@ -73,6 +73,59 @@
                 </div>
             </div>
         </div>
+        <!--AQUI modal cierre maestro
+        <div class="modal fade" id="cierreMaestroModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Cierre Maestro</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                    <div class="container">
+                        <form onsubmit="return false;">
+                            <div class="form-group">
+                            <button id="cerrarDia" type="button" class="btn btn-outline-warning btn-lg btn-block hidden">Cierre Maestro</button>
+                            <div class="form-row align-items-center">
+                                <div class="col-md-6 col-sm-12">
+                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cerrar Ventana</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>-->
+        <div class="modal fade" id="cierreMaestroModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Cambia tu contraseña</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                    <div class="container">
+                        <form onsubmit="return false;">
+
+                            <div class="form-group">
+                                <button id="cerrarDia" type="button" class="btn btn-outline-warning btn-lg btn-block">Cierre Maestro</button>
+                            </div>
+                            <div class="form-row align-items-center">
+                                <div class="col-md-12 col-sm-12">
+                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cerrar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Modales para los editar-->
 
@@ -633,8 +686,9 @@
                         <button type="button" class="btn btn-danger" id="cerrarSesion">Cerrar sesión</button>
                     </div>
                 </ul>
+                <!--AQUI-->
                 <ul class="list-unstyled components hidden" id="pageSubmenuCierre">
-                    <button id="cerrarDia" type="button" class="btn btn-outline-warning btn-lg btn-block hidden">Cierre Maestro</button>
+                    <li id="cierreMaestro"class="tab hidden"><a href="#" data-toggle="modal" data-target="#cierreMaestroModal">Cierre Maestro</a></li>
                 </ul>
                 <ul class="list-unstyled components" id="pageSubmenuActRegs">
                     <button id="botonChidoRegs" type="button" class="btn btn-outline-info btn-lg btn-block">Actualizar Registros</button>
@@ -2024,7 +2078,7 @@
         <script src="proyectos/app_imprimir_presupuesto.js"></script>
         <!--<script src="proyectos/app_bibliotecas.js"></script>-->
         <script src="proyectos/app_exc_reqs.js"></script>
-        <script src="proyectos/app_cierre_maestro.js"></script>
+        <!--<script src="proyectos/app_cierre_maestro.js"></script>-->
         <!--<script src="proyectos/app_graphs.js"></script>-->
         <script src="proyectos/app_actualizar_regs.js"></script>
         <!--<script src="proyectos/app_dashgrid.js"></script>-->

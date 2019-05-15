@@ -5,15 +5,15 @@ var rama_bd_obras = "obras";
 
 var interval;
 
-$(document).ready(function(){
+/*$(document).ready(function(){
     checkTime();
     setInterval(checkTime, 3600000);
 });
-
+*/
 $('#' + id_cerrar_button_cierre).click(function(){
     cierreMaestro(false);
 });
-
+/*
 function checkTime(){
     var hora = new Date().getHours();
     var minutos;
@@ -22,7 +22,7 @@ function checkTime(){
         var ms_que_faltan = (60 - minutos)*60000;
         interval = setInterval(endDay, ms_que_faltan);
     }
-};
+};*/
 
 function endDay(){
     cierreMaestro(true);
@@ -30,6 +30,8 @@ function endDay(){
 }
 
 function cierreMaestro(automatico){
+    if(automatico){
+    var cm = {pad: pistaDeAuditoria(), cerrados:{}};
     firebase.database().ref(rama_bd_personal).once('value').then(function(snapshot){
         snapshot.forEach(function(inge_snap){
             if(inge_snap.child("areas/proyectos").val()){
@@ -55,6 +57,7 @@ function cierreMaestro(automatico){
                         var fal = false;
                         firebase.database().ref(rama_bd_personal + "/" + inge_snap.key + "/status").set(fal);                           
                         if(automatico){
+                            cm.cerrados[ing.uid] = {nombre: ing.nombre};
                             console.log("Sesion de " + ing.nombre + " cerrada.");
                         } else {
                             alert("Sesion de " + ing.nombre + " cerrada.");
@@ -65,6 +68,8 @@ function cierreMaestro(automatico){
             }
         });
     });
+    firebase.database().ref("info_web/cierreMaestro").push(cm);
+    }
 }
 
 function cierraRegistroMaestro(regSnap, path){

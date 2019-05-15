@@ -8,7 +8,8 @@ firebase.auth().onAuthStateChanged(user => {
             var user_bd = snapshot.val();
 
             var usuarioNombre = document.getElementById('usuarioConectado');
-            usuarioNombre.innerHTML = user_bd.nickname;
+            var esp = user_bd.esp ? " - " + user_bd.esp.toUpperCase() : "";
+            usuarioNombre.innerHTML = user_bd.nickname + esp;
             var creden = user_bd.credenciales;
             if(creden == 3){
                 console.log("creden3");
@@ -23,6 +24,7 @@ firebase.auth().onAuthStateChanged(user => {
                 $('#tabPermisos').addClass('hidden');
                 $('#pageSubmenuCierre').addClass('hidden');
                 $('#pageSubmenuActRegs').addClass('hidden');
+                $('#cierreMaestro').addClass('hidden');                
             } else if(creden == 2 || creden == 1 || creden == 0){
                 $('#tabAltaCliente').removeClass('hidden');
                 $('#tabAltaReqsExcs').removeClass('hidden');
@@ -33,16 +35,19 @@ firebase.auth().onAuthStateChanged(user => {
                 $('#tabPagos').removeClass('hidden');
                 $('#pageSubmenuCierre').removeClass('hidden');
                 if(creden == 2){
+                    $('#cierreMaestro').addClass('hidden');
                     $('#tabRegistrosProy').removeClass('hidden');
                     $('#tabPermisos').addClass('hidden');
                 } else {
                     if(creden == 0){
                         //$('#botonChidoRegs').removeClass('hidden');
                     }
+                    $('#cierreMaestro').removeClass('hidden');
                     $('#tabPermisos').removeClass('hidden');
                     $('#tabRegistrosProy').addClass('hidden');
                 }
             } else {
+                $('#cierreMaestro').addClass('hidden');
                 $('#tabAltaCliente').addClass('hidden');
                 $('#tabAltaReqsExcs').addClass('hidden');
                 $('#tabAltaTiposGens').addClass('hidden');

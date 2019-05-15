@@ -88,6 +88,7 @@
       - clave
       - nombre
       - telefono
+      - ppto_especial (bool, ahorita solo lo tiene migdal, solo hace falta si requiere la segunda version del ppto adic)
       - atencion
          - numero (por push pero de array, 0,1,2)
             - area

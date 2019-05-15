@@ -69,11 +69,13 @@ var subtotal;
 var excelSeleccionado = "";
 var fileName = "";
 
+var ppto_especial = false;
+
 $('#' + id_file_ppto_adic).on("change",(function(event) {
     //console.log("hola"); 
     excelSeleccionado = event.target.files[0];
     fileName = excelSeleccionado.name;
-    $('#' + id_filename_ppto_adic).text(fileName)
+    $('#' + id_filename_ppto_adic).text(fileName);
 }));
 
 $('#tabPresupuestoAdic').click(function() {
@@ -155,8 +157,10 @@ $("#" + id_obra_ddl_ppto_adic).change(function() {
         obra_global = snapshot.val();
         obra_global_snap = snapshot;
         var cliente = snapshot.child("cliente").val();
-        firebase.database().ref(rama_bd_clientes + "/" + cliente + "/atencion").once('value').then(function(atnSnap){
-            var atnArray = atnSnap.val();
+        firebase.database().ref(rama_bd_clientes + "/" + cliente).once('value').then(function(clienSnap){
+            ppto_especial = clienSnap.child("ppto_especial").exists() ? clienSnap.child("ppto_especial").val() : false;
+            console.log(ppto_especial);
+            var atnArray = clienSnap.child("atencion").val();
             for(var i = 0; i < atnArray.length; i++){
                 var atn = atnArray[i];
                 myDataAtn.push({id: atn.nombre, label: atn.nombre});
@@ -168,6 +172,7 @@ $("#" + id_obra_ddl_ppto_adic).change(function() {
 });
 
 $('#' + id_importar_button_ppto_adic).on("click",function() {
+//function loadAnexoPptoAdic(){
     var reader = new FileReader();
     var result = {};
     var json = {};
@@ -180,114 +185,46 @@ $('#' + id_importar_button_ppto_adic).on("click",function() {
             var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {header: 1});
             if (roa.length) json = roa;
         });
-        var titulos = [json[2][0],json[2][1],json[2][2],json[2][3],json[2][4]];
         alcance = [];
+        alcance[0] = [{text: json[2][0], alignment: 'left'},{text: json[2][1], alignment: 'left'},{text: json[2][2], colSpan:2},'',{text: json[2][3], alignment: 'left'},{text: json[2][4], alignment: 'left'}];
         var ren = [];
         var finished = false;
-        console.log(json);
         for(key in json){
             if(!finished){
                 if(key > 2){
                     if(json[key][0] != undefined){
-                        ren = ['1.' + (alcance.length + 1)];
-                        for(i=0;i<titulos.length;i++){
-                            ren.push(json[key][i]);
-                        }
+                        //ren = ['1.' + ("0" + (alcance.length)).slice(-2)];
+                        /*for(i=0;i<alcance[0].length - 1;i++){
+                            if(i == 1){
+                                ren.push({text:parseFloat(json[key][i]).toFixed(0), noWrap: true});
+                            } else {
+                                ren.push({text:json[key][i], noWrap: true});
+                            }
+                        }*/
+                        ren = [];
+                        ren.push({text:json[key][0], alignment: 'left'});
+                        ren.push({text:parseFloat(json[key][1]).toFixed(0), alignment: 'center'});
+                        ren.push({text:json[key][2], alignment:'left',colSpan:2});
+                        ren.push('');
+                        ren.push({text:json[key][3], noWrap: true, alignment: 'right'});
+                        ren.push({text:json[key][4], noWrap: true, alignment: 'right'});
                         alcance.push(ren);
                         alcance_string += json[key][2] + "; ";
                     } else if(!isNaN(deformatMoney(json[key][4]))){
                         subtotal = parseFloat(deformatMoney(json[key][4]));
                         finished = true;
-                        console.log(subtotal);
                     }
                 }
             }
         }
         if(isNaN(subtotal)){
             alert("Error de formato");
-            //location.reload();
         }
-            /*ren = [
-                {  
-                    border: [true, false, true, false],
-                    text: num,
-                    margin: [0,5],
-                    alignment: 'center',
-                    fontSize:8,
-                    textAlign: 'center',
-                },
-                {  
-                    colSpan:4,
-                    border: [true, false, true, false],
-                    text: alcance[i].texto,         
-                    margin: [0,5],
-                    fontSize:8,
-                    alignment: 'justify',
-                },
-                '',
-                '',
-                '',
-                {  
-                    border: [true, false, true, false],
-                    text:formatMoney(alcance[i].precio),
-                    margin: [0,5],
-                    alignment: 'center',
-                    fontSize:10,
-                }
-            ];*/
-        console.log(alcance); 
-        /*firebase.database().ref(rama_bd_compras).once('value').then(function(snapshot){
-            var proveedores = snapshot.child("proveedores").val();
-            for(key in resultado){
-                if(key > id_max){
-                    id_max = key;
-                }
-                if(proveedores[key]){
-                    console.log("El proveedor con ID " + key + " ya existe en la base de datos");
-                } else {
-                    console.log(rama_bd_proveedores + "/" + key + ": " + resultado[key]);
-                    firebase.database().ref(rama_bd_proveedores + "/" + key).set(resultado[key]);
-                }
-            }
-            var num_proveedores = parseInt(proveedores.num_proveedores_id);
-            if(id_max > num_proveedores){
-                firebase.database().ref(rama_bd_compras + "/num_proveedores_id").set(id_max);
-            }
-            alert("Importación exitosa");
-        });*/
     };
     reader.readAsArrayBuffer(excelSeleccionado);
+    alert("Documento cargado con exito");
+    //console.log(alcance);
 });
-
-/*$('#' + id_add_entrada_button_ppto_adic).click(function () {//AQUI se va
-    if(alcance.length < 15){
-        var node = document.createElement("LI");
-        node.classList.add("list-group-item");// Create a <li> node
-        var textnode = document.createTextNode($('#' + id_descripcion_entrada_ppto_adic).val() + "\n   - Precio: " + formatMoney(parseFloat($('#' + id_precio_entrada_ppto_adic).val())));// Create a text node
-        node.appendChild(textnode);// Append the text to <li>
-        document.getElementById(id_entrada_lista_ppto_adic).appendChild(node);  
-        alcance.push({
-            texto: "" + $('#' + id_descripcion_entrada_ppto_adic).val(),
-            precio: $('#' + id_precio_entrada_ppto_adic).val(),
-        });
-    } else {
-        alert('Maximo 15 entradas');
-    }
-});
-
-$('#' + id_del_entrada_button_ppto_adic).click(function () {//AQUI se va
-    var list = document.getElementById(id_entrada_lista_ppto_adic);   // Get the <ul> element with id="myList"
-    list.removeChild(list.lastChild);
-    alcance.pop(); 
-});
-
-$('#' + id_borrar_todo_ppto_adic).click(function () {//AQUI se va
-   var list = document.getElementById(id_entrada_lista_ppto_adic);   // Get the <ul> element with id="myList"
-   while (list.firstChild) {
-       list.removeChild(list.firstChild);
-   }
-   alcance = [];
-});*/
 
 $("#" + id_existente_check_ppto_adic).change(function(){
     if(this.checked){
@@ -356,9 +293,10 @@ $("#" + id_profit_cantidad_ppto_adic).change(function(){
 });
 
 $('#' + id_vistaPrevia_button_ppto_adic).click(function () {
-    if((document.getElementById(id_existente_check_ppto_adic).checked && $('#' + id_proc_ddl_ppto_adic + " option:selected").val() == "") || !$('#' + id_nombre_ppto_adic).val() || $('#' + id_obra_ddl_ppto_adic + " option:selected").val() == "" || alcance.length == 0){
+    if((document.getElementById(id_existente_check_ppto_adic).checked && $('#' + id_proc_ddl_ppto_adic + " option:selected").val() == "") || !$('#' + id_nombre_ppto_adic).val() || $('#' + id_obra_ddl_ppto_adic + " option:selected").val() == "" || alcance.length == 0){//$('#' + id_filename_ppto_adic).text() == "Archivo no seleccionado"){
         alert("Llena todos los campos requeridos");
     } else {
+        //loadAnexoPptoAdic();
         var ppto = generaPptoAdic(false);
         var pdfPresupuesto = ppto[0];
         const pdfDocGenerator = pdfMake.createPdf(pdfPresupuesto);
@@ -367,9 +305,11 @@ $('#' + id_vistaPrevia_button_ppto_adic).click(function () {
 });
 
 $('#' + id_registrar_button_ppto_adic).click(function () {
-    if((document.getElementById(id_existente_check_ppto_adic).checked && $('#' + id_proc_ddl_ppto_adic + " option:selected").val() == "") || !$('#' + id_nombre_ppto_adic).val() || $('#' + id_obra_ddl_ppto_adic + " option:selected").val() == "" || alcance.length == 0){
+    if(!$('#' + id_proyectos_ppto_adic).val() || !$('#' + id_suministros_ppto_adic).val() || !$('#' + id_copeo_ppto_adic).val() || (document.getElementById(id_existente_check_ppto_adic).checked && $('#' + id_proc_ddl_ppto_adic + " option:selected").val() == "") || !$('#' + id_nombre_ppto_adic).val() || $('#' + id_obra_ddl_ppto_adic + " option:selected").val() == "" || alcance.length == 0){//$('#' + id_filename_ppto_adic).text() == "Archivo no seleccionado"){
+        //console.log('Text: ' + $('#' + id_filename_ppto_adic).text());
         alert("Llena todos los campos requeridos");
     } else {
+        //loadAnexoPptoAdic();
         var ppto = generaPptoAdic(true);
         var pdfPresupuesto = ppto[0];
         var clave_presu = ppto[1];
@@ -436,7 +376,7 @@ $('#' + id_registrar_button_ppto_adic).click(function () {
                 kaiz_nuevo.PROFIT.PROG.NETO = neto_kaiz;
                 //console.log(kaiz);
                 var subproc = {
-                    alcance: ppto[3],
+                    alcance: alcance_string,
                     categoria: "",
                     clave: subp,
                     fecha_inicio: "",
@@ -460,11 +400,6 @@ $('#' + id_registrar_button_ppto_adic).click(function () {
                         },
                     },
                 }
-                //console.log(rama_bd_obras + "/" + obra_global.nombre + "/procesos/ADIC/subprocesos/" + subp);
-                //console.log(subproc);
-                //console.log(rama_bd_obras + "/" + obra_global.nombre + "/procesos/ADIC/num_subprocesos");
-                //console.log(subp_num);
-
                 firebase.database().ref(rama_bd_obras + "/" + obra_global.nombre + "/procesos/ADIC/subprocesos/" + subp).set(subproc);
                 firebase.database().ref(rama_bd_obras + "/" + obra_global.nombre + "/procesos/ADIC/num_subprocesos").set(subp_num);
             };
@@ -490,6 +425,7 @@ $('#' + id_registrar_button_ppto_adic).click(function () {
 });
 
 function generaPptoAdic(genera){
+    //loadAnexoPptoAdic();
     var clave_presu;
     var existente = document.getElementById(id_existente_check_ppto_adic).checked;
     if(!existente){
@@ -562,67 +498,7 @@ function generaPptoAdic(genera){
             alignment: 'left',
         }
     }
-    //Genero el bloque dinamico de entradas
     var precio_total = subtotal;
-    /*var alcance_pdf = [];
-    var alcance_string = "";//AQUI se va
-    for(i = 0; i < 15; i++){
-        var num = i+1;
-        if(i<alcance.length){
-            alcance_string = alcance_string + alcance[i].texto + '. ';
-            alcance_pdf[i] = [
-                {  
-                    border: [true, false, true, false],
-                    text: num,
-                    margin: [0,5],
-                    alignment: 'center',
-                    fontSize:8,
-                    textAlign: 'center',
-                },
-                {  
-                    colSpan:4,
-                    border: [true, false, true, false],
-                    text: alcance[i].texto,         
-                    margin: [0,5],
-                    fontSize:8,
-                    alignment: 'justify',
-                },
-                '',
-                '',
-                '',
-                {  
-                    border: [true, false, true, false],
-                    text:formatMoney(alcance[i].precio),
-                    margin: [0,5],
-                    alignment: 'center',
-                    fontSize:10,
-                }
-            ];
-            precio_total += parseFloat(alcance[i].precio);
-        } else {
-            alcance_pdf[i] = [
-                {  
-                    border: [true, false, true, false],
-                    margin: [0,0.001],
-                    text: "",
-                },
-                {  
-                    colSpan:4,
-                    border: [true, false, true, false],
-                    margin: [0,0.001],
-                    text: "",
-                },
-                '',
-                '',
-                '',
-                {  
-                    border: [true, false, true, false],
-                    margin: [0,0.001],
-                    text: "",
-                },
-            ]
-        }                   
-    }*/
 
     //________________________________________________________________________________________
     var tiempoEntrega = $('#' + id_tiempoEntrega_ppto_adic).val();
@@ -665,7 +541,7 @@ function generaPptoAdic(genera){
         "042180016002792181" + "\n" +
         "Moneda Nacional" + "\n";
     }
-    var bod = [
+    var bod1 = [
         [
             {
                 border: [false, false, false, false],
@@ -789,7 +665,7 @@ function generaPptoAdic(genera){
                 text:  atn_str, 
                 bold: true,
                 margin: [0,1],
-                fontSize: 8,
+                fontSize: 12,
                 alignment: 'center',
             },
             '',
@@ -802,7 +678,7 @@ function generaPptoAdic(genera){
                  {text: $('#' + id_titulo_ppto_adic).val().toUpperCase(), bold: true},
                  " a efectuarse en el edificio ubicado en la dirección arriba indicada."],
                 margin: [0,5],
-                fontSize: 8,
+                fontSize: 12,
                 alignment: 'justify',
             },
             '',
@@ -839,6 +715,7 @@ function generaPptoAdic(genera){
             '',
         ],
     ];
+    var bod = [];
     bod.push()
     for(i=0;i<alcance.length;i++){
         bod.push(alcance[i]);
@@ -863,13 +740,120 @@ function generaPptoAdic(genera){
             };
         },
         content: [
+            //Header
             { 
                 table:{
-                    widths: ['auto', 'auto', 'auto', '*','auto','auto'],
+                    widths: ['*', 120, '*', '*','*',120],
+                    body: bod1,
+                },
+            },
+            //Alcance
+            { 
+                table:{
+                    widths: ['auto', 'auto', '*', 'auto','auto','auto'],
                     body: bod,
                 },
             },
-            {text:' '},
+            //Totales
+            {
+                table:{
+                    widths: ['*', 120, '*', '*','*',120],
+                    body:[
+                        [
+                            {  
+                                colSpan:3,
+                                border: [false, true, false, false],
+                                text: '',
+                                margin: [0,0],
+                                alignment: 'center',
+                                fontSize: 8,
+                            },
+                            '',
+                            '',
+                            {  
+                                colSpan:2,
+                                border: [false, true, true, false],
+                                text: 'Subtotal',
+                                margin: [0,0],
+                                alignment: 'right',
+                                fontSize: 10,
+                            },
+                            '',
+                            {  
+                                border: [true, true, true, true],
+                                text: formatMoney(precio_total),
+                                bold: true,
+                                margin: [0,0],
+                                alignment: 'right',
+                                fontSize: 12,
+                            }
+
+                        ],
+                        [
+                            {  
+                                colSpan:3,
+                                border: [false, false, false, false],
+                                text: '',
+                                margin: [0,0],
+                                alignment: 'center',
+                                fontSize: 8,
+                            },
+                            '',
+                            '',
+                            {  
+                                colSpan:2,
+                                border: [false, false, true, false],
+                                text: 'I.V.A',
+                                margin: [0,0],
+                                alignment: 'right',
+                                fontSize: 10,
+                            },
+                            '',
+                            {  
+                                border: [true, true, true, true],
+                                text: formatMoney(precio_total*0.16),
+                                bold:true,
+                                margin: [0,0],
+                                alignment: 'right',
+                                fontSize: 12,
+                            }
+                        ],
+                        [
+                            {  
+                                colSpan:3,
+                                border: [false, false, false, false],
+                                text: '',
+                                margin: [0,0],
+                                alignment: 'center',
+                                fontSize: 8,
+                            },
+                            '',
+                            '',
+                            {  
+                                colSpan:2,
+                                border: [false, false, true, false],
+                                text: 'TOTAL',
+                                bold:true,
+                                margin: [0,0],
+                                alignment: 'right',
+                                fontSize: 10,
+                            },
+                            '',
+                            {  
+                                border: [true, true, true, true],
+                                text: formatMoney(precio_total*1.16),
+                                bold: true,
+                                margin: [0,0],
+                                alignment: 'right',
+                                fontSize: 14,
+                            }
+
+                        ],
+                    ],
+                    unbreakable: true,
+                },
+            },
+            //Letra
             {
                 table:{
                     widths: ['*', 120, '*', '*','*',120],
@@ -877,7 +861,53 @@ function generaPptoAdic(genera){
                         [
                             {  
                                 colSpan: 6,
-                                border: [false, true, false, true],
+                                border: [false, false, false, true],
+                                margin: [0,2],
+                                text: "",
+                            },
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                        ],
+                        [
+                            { 
+                                border: [true, true, true, true],
+                                text: 'IMPORTE CON LETRA',
+                                margin: [0,2],
+                                fillColor: '#dddddd',
+                                alignment: 'center',
+                                fontSize: 8,
+                            },
+                            {  
+                                colSpan:5,
+                                border: [true, true, true, true],
+                                text: numeroALetras((precio_total*1.16).toFixed(2)),
+                                bold: true,
+                                margin: [0,1],
+                                fillColor: '#dddddd',
+                                alignment: 'center',
+                                fontSize: 12,
+                            },
+                            '',
+                            '',
+                            '',
+                            '',
+                        ],
+                    ]
+                },
+                unbreakable: true,
+            },
+            //Reqs
+            {
+                table:{
+                    widths: ['*', 120, '*', '*','*',120],
+                    body:[
+                        [
+                            {  
+                                colSpan: 6,
+                                border: [false, false, false, true],
                                 margin: [0,2],
                                 text: "",
                             },
@@ -934,7 +964,7 @@ function generaPptoAdic(genera){
                         [
                             {  
                                 colSpan: 6,
-                                border: [false, true, false, true],
+                                border: [false, true, false, false],
                                 margin: [0,2],
                                 text: "",
                             },
@@ -949,7 +979,7 @@ function generaPptoAdic(genera){
                 },
                 unbreakable: true,
             },
-            {text:' '},
+            //Exc
             {
                 table:{
                     widths: ['*', 120, '*', '*','*',120],
@@ -959,7 +989,7 @@ function generaPptoAdic(genera){
                                 border: [true, true, true, true],
                                 text: 'III',
                                 bold: true,
-                                margin: [0,1],
+                                margin: [0,2],
                                 fillColor: '#dddddd',
                                 alignment: 'center',
                                 fontSize: 10,
@@ -969,7 +999,7 @@ function generaPptoAdic(genera){
                                 border: [true, true, true, true],
                                 text: 'EXCLUSIONES',
                                 bold: true,
-                                margin: [0,1],
+                                margin: [0,2],
                                 fillColor: '#dddddd',
                                 alignment: 'center',
                                 fontSize: 10,
@@ -1004,127 +1034,12 @@ function generaPptoAdic(genera){
                 },
                 unbreakable:true,
             },
-            {text:' '},
+
+            //Condiciones Comerciales
             {
                 table:{
                     widths: ['*', 120, '*', '*','*',120],
                     body:[
-                        [
-                            { 
-                                border: [true, true, true, true],
-                                text: 'IMPORTE CON LETRA',
-                                margin: [0,1],
-                                fillColor: '#dddddd',
-                                alignment: 'center',
-                                fontSize: 8,
-                            },
-                            {  
-                                colSpan:5,
-                                border: [true, true, true, true],
-                                text: numeroALetras((precio_total*1.16).toFixed(2)),
-                                bold: true,
-                                margin: [0,1],
-                                fillColor: '#dddddd',
-                                alignment: 'center',
-                                fontSize: 8,
-                            },
-                            '',
-                            '',
-                            '',
-                            '',
-                        ],
-                        
-                        [
-                            {  
-                                colSpan:3,
-                                border: [false, false, false, false],
-                                text: '',
-                                margin: [0,0],
-                                alignment: 'center',
-                                fontSize: 8,
-                            },
-                            '',
-                            '',
-                            {  
-                                colSpan:2,
-                                border: [false, true, true, false],
-                                text: 'Subtotal',
-                                margin: [0,0],
-                                alignment: 'right',
-                                fontSize: 8,
-                            },
-                            '',
-                            {  
-                                border: [true, true, true, true],
-                                text: formatMoney(precio_total),
-                                bold: true,
-                                margin: [0,0],
-                                alignment: 'right',
-                                fontSize: 8,
-                            }
-
-                        ],
-                        [
-                            {  
-                                colSpan:3,
-                                border: [false, false, false, false],
-                                text: '',
-                                margin: [0,0],
-                                alignment: 'center',
-                                fontSize: 8,
-                            },
-                            '',
-                            '',
-                            {  
-                                colSpan:2,
-                                border: [false, false, true, false],
-                                text: 'I.V.A',
-                                margin: [0,0],
-                                alignment: 'right',
-                                fontSize: 8,
-                            },
-                            '',
-                            {  
-                                border: [true, true, true, true],
-                                text: formatMoney(precio_total*0.16),
-                                bold:true,
-                                margin: [0,0],
-                                alignment: 'right',
-                                fontSize: 8,
-                            }
-                        ],
-
-                        [
-                            {  
-                                colSpan:3,
-                                border: [false, false, false, false],
-                                text: '',
-                                margin: [0,0],
-                                alignment: 'center',
-                                fontSize: 8,
-                            },
-                            '',
-                            '',
-                            {  
-                                colSpan:2,
-                                border: [false, false, true, false],
-                                text: 'TOTAL',
-                                bold:true,
-                                margin: [0,0],
-                                alignment: 'right',
-                                fontSize: 8,
-                            },
-                            '',
-                            {  
-                                border: [true, true, true, true],
-                                text: formatMoney(precio_total*1.16),
-                                bold: true,
-                                margin: [0,0],
-                                alignment: 'right',
-                                fontSize: 8,
-                            }
-
-                        ],
                         [
                             {  
                                 colSpan:2,
@@ -1230,9 +1145,10 @@ function generaPptoAdic(genera){
                         [
                             {  
                                 colSpan:3,
+                                rowSpan:2,
                                 border: [false, false, false, false],
                                 text: 'Cliente',
-                                margin: [0,10],
+                                margin: [0,40],
                                 alignment: 'center',
                                 fontSize: 10,
                                 bold: true,
@@ -1240,9 +1156,10 @@ function generaPptoAdic(genera){
                             '','',
                             {  
                                 colSpan:3,
+                                rowSpan:2,
                                 border: [false, false, false, false],
                                 text: 'Contratista',
-                                margin: [0,10],
+                                margin: [0,40],
                                 alignment: 'center',
                                 fontSize: 10,
                                 bold: true,
@@ -1250,13 +1167,13 @@ function generaPptoAdic(genera){
                             '','',
 
                         ],
-
+                        ['','','','','',''],
                         [
                             {  
                                 colSpan:3,
                                 border: [false, false, false, false],
                                 text: '______________________________________',
-                                margin: [0,3],
+                                margin: [0,6],
                                 alignment: 'center',
                                 fontSize: 8,
                             },
@@ -1265,7 +1182,7 @@ function generaPptoAdic(genera){
                                 colSpan:3,
                                 border: [false, false, false, false],
                                 text: '______________________________________',
-                                margin: [0,3],
+                                margin: [0,6],
                                 alignment: 'center',
                                 fontSize: 8,
                             },
