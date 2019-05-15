@@ -7,15 +7,13 @@ var id_obra_ddl_ppto_adic = "obraDdlPptoAdic";
 var id_atn_ddl_check_ppto_adic = "atnDdlCbPptoAdic";
 
 //Body
-//var id_descripcion_entrada_ppto_adic = 'descripcionEntradaPptoAdic';//AQUI se va?
-//var id_precio_entrada_ppto_adic = "precioEntradaPptoAdic";//AQUI se va?
-//var id_add_entrada_button_ppto_adic = "addEntradaButtonPptoAdic";//AQUI se va?
-//var id_del_entrada_button_ppto_adic ="delEntradaButtonPptoAdic"//AQUI se va?
-//var id_entrada_lista_ppto_adic = "entradasListaPptoAdic";//AQUI se va?
 
 var id_file_ppto_adic = "importarPptoAdic";
 var id_filename_ppto_adic = "importarLabelPptoAdic";
 var id_importar_button_ppto_adic = "importarButtonPptoAdic";
+var id_imagen_button_ppto_adic = "imagenButtonPptoAdic";
+var id_imagen_name_ppto_adic = "imagenLabelPptoAdic";
+var id_imagen_file_ppto_adic = "fotoAdicInput";
 
 //Footer
 var id_reqs_ddl_check_ppto_adic = "reqsDdlCbPptoAdic";
@@ -69,13 +67,18 @@ var subtotal;
 var excelSeleccionado = "";
 var fileName = "";
 
+var fotoSeleccionada;
+var imagen_anexo;
+
 var ppto_especial = false;
+var pv_directo = "";
+var pv_indirecto = "";
 
 $('#' + id_file_ppto_adic).on("change",(function(event) {
-    //console.log("hola"); 
     excelSeleccionado = event.target.files[0];
     fileName = excelSeleccionado.name;
     $('#' + id_filename_ppto_adic).text(fileName);
+    document.getElementById(id_importar_button_ppto_adic).disabled = false;
 }));
 
 $('#tabPresupuestoAdic').click(function() {
@@ -136,6 +139,24 @@ $('#tabPresupuestoAdic').click(function() {
     });
 });
 
+$('#' + id_imagen_file_ppto_adic).on("change", function(event){
+    fotoSeleccionada = event.target.files[0];
+    $('#' + id_imagen_name_ppto_adic).text(fotoSeleccionada.name);
+    document.getElementById(id_imagen_button_ppto_adic).disabled = false;
+});
+
+$('#' + id_imagen_button_ppto_adic).click(function() {
+    var reader = new FileReader();
+
+    reader.readAsDataURL(fotoSeleccionada);
+    
+    reader.onloadend = function () {
+        imagen_anexo = reader.result;
+        alert("Imagen cargada")
+        document.getElementById(id_imagen_button_ppto_adic).disabled = true;
+    }
+});
+
 $("#" + id_anticipo_ppto_adic).click(function() {
     document.getElementById(id_anticipo2_rb_ppto_adic).checked = true;
 });
@@ -159,7 +180,6 @@ $("#" + id_obra_ddl_ppto_adic).change(function() {
         var cliente = snapshot.child("cliente").val();
         firebase.database().ref(rama_bd_clientes + "/" + cliente).once('value').then(function(clienSnap){
             ppto_especial = clienSnap.child("ppto_especial").exists() ? clienSnap.child("ppto_especial").val() : false;
-            console.log(ppto_especial);
             var atnArray = clienSnap.child("atencion").val();
             for(var i = 0; i < atnArray.length; i++){
                 var atn = atnArray[i];
@@ -181,49 +201,69 @@ $('#' + id_importar_button_ppto_adic).on("click",function() {
         data = new Uint8Array(data);
         var workbook = XLSX.read(data, {type: 'array'});
         json = {};
+        var num_worksheets = 0;
         workbook.SheetNames.forEach(function (sheetName) {
+            num_worksheets++;
             var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {header: 1});
             if (roa.length) json = roa;
         });
-        alcance = [];
-        alcance[0] = [{text: json[2][0], alignment: 'left'},{text: json[2][1], alignment: 'left'},{text: json[2][2], colSpan:2},'',{text: json[2][3], alignment: 'left'},{text: json[2][4], alignment: 'left'}];
-        var ren = [];
-        var finished = false;
-        for(key in json){
-            if(!finished){
-                if(key > 2){
-                    if(json[key][0] != undefined){
-                        //ren = ['1.' + ("0" + (alcance.length)).slice(-2)];
-                        /*for(i=0;i<alcance[0].length - 1;i++){
-                            if(i == 1){
-                                ren.push({text:parseFloat(json[key][i]).toFixed(0), noWrap: true});
-                            } else {
-                                ren.push({text:json[key][i], noWrap: true});
+        if(num_worksheets > 1){
+            alert("El documento tiene más de un libro");
+        } else {
+            alcance = [];
+            alcance[0] = [{text: json[2][0], alignment: 'left'},{text: json[2][1], alignment: 'left'},{text: json[2][2], colSpan:2},'',{text: json[2][3], alignment: 'left'},{text: json[2][4], alignment: 'left'}];
+            var ren = [];
+            var finished = false;
+            for(key in json){
+                if(!finished){
+                    if(key > 2){
+                        if(json[key][0] != undefined){
+                            //ren = ['1.' + ("0" + (alcance.length)).slice(-2)];
+                            /*for(i=0;i<alcance[0].length - 1;i++){
+                                if(i == 1){
+                                    ren.push({text:parseFloat(json[key][i]).toFixed(0), noWrap: true});
+                                } else {
+                                    ren.push({text:json[key][i], noWrap: true});
+                                }
+                            }*/
+                            ren = [];
+                            ren.push({text:json[key][0], alignment: 'left'});
+                            ren.push({text:parseFloat(json[key][1]).toFixed(0), alignment: 'center'});
+                            ren.push({text:json[key][2], alignment:'left',colSpan:2});
+                            ren.push('');
+                            ren.push({text:json[key][3], noWrap: true, alignment: 'right'});
+                            ren.push({text:json[key][4], noWrap: true, alignment: 'right'});
+                            alcance.push(ren);
+                            alcance_string += json[key][2] + "; ";
+                        } else if(json[key][4] != undefined){
+                            if(!isNaN(deformatMoney(json[key][4]))){
+                                if(ppto_especial){
+                                    if(pv_directo == ""){
+                                        pv_directo = parseFloat(deformatMoney(json[key][4]));
+                                    } else if(pv_indirecto == ""){
+                                        pv_indirecto = parseFloat(deformatMoney(json[key][4]));
+                                    } else {
+                                        subtotal = parseFloat(deformatMoney(json[key][4]));
+                                        finished = true;   
+                                    }
+                                } else {
+                                    subtotal = parseFloat(deformatMoney(json[key][4]));
+                                    finished = true;
+                                }
                             }
-                        }*/
-                        ren = [];
-                        ren.push({text:json[key][0], alignment: 'left'});
-                        ren.push({text:parseFloat(json[key][1]).toFixed(0), alignment: 'center'});
-                        ren.push({text:json[key][2], alignment:'left',colSpan:2});
-                        ren.push('');
-                        ren.push({text:json[key][3], noWrap: true, alignment: 'right'});
-                        ren.push({text:json[key][4], noWrap: true, alignment: 'right'});
-                        alcance.push(ren);
-                        alcance_string += json[key][2] + "; ";
-                    } else if(!isNaN(deformatMoney(json[key][4]))){
-                        subtotal = parseFloat(deformatMoney(json[key][4]));
-                        finished = true;
+                        }
                     }
                 }
             }
-        }
-        if(isNaN(subtotal)){
-            alert("Error de formato");
+            if(isNaN(subtotal)){
+                alert("Error de formato");
+            } else {
+                alert("Documento cargado con exito");
+                document.getElementById(id_importar_button_ppto_adic).disabled = true;
+            }
         }
     };
     reader.readAsArrayBuffer(excelSeleccionado);
-    alert("Documento cargado con exito");
-    //console.log(alcance);
 });
 
 $("#" + id_existente_check_ppto_adic).change(function(){
@@ -306,7 +346,6 @@ $('#' + id_vistaPrevia_button_ppto_adic).click(function () {
 
 $('#' + id_registrar_button_ppto_adic).click(function () {
     if(!$('#' + id_proyectos_ppto_adic).val() || !$('#' + id_suministros_ppto_adic).val() || !$('#' + id_copeo_ppto_adic).val() || (document.getElementById(id_existente_check_ppto_adic).checked && $('#' + id_proc_ddl_ppto_adic + " option:selected").val() == "") || !$('#' + id_nombre_ppto_adic).val() || $('#' + id_obra_ddl_ppto_adic + " option:selected").val() == "" || alcance.length == 0){//$('#' + id_filename_ppto_adic).text() == "Archivo no seleccionado"){
-        //console.log('Text: ' + $('#' + id_filename_ppto_adic).text());
         alert("Llena todos los campos requeridos");
     } else {
         //loadAnexoPptoAdic();
@@ -337,13 +376,12 @@ $('#' + id_registrar_button_ppto_adic).click(function () {
                 var subp_clave = $('#' + id_proc_ddl_ppto_adic + " option:selected").text();
                 var nombre = $('#' + id_nombre_ppto_adic).val();
                 var consecutivo = parseInt(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/presupuesto/archivos").numChildren()) + 1;
-                //console.log(consecutivo);
 
                 proy_kaiz -= parseFloat(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/kaizen/PROYECTOS/PPTO").val());
                 mate_kaiz -= parseFloat(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/kaizen/PRODUCCION/SUMINISTROS/CUANT").val());
                 mdeo_kaiz -= parseFloat(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/kaizen/PRODUCCION/COPEO/PREC").val());
-                anti_kaiz -= parseFloat(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/kaizen/ADMINISTRACION/ESTIMACIONES/PPTO").val());
-                esti_kaiz -= parseFloat(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/kaizen/ADMINISTRACION/ANTICIPOS/PPTO").val());
+                esti_kaiz -= parseFloat(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/kaizen/ADMINISTRACION/ESTIMACIONES/PPTO").val());
+                anti_kaiz -= parseFloat(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/kaizen/ADMINISTRACION/ANTICIPOS/PPTO").val());
                 brut_kaiz -= parseFloat(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/kaizen/PROFIT/PROG/BRUTO").val());
                 neto_kaiz -= parseFloat(obra_global_snap.child("procesos/ADIC/subprocesos/" + subp_clave + "/kaizen/PROFIT/PROG/NETO").val());
                 var updates = {};
@@ -358,8 +396,8 @@ $('#' + id_registrar_button_ppto_adic).click(function () {
                 sumaEnFirebase(query_subp + "/PROYECTOS/PPTO", proy_kaiz);
                 sumaEnFirebase(query_subp + "/PRODUCCION/SUMINISTROS/CUANT", mate_kaiz);
                 sumaEnFirebase(query_subp + "/PRODUCCION/COPEO/PREC", mdeo_kaiz);
-                sumaEnFirebase(query_subp + "/ADMINISTRACION/ESTIMACIONES/PPTO", anti_kaiz);
-                sumaEnFirebase(query_subp + "/ADMINISTRACION/ANTICIPOS/PPTO", esti_kaiz);
+                sumaEnFirebase(query_subp + "/ADMINISTRACION/ESTIMACIONES/PPTO", esti_kaiz);
+                sumaEnFirebase(query_subp + "/ADMINISTRACION/ANTICIPOS/PPTO", anti_kaiz);
                 sumaEnFirebase(query_subp + "/PROFIT/PROG/BRUTO", brut_kaiz);
                 sumaEnFirebase(query_subp + "/PROFIT/PROG/NETO", neto_kaiz);
             } else {
@@ -370,11 +408,10 @@ $('#' + id_registrar_button_ppto_adic).click(function () {
                 kaiz_nuevo.PROYECTOS.PPTO = proy_kaiz;
                 kaiz_nuevo.PRODUCCION.SUMINISTROS.CUANT = mate_kaiz;
                 kaiz_nuevo.PRODUCCION.COPEO.PREC = mdeo_kaiz;
-                kaiz_nuevo.ADMINISTRACION.ESTIMACIONES.PPTO = anti_kaiz;
-                kaiz_nuevo.ADMINISTRACION.ANTICIPOS.PPTO = esti_kaiz;
+                kaiz_nuevo.ADMINISTRACION.ESTIMACIONES.PPTO = esti_kaiz;
+                kaiz_nuevo.ADMINISTRACION.ANTICIPOS.PPTO = anti_kaiz;
                 kaiz_nuevo.PROFIT.PROG.BRUTO = brut_kaiz;
                 kaiz_nuevo.PROFIT.PROG.NETO = neto_kaiz;
-                //console.log(kaiz);
                 var subproc = {
                     alcance: alcance_string,
                     categoria: "",
@@ -408,16 +445,16 @@ $('#' + id_registrar_button_ppto_adic).click(function () {
             sumaEnFirebase(query_proc + "/PROYECTOS/PPTO", proy_kaiz);
             sumaEnFirebase(query_proc + "/PRODUCCION/SUMINISTROS/CUANT", mate_kaiz);
             sumaEnFirebase(query_proc + "/PRODUCCION/COPEO/PREC", mdeo_kaiz);
-            sumaEnFirebase(query_proc + "/ADMINISTRACION/ESTIMACIONES/PPTO", anti_kaiz);
-            sumaEnFirebase(query_proc + "/ADMINISTRACION/ANTICIPOS/PPTO", esti_kaiz);
+            sumaEnFirebase(query_proc + "/ADMINISTRACION/ESTIMACIONES/PPTO", esti_kaiz);
+            sumaEnFirebase(query_proc + "/ADMINISTRACION/ANTICIPOS/PPTO", anti_kaiz);
             sumaEnFirebase(query_proc + "/PROFIT/PROG/BRUTO", brut_kaiz);
             sumaEnFirebase(query_proc + "/PROFIT/PROG/NETO", neto_kaiz);
 
             sumaEnFirebase(query_obra + "/PROYECTOS/PPTO", proy_kaiz);
             sumaEnFirebase(query_obra + "/PRODUCCION/SUMINISTROS/CUANT", mate_kaiz);
             sumaEnFirebase(query_obra + "/PRODUCCION/COPEO/PREC", mdeo_kaiz);
-            sumaEnFirebase(query_obra + "/ADMINISTRACION/ESTIMACIONES/PPTO", anti_kaiz);
-            sumaEnFirebase(query_obra + "/ADMINISTRACION/ANTICIPOS/PPTO", esti_kaiz);
+            sumaEnFirebase(query_obra + "/ADMINISTRACION/ESTIMACIONES/PPTO", esti_kaiz);
+            sumaEnFirebase(query_obra + "/ADMINISTRACION/ANTICIPOS/PPTO", anti_kaiz);
             sumaEnFirebase(query_obra + "/PROFIT/PROG/BRUTO", brut_kaiz);
             sumaEnFirebase(query_obra + "/PROFIT/PROG/NETO", neto_kaiz);
         });
@@ -720,6 +757,260 @@ function generaPptoAdic(genera){
     for(i=0;i<alcance.length;i++){
         bod.push(alcance[i]);
     }
+    var bod_tot;
+    if(ppto_especial){
+        bod_tot = [
+            [
+                {  
+                    colSpan:3,
+                    border: [false, true, false, false],
+                    text: '',
+                    margin: [0,0],
+                    alignment: 'center',
+                    fontSize: 8,
+                },
+                '',
+                '',
+                {  
+                    colSpan:2,
+                    border: [false, true, true, false],
+                    text: 'Costo directo',
+                    margin: [0,0],
+                    alignment: 'right',
+                    fontSize: 10,
+                },
+                '',
+                {  
+                    border: [true, true, true, true],
+                    text: formatMoney(pv_directo),
+                    bold: true,
+                    margin: [0,0],
+                    alignment: 'right',
+                    fontSize: 10,
+                }
+            ],
+            [
+                {  
+                    colSpan:3,
+                    border: [false, false, false, false],
+                    text: '',
+                    margin: [0,0],
+                    alignment: 'center',
+                    fontSize: 8,
+                },
+                '',
+                '',
+                {  
+                    colSpan:2,
+                    border: [false, false, true, false],
+                    text: 'Costo indirecto',
+                    margin: [0,0],
+                    alignment: 'right',
+                    fontSize: 10,
+                },
+                '',
+                {  
+                    border: [true, true, true, true],
+                    text: formatMoney(pv_indirecto),
+                    bold: true,
+                    margin: [0,0],
+                    alignment: 'right',
+                    fontSize: 10,
+                }
+            ],
+            [
+                {  
+                    colSpan:3,
+                    border: [false, false, false, false],
+                    text: '',
+                    margin: [0,0],
+                    alignment: 'center',
+                    fontSize: 8,
+                },
+                '',
+                '',
+                {  
+                    colSpan:2,
+                    border: [false, false, true, false],
+                    text: 'Subtotal',
+                    margin: [0,0],
+                    alignment: 'right',
+                    fontSize: 10,
+                },
+                '',
+                {  
+                    border: [true, true, true, true],
+                    text: formatMoney(precio_total),
+                    bold: true,
+                    margin: [0,0],
+                    alignment: 'right',
+                    fontSize: 12,
+                }
+            ],
+            [
+                {  
+                    colSpan:3,
+                    border: [false, false, false, false],
+                    text: '',
+                    margin: [0,0],
+                    alignment: 'center',
+                    fontSize: 8,
+                },
+                '',
+                '',
+                {  
+                    colSpan:2,
+                    border: [false, false, true, false],
+                    text: 'I.V.A',
+                    margin: [0,0],
+                    alignment: 'right',
+                    fontSize: 10,
+                },
+                '',
+                {  
+                    border: [true, true, true, true],
+                    text: formatMoney(precio_total*0.16),
+                    bold:true,
+                    margin: [0,0],
+                    alignment: 'right',
+                    fontSize: 12,
+                }
+            ],
+            [
+                {  
+                    colSpan:3,
+                    border: [false, false, false, false],
+                    text: '',
+                    margin: [0,0],
+                    alignment: 'center',
+                    fontSize: 8,
+                },
+                '',
+                '',
+                {  
+                    colSpan:2,
+                    border: [false, false, true, false],
+                    text: 'TOTAL',
+                    bold:true,
+                    margin: [0,0],
+                    alignment: 'right',
+                    fontSize: 10,
+                },
+                '',
+                {  
+                    border: [true, true, true, true],
+                    text: formatMoney(precio_total*1.16),
+                    bold: true,
+                    margin: [0,0],
+                    alignment: 'right',
+                    fontSize: 14,
+                }
+            ],
+        ]
+    } else {
+        bod_tot = [
+            [
+                {  
+                    colSpan:3,
+                    border: [false, true, false, false],
+                    text: '',
+                    margin: [0,0],
+                    alignment: 'center',
+                    fontSize: 8,
+                },
+                '',
+                '',
+                {  
+                    colSpan:2,
+                    border: [false, true, true, false],
+                    text: 'Subtotal',
+                    margin: [0,0],
+                    alignment: 'right',
+                    fontSize: 10,
+                },
+                '',
+                {  
+                    border: [true, true, true, true],
+                    text: formatMoney(precio_total),
+                    bold: true,
+                    margin: [0,0],
+                    alignment: 'right',
+                    fontSize: 12,
+                }
+            ],
+            [
+                {  
+                    colSpan:3,
+                    border: [false, false, false, false],
+                    text: '',
+                    margin: [0,0],
+                    alignment: 'center',
+                    fontSize: 8,
+                },
+                '',
+                '',
+                {  
+                    colSpan:2,
+                    border: [false, false, true, false],
+                    text: 'I.V.A',
+                    margin: [0,0],
+                    alignment: 'right',
+                    fontSize: 10,
+                },
+                '',
+                {  
+                    border: [true, true, true, true],
+                    text: formatMoney(precio_total*0.16),
+                    bold:true,
+                    margin: [0,0],
+                    alignment: 'right',
+                    fontSize: 12,
+                }
+            ],
+            [
+                {  
+                    colSpan:3,
+                    border: [false, false, false, false],
+                    text: '',
+                    margin: [0,0],
+                    alignment: 'center',
+                    fontSize: 8,
+                },
+                '',
+                '',
+                {  
+                    colSpan:2,
+                    border: [false, false, true, false],
+                    text: 'TOTAL',
+                    bold:true,
+                    margin: [0,0],
+                    alignment: 'right',
+                    fontSize: 10,
+                },
+                '',
+                {  
+                    border: [true, true, true, true],
+                    text: formatMoney(precio_total*1.16),
+                    bold: true,
+                    margin: [0,0],
+                    alignment: 'right',
+                    fontSize: 14,
+                }
+            ],
+        ]
+    }
+
+    var img_an;
+    if($('#' + id_imagen_name_ppto_adic).text() == "Archivo no seleccionado"){
+        img_an = '';
+    } else {
+        img_an = {
+            image: imagen_anexo,
+            alignment: 'left',
+            width: 532.00,
+            height: 680.00
+        };
+    }
     var pdfPresupuesto = {
         pageSize: 'LETTER',
     
@@ -758,98 +1049,7 @@ function generaPptoAdic(genera){
             {
                 table:{
                     widths: ['*', 120, '*', '*','*',120],
-                    body:[
-                        [
-                            {  
-                                colSpan:3,
-                                border: [false, true, false, false],
-                                text: '',
-                                margin: [0,0],
-                                alignment: 'center',
-                                fontSize: 8,
-                            },
-                            '',
-                            '',
-                            {  
-                                colSpan:2,
-                                border: [false, true, true, false],
-                                text: 'Subtotal',
-                                margin: [0,0],
-                                alignment: 'right',
-                                fontSize: 10,
-                            },
-                            '',
-                            {  
-                                border: [true, true, true, true],
-                                text: formatMoney(precio_total),
-                                bold: true,
-                                margin: [0,0],
-                                alignment: 'right',
-                                fontSize: 12,
-                            }
-
-                        ],
-                        [
-                            {  
-                                colSpan:3,
-                                border: [false, false, false, false],
-                                text: '',
-                                margin: [0,0],
-                                alignment: 'center',
-                                fontSize: 8,
-                            },
-                            '',
-                            '',
-                            {  
-                                colSpan:2,
-                                border: [false, false, true, false],
-                                text: 'I.V.A',
-                                margin: [0,0],
-                                alignment: 'right',
-                                fontSize: 10,
-                            },
-                            '',
-                            {  
-                                border: [true, true, true, true],
-                                text: formatMoney(precio_total*0.16),
-                                bold:true,
-                                margin: [0,0],
-                                alignment: 'right',
-                                fontSize: 12,
-                            }
-                        ],
-                        [
-                            {  
-                                colSpan:3,
-                                border: [false, false, false, false],
-                                text: '',
-                                margin: [0,0],
-                                alignment: 'center',
-                                fontSize: 8,
-                            },
-                            '',
-                            '',
-                            {  
-                                colSpan:2,
-                                border: [false, false, true, false],
-                                text: 'TOTAL',
-                                bold:true,
-                                margin: [0,0],
-                                alignment: 'right',
-                                fontSize: 10,
-                            },
-                            '',
-                            {  
-                                border: [true, true, true, true],
-                                text: formatMoney(precio_total*1.16),
-                                bold: true,
-                                margin: [0,0],
-                                alignment: 'right',
-                                fontSize: 14,
-                            }
-
-                        ],
-                    ],
+                    body:bod_tot,
                     unbreakable: true,
                 },
             },
@@ -1274,15 +1474,8 @@ function generaPptoAdic(genera){
                 },
                 unbreakable:true,
             },
-            /*
-            {text:' '},
-            {
-                table:{
-
-                },
-                unbreakable:true,
-            }
-            */ 
+            //Anexo imagen
+            img_an,
         ],       
     };
     return [pdfPresupuesto, clave_presu, precio_total*1.16];
