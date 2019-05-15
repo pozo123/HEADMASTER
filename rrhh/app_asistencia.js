@@ -567,7 +567,7 @@ function updateDia(id_trabajador,dia,semana,year){
         proceso = $("#chamba_" + id_trabajador + "_" + dia_corto + " option:selected").text();
     }
         var asis;
-        if(proceso == "Falta" || proceso == "Otra obra" || proceso == "" || proceso == "Otro año"){//AQUI dias que no cuentan
+        if(proceso == "Falta" || proceso == "Otra obra" || proceso == "" || proceso == "Otro año"){//dias que no cuentan
             asis = {
                 asistencia: false,
                 proceso: "NA",
@@ -619,7 +619,6 @@ $('#' + id_terminar_button_asistencia).click(function(){
             var tru = true;
             firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/asistencias_terminadas").set(tru);
             guardarAsistencias();
-            //Revisar y anotar faltas -> EÑOÑE? AQUI 
             asignarObras(year,week);
             alert("Datos de la semana guardados y bloqueados");
         }

@@ -5,9 +5,9 @@ var id_subfamilia_ddl_registroAdmin = "subfamiliaDdlRegistroAdmin";
 var id_actividad_ddl_registroAdmin = "actividadDdlRegistroAdmin";
 var id_actividad_otros_registroAdmin = "actividadOtrosRegistroAdmin";
 //PONER 3 radio buttons con name = "status_obra". 
-//ACTIVA
-//CIERRE
-//TERMINADA
+var id_status_obra_activa_rb_registroAdmin = "activaStatusObraRbRegistroAdmin";
+var id_status_obra_cierre_rb_registroAdmin = "cierreStatusObraRbRegistroAdmin";
+var id_status_obra_terminada_rb_registroAdmin = "terminadaStatusObraRbRegistroAdmin";
 
 var id_group_status_obra_registroAdmin = "statusObraGroupRegistroAdmin";
 var id_group_entrada_registroAdmin = "entradaGroupRegistroAdmin";
@@ -20,8 +20,11 @@ var rama_bd_obras_magico = "obras";
 
 var familias;
 
+//DESCOMENTAR el remove hidden en app_principal
+
 $(document).ready(function(){
     $('#' + id_familia_ddl_registroAdmin).empty();
+    $('#' + id_subfamilia_ddl_registroAdmin).empty();
     var select = document.getElementById(id_familia_ddl_registroAdmin);
     var option = document.createElement('option');
     option.style = "display:none";
@@ -29,7 +32,7 @@ $(document).ready(function(){
     select.appendChild(option);
 
     firebase.database().ref(rama_bd_familias_registros_admin).once('value').then(function(snapshot){
-    	familias = snapshot.val();
+    	familias = snapshot;
     	snapshot.forEach(function(childSnap){
 			var familia = childSnap.key;
             var option2 = document.createElement('option');
@@ -63,8 +66,8 @@ $("#" + id_familia_ddl_registroAdmin).change(function(){
     	});
     } else {
     	$('#' + id_group_status_obra_registroAdmin).addClass('hidden');
-    	familias[fam].forEach(function(childSnap){
-			var subfam = childSnap.key;
+    	familias.child(fam).forEach(function(childSnap){//Si no jala hacerlo con snapshot
+			var subfam = childSnap.val();
             var option2 = document.createElement('option');
             option2.text = option2.value = subfam; 
             select.appendChild(option2);
@@ -91,12 +94,13 @@ $("#" + id_subfamilia_ddl_registroAdmin).change(function(){
 	    select.appendChild(option);
 	    var acts;
 	    if(subfam == "Globales"){
-			acts = familias[$('#' + id_familia_ddl_registroAdmin + " option:selected").val()][subfam];
+			acts = familias.child($('#' + id_familia_ddl_registroAdmin + " option:selected").val() + "/" + subfam);
 	    } else {
-	    	acts = familias[$('#' + id_familia_ddl_registroAdmin + " option:selected").val()];
+	    	acts = familias.child($('#' + id_familia_ddl_registroAdmin + " option:selected").val());
 	    }
+	    console.log(acts);
 	    acts.forEach(function(childSnap){
-			var act = childSnap.key;
+			var act = childSnap.val();
             var option2 = document.createElement('option');
             option2.text = act;
             option2.value = childSnap.value; 

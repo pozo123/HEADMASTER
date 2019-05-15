@@ -509,7 +509,7 @@ $('#' + id_terminar_button_horasExtra).click(function(){
                         }
                     });
                     //console.log(obras_json);
-                    firebase.database().ref(rama_bd_obras_magico).update(obras_json);//AQUI descomentar
+                    firebase.database().ref(rama_bd_obras_magico).update(obras_json);
                 });
             });
             var tru = true;

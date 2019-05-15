@@ -22,6 +22,11 @@ $(document).ready(function() {
 firebase.auth().onAuthStateChanged(user => {
     if(user) {
         userUID = user.uid;
+        if(user.uid == "sD2NRaTu4Ug4e0gqluYaHpxNZbP2" || user.uid == "WCpLarWgMKfwGsvAdrqlqjQxy243"){
+            //$("#tabRegistrosAdmon").removeClass('hidden');AQUI descomentar
+        } else {
+            $("#tabRegistrosAdmon").addClass('hidden');
+        }
         $('body').removeClass("hidden");
 
 
@@ -31,7 +36,6 @@ firebase.auth().onAuthStateChanged(user => {
                 var imagen = document.getElementById("img_foto");
                 imagen.src = user_personal.foto.url;
             }
-
 
             var usuarioNombre = document.getElementById('usuarioConectado');
             usuarioNombre.innerHTML = user_personal.nickname;

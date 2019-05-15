@@ -105,7 +105,6 @@ ARTURO:
     
 DIEGO:
  - Definir cómo terminar OdeC
- - Desplegar Proveedores y OdeC, como bibliotecas
  - En Odec revisar proveedor en on change (compararlo con la bd) 
  - Definir quién llena las horas ppto de SCORE en los procs/pptos, y cómo (no sólo en kaizen)
  - desplegar kaizen lo del cambio de obra, cargarKaizen hay que descomentarlo de funciones y probarlo, que se sumen en totales y asi todo bien

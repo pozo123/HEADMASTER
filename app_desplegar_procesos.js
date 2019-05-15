@@ -188,7 +188,6 @@ function loadTablaProcesos(){
             language: idioma_espanol,
         });
      
-        // aqui
         $('.' + class_table_datatable_procesos +' tbody').on( 'click', 'tr.group', function () {
             var currentOrder = table.order()[0];
             if ( currentOrder[0] === groupColumn && currentOrder[1] === 'asc' ) {

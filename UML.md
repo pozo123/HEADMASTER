@@ -401,7 +401,7 @@
                      - impuestos:
                         - impuestos_horas_extra
                         - impuestos_diversos
-                        - impuestos_asistencia (impuestos_asistencia_trabajador * asistencias_aqui/asistencias totales)
+                        - impuestos_asistencia (impuestos_asistencia_trabajador * asistencias_esta_obra/asistencias totales)
                      - total (subtotal + impuestos)
   
 

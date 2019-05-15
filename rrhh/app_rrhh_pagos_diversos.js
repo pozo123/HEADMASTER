@@ -707,7 +707,7 @@ function distribuyeEnAsistencias(obras_json,monto,trabSnap,year,week,diverso){
     asistenciaDia(asistencias, trabSnap.child("nomina/" + year + "/" + week + "/jueves").val());
     asistenciaDia(asistencias, trabSnap.child("nomina/" + year + "/" + week + "/viernes").val());
 
-    var totales = {};//AQUI se redefine por cada entrada y por eso se muere para siempre
+    var totales = {};
     //firebase.database().ref(rama_bd_obras_magico).once('value').then(function(obrasSnapshot){
         //var obras_json = obrasSnapshot.val();
         for(key in asistencias){
@@ -725,7 +725,6 @@ function distribuyeEnAsistencias(obras_json,monto,trabSnap,year,week,diverso){
                             diverso: diverso,
                         }
                         firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + keyObra + "/trabajadores/" + trabSnap.key + "/diversos").push(diver);
-                        //AQUI tiene que entrar al kaizen... pero me da miedo la asincronía
                         if(keyObra != "Atencion a Clientes"){
                             //sumaMOKaizen(keyObra,cant);
                             obras_json[keyObra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] =(parseFloat(obras_json[keyObra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(cant)*1.16).toFixed(2);
@@ -749,7 +748,6 @@ function distribuyeEnAsistencias(obras_json,monto,trabSnap,year,week,diverso){
                         diverso: diverso,
                     }
                     firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + keyObra + "/trabajadores/" + trabSnap.key + "/diversos").push(diver);
-                    //AQUI tiene que entrar al kaizen... pero me da miedo la asincronía
                     obras_json[keyObra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] = (parseFloat(obras_json[keyObra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(cant)*1.16).toFixed(2);
                     //sumaMOKaizen(keyObra,cant);
                     //console.log(keyObra + ": " + cant);
