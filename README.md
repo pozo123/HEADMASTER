@@ -10,16 +10,12 @@ REESTRUCTURA_BD:
     - bibliotecas -> cambiar a "catalogos"
        - Total
           - Obras, editable
-          - Categorias, editable
-          - Clientes, editable
           - Atencion, editable, eliminable
           - Personal, editable
           - Destajistas, editable
           - Diversos, editable
        - Admon
           - Obras (editar: cliente, clave, terminada, direccion)
-          - Categorias (editar: nombre)
-          - Clientes (editar: Todo)
           - Atencion (editar: Todo, eliminar)
           - Personal (editar -> No, se hace desde app_personal)
        - Compras
@@ -27,13 +23,11 @@ REESTRUCTURA_BD:
           - Atencion
        - Produccion
           - Obras
-          - Categorias
           - Atencion 
           - destajistas
           - Diversos
        - Proyectos
           - Obras
-          - Clientes (editar: Todo)
           - Atencion (editar: Todo, eliminar)
        - RRHH
           - Obras
@@ -45,11 +39,17 @@ REESTRUCTURA_BD:
   - Para anexos jalar archivos excel y jalar el formato (mezcla apps importar con apps ppto)
   - Poner nota en registro si creden == 2
   - generador de pptos (solo pdf) -> contratos de obra
+  - app para cambiar cliente.ppto_especial
+
+ KICK-OFF 
+ - subir y editar por req (req = {id, alcance, nombre_corto, familia})
+ - asignar a proc (al dar de alta el proc, con ddcb)
+ - Palomear (con pad, necesita creden, subir archivo)
+ - liberar
 
  HTMLs:
  - app_admin_registro
  - app_admon_pago_kaizen -> (REVISAR HTML) nueva app + pad + checo si obra terminada
- - app_proy_actualizar_esp -> (REVISAR HTML) nueva app. 2 radio buttons y un botÃ³n nada mÃ¡s.
  - app_reporte_obras -> (REVISAR HTML, faltan divs y sobran dropdown checkboxes) reestructura_bd. 
  - app_distribucion_supervisores (los pagos de la pagadora)
  - app_gestionar_supervisores -> (REVISAR HTML) reestructura_bd, solo se asigna por obra, se comenta un ddl
@@ -91,17 +91,12 @@ REESTRUCTURA_BD:
  - falta empty a muchos ddls antes de cargarlos
 
 ARTURO:
- - Falta el app_generos_tipos en proyectos
- - Quitar todos los colaboradores de todo lo que no sea admin
- - en app_pryo_cuant_kaizen cambiar el placeholder de descripcion
  - clase rojo y gris en desplegar kaizen
  - Desplegar Kaizen: TODO en colores por columna, sin el negro
  - Titulos de obra en catalogo de proceso en negritas y mas grandes
- - Poner los labels de anterior y nuevo separados en proy_cuant_kaizen
- - En producción revisar qué cosas pueden ver/usar supervisores. Bloquear tabs y cargar ddls sólo con las asignadas
+ - En producción revisar qué cosas pueden ver/usar supervisores. Cargar ddls sólo con las asignadas
  - Poner el filtro de areas adentro de las paginas para que te saque si metes el link directo
  - Ddl para navegar entre pestaÃ±as de areas
- - Poner filtros para pestañas en prod (gerente/supervisor)
     
 DIEGO:
  - Definir cómo terminar OdeC
@@ -171,25 +166,6 @@ TO DO:
 
  - Cambiar idioma_espanol en tablas de apps como datos_kaizen y asistencia y desplegar_procesos
 
- - SCORE:
-   - actualizar regs > 15 (darle un botonazo)
-   - Reporte semanal
-      - Tabla de colabs contra procesos con totales
-   - Eliminar en bibliotecas
-      - Colabs? borrarlos de auth pero no de database, no? meterle atributo "eliminado"? -> No, sÃ³lo en auth. lo demÃ¡s es con permisos.
-      - Obras Poner activo/No activo?
-      - pptos sÃ­
-      - Despachos no, o sÃ­?
-      - atn sÃ­
-      - req/exc sÃ­
-      - tipos/generos sÃ­
-   - Dashgrid
-   - Dashcards nuevo diseÃ±o
-   - Amarillo y rojo en dashcards y graphs para cuando esten al 90% o se hayan pasado de las horas programadas
-   - Update uml
-   - Los editar en bibliotecas ya no solo afectan la bd de proyectos. Checar que si se cambia el nombre de cliente, por ejemplo, se cambie tambiÃ©n en obra magico y en todos los lugares que sean correspondientes
-
-dudas:
 Obras divididas ya existentes
    - CPBR -> Son el mismo
    - zentral -> Partirla en t1 y t2, todo lo que ya va a torre 1
@@ -200,7 +176,6 @@ Ya terminadas?
    - Box Metepec -> cerrada
    - LA CITE (td y te) -> clausurada
    - Periferico 2840 -> = pc00
-Cambiar UNICO por EJE 8
 
 OBRAS:
  - Kaizen:

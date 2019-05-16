@@ -227,12 +227,12 @@ $('#' + id_importar_button_ppto_adic).on("click",function() {
                                 }
                             }*/
                             ren = [];
-                            ren.push({text:json[key][0], alignment: 'left', fontSize: 11});
-                            ren.push({text:parseFloat(json[key][1]).toFixed(0), alignment: 'center', fontSize: 11});
-                            ren.push({text:json[key][2], alignment:'left',colSpan:2, fontSize: 11});
+                            ren.push({text:json[key][0], alignment: 'left', fontSize: 10});
+                            ren.push({text:parseFloat(json[key][1]).toFixed(0), alignment: 'center', fontSize: 10});
+                            ren.push({text:json[key][2], alignment:'left',colSpan:2, fontSize: 10});
                             ren.push('');
-                            ren.push({text:json[key][3], noWrap: true, alignment: 'right', fontSize: 11});
-                            ren.push({text:json[key][4], noWrap: true, alignment: 'right', fontSize: 11});
+                            ren.push({text:json[key][3], noWrap: true, alignment: 'right', fontSize: 10});
+                            ren.push({text:json[key][4], noWrap: true, alignment: 'right', fontSize: 10});
                             alcance.push(ren);
                             alcance_string += json[key][2] + "; ";
                         } else if(json[key][4] != undefined){
@@ -738,7 +738,7 @@ function generaPptoAdic(genera){
         ],
     ];
     var bod = [];
-    bod.push([{  colSpan:6,border: [true, true, true, true],text: 'DESCRIPCIÓN DEL PRESUPUESTO',bold: true,margin: [0,1],fillColor: '#e5e534',alignment: 'center',fontSize: 10,},'','','','','',]);
+    bod.push([{  colSpan:6,border: [true, true, true, true],text: 'DESCRIPCIÓN DEL PRESUPUESTO',bold: true,margin: [0,1],fillColor: '#ffdd00',alignment: 'center',fontSize: 10,},'','','','','',]);
     for(i=0;i<alcance.length;i++){
         bod.push(alcance[i]);
     }
@@ -992,7 +992,7 @@ function generaPptoAdic(genera){
                 text: 'EXCLUSIONES',
                 bold: true,
                 margin: [0,2],
-                fillColor: '#e5e534',
+                fillColor: '#ffdd00',
                 alignment: 'center',
                 fontSize: 10,
             },
@@ -1051,7 +1051,7 @@ function generaPptoAdic(genera){
                 text: 'REQUERIMIENTOS ANTES DE INICIAR',
                 bold: true,
                 margin: [0,1],
-                fillColor: '#e5e534',
+                fillColor: '#ffdd00',
                 alignment: 'center',
                 fontSize: 10,
             },

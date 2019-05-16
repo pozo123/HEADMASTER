@@ -491,7 +491,7 @@ $('#' + id_terminar_button_horasExtra).click(function(){
                                     var cantidad = horas_extra.horas;
                                     //console.log("cantidad :" + cantidad)
                                     var obra = obraSnap.key;
-                                    if(obra != "Atencion a Clientes"){
+                                    if(obra != "Atencion a Clientes" && obra != "Vacaciones"){
                                         obras_json[obra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] = (parseFloat(obras_json[obra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(cantidad)*1.16).toFixed(2);
                                         //sumaMOKaizenHE(obra,cantidad);
                                         if(proc != obra){

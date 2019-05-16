@@ -1,11 +1,5 @@
 Reestructuración de la base de datos.
 
-CHECKLIST de KICK-OFF 
- -> subir y editar por req (req = {id, alcance, nombre_corto, familia})
- -> asignar a proc (al dar de alta el proc, con ddcb)
- -> Palomear (con pad, necesita creden, subir archivo)
- -> liberar
-
 LISTA DE CAMBIOS:
 Obra simple manda todo a misc
 

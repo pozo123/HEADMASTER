@@ -188,8 +188,8 @@ $('#' + id_terminar_button_pago_nomina).click(function(){
 					distribuyeEnAsistenciasPagoNomina(obras_json,total,week,year,snapshot.child(id_trabajador),"NA", sueldo_base, id_trabajador);
 				}
 			});
-		//console.log(obras_json);
-		firebase.database().ref(rama_bd_obras_magico).update(obras_json);
+			//console.log(obras_json);
+			firebase.database().ref(rama_bd_obras_magico).update(obras_json);
 		});
 	});
 	
@@ -274,7 +274,7 @@ function distribuyeEnAsistenciasPagoNomina(obras_json,total,week,year,snapshot,s
 
         firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + keyObra + "/trabajadores/" + id_trabajador + "/total_asistencia").set(total_asistencia_obra);
         firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + keyObra + "/trabajadores/" + id_trabajador + "/impuestos/impuestos_asistencia").set(impuestos_asistencia_obra);
-        if(keyObra != "Atencion a Clientes"){
+        if(keyObra != "Atencion a Clientes" && keyObra != "Vacaciones"){
             //sumaMOKaizenPN(keyObra,cant);
 			obras_json[keyObra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] = (parseFloat(obras_json[keyObra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(cant)).toFixed(2);
 

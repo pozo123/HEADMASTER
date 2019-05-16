@@ -320,10 +320,10 @@ function generateDdls(cell_obra, cell_proc, nuevo, obra_in, proc_in){
     firebase.database().ref(rama_bd_obras_magico).once('value').then(function(snapshot){
         snapshot.forEach(function(obraSnap){
             var obra = obraSnap.val();
+            var option = document.createElement('OPTION');
             if(obra.terminada){
                 option.style = "display:none";
             }
-            var option = document.createElement('OPTION');
             option.text = option.value = obra.nombre;
             obra_ddl.appendChild(option);
         });
@@ -624,7 +624,7 @@ $('#' + id_terminar_button_diversos).click(function(){
                                                 }
                                                 firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + diver.obra + "/trabajadores/" + trabSnap.key + "/diversos").push(diverso);
                                                 //var query = diver.obra;
-                                                if(diver.obra != "Atencion a Clientes"){
+                                                if(diver.obra != "Atencion a Clientes" && diver.obra != "Vacaciones"){
                                                     //sumaMOKaizen(query,diver.cantidad);
                                                     obras_json[diver.obra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] = (parseFloat(obras_json[diver.obra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(diver.cantidad)*1.16).toFixed(2);
                                                     if(diver.obra != diver.proceso){
@@ -725,7 +725,7 @@ function distribuyeEnAsistencias(obras_json,monto,trabSnap,year,week,diverso){
                             diverso: diverso,
                         }
                         firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + keyObra + "/trabajadores/" + trabSnap.key + "/diversos").push(diver);
-                        if(keyObra != "Atencion a Clientes"){
+                        if(keyObra != "Atencion a Clientes" && keyObra != "Vacaciones"){
                             //sumaMOKaizen(keyObra,cant);
                             obras_json[keyObra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] =(parseFloat(obras_json[keyObra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(cant)*1.16).toFixed(2);
                             var path = key.split("-");

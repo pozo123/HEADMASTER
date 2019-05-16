@@ -68,6 +68,9 @@ $('#' + id_tab_asistencia).click(function(){
     var option5 = document.createElement('option');
     option5.text = option5.value = "Atencion a Clientes";
     select3.appendChild(option5);
+    var option6 = document.createElement('option');
+    option6.text = option6.value = "Vacaciones";
+    select3.appendChild(option6);
 
     nuevo = tableAsistencia.insertRow(0);
     nuevo.id = "nuevo_trabajadorasistencia";
@@ -200,7 +203,7 @@ $("#" + id_obra_ddl_asistencia).change(function(){
             });
         } else {
             //Cargar matriz (no necesariamente tabla) con ddls y textfield
-            if($('#' + id_obra_ddl_asistencia + " option:selected").val() == "Atencion a Clientes"){
+            if($('#' + id_obra_ddl_asistencia + " option:selected").val() == "Atencion a Clientes" || $('#' + id_obra_ddl_asistencia + " option:selected").val() == "Vacaciones"){
                 loadAsistencias(semana,year,[],0);
             } else {
                 cargaEntradasAsistencia(year,semana);
@@ -436,6 +439,14 @@ function ddlDia(dia,row,id_trabajador,bool_nom,nom,count_proc,procesos,bool_otro
         textField.type = "text";
         textField.id = "chamba_" + id_trabajador + "_" + dia_corto;
         row.appendChild(textField);
+        var otra_obra = false;
+        if(bool_nom){
+            if(nom[dia]){
+                if(nom[dia].obra != "Atencion a Clientes"){
+                    otra_obra == true;
+                }
+            }
+        }
         if(otra_obra){
             $('#' + textField.id).val("Otra obra");
             textField.disabled = true;
@@ -443,6 +454,18 @@ function ddlDia(dia,row,id_trabajador,bool_nom,nom,count_proc,procesos,bool_otro
             $('#' + textField.id).val("Otro año");
             textField.disabled = true;
         }
+    } else if($('#' + id_obra_ddl_asistencia + " option:selected").val() == "Vacaciones"){
+        var cb = document.createElement('input');
+        cb.type = "checkbox";
+        cb.id = "chamba_" + id_trabajador + "_" + dia_corto;
+        if(bool_nom){
+            if(nom[dia]){
+                if(nom[dia].obra != "Vacaciones"){
+                    cb.disabled = true;
+                }
+            }
+        }
+        row.appendChild(cb);
     } else {
         var ddl = document.createElement('select');
         ddl.id = "chamba_" + id_trabajador + "_" + dia_corto;
@@ -532,7 +555,7 @@ function guardarAsistencias(){
                 var flagmi;
                 var flagju;
                 var flagvi;
-                if($('#' + id_obra_ddl_asistencia + " option:selected").val() == "Atencion a Clientes"){
+                if($('#' + id_obra_ddl_asistencia + " option:selected").val() == "Atencion a Clientes"){//AQUI si vacaciones
                     flaglu = $("#chamba_" + id_trabajador + "_lu").val() != "" && $("#chamba_" + id_trabajador + "_lu").val() != "Otra obra" && $("#chamba_" + id_trabajador + "_lu").val() != "Otro año";
                     flagma = $("#chamba_" + id_trabajador + "_ma").val() != "" && $("#chamba_" + id_trabajador + "_ma").val() != "Otra obra" && $("#chamba_" + id_trabajador + "_ma").val() != "Otro año";
                     flagmi = $("#chamba_" + id_trabajador + "_mi").val() != "" && $("#chamba_" + id_trabajador + "_mi").val() != "Otra obra" && $("#chamba_" + id_trabajador + "_mi").val() != "Otro año";
@@ -557,12 +580,14 @@ function guardarAsistencias(){
 function updateDia(id_trabajador,dia,semana,year){
     var dia_corto = dia.substring(0,2);
     var proceso;
-    if($('#' + id_obra_ddl_asistencia + " option:selected").val() == "Atencion a Clientes"){
+    if($('#' + id_obra_ddl_asistencia + " option:selected").val() == "Atencion a Clientes"){//AQUI Vacaciones
         if($("#chamba_" + id_trabajador + "_" + dia_corto).val() == ""){
             proceso = "Falta";
         } else {
             proceso = $("#chamba_" + id_trabajador + "_" + dia_corto).val();
         }
+    } else if($('#' + id_obra_ddl_asistencia + " option:selected").val() == "Vacaciones"){
+        proceso = $("#chamba_" + id_trabajador + "_" + dia_corto).prop('checked') ? "Vacaciones" : "Falta";
     } else { 
         proceso = $("#chamba_" + id_trabajador + "_" + dia_corto + " option:selected").text();
     }

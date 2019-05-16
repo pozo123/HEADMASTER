@@ -3,8 +3,6 @@ var id_datatable_catalogo_proveedores =  "dataTableCatalogoProveedores";
 
 var rama_bd_proveedores = "compras/proveedores";
 
-var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-
 $('#' + id_tab_catalogo_proveedores).click(function() {
     var datos_prov = [];
 
@@ -21,7 +19,7 @@ $('#' + id_tab_catalogo_proveedores).click(function() {
             ]);
         });
 
-        tabla_registros = $('#'+ id_datatable_catalogo_proveedores).DataTable({
+        tabla_proveedores = $('#'+ id_datatable_catalogo_proveedores).DataTable({
             destroy: true,
             data: datos_prov,
             dom: 'Bfrtip',

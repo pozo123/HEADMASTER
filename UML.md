@@ -311,23 +311,23 @@
                - semana: (ej 1)
                   - lunes:
                      - obra (nombre) 
-                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
+                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente, "Vacaciones" si Vacaciones)
                      - asistencia (bool)
                   - martes:
                      - obra (nombre) 
-                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
+                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente, "Vacaciones" si Vacaciones)
                      - asistencia (bool)
                   - miercoles:
                      - obra (nombre) 
-                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
+                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente, "Vacaciones" si Vacaciones)
                      - asistencia (bool)
                   - jueves:
                      - obra (nombre) 
-                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
+                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente, "Vacaciones" si Vacaciones)
                      - asistencia (bool)
                   - viernes:
                      - obra (nombre) 
-                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
+                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente, "Vacaciones" si Vacaciones)
                      - asistencia (bool)
                   - horas_extra:
                      - por push:
@@ -372,19 +372,19 @@
                      - dias 
                         - lunes:
                            - asistencia: bool
-                           - proceso: (clave) "NA" si asistencia es false
+                           - proceso: (clave) "NA" si asistencia es false, "vacaciones" si obra es vacaciones
                         - martes:
                            - asistencia: bool
-                           - proceso: (clave) "NA" si asistencia es false
+                           - proceso: (clave) "NA" si asistencia es false, "vacaciones" si obra es vacaciones
                         - miercoles:
                            - asistencia: bool
-                           - proceso: (clave) "NA" si asistencia es false
+                           - proceso: (clave) "NA" si asistencia es false, "vacaciones" si obra es vacaciones
                         - jueves:
                            - asistencia: bool
-                           - proceso: (clave) "NA" si asistencia es false
+                           - proceso: (clave) "NA" si asistencia es false, "vacaciones" si obra es vacaciones
                         - viernes:
                            - asistencia: bool
-                           - proceso: (clave) "NA" si asistencia es false
+                           - proceso: (clave) "NA" si asistencia es false, "vacaciones" si obra es vacaciones
                      - horas_extra:
                         - push:
                            - horas (EN $)
