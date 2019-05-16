@@ -9,26 +9,26 @@ var rama_bd_trabajadores = "rrhh/trabajadores";
 //_____MODAL______
 var id_modal_editarTrabajadores = "modalEditarTrabajadores";
 
-var id_nombre_editarTrabajadores = "nombreEditarTrabajadores";//TF
-var id_puesto_ddl_editarTrabajadores = "puestoDdlEditarTrabajadores";//ddl
-var id_sueldo_base_editarTrabajadores = "sueldoBaseEditarTrabajadores";//TF
-var id_jefe_editarTrabajadores = "jefeEditarTrabajadores";//ddl?TF? AQUI definir
-var id_especialidad_ddl_editarTrabajadores = "especialidadDdlEditarTrabajadores";//ddl
-var id_activo_cb_editarTrabajadores = "activoCbEditarTrabajadores";//checkbox
-var id_clave_pagadora_editarTrabajadores = "clavePagadoraEditarTrabajadores";//TF
-var id_RFC_editarTrabajadores = "RFCEditarTrabajadores";//TF
-var id_IMSS_editarTrabajadores = "IMSSEditarTrabajadores";//TF
-var id_CURP_editarTrabajadores = "CURPEditarTrabajadores";//TF
-var id_fecha_nacimiento_editarTrabajadores = "fechaNacimientoEditarTrabajadores";//datepicker
-var id_estado_civil_ddl_editarTrabajadores = "estadoCivilDdlEditarTrabajadores";//ddl
-var id_sexo_editarTrabajadores = "sexoEditarTrabajadores";//TF
-var id_domicilio_editarTrabajadores = "domicilioEditarTrabajadores";//TF
-var id_banco_editarTrabajadores = "bancoEditarTrabajadores";//TF
-var id_cuenta_editarTrabajadores = "cuentaEditarTrabajadores";//TF
-var id_clabe_editarTrabajadores = "clabeEditarTrabajadores";//TF
-var id_camisa_editarTrabajadores = "camisaEditarTrabajadores";//TF
-var id_pantalon_editarTrabajadores = "pantalonEditarTrabajadores";//TF
-var id_zapatos_editarTrabajadores = "zapatosEditarTrabajadores";//TF
+var id_nombre_editarTrabajadores = "nombreEditarTrabajadores";
+var id_puesto_ddl_editarTrabajadores = "puestoDdlEditarTrabajadores";
+var id_sueldo_base_editarTrabajadores = "sueldoBaseEditarTrabajadores";
+var id_jefe_editarTrabajadores = "jefeEditarTrabajadores";
+var id_especialidad_ddl_editarTrabajadores = "especialidadDdlEditarTrabajadores";
+var id_activo_cb_editarTrabajadores = "activoCbEditarTrabajadores";
+var id_clave_pagadora_editarTrabajadores = "clavePagadoraEditarTrabajadores";
+var id_RFC_editarTrabajadores = "RFCEditarTrabajadores";
+var id_IMSS_editarTrabajadores = "IMSSEditarTrabajadores";
+var id_CURP_editarTrabajadores = "CURPEditarTrabajadores";
+var id_fecha_nacimiento_editarTrabajadores = "fechaNacimientoEditarTrabajadores";
+var id_estado_civil_ddl_editarTrabajadores = "estadoCivilDdlEditarTrabajadores";
+var id_sexo_editarTrabajadores = "sexoEditarTrabajadores";
+var id_domicilio_editarTrabajadores = "domicilioEditarTrabajadores";
+var id_banco_editarTrabajadores = "bancoEditarTrabajadores";
+var id_cuenta_editarTrabajadores = "cuentaEditarTrabajadores";
+var id_clabe_editarTrabajadores = "clabeEditarTrabajadores";
+var id_camisa_editarTrabajadores = "camisaEditarTrabajadores";
+var id_pantalon_editarTrabajadores = "pantalonEditarTrabajadores";
+var id_zapatos_editarTrabajadores = "zapatosEditarTrabajadores";
 		
 //var id_label_eliminar_editarTrabajadores = "labelEliminarEditarTrabajadores";
 
@@ -109,7 +109,7 @@ function editar_trabajador(tbody, table){
 	            }
 				$('#' + id_nombre_editarTrabajadores).val(trabajador.nombre);
 				$('#' + id_sueldo_base_editarTrabajadores).val(trabajador.sueldo_base);
-				$('#' + id_jefe_editarTrabajadores).val(trabajador.jefe);//TF/ddl? AQUI definir
+				$('#' + id_jefe_editarTrabajadores).val(trabajador.jefe);
 				if(trabajador.activo){
 					document.getElementById(id_activo_cb_editarTrabajadores).checked = true;
 				} else {
@@ -159,7 +159,7 @@ $('#' + id_editar_button_editarTrabajadores).click(function(){
 			nombre: $('#' + id_nombre_editarTrabajadores).val(),
 			puesto: $('#' + id_puesto_ddl_editarTrabajadores + " option:selected").val(),
 			sueldo_base: $('#' + id_sueldo_base_editarTrabajadores).val(),
-			jefe: $('#' + id_jefe_editarTrabajadores).val(),//AQUI definir
+			jefe: $('#' + id_jefe_editarTrabajadores).val(),
 			id_trabajador: trabajador_seleccionado,
 			fecha_antiguedad: trab.fecha_antiguedad,
 			obra_asignada: trab.obra_asignada,

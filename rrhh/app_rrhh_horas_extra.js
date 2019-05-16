@@ -143,14 +143,14 @@ $("#" + id_obra_ddl_horasExtra).change(function(){
         }   
         if(terminada){
             //Cargar tabla con datos
-            console.log(terminada);
+            //console.log(terminada);
             firebase.database().ref(rama_bd_trabajadores).once('value').then(function(tSnap){
                 $('#' + id_datatable_div_horasExtra).removeClass('hidden');
                 var datos_horasExtra = [];
                 snapshot.child($("#" + id_obra_ddl_horasExtra + " option:selected").val() + "/trabajadores").forEach(function(trabSnap){
-                    console.log(trabSnap)
+                    //console.log(trabSnap)
                     trabSnap.child("horas_extra").forEach(function(childSnap){
-                        console.log("1");
+                        //console.log("1");
                         var entrada = childSnap.val();
                         datos_horasExtra.push([trabSnap.key,tSnap.child(trabSnap.key).val().nombre,new Date(entrada.fecha).toLocaleDateString("es-ES",options),entrada.proceso,formatMoney(entrada.horas)]);
                     });
@@ -319,9 +319,9 @@ function cargaRenglonHorasExtra(trabajador,procesos,nuevo,fecha_in,horas_in,proc
     horas.placeholder = "Horas trabajadas";
     cell_horas.appendChild(horas);
 
-    console.log(entradas);
-    console.log(trabajador);
-    console.log(trabajador.sueldo_base)
+    //console.log(entradas);
+    //console.log(trabajador);
+    //console.log(trabajador.sueldo_base)
     sueldos_base[entradas] = parseFloat(trabajador.sueldo_base);
     if($('#' + id_obra_ddl_horasExtra + " option:selected").val() == "Atencion a Clientes"){
         var textField = document.createElement('input');
@@ -431,7 +431,7 @@ function guardarHorasExtra(){
             }
         }
         firebase.database().ref(rama_bd_trabajadores).once('value').then(function(snapshot){
-            console.log(total_horas_tra);
+            //console.log(total_horas_tra);
             for(key in total_horas_tra){
                 var horas_previas = snapshot.child(key + "/nomina/" + year + "/" + semana + "/total_horas_extra");
                 //horas_previas = horas_previas.exists() ? horas_previas.val() : 0;
@@ -440,8 +440,8 @@ function guardarHorasExtra(){
                 } else {
                     horas_previas = horas_previas.val();
                 }
-                var horas_nuevas = parseFloat(horas_previas) + total_horas_tra[key];
-                console.log("horas_nuevas_tra: " + horas_nuevas);
+                var horas_nuevas = (parseFloat(horas_previas) + total_horas_tra[key]).toFixed(2);
+                //console.log("horas_nuevas_tra: " + horas_nuevas);
                 firebase.database().ref(rama_bd_trabajadores + "/" + key + "/nomina/" + year + "/" + semana + "/total_horas_extra").set(horas_nuevas);
                 var impuestos_horas = (horas_nuevas * 0.16).toFixed(2);
                 firebase.database().ref(rama_bd_trabajadores + "/" + key + "/nomina/" + year + "/" + semana + "/impuestos/impuestos_horas_extra").set(impuestos_horas);
@@ -451,7 +451,7 @@ function guardarHorasExtra(){
         //Sumar total_horas a lo que ya está en total horas en la base de datos (nomina)
         //Checar asincronia
         firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + semana + "/" + obra + "/trabajadores").once('value').then(function(snapshot){
-            console.log(total_horas_nom);
+            //console.log(total_horas_nom);
             for(key in total_horas_nom){
                 var horas_previas = snapshot.child(key + "/total_horas_extra");
                 if(!horas_previas.exists()){
@@ -459,8 +459,8 @@ function guardarHorasExtra(){
                 } else {
                     horas_previas = horas_previas.val();
                 }
-                var horas_nuevas = parseFloat(horas_previas) + total_horas_nom[key];
-                console.log("horas_nuevas_nom: " + horas_nuevas);
+                var horas_nuevas = (parseFloat(horas_previas) + total_horas_nom[key]).toFixed(2);
+                //console.log("horas_nuevas_nom: " + horas_nuevas);
                 firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + semana + "/" + obra + "/trabajadores/" + key + "/total_horas_extra").set(horas_nuevas);
                 var impuestos_horas = (horas_nuevas * 0.16).toFixed(2);
                 firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + semana + "/" + obra + "/trabajadores/" + key + "/impuestos/impuestos_horas_extra").set(impuestos_horas);
@@ -478,31 +478,38 @@ $('#' + id_terminar_button_horasExtra).click(function(){
         var terminada = snapshot.val().horas_extra_terminadas;
         if(!terminada){
             guardarHorasExtra();
-            firebase.database().ref(rama_bd_pagos_nomina + "/" + $('#' + id_year_ddl_horasExtra + " option:selected").val() + "/" + $('#' + id_semana_ddl_horasExtra + " option:selected").val()).once('value').then(function(snapshot){
-                snapshot.forEach(function(obraSnap){
-                    if(obraSnap.key != "total" && obraSnap.key != "terminada" && obraSnap.key != "asistencias_terminadas" && obraSnap.key != "horas_extra_terminadas" && obraSnap.key != "diversos_terminados"){
-                        obraSnap.child("trabajadores").forEach(function(trabSnap){
-                            trabSnap.child("horas_extra").forEach(function(heSnap){
-                                var horas_extra = heSnap.val();
-                                var proc = horas_extra.proceso;
-                                var cantidad = horas_extra.horas;
-                                console.log("cantidad :" + cantidad)
-                                var obra = obraSnap.key;
-                                if(obra != "Atencion a Clientes"){
-                                    sumaMOKaizenHE(obra,cantidad);
-                                    if(proc != obra){
-                                        var path = proc.split("-");
-                                        if(path.length > 1){
-                                            sumaMOKaizenHE(obra + "/procesos/" + path[0],cantidad);
-                                            sumaMOKaizenHE(obra + "/procesos/" + path[0] + "/subprocesos/" + proc,cantidad);
-                                        } else {
-                                            sumaMOKaizenHE(obra + "/procesos/" + proc,cantidad);
+            firebase.database().ref(rama_bd_obras_magico).once('value').then(function(obrasSnapshot){
+                var obras_json = obrasSnapshot.val();
+                //Repito para volver a cargar las horas guardadas... creo
+                firebase.database().ref(rama_bd_pagos_nomina + "/" + $('#' + id_year_ddl_horasExtra + " option:selected").val() + "/" + $('#' + id_semana_ddl_horasExtra + " option:selected").val()).once('value').then(function(snapshot){    
+                    snapshot.forEach(function(obraSnap){
+                        if(obraSnap.key != "total" && obraSnap.key != "terminada" && obraSnap.key != "asistencias_terminadas" && obraSnap.key != "horas_extra_terminadas" && obraSnap.key != "diversos_terminados"){
+                            obraSnap.child("trabajadores").forEach(function(trabSnap){
+                                trabSnap.child("horas_extra").forEach(function(heSnap){
+                                    var horas_extra = heSnap.val();
+                                    var proc = horas_extra.proceso;
+                                    var cantidad = horas_extra.horas;
+                                    //console.log("cantidad :" + cantidad)
+                                    var obra = obraSnap.key;
+                                    if(obra != "Atencion a Clientes" && obra != "Vacaciones"){
+                                        obras_json[obra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] = (parseFloat(obras_json[obra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(cantidad)*1.16).toFixed(2);
+                                        //sumaMOKaizenHE(obra,cantidad);
+                                        if(proc != obra){
+                                            var path = proc.split("-");
+                                            if(path.length > 1){
+                                                obras_json[obra]["procesos"][path[0]]["subprocesos"][proc]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] = (parseFloat(obras_json[obra]["procesos"][path[0]]["subprocesos"][proc]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(cantidad)*1.16).toFixed(2);
+                                                //sumaMOKaizenHE(obra + "/procesos/" + path[0] + "/subprocesos/" + proc,cantidad);
+                                            }
+                                            obras_json[obra]["procesos"][path[0]]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] = (parseFloat(obras_json[obra]["procesos"][path[0]]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(cantidad)*1.16).toFixed(2);
+                                            //sumaMOKaizenHE(obra + "/procesos/" + path[0],cantidad);
                                         }
                                     }
-                                }
+                                });
                             });
-                        });
-                    }
+                        }
+                    });
+                    //console.log(obras_json);
+                    firebase.database().ref(rama_bd_obras_magico).update(obras_json);
                 });
             });
             var tru = true;
@@ -512,14 +519,14 @@ $('#' + id_terminar_button_horasExtra).click(function(){
     });
 });
 
-function sumaMOKaizenHE(query,cantidad){
+/*function sumaMOKaizenHE(query,cantidad){
     firebase.database().ref(rama_bd_obras_magico + "/" + query + "/kaizen/PRODUCCION/COPEO/PAG").once('value').then(function(snapshot){
         var anterior = snapshot.val();
         console.log("anterior " + anterior)
         var nuevo = (parseFloat(anterior) + parseFloat(cantidad) * 1.16).toFixed(2);//se le agrega al impuesto para el kaizen
         firebase.database().ref(rama_bd_obras_magico + "/" + query + "/kaizen/PRODUCCION/COPEO/PAG").set(nuevo);
     });
-}
+}*/
 
 function headersHorasExtra() {
   var row = tableHorasExtra.insertRow(0);

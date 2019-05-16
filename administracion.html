@@ -67,6 +67,108 @@
                 </div>
             </div>
         </div>
+        <!-- Modales catalogos-->
+        <div class="modal fade" id="clienteModalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Editar Cliente</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form onsubmit="return false;">
+                                <div class="form-group">
+                                    <label for="nombreEditarCatalogoClientes" class="col-form-label">Nombre de la empresa:</label>
+                                    <input type="text" class="form-control" id="nombreEditarCatalogoClientes">
+                                </div>
+                                <div class="form-group">
+                                    <label for="claveEditarCatalogoClientes" class="col-form-label">Clave:</label>
+                                    <input type="text" class="form-control" id="claveEditarCatalogoClientes">
+                                </div>
+                                <div class="form-group">
+                                    <label for="telefonoEditarCatalogoClientes" class="col-form-label">Teléfono oficina:</label>
+                                    <input type="text" class="form-control" id="telefonoEditarCatalogoClientes">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pptoEspEditarCatalogoClientes" class="form-check-label">Formato ppto especial:</label>
+                                    <input type="checkbox" class="custom-checkbox" id="pptoEspEditarCatalogoClientes">
+                                </div>
+                                <h5>Dirección</h5>
+                                <div class="form-group">
+                                    <label for="calleEditarCatalogoClientes" class="col-form-label">Calle:</label>
+                                    <input type="text" class="form-control" id="calleEditarCatalogoClientes">
+                                </div>
+                                <div class="form-group">
+                                    <label for="numeroEditarCatalogoClientes" class="col-form-label">Número:</label>
+                                    <input type="text" class="form-control" id="numeroEditarCatalogoClientes">
+                                </div>
+                                <div class="form-group">
+                                    <label for="coloniaEditarCatalogoClientes" class="col-form-label">Colonia:</label>
+                                    <input type="text" class="form-control" id="coloniaEditarCatalogoClientes">
+                                </div>
+                                <div class="form-group">
+                                    <label for="delegacionEditarCatalogoClientes" class="col-form-label">Delegación/Municipio:</label>
+                                    <input type="text" class="form-control" id="delegacionEditarCatalogoClientes">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ciudadEditarCatalogoClientes" class="col-form-label">Ciudad:</label>
+                                    <input type="text" class="form-control" id="ciudadEditarCatalogoClientes">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cpEditarCatalogoClientes" class="col-form-label">Código Postal:</label>
+                                    <input type="text" class="form-control" id="cpEditarCatalogoClientes">
+                                </div>
+                            <div class="form-row align-items-center">
+                                <div class="col-md-6 col-sm-12">
+                                    <button id="buttonEditarCatalogoClientes" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cancelar</button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="categoriaModalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Editar Categoría</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form onsubmit="return false;">
+                                <div class="form-group">
+                                    <label for="nombreEditarCatalogoCategorias" class="col-form-label">Nombre:</label>
+                                    <input type="text" class="form-control" id="nombreEditarCatalogoCategorias">
+                                </div>
+                                <div class="form-group">
+                                    <label for="claveEditarCatalogoCategorias" class="col-form-label">Clave:</label>
+                                    <input type="text" class="form-control" id="claveEditarCatalogoCategorias">
+                                </div>
+                            <div class="form-row align-items-center">
+                                <div class="col-md-6 col-sm-12">
+                                    <button id="buttonEditarCatalogoCategorias" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cancelar</button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="wrapper">
             <!-- Sidebar -->
             <nav id="sidebar">
@@ -98,6 +200,53 @@
                         <h6 class="card-title" id="usuarioConectado"></h6>
                     </div>
                 </ul>
+                <ul class="list-unstyled components hidden" id = "tabRegistrosAdmon">
+                    <div class="card text-center text-white bg-dark">
+                        <div class="card-body" id="card">
+                            
+                            <div class="container-fluid" id="entradaGroupRegistroAdmin">
+                                <label for="">¿En qué vas a trabajar hoy?</label>
+                                <div class="form-group">
+                                    <label for="familiaDdlRegistroAdmin">Familia:</label>
+                                    <select id ="familiaDdlRegistroAdmin" class="form-control"></select>
+                                </div>
+                                <div class="form-group" id="">
+                                    <label for="subfamiliaDdlRegistroAdmin">Subfamilia:</label>
+                                    <select id ="subfamiliaDdlRegistroAdmin" class="form-control"></select>
+                                </div>
+                                <div class="form-group hidden" id="actividadGroupRegistroAdmin">
+                                    <label for="actividadDdlRegistroAdmin">Actividad:</label>
+                                    <select id ="actividadDdlRegistroAdmin" class="form-control"></select>
+                                </div>
+    
+                                <div class="form-group hidden" id="otrosGroupRegistroAdmin">
+                                    <label for="actividadOtrosRegistroAdmin">¿En qué vas a trabajar?</label>
+                                    <textarea class="form-control" id="actividadOtrosRegistroAdmin" rows="5"></textarea>
+                                </div>
+
+                                <div class="row text-center" id="statusObraGroupRegistroAdmin">
+                                    <div class= "col-md-6" id = "">
+                                        <input type="radio" name="status_obra" id="activaStatusObraRbRegistroAdmin" aria-label="">
+                                        <label>Activa</label>
+                                    </div>
+                                    <div class= "col-md-6" id = "">
+                                        <input type="radio" name="status_obra" id="cierreStatusObraRbRegistroAdmin" aria-label="">
+                                        <label>Cierre</label>
+                                    </div>  
+                                    <div class= "col-md-6" id = "">
+                                        <input type="radio" name="status_obra" id="terminadaStatusObraRbRegistroAdmin" aria-label="">
+                                        <label>Termin</label>
+                                    </div>        
+                                </div>
+    
+                                <button type="button" name="" id="entradaButtonRegistroAdmin" class="btn btn-success btn-lg btn-block">Entrada</button> 
+                            </div>
+                            <div class="container-fluid">
+                                <button type="button" name="" id="salidaButtonRegistroAdmin" class="btn btn-danger btn-lg btn-block hidden">Salida</button>
+                            </div>
+                        </div>
+                    </div>
+                </ul>
                 <ul class="list-unstyled components">
 
                     <li>
@@ -112,6 +261,8 @@
                         <ul class="collapse list-unstyled" id="pageSubmenu2">
                             <li class="tab tabCatalogoProceso" id="tabCatalogoProceso"><a href="#" onclick="openTabs('tabCatalogoProceso','catalogoProceso')">Catálogo de procesos</a></li>
                             <li class="tab" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Alta Obra</a></li>
+                            <li class="tab" id="tabAltaProceso"><a href="#" onclick="openTabs('tabAltaProceso','altaProceso')">Alta de procesos</a></li>
+                            <li class="tab tabEditarProceso" id="tabEditarProceso"><a href="#" onclick="openTabs('tabEditarProceso','editarProceso')">Editar Procesos</a></li>
                             <li class="tab" id="tabPresupuestoAdic"><a href="#" onclick="openTabs('tabPresupuestoAdic','presupuestoAdic')">Generar Ppto Adic</a></li>
                         </ul>
                     </li>
@@ -132,6 +283,21 @@
                         <a href="#pageSubmenu5" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Clientes</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu5">
                             <li class="tab" id="tabAltaCliente"><a href="#" onclick="openTabs('tabAltaCliente','altaCliente')">Despachos</a></li>
+                            <li class="tab" id="tabAltaAtencion"><a href="#" onclick="openTabs('tabAltaAtencion','altaAtencion')">AT'N</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#pageSubmenu6" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Reportes</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu6">
+                            <li class="tab" id="tabReporte"><a href="#" onclick="openTabs('tabReporte','reporte')">Reporte de Registros</a></li>
+                            <li class="tab" id="tabReporteDiario"><a href="#">Reporte Diario</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#pageSubmenu7" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Catálogos</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu7">
+                            <li class="tab" id="tabCatalogoCategorias"><a href="#" onclick="openTabs('tabCatalogoCategorias','categoriasCatalogo')">Categorías de Pptos</a></li>
+                            <li class="tab" id="tabCatalogoClientes"><a href="#" onclick="openTabs('tabCatalogoClientes','clientesCatalogo')">Clientes</a></li>
                         </ul>
                     </li>
                     <li class="tab"><a href="#" data-toggle="modal" data-target="#contraseñaModal">Cambiar contraseña</a></li>
@@ -180,12 +346,13 @@
                             <p>* Los campos son obligatorios</p>
                             <div class="container-fluid">
                                 <div class="row align-items-center">
-                                    <div class="col-lg-12">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
                                         <form action ="#" onsubmit="return false;">
 
                                             <div class="form-group">
                                                 <label for="obraNombreProy">*Obra:</label>
-                                                <select class="form-control" name="" id="obraNombreProy"></select>
+                                                <input type="text" id="obraNombreProy" class="form-control" placeholder="Ingresa el nombre de la obra">
                                             </div>
                                             <div class="form-group">
                                                 <label for="obraClave">*Clave de la obra (máx 5 caracteres):</label>
@@ -195,6 +362,26 @@
                                             <div class="form-group">
                                                 <label for="cliente">*Cliente:</label>
                                                 <select class="form-control" name="" id="cliente"></select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="cliente">*Supervisor:</label>
+                                                <select class="form-control" name="" id="supervisorDdlObra"></select>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-lg-6 col-sm-12">
+                                                    <label for="fechaInicioObra">Fecha programada de inicio de obra:</label>
+                                                </div>
+                                                <div class="col-lg-6 col-sm-12">
+                                                    <label for="fechaFinalObra">Fecha programada de inicio de obra:</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-lg-6 col-sm-12">
+                                                    <input class="form-control" type="text" id="fechaInicioObra" placeholder="" readonly="readonly">
+                                                </div>
+                                                <div class="col-lg-6 col-sm-12">
+                                                    <input class="form-control" type="text" id="fechaFinalObra" placeholder="" readonly="readonly">
+                                                </div>
                                             </div>
                                             <hr class="style2">
                                             <div class="form-group">
@@ -225,6 +412,7 @@
                                                 </div>
                                             </div>
 
+
                                             <button id="registrarObra" type="submit" class="btn btn-success btn-lg btn-block">Registrar</button>
                                             <button id="borrarTodoObra" type="reset" class="btn btn-outline-danger btn-lg btn-block">Borrar Todo</button>                                                                
                                         </form>  
@@ -232,7 +420,139 @@
                                 </div>
                             </div>
                         </div>
+                        <div id="altaProceso" class="tabcontent hidden">
+                            <h1>Alta de Proceso Continuo</h1>
+                            <p>Página para dar de alta procesos continuos en el sistema</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">
 
+                                            <div class="form-group">
+                                                <label for="obraDdlProcesos">Obra:</label>
+                                                <select id="obraDdlProcesos" class="form-control"></select>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" id="checkboxSubproceso" value="">
+                                                    <label class="form-check-label" for="checkboxSubproceso">Subproceso</label>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-group hidden" id="grupoSubproceso">
+                                                <label for="procesoDdlProcesos">Proceso:</label>
+                                                <select id="procesoDdlProcesos" class="form-control"></select>
+                                            </div>
+                                            
+                                            <div class="form-group hidden" id="grupoCategoria">
+                                                <label for="categoriaDdlProcesos">Categoría:</label>
+                                                <select id="categoriaDdlProcesos" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="nombreProcesos">Nombre:</label>
+                                                <input type="text" name="obraNombreProd" id="nombreProcesos" class="form-control" placeholder="Nombre">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="otros">Alcance:</label>
+                                                <textarea class="form-control" id="alcanceProcesoProcesos" rows="10"></textarea>
+                                            </div>
+                                            
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-6 col-sm-12">
+                                                    <label for="fechaInicioProcesos">Fecha programada de inicio de proceso:</label>
+                                                </div>
+                                                <div class="col-lg-6 col-sm-12">
+                                                    <input class="form-control" type="text" id="fechaInicioProcesos" placeholder="" readonly="readonly">
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-6 col-sm-12">
+                                                    <label for="fechaFinalProcesos">Fecha programada de terminación de proceso:</label>
+                                                </div>
+                                                <div class="col-lg-6 col-sm-12">
+                                                    <input class="form-control" type="text" id="fechaFinalProcesos" placeholder="" readonly="readonly">
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="form-row">
+                                                <div class= "col-lg-6">
+                                                    <button id="agregarProcesoProcesos" type="button" class="btn btn-outline-success btn-block">Registrar Proceso</button>
+                                                </div>
+                                                <div class= "col-lg-6">
+                                                    <button type="reset" id = ""class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class="col-lg-3"></div>
+                                </div>
+                            </div>
+                        </div>   
+                        <div id="editarProceso" class="tabcontent hidden">
+                            <h1>Edición de Procesos</h1>
+                            <p>Página para editar información de procesos existentes</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">                   
+                                            
+                                            <div class="form-group">
+                                                <label for="obraDdlEditarProceso">Obra:</label>
+                                                <select id="obraDdlEditarProceso" class="form-control" onChange=""></select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="procesoDdlEditarProceso">Proceso:</label>
+                                                <select id ="procesoDdlEditarProceso" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group hidden" id = "groupSubEditarProceso">
+                                                <label for="subprocesoDdlEditarProceso">Subproceso:</label>
+                                                <select id ="subprocesoDdlEditarProceso" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group hidden" id="groupDatosEditarProceso">
+                                                <label for="nombreEditarProceso">Nombre:</label>
+                                                <input type="text" name="" id="nombreEditarProceso" class="form-control" placeholder="Nombre">
+                                                <label for="alcanceEditarProceso">Alcance:</label>
+                                                <textarea id="alcanceEditarProceso" class="form-control" rows = 10></textarea>
+                                            </div>
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-lg-6 col-sm-12">
+                                                        <label for="fechaInicioEditarProceso">Fecha programada de inicio de Proceso:</label>
+                                                    </div>
+                                                    <div class="col-lg-6 col-sm-12">
+                                                        <input class="form-control" type="text" id="fechaInicioEditarProceso" placeholder="" readonly="readonly">
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-lg-6 col-sm-12">
+                                                        <label for="fechaFinalEditarProceso">Fecha programada de terminación de Proceso:</label>
+                                                    </div>
+                                                    <div class="col-lg-6 col-sm-12">
+                                                        <input class="form-control" type="text" id="fechaFinalEditarProceso" placeholder="" readonly="readonly">
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <div class="form-row">
+                                                    <div class= "col-lg-6">
+                                                        <button id="buttonEditarProceso" type="button" class="btn btn-outline-success btn-block">Aceptar</button>
+                                                    </div>
+                                                    <div class= "col-lg-6">
+                                                        <button type="reset" id = ""class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                    </div>
+                                                </div>
+                                        </form>
+                                        <br/>
+                                        </div>
+                                        <div class="col-lg-3"></div>
+                                    </div>
+                                </div>
+                        </div>
                         <div id= "catalogoProceso" class="tabcontent hidden dataTables_wrapper catalogoProceso">
                                 <div class="container-fluid">
                                     <h1>Catálogo de Procesos</h1>
@@ -403,12 +723,13 @@
                              <h1>Generador de Presupuesto Adicional</h1>
                              <div class="container-fluid">
                                  <div class="row align-items-center">
-                                     <div class="col-lg-12">
+                                     <div class="col-lg-3"></div>
+                                     <div class="col-lg-6">
                                          <form action="#" onsubmit="return false;">
                                             <br/>
                                                 <h3>Header</h3>
                                                 <hr class="style2">
-
+                                        
                                                 <div class="form-group">
                                                     <label for="nombrePptoAdic">Nombre:</label>
                                                     <input type="text" id="nombrePptoAdic"class="form-control" placeholder="Nombre del presupuesto">
@@ -428,53 +749,40 @@
                                                 <br/>
                                                 <h3>Body</h3>
                                                 <hr class="style2">
-
                                                 <div class="form-group">
-                                                    <label for="descripcionEntradaPptoAdic">Descripción de la entrada:</label>
-                                                    <textarea class="form-control" rows="6" id="descripcionEntradaPptoAdic"></textarea>
-                                                </div>
-                                                
-                                                <div class="form-row align-items-center">
-                                                    <div class="col-lg-12">
-                                                        <label for="precioEntradaPptoAdic">Precio de venta de la entrada (sin IVA):</label>
-                                                        <input type="text"  id="precioEntradaPptoAdic" class="form-control" placeholder="" aria-describedby="helpId">
+                                                    <label for="importarPptoAdic">Selecciona archivo de Excel en el formato deseado</label>
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input" id="importarPptoAdic" accept=".xlsx, .xls, .csv">
+                                                        <label class = "custom-file-label" id="importarLabelPptoAdic">Archivo no seleccionado</label>
                                                     </div>
                                                 </div>
-                                                
-                                                <div class="form-row align-items-center">
-                                                    <div class="col-md-6 col-sm-12">
-                                                        <button id="addEntradaButtonPptoAdic" type="button" class="btn btn-outline-danger btn-lg btn-block">Agregar Entrada</button>
-                                                    </div>
-                                                    <div class="col-md-6 col-sm-12">
-                                                        <button id="delEntradaButtonPptoAdic" type="button" class="btn btn-outline-secondary btn-lg btn-block">Eliminar última</button>
+
+                                                <div class="form-row">
+                                                    <button id="importarButtonPptoAdic" type="button" class="btn btn-outline-success btn-block">Aceptar</button>
+                                                </div>
+                                                <br/>
+                                                <br/>
+                                                <div class="form-group">
+                                                    <label for="fotoAdicInput">Selecciona una imagen</label>
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input" id="fotoAdicInput" accept="image/*"/>
+                                                        <label class = "custom-file-label" id="imagenLabelPptoAdic">Archivo no seleccionado</label>
                                                     </div>
                                                 </div>
-                                                
-                                                <div class="form-group pt-3">
-                                                    <div class="card w-100 scrollbar scrollbar-danger">
-                                                        <div class="card-header text-center">
-                                                            Descripción
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <ul id="entradasListaPptoAdic"class="list-group list-group-flush">
-                                                            </ul>
-                                                        </div>
-                                                    </div>
+
+                                                <div class="form-row">
+                                                    <button id="imagenButtonPptoAdic" type="button" class="btn btn-outline-success btn-block">Aceptar</button>
                                                 </div>
                                                 <br/>
                                                 <h3>Footer</h3>
                                                 <hr class="style2">
 
                                                 <div class="form-group">
-                                                    <!--<label for="reqsDdlCbPptoAdic"> Requisitos:</label>-->
                                                     <div class="myDropdownCheckbox" id="reqsDdlCbPptoAdic"></div>
                                                 </div>
                                                 
                                                 <div class="form-group">
-                                                    <!--<label for="excDdlCbPptoAdic">Exclusiones:</label>-->
                                                     <div class="myDropdownCheckbox" id="excDdlCbPptoAdic"></div>
-                                                    <!-- <button id ="exc" class="dropdown-checkbox-toggle btn btn-danger" data-toggle="dropdown" href="#">Holi</button> -->
-                                                    <!-- <select class="form-control" name="" id="exc"></select> AQUI-->
                                                 </div>
                                                 
                                                 <br/>
@@ -562,7 +870,7 @@
                                                 <div class="form-group">
                                                     <div class="row">
                                                         <div class="col-lg-4">
-                                                            <button id="registrarPptoAdic" type="button" class="btn btn-outline-success btn-lg btn-block">Generar Presupuesto</button>
+                                                            <button id="registrarPptoAdic" type="button" class="btn btn-outline-success btn-lg btn-block">Generar Ppto</button>
                                                         </div>
                                                         <div class="col-lg-4">
                                                             <button id="vistaPreviaPptoAdic" type="button" class="btn btn-outline-warning btn-lg btn-block">Vista Previa</button>
@@ -574,6 +882,7 @@
                                                 </div>
                                             </form>
                                         </div>
+                                    </div>
                                     </div>
                                 </div>
                          </div>
@@ -683,6 +992,60 @@
                                 </div>
                             </div>
                         </div>
+                        <div id="altaAtencion" class="tabcontent hidden">
+                            <h1>AT'N</h1>
+                            <p>* Los campos son obligatorios</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3">
+
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">
+                                            <div class="form-group">
+                                                <label for="DDL_cliente">*Selecciona el Cliente</label>
+                                                <select class="form-control" name="" id="DDL_cliente" onChange="loadDDLClienteAtn()"></select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="nombreAtn">*Nombre:</label>
+                                                <input type="text" name="" id="nombreAtn" class="form-control" placeholder="Ingresa el nombre de la persona que vas a agregar:">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Información General:</label>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-lg-4">
+                                                    <input type="text" id="areaAtn" class="form-control" placeholder="Área/departamento">
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <input type="text" id="celAtn"  class="form-control" placeholder="Celular">
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <input type="text" id="emailAtn" class="form-control" placeholder="Email">
+                                                </div>
+
+                                                <div class="col-lg-3">
+                                                    <input type="text" id="extensionAtn" class="form-control" placeholder="Extensión">
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="row">
+                                                <div class= "col-lg-6">
+                                                    <button id="altaAtn" type="submit" class="btn btn-outline-success btn-block">Dar de alta</button>
+                                                </div>
+                                                <div class= "col-lg-6">
+                                                    <button id="" type="reset" class="btn btn-outline-danger btn-block">Limpiar Todo</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-lg-3">
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                         <!-- Areas-->
                         <div id="areas" class="tabcontent hidden">
                             <h1>Asignar Areas de Usuario</h1>
@@ -732,6 +1095,83 @@
                                         </div>
                                     </div>
                                 </form>
+                            </div>
+                        </div>
+                        <!-- Reporte-->
+                        <div id="reporte" class="tabcontent hidden">
+                            <h1>Generador de reportes</h1><br/>
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <form action="#" onsubmit="return false;">
+                                        <div class="form-row align-items-center">
+                                            <div class="col-lg-3 col-sm-12">
+                                                <label for="fechaInicioReporte">Fecha inicio de reporte:</label>
+                                            </div>
+                                            <div class="col-lg-3 col-sm-12">
+                                                <input class="form-control" type="text" id="fechaInicioReporte" placeholder="" readonly="readonly">
+                                            </div>
+                                            <div class="col-lg-3 col-sm-12">
+                                                <label for="fichaFinalReporte">Fecha final del reporte:</label>
+                                            </div>
+                                            <div class="col-lg-3 col-sm-12">
+                                                <input class="form-control" type="text" id="fichaFinalReporte" placeholder="" readonly="readonly">
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        <p>*Para generar reporte de un solo día coloca en "Fecha inicio de reporte" el día deseado y deja en blanco "Fecha final del reporte"</p>
+                                        <div class="form-group">
+                                            <label for="ingeDdlReporte">Colaborador:</label>
+                                            <select id ="ingeDdlReporte" class="form-control"></select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="obraDdlReporte">Obra:</label>
+                                            <select id ="obraDdlReporte" class="form-control"></select>
+                                        </div>
+                                        <div class="form-group hidden" id="procGroupReporte">
+                                            <label for="procDdlReporte">Proceso:</label>
+                                            <select id ="procDdlReporte" class="form-control"></select>
+                                        </div>
+                                        <div class="form-group hidden" id="subprocDdlReporte">
+                                            <label for="subprocDdlReporte">Subroceso:</label>
+                                            <select id ="subprocDdlReporte" class="form-control"></select>
+                                        </div>
+                                        <div class="row">
+                                            <button type="reset" name="" class="btn btn-danger">Limpiar campos</button>
+                                            <button type="button" name="" id="generarButtonReporte" class="btn btn-primary">Generar PDF</button>
+                                            <button type="button" name="" id="tablaButtonReporte" class="btn btn-info">Ver tabla en esta página</button>                                                                           
+                                        </div>     
+                                    </form>
+
+                                    <div class="row mt-3">
+                                        <div class="container-fluid">
+                                            <table id="dataTableReporte" class="display" style="width:100%">
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Catalogos -->
+                        <div id= "categoriasCatalogo" class="tabcontent hidden">
+                            <div class="container-fluid">
+                                <h1>Catálogo de Categorías de Presupuestos</h1>
+                                <div class="row mt-3">
+                                    <div class="container-fluid">
+                                        <table id="dataTableCatalogoCategorias" class="display" style="width:100%">
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id= "clientesCatalogo" class="tabcontent hidden">
+                            <div class="container-fluid">
+                                <h1>Catálogo de Clientes</h1>
+                                <div class="row mt-3">
+                                    <div class="container-fluid">
+                                        <table id="dataTableCatalogoClientes" class="display" style="width:100%">
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -790,15 +1230,26 @@
             </script>
 
 <!--My scripts-->
+<script src="numeroLetras.js"></script>
 <script src="app_principal.js"></script>        
 <script src="app_desplegar_procesos.js"></script>
 <script src="app_funciones.js"></script>
+<script src="administracion/app_admon_areas.js"></script>        
+<script src="administracion/app_admin_registro.js"></script>        
 <script src="administracion/app_admon_colaborador.js"></script>
+<script src="administracion/app_admon_ppto_adic.js"></script>
 <script src="administracion/app_obra.js"></script>
 <script src="administracion/app_cliente.js"></script>
+<script src="administracion/app_procesos.js"></script>
+<script src="administracion/app_editar_proceso.js"></script>
+<script src="administracion/app_admon_reporte_diario.js"></script>
 <!--<script src="administracion/app_cuenta_cc.js"></script> -->
-<script src="administracion/app_admon_areas.js"></script>
-
+<script src="catalogos/app_catalogo_categorias.js"></script>
+<script src="catalogos/app_catalogo_clientes.js"></script>
+<script src="proyectos/app_atn.js"></script>
+<script src="proyectos/app_reporte.js"></script>
+<!-- Excel to Json-->
+<script src="xlsx.full.min.js"></script>
 <!-- PdfMaker-->
 
 <script src="pdfMake/pdfmake.min.js"></script>

@@ -1,18 +1,7 @@
 Reestructuración de la base de datos.
 
-Los labels en cuant_kaizen_proy ->AQUI
-
-CHECKLIST de KICK-OFF 
- -> subir y editar por req (req = {id, alcance, nombre_corto, familia})
- -> asignar a proc (al dar de alta el proc, con ddcb)
- -> Palomear (con pad, necesita creden, subir archivo)
- -> liberar
-
 LISTA DE CAMBIOS:
 Obra simple manda todo a misc
-Mudar pago_nomina y trabajadores a rrhh
-Cambiar procesos (alta y editar) y cliente a admin ->AQUI
-Revisar dashcards, reportes y graphs con registros
 
 SCORE en proc:
     - Atributo programado, empieza en false.
@@ -36,7 +25,7 @@ En obras:
 	- Rama ppto pero sólo si obra simple, sólo para el PC00
 	- Revisar terminada
 En ppto:
-    - Sólo para adic y para pc00. No se guarda nada de score aqui. Al hacer un ppto se genera un subproceso en el proc correspondiente.
+    - Sólo para adic y para pc00. No se guarda nada de score ahi. Al hacer un ppto se genera un subproceso en el proc correspondiente.
     - La rama_bd_ppto sólo tiene el url del pdf y si acaso datos para poder recrearlo.
     - Ya no se trabja en pptos, sino en los subps de los procs que les corresponden.
 	- clase ya no tiene
@@ -77,9 +66,3 @@ Cambios en bd:
        - Sumar horas de VIA OFICINAS de registros anteriores.
        - Pasar horas programadas de pptos a procs
     - Pptos -> Darlos de alta
- - proyectos -> Definir si nos quedamos con:
-    - clase
-    - exclusiones
-    - reqs
-    - generos
-    - tipos_prespuesto

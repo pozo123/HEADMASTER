@@ -88,6 +88,7 @@
       - clave
       - nombre
       - telefono
+      - ppto_especial (bool, ahorita solo lo tiene migdal, solo hace falta si requiere la segunda version del ppto adic)
       - atencion
          - numero (por push pero de array, 0,1,2)
             - area
@@ -310,23 +311,23 @@
                - semana: (ej 1)
                   - lunes:
                      - obra (nombre) 
-                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
+                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente, "Vacaciones" si Vacaciones)
                      - asistencia (bool)
                   - martes:
                      - obra (nombre) 
-                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
+                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente, "Vacaciones" si Vacaciones)
                      - asistencia (bool)
                   - miercoles:
                      - obra (nombre) 
-                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
+                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente, "Vacaciones" si Vacaciones)
                      - asistencia (bool)
                   - jueves:
                      - obra (nombre) 
-                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
+                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente, "Vacaciones" si Vacaciones)
                      - asistencia (bool)
                   - viernes:
                      - obra (nombre) 
-                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente)
+                     - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente, "Vacaciones" si Vacaciones)
                      - asistencia (bool)
                   - horas_extra:
                      - por push:
@@ -371,19 +372,19 @@
                      - dias 
                         - lunes:
                            - asistencia: bool
-                           - proceso: (clave) "NA" si asistencia es false
+                           - proceso: (clave) "NA" si asistencia es false, "vacaciones" si obra es vacaciones
                         - martes:
                            - asistencia: bool
-                           - proceso: (clave) "NA" si asistencia es false
+                           - proceso: (clave) "NA" si asistencia es false, "vacaciones" si obra es vacaciones
                         - miercoles:
                            - asistencia: bool
-                           - proceso: (clave) "NA" si asistencia es false
+                           - proceso: (clave) "NA" si asistencia es false, "vacaciones" si obra es vacaciones
                         - jueves:
                            - asistencia: bool
-                           - proceso: (clave) "NA" si asistencia es false
+                           - proceso: (clave) "NA" si asistencia es false, "vacaciones" si obra es vacaciones
                         - viernes:
                            - asistencia: bool
-                           - proceso: (clave) "NA" si asistencia es false
+                           - proceso: (clave) "NA" si asistencia es false, "vacaciones" si obra es vacaciones
                      - horas_extra:
                         - push:
                            - horas (EN $)
@@ -400,7 +401,7 @@
                      - impuestos:
                         - impuestos_horas_extra
                         - impuestos_diversos
-                        - impuestos_asistencia (impuestos_asistencia_trabajador * asistencias_aqui/asistencias totales)
+                        - impuestos_asistencia (impuestos_asistencia_trabajador * asistencias_esta_obra/asistencias totales)
                      - total (subtotal + impuestos)
   
 

@@ -216,7 +216,6 @@ function loadGraph(reg, horas_programadas, horas_trabajadas){
             ]
         }]
     };
-    //AQUI por que 3 divs anidados
     var canvas_container = document.createElement('canvas');
     canvas_container.id = "graph_" + proc;
     /*var canvas_div = document.createElement('div');

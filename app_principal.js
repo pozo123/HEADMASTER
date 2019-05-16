@@ -8,6 +8,9 @@ var id_newpassword_perfil = "newpass";
 var id_confirmpass_perfil = "confirm";
 var id_cambiarpassword_button_perfil = "button_cambio_contraseña";
 
+var areas_usuario_global;
+var creden_usuario_global;
+
 $(document).ready(function() {    
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
@@ -22,16 +25,22 @@ $(document).ready(function() {
 firebase.auth().onAuthStateChanged(user => {
     if(user) {
         userUID = user.uid;
+        if(user.uid == "sD2NRaTu4Ug4e0gqluYaHpxNZbP2" || user.uid == "WCpLarWgMKfwGsvAdrqlqjQxy243"){
+            //$("#tabRegistrosAdmon").removeClass('hidden');AQUI descomentar
+        } else {
+            $("#tabRegistrosAdmon").addClass('hidden');
+        }
         $('body').removeClass("hidden");
 
 
         firebase.database().ref(rama_bd_personal).orderByChild('uid').equalTo(user.uid).once("child_added", function (snapshot) {
             var user_personal = snapshot.val();
+            areas_usuario_global = user_personal.areas;
+            creden_usuario_global = user_personal.credenciales;
             if(user_personal.foto){
                 var imagen = document.getElementById("img_foto");
                 imagen.src = user_personal.foto.url;
             }
-
 
             var usuarioNombre = document.getElementById('usuarioConectado');
             usuarioNombre.innerHTML = user_personal.nickname;

@@ -5,7 +5,6 @@ $(document).ready(function() {
 
     firebase.auth().onAuthStateChanged(user => {
         if(user) {
-            // Necesito revisar esto (aqui poner un query por areas)
             $("#navComunidad").removeClass("hidden");
             $("#loginEmail").addClass("hidden");
             $("#loginPassword").addClass("hidden");

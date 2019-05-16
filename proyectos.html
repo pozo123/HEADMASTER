@@ -73,6 +73,33 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="cierreMaestroModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Cambia tu contraseña</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                    <div class="container">
+                        <form onsubmit="return false;">
+
+                            <div class="form-group">
+                                <button id="cerrarDia" type="button" class="btn btn-outline-warning btn-lg btn-block">Cierre Maestro</button>
+                            </div>
+                            <div class="form-row align-items-center">
+                                <div class="col-md-12 col-sm-12">
+                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cerrar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Modales para los editar-->
 
@@ -91,48 +118,52 @@
                         <div class="container">
                             <form onsubmit="return false;">
                                 <div class="form-group">
-                                    <label for="nombreClienteEditar" class="col-form-label">Nombre de la empresa:</label>
-                                    <input type="text" class="form-control" id="nombreClienteEditar">
+                                    <label for="nombreEditarCatalogoClientes" class="col-form-label">Nombre de la empresa:</label>
+                                    <input type="text" class="form-control" id="nombreEditarCatalogoClientes">
                                 </div>
                                 <div class="form-group">
-                                    <label for="claveClienteEditar" class="col-form-label">Clave:</label>
-                                    <input type="text" class="form-control" id="claveClienteEditar">
+                                    <label for="claveEditarCatalogoClientes" class="col-form-label">Clave:</label>
+                                    <input type="text" class="form-control" id="claveEditarCatalogoClientes">
                                 </div>
                                 <div class="form-group">
-                                    <label for="telClienteEditar" class="col-form-label">Teléfono oficina:</label>
-                                    <input type="text" class="form-control" id="telClienteEditar">
+                                    <label for="telefonoEditarCatalogoClientes" class="col-form-label">Teléfono oficina:</label>
+                                    <input type="text" class="form-control" id="telefonoEditarCatalogoClientes">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pptoEspEditarCatalogoClientes" class="form-check-label">Formato ppto especial:</label>
+                                    <input type="checkbox" class="custom-checkbox" id="pptoEspEditarCatalogoClientes">
                                 </div>
                                 <h5>Dirección</h5>
                                 <div class="form-group">
-                                    <label for="dir_calleClienteEditar" class="col-form-label">Calle:</label>
-                                    <input type="text" class="form-control" id="dir_calleClienteEditar">
+                                    <label for="calleEditarCatalogoClientes" class="col-form-label">Calle:</label>
+                                    <input type="text" class="form-control" id="calleEditarCatalogoClientes">
                                 </div>
                                 <div class="form-group">
-                                    <label for="dir_numeroClienteEditar" class="col-form-label">Número:</label>
-                                    <input type="text" class="form-control" id="dir_numeroClienteEditar">
+                                    <label for="numeroEditarCatalogoClientes" class="col-form-label">Número:</label>
+                                    <input type="text" class="form-control" id="numeroEditarCatalogoClientes">
                                 </div>
                                 <div class="form-group">
-                                    <label for="dir_coloniaClienteEditar" class="col-form-label">Colonia:</label>
-                                    <input type="text" class="form-control" id="dir_coloniaClienteEditar">
+                                    <label for="coloniaEditarCatalogoClientes" class="col-form-label">Colonia:</label>
+                                    <input type="text" class="form-control" id="coloniaEditarCatalogoClientes">
                                 </div>
                                 <div class="form-group">
-                                    <label for="dir_delegacionClienteEditar" class="col-form-label">Delegación/Municipio:</label>
-                                    <input type="text" class="form-control" id="dir_delegacionClienteEditar">
+                                    <label for="delegacionEditarCatalogoClientes" class="col-form-label">Delegación/Municipio:</label>
+                                    <input type="text" class="form-control" id="delegacionEditarCatalogoClientes">
                                 </div>
                                 <div class="form-group">
-                                    <label for="dir_ciudadClienteEditar" class="col-form-label">Ciudad:</label>
-                                    <input type="text" class="form-control" id="dir_ciudadClienteEditar">
+                                    <label for="ciudadEditarCatalogoClientes" class="col-form-label">Ciudad:</label>
+                                    <input type="text" class="form-control" id="ciudadEditarCatalogoClientes">
                                 </div>
                                 <div class="form-group">
-                                    <label for="dir_cpClienteEditar" class="col-form-label">Código Postal:</label>
-                                    <input type="text" class="form-control" id="dir_cpClienteEditar">
+                                    <label for="cpEditarCatalogoClientes" class="col-form-label">Código Postal:</label>
+                                    <input type="text" class="form-control" id="cpEditarCatalogoClientes">
                                 </div>
                             <div class="form-row align-items-center">
                                 <div class="col-md-6 col-sm-12">
-                                    <button id="editarCliente" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
+                                    <button id="buttonEditarCatalogoClientes" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
                                 </div>
                                 <div class="col-md-6 col-sm-12">
-                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cerrar</button>
+                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cancelar</button>
                                 </div>
                             </div>
                             </form>
@@ -141,8 +172,7 @@
                 </div>
             </div>
         </div>
-
-        <!-- ya está-->
+        <!--
         <div class="modal fade" id="reqModalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -178,7 +208,6 @@
             </div>
         </div>
 
-        <!-- ya está-->
         <div class="modal fade" id="excModalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -209,7 +238,6 @@
                 </div>
             </div>
         </div>
-        <!-- ya está-->
         <div class="modal fade" id="generoModalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -244,7 +272,6 @@
                 </div>
             </div>
         </div>
-        <!-- ya está-->
         <div class="modal fade" id="tipoModalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -279,7 +306,6 @@
                 </div>
             </div>
         </div>
-        <!-- ya está-->
         <div class="modal fade" id="obraModalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -343,7 +369,6 @@
                 </div>
             </div>
         </div>
-        <!-- ya está-->
         <div class="modal fade" id="ingeModalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -493,7 +518,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
 
         <div class="wrapper">
@@ -516,10 +541,10 @@
                         </div>
 
                         <div class= "form-group hidden" id = "subirFotoPersonal">
-                                <div class="upload-btn-wrapper">
-                                    <button type="button" name="" id="" class="btn btn-outline-success btn-lg btn-block" onclick="subirFotoPersonal()">Sube tu imagen</button> 
-                                </div>
+                            <div class="upload-btn-wrapper">
+                                <button type="button" name="" id="" class="btn btn-outline-success btn-lg btn-block" onclick="subirFotoPersonal()">Sube tu imagen</button> 
                             </div>
+                        </div>
                     </div>
                 </ul>
                 <ul class="list-unstyled components">
@@ -594,7 +619,7 @@
                     <li>
                         <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Dar de alta</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu2">
-                            <li class="tab" id="tabAltaColaborador"><a href="#" onclick="openTabs('tabAltaColaborador','altaColaborador')">Colaborador HEAD</a></li>
+                            <!--<li class="tab" id="tabAltaColaborador"><a href="#" onclick="openTabs('tabAltaColaborador','altaColaborador')">Colaborador HEAD</a></li>-->
                             <!--<li class="tab" id="tabAltaCliente"><a href="#" onclick="openTabs('tabAltaCliente','altaCliente')">Despachos</a></li>-->
                             <li class="tab" id="tabAltaAtencion"><a href="#" onclick="openTabs('tabAltaAtencion','altaAtencion')">AT'N</a></li>
                             <li class="tab" id="tabAltaReqsExcs"><a href="#" onclick="openTabs('tabAltaReqsExcs','altaReqsExcs')">Requisitos/Exclusiones</a></li>
@@ -613,16 +638,16 @@
                     <li class="tab"><a href="#" data-toggle="modal" data-target="#contraseñaModal">Cambiar contraseña</a></li>
                     <!--<li class="tab" id="tabPermisos"><a href="#" onclick="openTabs('tabPermisos','permisos')">Permisos de usuario</a></li>-->
                     <li>
-                        <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Bibliotecas</a>
+                        <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Catálogos</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu3">
-                            <li class="tab" id="tabBibColaborador"><a href="#" onclick="openTabs('tabBibColaborador','bibColaborador')">Colaboradores</a></li>
+                            <li class="tab" id="tabCatalogoClientes"><a href="#" onclick="openTabs('tabCatalogoClientes','clientesCatalogo')">Clientes</a></li>
+                            <!--<li class="tab" id="tabBibColaborador"><a href="#" onclick="openTabs('tabBibColaborador','bibColaborador')">Colaboradores</a></li>
                             <li class="tab" id="tabBibObras"><a href="#" onclick="openTabs('tabBibObras','bibObras')">Obras</a></li>
                             <li class="tab" id="tabBibPresupuestos"><a href="#" onclick="openTabs('tabBibPresupuestos','bibPresupuestos')">Presupuestos</a></li>
-                            <li class="tab" id="tabBibClientes"><a href="#" onclick="openTabs('tabBibClientes','bibClientes')">Despachos</a></li>
                             <li class="tab" id="tabBibAtencion"><a href="#" onclick="openTabs('tabBibAtencion','bibAtencion')">AT'N</a></li>
                             <li class="tab" id="tabBibReqsExcs"><a href="#" onclick="openTabs('tabBibReqsRecs','bibReqsExcs')">Requisitos/Exclusiones</a></li>
                             <li class="tab" id="tabBibTiposGens"><a href="#" onclick="openTabs('tabBibTiposGens','bibTiposGens')">Tipos de presupuesto/Géneros</a></li>
-                            <li class="tab" id="tabBibPagos"><a href="#" onclick="openTabs('tabBibPagos','bibPagos')">Tipos de pagos</a></li>
+                            <li class="tab" id="tabBibPagos"><a href="#" onclick="openTabs('tabBibPagos','bibPagos')">Tipos de pagos</a></li>-->
                         </ul>
                     </li>
                 </ul>
@@ -634,7 +659,7 @@
                     </div>
                 </ul>
                 <ul class="list-unstyled components hidden" id="pageSubmenuCierre">
-                    <button id="cerrarDia" type="button" class="btn btn-outline-warning btn-lg btn-block">Cierre Maestro</button>
+                    <li id="cierreMaestro"class="tab hidden"><a href="#" data-toggle="modal" data-target="#cierreMaestroModal">Cierre Maestro</a></li>
                 </ul>
                 <ul class="list-unstyled components hidden" id="pageSubmenuActRegs">
                     <button id="botonChidoRegs" type="button" class="btn btn-outline-info btn-lg btn-block">Actualizar Registros</button>
@@ -773,7 +798,7 @@
                                         <form action="#" onsubmit="return false;">                   
                                                 <div class="form-group">
                                                     <label for="obraDdlCuant">Obra:</label>
-                                                    <select id="obraDdlCuant" class="form-control" onChange=""></select>
+                                                    <select id="obraDdlCuant" class="form-control"></select>
                                                 </div>
                                                 <div class="form-group hidden" id ="groupProcCuant">
                                                     <label for="procDdlCuant">Proceso:</label>
@@ -787,7 +812,7 @@
 
                                                 <div class="form-group">
                                                     <label for="descripcionCuant">*Descripción:</label>
-                                                    <input type="text" name="" id="descripcionCuant"class="form-control" placeholder="Nombre del presupuesto">
+                                                    <input type="text" name="" id="descripcionCuant"class="form-control" placeholder="Descripción">
                                                 </div>
 
                                                 <div class="form-group">
@@ -931,15 +956,11 @@
                                                 <hr class="style2">
 
                                                 <div class="form-group">
-                                                    <!--<label for="reqsDdlCbPptoProy"> Requisitos:</label>-->
                                                     <div class="myDropdownCheckbox" id="reqsDdlCbPptoProy"></div>
                                                 </div>
                                                 
                                                 <div class="form-group">
-                                                    <!--<label for="excDdlCbPptoProy">Exclusiones:</label>-->
                                                     <div class="myDropdownCheckbox" id="excDdlCbPptoProy"></div>
-                                                    <!-- <button id ="exc" class="dropdown-checkbox-toggle btn btn-danger" data-toggle="dropdown" href="#">Holi</button> -->
-                                                    <!-- <select class="form-control" name="" id="exc"></select> AQUI-->
                                                 </div>
                                                 
                                                 <br/>
@@ -1053,7 +1074,7 @@
                                         <form action="#" onsubmit="return false;">
                                             <div class="form-group">
                                                 <label for="DDL_obra">Selecciona la Obra</label>
-                                                <select class="form-control" name="" id="DDL_obra" onChange="loadDDLPresupuestosGestionar()"></select>
+                                                <select class="form-control" name="" id="DDL_obra"></select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="DDL_presupuesto">Selecciona el presupuesto</label>
@@ -1143,13 +1164,13 @@
                                         <form action="#" onsubmit="return false;">
                                             <div class="form-group">
                                                 <label for="DDL_obra_imp">Selecciona la Obra</label>
-                                                <select class="form-control" name="" id="DDL_obra_imp" onChange="loadDDLPresupuestosImprimir()"></select>
+                                                <select class="form-control" name="" id="DDL_obra_imp"></select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="DDL_presupuesto_imp">Selecciona el presupuesto</label>
-                                                <select class="form-control" name="" id="DDL_presupuesto_imp" onChange= "loadDDLConsecutivosImprimir()"></select>
+                                                <select class="form-control" name="" id="DDL_presupuesto_imp"></select>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group" id="group_consecutivo_imp">
                                                 <label for="DDL_consecutivo_imp">Selecciona el consecutivo</label>
                                                 <select class="form-control" name="" id="DDL_consecutivo_imp"></select>
                                             </div>
@@ -1158,61 +1179,6 @@
                                     </div>
                                     <div class="col-lg-3">
                                         
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="altaColaborador" class="tabcontent hidden">
-                            <h1>Colaborador Head</h1><br/>
-                            <p>* Los campos son obligatorios</p>
-
-                            <div class="container-fluid">
-                                <div class="row align-items-center">
-                                    <div class="col-lg-12">
-                                        <form action="#" onsubmit="return false;">
-                                            <div class="form-group">
-                                                <label for="ingeNombre">*Nombre:</label>
-                                                <input type="text" name="" id="ingeNombre"class="form-control" placeholder="Ingresa el nombre del Ingeniero a dar de alta">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="ingeNickname">*Nombre corto:</label>
-                                                <input type="text" name="" id="ingeNickname"class="form-control" placeholder="Ingresa el nombre del Ingeniero a dar de alta">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="ingeEmail">*Email:</label>
-                                                <input type="text" name="" id="ingeEmail"class="form-control" placeholder="Ingresa su correo HEAD">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="ingePwd">*Contraseña:</label>
-                                                <input type="password" name="" id="ingePwd"class="form-control" placeholder="Ingresa su contraseña a desear">
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label>Especialidad:</label>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="checkbox" id="checkboxElectricidad" value="">
-                                                    <label class="form-check-label" for="checkboxElectricidad">Electricidad</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="checkbox" id="checkboxPlomeria" value="">
-                                                    <label class="form-check-label" for="checkboxPlomeria">Plomería</label>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="">Credenciales:</label>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                                    <label class="form-check-label" for="inlineRadio1">Administrador</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
-                                                    <label class="form-check-label" for="inlineRadio3">Colaborador</label>
-                                                </div>
-                                            </div>
-                                            <button id="registrarIngeniero" type="submit" class="btn btn-success btn-lg btn-block">Registrar</button>
-                                            <button id="borrarTodoIngeniero" type="reset" class="btn btn-outline-danger btn-lg btn-block">Borrar Todo</button>
-                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -1271,111 +1237,6 @@
                                             <button id="registrarObra" type="submit" class="btn btn-success btn-lg btn-block">Registrar</button>
                                             <button id="borrarTodoObra" type="reset" class="btn btn-outline-danger btn-lg btn-block">Borrar Todo</button>                                                                
                                         </form>  
-                                    </div>
-                                </div>
-                            </div>
-                        </div>-->
-
-                        <!--<div id="altaCliente" class="tabcontent hidden">
-                            <h1>Cliente</h1>
-                            <p>* Los campos son obligatorios</p>
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="container-fluid">
-                                        <form action="#" onsubmit="return false;">
-                                            <div class="form-row">
-                                                <div class="col-lg-4">
-                                                    <label for="clienteNombre">*Nombre de la empresa:</label>
-                                                    <input type="text" name="" id="clienteNombre" class="form-control" placeholder="Ingresa el nombre de la empresa">
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <label for="claveCliente">*Clave:</label>
-                                                    <input type="text" name="" id="claveCliente" class="form-control" placeholder="Clave:">
-                                                </div>
-
-                                                <div class="col-lg-4">
-                                                    <label for="clienteTelefono">Teléfono Oficina:</label>
-                                                    <input type="text" name="" id="clienteTelefono" class="form-control" placeholder="Ingresa el telefono de la empresa ">
-                                                </div>
-                                            </div> 
-
-                                            <hr class="style2">
-                                            <div class="form-group">
-                                                <h4>Dirección</h4><br/>
-                                                <div class="form-row">
-                                                    <div class="col-lg-4">
-                                                        <input type="text" id="calleCliente" class="form-control" placeholder="Nombre de la calle">
-                                                    </div>
-                                                    <div class="col-lg-2">
-                                                        <input type="text" id="numCliente"  class="form-control" placeholder="número">
-                                                    </div>
-                                                    <div class="col-lg-3">
-                                                        <input type="text" id="coloniaCliente" class="form-control" placeholder="Colonia">
-                                                    </div>
-
-                                                    <div class="col-lg-3">
-                                                        <input type="text" id="delegacionCliente" class="form-control" placeholder="Delegación/Municipio">
-                                                    </div>
-                                                </div>
-                                                <br/>
-                                                <div class="form-row">
-                                                    <div class="col-lg-2">
-                                                        <input type="text" id="cpCliente" class="form-control" placeholder="Código Postal">
-                                                    </div>
-                                                    <div class="col-lg-2">
-                                                        <input type="text" id="ciudadCliente" class="form-control" placeholder="Estado">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <hr class="style2">
-                                            <div class="form-group">
-                                                <h4>*AT'N</h4><br/>
-                                                <div class="form-group">
-                                                    <label for="nombreAtencion">Nombre:</label>
-                                                    <input type="text" name="" id="nombreAtencion" class="form-control" placeholder="Ingresa el nombre de la persona que vas a agregar:">
-                                                </div>
-                                                <div class="form-row">
-                                                    <div class="col-lg-4">
-                                                        <input type="text" id="areaAtencion" class="form-control" placeholder="Área/departamento">
-                                                    </div>
-                                                    <div class="col-lg-2">
-                                                        <input type="text" id="celAtencion"  class="form-control" placeholder="Celular">
-                                                    </div>
-                                                    <div class="col-lg-3">
-                                                        <input type="text" id="emailAtencion" class="form-control" placeholder="Email">
-                                                    </div>
-
-                                                    <div class="col-lg-3">
-                                                        <input type="text" id="extAtencion" class="form-control" placeholder="Extensión">
-                                                    </div>
-                                                </div>
-                                                <br/>
-                                            </div>
-                                            <div class="form-row align-items-center">
-                                                <div class="col-md-6 col-sm-12">
-                                                    <button id="addAtencion" type="button" class="btn btn-outline-danger btn-lg btn-block">Añadir AT'N</button>
-                                                </div>
-                                                <div class="col-md-6 col-sm-12">
-                                                        <button id="delAtencion" type="button" class="btn btn-outline-secondary btn-lg btn-block">Eliminar último</button>
-                                                </div>
-                                            </div>
-                            
-                                            <div class="form-group pt-3">
-                                                <div class="card w-100 scrollbar scrollbar-danger">
-                                                    <div class="card-header text-center">
-                                                        AT'N
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <ul id="ListaClientes"class="list-group list-group-flush">
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <button id="registrarCliente" type="button" class="btn btn-success btn-lg btn-block">Registrar Cliente</button>
-                                            <button id="borrarTodoCliente" type="reset" class="btn btn-outline-danger btn-lg btn-block">Borrar Todo</button>   
-                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -1770,21 +1631,19 @@
                             </div>
                         </div>-->
 
-                        <div id= "bibClientes" class="tabcontent hidden">
+                        <div id= "clientesCatalogo" class="tabcontent hidden">
                             <div class="container-fluid">
-                                <h1>Bibliotecas HEAD - Despachos</h1>
-                                <p>Aquí puedes revisar las bibliotecas y editar/eliminar información</p>
-                                
+                                <h1>Catálogo de Clientes</h1>
                                 <div class="row mt-3">
                                     <div class="container-fluid">
-                                        <table id="dataTableClientes" class="display" style="width:100%">
+                                        <table id="dataTableCatalogoClientes" class="display" style="width:100%">
                                         </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div id= "bibObras" class="tabcontent hidden">
+                        <!--<div id= "bibObras" class="tabcontent hidden">
                             <div class="container-fluid">
                                 <h1>Bibliotecas HEAD - Obras</h1>
                                 <p>Aquí puedes revisar las bibliotecas y editar/eliminar información</p>
@@ -1884,7 +1743,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
 
                         <div id="pagos" class="tabcontent hidden">
                             <h1>Pagos ingresados por presupuesto</h1>
@@ -2007,34 +1866,34 @@
         </script>
 
 <!--My scripts-->
-        <script src="numeroLetras.js"></script>
+        <script src="app_desplegar_procesos.js"></script>
+        <script src="app_funciones.js"></script>
         <script src="app_principal.js"></script>        
+        <script src="catalogos/app_catalogo_clientes.js"></script>        
+        <script src="numeroLetras.js"></script>
+        <script src="proyectos/app_actualizar_regs.js"></script>
+        <script src="proyectos/app_atn.js"></script>
+        <script src="proyectos/app_cierre_maestro.js"></script>
+        <script src="proyectos/app_exc_reqs.js"></script>
+        <script src="proyectos/app_gestionar_presu.js"></script>
+        <script src="proyectos/app_imprimir_presupuesto.js"></script>
+        <script src="proyectos/app_presupuesto.js"></script>
+        <script src="proyectos/app_proy_actualizar_esp.js"></script>
+        <script src="proyectos/app_proy_cuant_kaizen.js"></script>
+        <script src="proyectos/app_proy_registros.js"></script>
+        <script src="proyectos/app_proy_scoreboard.js"></script>
+        <script src="proyectos/app_reporte.js"></script>
+        <script src="proyectos/app_reporte_ppto.js"></script>
+        <script src="proyectos/score.js"></script>
         <!--<script src="proyectos/app_inge.js"></script>-->
         <!--<script src="proyectos/app_perfil.js"></script>-->
-        <script src="proyectos/app_presupuesto.js"></script>
-        <!--<script src="proyectos/app_cliente.js"></script>-->
-        <script src="proyectos/app_atn.js"></script>
-        <script src="proyectos/app_reporte.js"></script>
         <!--<script src="proyectos/app_dashboard.js"></script>-->
-        <script src="proyectos/score.js"></script>
-        <script src="proyectos/app_gestionar_presu.js"></script>
         <!--<script src="proyectos/app_permisos.js"></script>-->
-        <script src="proyectos/app_imprimir_presupuesto.js"></script>
         <!--<script src="proyectos/app_bibliotecas.js"></script>-->
-        <script src="proyectos/app_exc_reqs.js"></script>
-        <script src="proyectos/app_cierre_maestro.js"></script>
         <!--<script src="proyectos/app_graphs.js"></script>-->
-        <script src="proyectos/app_actualizar_regs.js"></script>
         <!--<script src="proyectos/app_dashgrid.js"></script>-->
-        <script src="proyectos/app_reporte_ppto.js"></script>
         <!--<script src="proyectos/app_pagos.js"></script>-->
-        <script src="proyectos/app_proy_cuant_kaizen.js"></script>
-        <script src="app_desplegar_procesos.js"></script>
-        <script src="proyectos/app_proy_registros.js"></script>
         <!--<script src="proyectos/app_proy_asigna_proc.js"></script>-->
-        <script src="app_funciones.js"></script>
-        <script src="proyectos/app_proy_scoreboard.js"></script>
-        <script src="proyectos/app_proy_actualizar_esp.js"></script>
 
         
 

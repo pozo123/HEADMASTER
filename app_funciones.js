@@ -7,6 +7,15 @@ var rama_bd_mensajes = "mensajes";
 var rama_bd_version = "info_web/version";
 
 
+function trickleDownKaizen(obra, hoja, query_kaiz, cantidad){
+  var split = hoja.split("-");
+  if(split.length > 1){
+    sumaEnFirebase(rama_bd_obras + "/" + obra + "/procesos/" + split[0] + "/subprocesos/" + hoja + "/kaizen/" + query_kaiz, cantidad);
+  }
+  sumaEnFirebase(rama_bd_obras + "/" + obra + "/procesos/" + split[0] + "/kaizen/" + query_kaiz, cantidad);
+  sumaEnFirebase(rama_bd_obras + "/" + obra + "/kaizen/" + query_kaiz, cantidad);
+}
+
 function gcd_two_numbers(x, y) {
   if ((typeof x !== 'number') || (typeof y !== 'number')) 
     return false;

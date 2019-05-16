@@ -11,9 +11,10 @@ var id_fecha_final_reporte = "fichaFinalReporte";
 var id_datatable_reporte =  "dataTableReporte";
 
 var rama_bd_registros = "proyectos/registros";
-var rama_bd_personal = "prersonal";
+var rama_bd_personal = "personal";
 var rama_bd_obras = "obras";
 
+var inges = {};
 var fecha_actual = new Date();
 var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
@@ -27,6 +28,7 @@ $('#tabReporte').click(function() {
     $('#' + id_proc_group_reporte).addClass("hidden");
     $('#' + id_subproc_ddl_reporte).empty();
     $('#' + id_subproc_group_reporte).addClass("hidden");
+    inges = {};
     
     jQuery('#' + id_fecha_inicio_reporte).datetimepicker(
         {timepicker:false, weeks:true,format:'m.d.Y'}
@@ -51,6 +53,7 @@ $('#tabReporte').click(function() {
     firebase.database().ref(rama_bd_personal).once('value').then(function(snapshot){
         snapshot.forEach(function(childSnap){
             if(childSnap.child("areas/proyectos").val()){
+                inges[childSnap.key] = childSnap.child("nickname").val();
                 var option3 = document.createElement('option');
                 option3.text = childSnap.child("nickname").val(); 
                 option3.value = childSnap.key;
@@ -200,7 +203,7 @@ function getRegsReporte(datos_reporte, data, imprime){
                         datos_reporte.push([
                             new Date(reg.checkin).toLocaleDateString("es-ES", options),
                             "" + horas,
-                            reg.inge, 
+                            inges[reg.inge], 
                             reg.obra,
                             reg.proceso,
                         ]);
@@ -210,7 +213,7 @@ function getRegsReporte(datos_reporte, data, imprime){
                             reg.status,
                             new Date(reg.checkin).toLocaleDateString("es-ES", options),
                             horas,
-                            reg.inge, 
+                            inges[reg.inge], 
                             reg.obra,
                             reg.proceso,
                             reg.esp,
@@ -221,7 +224,7 @@ function getRegsReporte(datos_reporte, data, imprime){
             });
         });
     });
-    return horas_totales;
+    return [horas_totales, fecha_i, fecha_f];
 }
 $('#' + id_imprime_button_reporte).click(function () {
     var doc;
@@ -229,7 +232,10 @@ $('#' + id_imprime_button_reporte).click(function () {
     regs[0] = [{text:"Fecha", style:"tableHeader"},{text:"Horas trabajadas", style:"tableHeader"},{text:"Colaborador", style:"tableHeader"},{text:"Obra", style:"tableHeader"},{text:"Presupuesto / Proceso", style:"tableHeader"}]
 
     firebase.database().ref(rama_bd_registros).once('value').then(function(data){
-        var horas_totales = getRegsReporte(regs, data, true);
+        var getRegs = getRegsReporte(regs, data, true);
+        var horas_totales = getRegs[0];
+        var fecha_i = getRegs[1];
+        var fecha_f = getRegs[2];
 
         regs[regs.length] = [{text: "Horas totales: ", style: "totals", colSpan:2}, {}, {text: "" + horas_totales.toFixed(2), style: "totals"},{},{}]
 
@@ -246,11 +252,11 @@ $('#' + id_imprime_button_reporte).click(function () {
                     ]
                 },
                 {text: 'Reporte de registros', style: 'header',alignment: 'center'},
-                'El siguiente reporta muestra los registros de trabajo del ingeniero "' + $('#' + id_inge_ddl_reporte + " option:selected").val() + '" en la obra  "' + $('#' + id_obra_ddl_reporte + " option:selected").val() + '" en el periodo seleccionado.',
+                'El siguiente reporta muestra los registros de trabajo del ingeniero "' + $('#' + id_inge_ddl_reporte + " option:selected").val() + '" en la obra  "' + $('#' + id_obra_ddl_reporte + " option:selected").val() + '" en el periodo ' + new Date(fecha_i).toLocaleDateString() + " - " + new Date(fecha_f).toLocaleDateString(),
                 " ",
                 " ",
-                {text: 'Periodo:', alignment: 'center'},
-                " ",
+                //{text: 'Periodo:', alignment: 'center'},
+                //fecha_i.toLocaleDateString() + "-" + fecha_f.toLocaleDateString(),
                 {
                     style: 'tableStyle',
                     table: {

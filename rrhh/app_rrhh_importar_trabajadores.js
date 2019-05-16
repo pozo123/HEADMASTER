@@ -32,7 +32,7 @@ $('#' + id_button_guardar_importarTrabajadores).on("click",function() {
         });
         var uid_index = 0;
         var titulos = [];
-        //AQUI hay que definir
+        //hay que definir
         var niveles = [0,"obra_asignada",0,0,"claves","claves","claves","info_personal","info_personal","info_personal","info_personal",0,"datos_bancarios","datos_bancarios","datos_bancarios",0,0,"tallas","tallas","tallas",0,0];
         for(key in json[0]){
             if(json[0][key] == "id_trabajadores") 

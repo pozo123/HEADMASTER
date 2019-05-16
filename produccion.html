@@ -74,6 +74,42 @@
                 </div>
             </div>
         </div>
+        <!--Que se pueda editar desde aqui si tienes admin?-->
+        <!--
+        <div class="modal fade" id="categoriaModalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Editar Categoría</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form onsubmit="return false;">
+                                <div class="form-group">
+                                    <label for="nombreEditarCatalogoCategorias" class="col-form-label">Nombre:</label>
+                                    <input type="text" class="form-control" id="nombreEditarCatalogoCategorias">
+                                </div>
+                                <div class="form-group">
+                                    <label for="claveEditarCatalogoCategorias" class="col-form-label">Clave:</label>
+                                    <input type="text" class="form-control" id="claveEditarCatalogoCategorias">
+                                </div>
+                            <div class="form-row align-items-center">
+                                <div class="col-md-6 col-sm-12">
+                                    <button id="buttonEditarCatalogoCategorias" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cancelar</button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>-->
         <div class="wrapper">
             <!-- Sidebar -->
             <nav id="sidebar">
@@ -116,18 +152,24 @@
                     <li>
                         <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Obras</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu2">
-                            <li class="tab" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Alta de obra</a></li>
-                            <li class="tab" id="tabAltaProceso"><a href="#" onclick="openTabs('tabAltaProceso','altaProceso')">Alta de procesos</a></li>
-                            <li class="tab tabEditarProceso" id="tabEditarProceso"><a href="#" onclick="openTabs('tabEditarProceso','editarProceso')">Editar Procesos</a></li>
+                            <!--<li class="tab" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Alta de obra</a></li>-->
+                            <!--<li class="tab" id="tabAltaProceso"><a href="#" onclick="openTabs('tabAltaProceso','altaProceso')">Alta de procesos</a></li>-->
+                            <!--<li class="tab tabEditarProceso" id="tabEditarProceso"><a href="#" onclick="openTabs('tabEditarProceso','editarProceso')">Editar Procesos</a></li>-->
                             <li class="tab tabCatalogoProceso" id="tabCatalogoProceso"><a href="#" onclick="openTabs('tabCatalogoProceso','catalogoProceso')">Catálogo de procesos</a></li>
                             <li class="tab tabUtilidad" id="tabUtilidad"><a href="#" onclick="openTabs('tabUtilidad','utilidad')">Generador de Precios</a></li>
                         </ul>
                     </li>
-                    <li>
+                    <!--<li>
                         <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Colaboradores</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu3">
                                 <li class="tab" id="tabAltaColaborador"><a href="#" onclick="openTabs('tabAltaColaborador','altaColaborador')">Alta de colaborador</a></li>
-                                <!-- <li class="tab" id="tabGestionarSup"><a href="#" onclick="openTabs('tabGestionarSup','gestionarSup')">Gestionar supervisores</a></li> -->
+                                <li class="tab" id="tabGestionarSup"><a href="#" onclick="openTabs('tabGestionarSup','gestionarSup')">Gestionar supervisores</a></li>
+                        </ul>
+                    </li>-->
+                    <li>
+                        <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Catálogos</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu3">
+                            <li class="tab" id="tabCatalogoCategorias"><a href="#" onclick="openTabs('tabCatalogoCategorias','categoriasCatalogo')">Categorías de Pptos</a></li>
                         </ul>
                     </li>
                     <li class="tab"><a href="#" data-toggle="modal" data-target="#contraseñaModal">Cambiar contraseña</a></li>
@@ -267,7 +309,7 @@
                             </div>                            
                         </div>
                         <!--Obras-->
-                        <div id="altaObra" class="tabcontent hidden">
+                        <!--<div id="altaObra" class="tabcontent hidden">
                             <h1>Alta de Obra</h1>
                             <p>Página para dar de alta obras en el sistema</p>
                             <div class="container-fluid">
@@ -275,57 +317,57 @@
                                     <div class="col-lg-3"></div>
                                     <div class="col-lg-6">
                                         <form action="#" onsubmit="return false;">                   
-                                                <div class="form-group">
-                                                    <label for="obraNombreProd">Nombre:</label>
-                                                    <input type="text" name="obraNombreProd" id="obraNombreProd" class="form-control" placeholder="Nombre">
+                                            <div class="form-group">
+                                                <label for="obraNombreProd">Nombre:</label>
+                                                <input type="text" name="obraNombreProd" id="obraNombreProd" class="form-control" placeholder="Nombre">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="claveObraProd">Clave:</label>
+                                                <input type="text" name="claveObraProd" id="claveObraProd"class="form-control" placeholder="Clave (Máximo 6 caracteres)">
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label for="clienteProd">Cliente:</label>
+                                                <select id="clienteProd" class="form-control" onChange=""></select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="supervisorDdlObraProd">Supervisor:</label>
+                                                <select id ="supervisorDdlObraProd" class="form-control"></select>
+                                            </div>
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-6 col-sm-12">
+                                                    <label for="fechaInicioObraProd">Fecha programada de inicio de Obra:</label>
                                                 </div>
-                                                <div class="form-group">
-                                                    <label for="claveObraProd">Clave:</label>
-                                                    <input type="text" name="claveObraProd" id="claveObraProd"class="form-control" placeholder="Clave (Máximo 6 caracteres)">
+                                                <div class="col-lg-6 col-sm-12">
+                                                    <input class="form-control" type="text" id="fechaInicioObraProd" placeholder="" readonly="readonly">
                                                 </div>
-                                                
-                                                <div class="form-group">
-                                                    <label for="clienteProd">Cliente:</label>
-                                                    <select id="clienteProd" class="form-control" onChange=""></select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="supervisorDdlObraProd">Supervisor:</label>
-                                                    <select id ="supervisorDdlObraProd" class="form-control"></select>
-                                                </div>
-                                                <div class="form-row align-items-center">
-                                                    <div class="col-lg-6 col-sm-12">
-                                                        <label for="fechaInicioObraProd">Fecha programada de inicio de Obra:</label>
-                                                    </div>
-                                                    <div class="col-lg-6 col-sm-12">
-                                                        <input class="form-control" type="text" id="fechaInicioObraProd" placeholder="" readonly="readonly">
-                                                    </div>
-                                                </div>
-                                                <br/>
-                                                <div class="form-row align-items-center">
-                                                    <div class="col-lg-6 col-sm-12">
-                                                        <label for="fechaFinalObraProd">Fecha programada de terminación de Obra:</label>
-                                                    </div>
-                                                    <div class="col-lg-6 col-sm-12">
-                                                        <input class="form-control" type="text" id="fechaFinalObraProd" placeholder="" readonly="readonly">
-                                                    </div>
-                                                </div>
-                                                <br/>
-                                                <div class="form-row">
-                                                    <div class= "col-lg-6">
-                                                        <button id="registrarObraProd" type="button" class="btn btn-outline-success btn-block">Agregar Obra</button>
-                                                    </div>
-                                                    <div class= "col-lg-6">
-                                                        <button type="reset" id = ""class="btn btn-outline-danger btn-block">Borrar Todo</button>
-                                                    </div>
-                                                </div>
-                                            </form>
+                                            </div>
                                             <br/>
-                                        </div>
-                                        <div class="col-lg-3"></div>
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-6 col-sm-12">
+                                                    <label for="fechaFinalObraProd">Fecha programada de terminación de Obra:</label>
+                                                </div>
+                                                <div class="col-lg-6 col-sm-12">
+                                                    <input class="form-control" type="text" id="fechaFinalObraProd" placeholder="" readonly="readonly">
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="form-row">
+                                                <div class= "col-lg-6">
+                                                    <button id="registrarObraProd" type="button" class="btn btn-outline-success btn-block">Agregar Obra</button>
+                                                </div>
+                                                <div class= "col-lg-6">
+                                                    <button type="reset" id = ""class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <br/>
                                     </div>
+                                    <div class="col-lg-3"></div>
                                 </div>
-                        </div>
-                        <div id="altaProceso" class="tabcontent hidden">
+                            </div>
+                        </div>-->
+                        <!--<div id="altaProceso" class="tabcontent hidden">
                                 <h1>Alta de Proceso Continuo</h1>
                                 <p>Página para dar de alta procesos continuos en el sistema</p>
                                 <div class="container-fluid">
@@ -397,7 +439,7 @@
                                             <div class="col-lg-3"></div>
                                         </div>
                                     </div>
-                        </div>                         
+                        </div>-->                         
                         <div id= "catalogoProceso" class="tabcontent hidden dataTables_wrapper catalogoProceso">
                                 <div class="container-fluid">
                                     <h1>Catálogo de Procesos</h1>
@@ -410,7 +452,7 @@
                                     </div>
                                 </div>
                         </div>
-                        <div id="editarProceso" class="tabcontent hidden">
+                        <!--<div id="editarProceso" class="tabcontent hidden">
                             <h1>Edición de Procesos</h1>
                             <p>Página para editar información de procesos existentes</p>
                             <div class="container-fluid">
@@ -469,7 +511,7 @@
                                         <div class="col-lg-3"></div>
                                     </div>
                                 </div>
-                        </div>
+                        </div>-->
                         <div id="utilidad" class="tabcontent hidden">
                                 <h1>Generador de Precios</h1>
                                 <p>Página auxiliar que te ayuda a calcular precios de venta de procesos u obras</p>
@@ -609,7 +651,18 @@
                                     </div>
                                 </div>
                         </div>
-
+                        <!-- Catalogos-->
+                        <div id= "categoriasCatalogo" class="tabcontent hidden">
+                            <div class="container-fluid">
+                                <h1>Catálogo de Categorías de Presupuestos</h1>
+                                <div class="row mt-3">
+                                    <div class="container-fluid">
+                                        <table id="dataTableCatalogoCategorias" class="display" style="width:100%">
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -669,15 +722,16 @@
 
 <!--My scripts-->
 <script src="app_principal.js"></script>        
-<script src="numeroLetras.js"></script>
 <script src="app_funciones.js"></script>
+<script src="app_desplegar_procesos.js"></script>
+<script src="catalogos/app_catalogo_categorias.js"></script>
+<script src="numeroLetras.js"></script>
 <script src="produccion/produccion.js"></script>
 <!--<script src="produccion/app_colaboradores_produccion.js"></script>-->
 <!--<script src="produccion/app_obra_prod.js"></script>-->
-<script src="produccion/app_procesos.js"></script>
-<script src="app_desplegar_procesos.js"></script>
+<!--<script src="produccion/app_procesos.js"></script>-->
 <!--<script src="produccion/app_kaizen_global.js"></script>-->
-<script src="produccion/app_editar_proceso.js"></script>
+<!--<script src="produccion/app_editar_proceso.js"></script>-->
 <script src="produccion/app_utilidad.js"></script>
 <!-- <script src="produccion/app_datos_kaizen.js"></script> -->
 <script src="produccion/app_desplegar_kaizen.js"></script>

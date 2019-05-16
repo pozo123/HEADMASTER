@@ -29,7 +29,7 @@ $('#' + id_tab_pago_nomina).click(function(){
         option.text = option.value = i;
         select.appendChild(option);
     }
-
+    //Solo carga las semanas con registros, aka las que tienen una rama en rama_bd_pagos_nomina
     loadSemanasPagoNomina(year_actual);
 });
 
@@ -56,32 +56,29 @@ function loadSemanasPagoNomina(year){
 	var select = document.getElementById(id_semana_ddl_pago_nomina);
 	select.appendChild(optionBlank);
 
-    for(i=semana_actual;i>0;i--){
-    	firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + i).once('value').then(function(snapshot){
-			if(snapshot.exists()){
-				var semana = snapshot.val();
+    firebase.database().ref(rama_bd_pagos_nomina + "/" + year).once('value').then(function(snapshot){
+    	for(i=semana_actual;i>0;i--){
+			if(snapshot.child(i).exists()){
+				var semana = snapshot.child(i).val();
 				if(semana.diversos_terminados && semana.asistencias_terminadas && semana.horas_extra_terminadas){
-					console.log("2")
 					var option = document.createElement('option');
-					option.text = snapshot.key;
-					option.value = semana.terminada;
+					option.text = snapshot.child(i).key;
+					option.value = snapshot.child(i + "/terminada").val();//No estoy seguro de para que puse este valor
 					select.appendChild(option);
 				}
 			}
-    	});
-    }
+    	}
+    });
 }
 
 $('#' + id_semana_ddl_pago_nomina).change(function(){
 	trabajadores = [];
     var year = $('#' + id_year_ddl_pago_nomina + " option:selected").val();
 	var semana = $('#' + id_semana_ddl_pago_nomina + " option:selected").text();
-	console.log(year)
-	console.log(semana)
-	firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + semana).once('value').then(function(snapshot){
-		var terminada = snapshot.val().terminada;
-		console.log(terminada)
-		if(terminada){
+	//firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + semana).once('value').then(function(snapshot){
+		//var terminada = snapshot.val().terminada;
+		var terminada = $('#' + id_semana_ddl_pago_nomina + " option:selected").val();
+		if(terminada == 'true'){
 			//DataTable
 			var datos_pagoNomina = [];
 			firebase.database().ref(rama_bd_trabajadores).once('value').then(function(snapshot){
@@ -89,8 +86,15 @@ $('#' + id_semana_ddl_pago_nomina).change(function(){
 					var trabajador = trabSnap.val();
 					if(trabSnap.child("nomina/" + year + "/" + semana).exists()){
 						var nom = trabSnap.child("nomina/" + year + "/" + semana).val();
-						var subtotal = formatMoney(parseFloat(nom.total_asistencia) + parseFloat(nom.total_horas_extra) + parseFloat(nom.total_diversos));
-						var impuestos = formatMoney(parseFloat(nom.impuestos.impuestos_asistencia) + parseFloat(nom.impuestos.impuestos_horas_extra) + parseFloat(nom.impuestos.impuestos_diversos));
+						var tot_HE = isNaN(parseFloat(nom.total_horas_extra)) ? 0 : parseFloat(nom.total_horas_extra);
+						var tot_as = isNaN(parseFloat(nom.total_asistencia)) ? 0 :  parseFloat(nom.total_asistencia);
+						var tot_div = isNaN(parseFloat(nom.total_diversos)) ? 0 : parseFloat(nom.total_diversos);
+						var imp_as = isNaN(parseFloat(nom.impuestos.impuestos_asistencia)) ? 0 : parseFloat(nom.impuestos.impuestos_asistencia);
+						var imp_div = isNaN(parseFloat(nom.impuestos.impuestos_diversos)) ? 0 : parseFloat(nom.impuestos.impuestos_diversos);
+						var imp_HE = isNaN(parseFloat(nom.impuestos.impuestos_horas_extra)) ? 0 : parseFloat(nom.impuestos.impuestos_horas_extra);
+
+						var subtotal = formatMoney(tot_as + tot_HE + tot_div);
+						var impuestos = formatMoney(imp_as + imp_div + imp_HE);
 						var total = formatMoney(parseFloat(nom.total));
 	                    datos_pagoNomina.push([trabSnap.key,trabajador.nombre,subtotal,impuestos,total]);
 					}
@@ -121,7 +125,6 @@ $('#' + id_semana_ddl_pago_nomina).change(function(){
 					snapshot.forEach(function(obraSnap){
 						if(obraSnap.key != "total" && obraSnap.key != "terminada" && obraSnap.key != "asistencias_terminadas" && obraSnap.key != "horas_extra_terminadas" && obraSnap.key != "diversos_terminados"){
 							obraSnap.child("trabajadores").forEach(function(trabSnap){
-
 								//Si no existe ya, crealo.
 								if(!trabajadores[trabSnap.key]){
 									cargaRenglonPagoNomina(tSnap.child(trabSnap.key));
@@ -132,7 +135,7 @@ $('#' + id_semana_ddl_pago_nomina).change(function(){
 				});
 			});
 		}
-	});
+	//});
 });
 
 function cargaRenglonPagoNomina(trabSnap){
@@ -170,20 +173,23 @@ function headersPagoNomina() {
 $('#' + id_terminar_button_pago_nomina).click(function(){
 	var year = $('#' + id_year_ddl_pago_nomina + " option:selected").val();
 	var week = $('#' + id_semana_ddl_pago_nomina + " option:selected").text();
-	$('[id^=cant_pagada_]').each(function(){
-		var split = this.id.split("_");
-		var id_trabajador = split[split.length - 1];
-		console.log(id_trabajador);
-		console.log(split)
-		firebase.database().ref(rama_bd_trabajadores + "/" + id_trabajador).once('value').then(function(snapshot){
-			var sueldo_base = parseFloat(snapshot.val().sueldo_base);
-			var total = parseFloat($("#" + "cant_pagada_" + id_trabajador).val());
-			if(week == 1 && new Date(year,0,1).getDay() != 4){
-				distribuyeEnAsistenciasPagoNomina(total,week,year,snapshot,"first", sueldo_base);
-				distribuyeEnAsistenciasPagoNomina(total,getWeek(new Date(year-1,11,31).getTime())[0],year - 1,snapshot,"last", sueldo_base);
-			} else {
-				distribuyeEnAsistenciasPagoNomina(total,week,year,snapshot,"NA", sueldo_base);
-			}
+	firebase.database().ref(rama_bd_trabajadores).once('value').then(function(snapshot){
+		firebase.database().ref(rama_bd_obras_magico).once('value').then(function(obraSnapshot){
+			var obras_json = obraSnapshot.val();
+			$('[id^=cant_pagada_]').each(function(){
+				var split = this.id.split("_");
+				var id_trabajador = split[split.length - 1];
+				var sueldo_base = parseFloat(snapshot.child(id_trabajador + "/sueldo_base").val());
+				var total = parseFloat($("#cant_pagada_" + id_trabajador).val());
+				if(week == 1 && new Date(year,0,1).getDay() != 4){
+					distribuyeEnAsistenciasPagoNomina(obras_json,total,week,year,snapshot.child(id_trabajador),"first", sueldo_base, id_trabajador);
+					distribuyeEnAsistenciasPagoNomina(obras_json,total,getWeek(new Date(year-1,11,31).getTime())[0],year - 1,snapshot.child("id_trabajador"),"last", sueldo_base, id_trabajador);
+				} else {
+					distribuyeEnAsistenciasPagoNomina(obras_json,total,week,year,snapshot.child(id_trabajador),"NA", sueldo_base, id_trabajador);
+				}
+			});
+			//console.log(obras_json);
+			firebase.database().ref(rama_bd_obras_magico).update(obras_json);
 		});
 	});
 	
@@ -198,16 +204,21 @@ $('#' + id_terminar_button_pago_nomina).click(function(){
 });
 
 function sumaTotalesPN(week, year){
-	console.log("adios")
 	firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week).once('value').then(function(snapshot){
 		var total_week = 0;
 		snapshot.forEach(function(childSnap){
-			if(childSnap.key != "terminada" || childSnap.key != "total" || childSnap.key != "diversos_terminados" || childSnap.key != "horas_extra_terminadas" || childSnap.key != "asistencias_terminadas"){
+			if(childSnap.key != "terminada" && childSnap.key != "total" && childSnap.key != "diversos_terminados" && childSnap.key != "horas_extra_terminadas" && childSnap.key != "asistencias_terminadas"){
 				var total_obra = 0;
 				childSnap.child("trabajadores").forEach(function(trabSnap){
 					var trab = trabSnap.val();
-					console.log(trab)
-					var total_trab = parseFloat(trab.total_horas_extra) + parseFloat(trab.total_asistencia) + parseFloat(trab.total_diversos) + parseFloat(trab.impuestos.impuestos_asistencia_obra) + parseFloat(trab.impuestos.impuestos_diversos) + parseFloat(trab.impuestos.impuestos_horas_extra);
+					var tot_HE = isNaN(parseFloat(trab.total_horas_extra)) ? 0 : parseFloat(trab.total_horas_extra);
+					var tot_as = isNaN(parseFloat(trab.total_asistencia)) ? 0 :  parseFloat(trab.total_asistencia);
+					var tot_div = isNaN(parseFloat(trab.total_diversos)) ? 0 : parseFloat(trab.total_diversos);
+					var imp_as = isNaN(parseFloat(trab.impuestos.impuestos_asistencia)) ? 0 : parseFloat(trab.impuestos.impuestos_asistencia);
+					var imp_div = isNaN(parseFloat(trab.impuestos.impuestos_diversos)) ? 0 : parseFloat(trab.impuestos.impuestos_diversos);
+					var imp_HE = isNaN(parseFloat(trab.impuestos.impuestos_horas_extra)) ? 0 : parseFloat(trab.impuestos.impuestos_horas_extra);
+
+					var total_trab = tot_HE + tot_as + tot_div + imp_as + imp_div + imp_HE;
 					total_obra = total_obra + total_trab;
 					firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + childSnap.key + "/trabajadores/" + trabSnap.key + "/total").set(total_trab);
 				});
@@ -218,10 +229,8 @@ function sumaTotalesPN(week, year){
 		firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/total").set(total_week);
 	});
 }
-function distribuyeEnAsistenciasPagoNomina(total,week,year,snapshot,semanaQuebrada, sueldo_base){
-	console.log("hola")
-	semSnap = snapshot.child("nomina/" + year + "/" + week);
-	var sem_trab = semSnap.val();
+function distribuyeEnAsistenciasPagoNomina(obras_json,total,week,year,snapshot,semanaQuebrada, sueldo_base, id_trabajador){
+	var sem_trab = snapshot.child("nomina/" + year + "/" + week).val();
 	var asis = 0;
 	var asistencias = {};
 
@@ -235,56 +244,72 @@ function distribuyeEnAsistenciasPagoNomina(total,week,year,snapshot,semanaQuebra
 		sumaAsistenciasPN(nextWeek,asis);
 	}
 
-	asistenciaDiaPN(sem_trab.lunes,asistencias,asis);
-	asistenciaDiaPN(sem_trab.martes,asistencias,asis);
-	asistenciaDiaPN(sem_trab.miercoles,asistencias,asis);
-	asistenciaDiaPN(sem_trab.jueves,asistencias,asis);
-	asistenciaDiaPN(sem_trab.viernes,asistencias,asis);
+	asis = asistenciaDiaPN(sem_trab.lunes,asistencias,asis);
+	asis = asistenciaDiaPN(sem_trab.martes,asistencias,asis);
+	asis = asistenciaDiaPN(sem_trab.miercoles,asistencias,asis);
+	asis = asistenciaDiaPN(sem_trab.jueves,asistencias,asis);
+	asis = asistenciaDiaPN(sem_trab.viernes,asistencias,asis);
 
 	//Guardo valores en rama trabajadores
-	var total_asistencia = asis * sueldo_base;
-	var impuestos_asistencia = total - total_asistencia - sem_trab.total_diversos - sem_trab.total_horas_extra - sem_trab.impuestos.impuestos_diversos - sem_trab.impuestos.impuestos_horas_extra;
+	var impu = sem_trab.impuestos ? sem_trab.impuestos : 0;
+	var total_asistencia = parseFloat(asis) * sueldo_base;
+	var tot_div = isNaN(parseFloat(sem_trab.total_diversos)) ? 0 : parseFloat(sem_trab.total_diversos);
+	var tot_HE = isNaN(parseFloat(sem_trab.total_horas_extra)) ? 0 : parseFloat(sem_trab.total_horas_extra);
+	var imp_div = isNaN(parseFloat(impu.impuestos_diversos)) ? 0 : parseFloat(impu.impuestos_diversos);
+	var imp_HE = isNaN(parseFloat(impu.impuestos_horas_extra)) ? 0 : parseFloat(impu.impuestos_horas_extra);
+
+	var impuestos_asistencia = total - total_asistencia - tot_div - tot_HE - imp_div - imp_HE;
 
 	firebase.database().ref(rama_bd_trabajadores + "/" + id_trabajador + "/nomina/" + year + "/" + week + "/total_asistencia").set(total_asistencia);
 	firebase.database().ref(rama_bd_trabajadores + "/" + id_trabajador + "/nomina/" + year + "/" + week + "/impuestos/impuestos_asistencia").set(impuestos_asistencia);
 	firebase.database().ref(rama_bd_trabajadores + "/" + id_trabajador + "/nomina/" + year + "/" + week + "/total").set(total);
 	
+	console.log(asistencias);
 	for(key in asistencias){
-		if(key != "total"){
-			var keyObra = key;
+		var keyObra = key;
 
-            var total_asistencia_obra = (total_asistencia * asistencias[keyObra]["total"] / asis).toFixed(2);
-            var impuestos_asistencia_obra = (impuestos_asistencia_obra * asistencias[keyObra]["total"] / asis).toFixed(2);
-            var cant = total_asistencia_obra + impuestos_asistencia;
+        var total_asistencia_obra = parseFloat((total_asistencia * asistencias[keyObra]["total"] / asis).toFixed(2));
+        var impuestos_asistencia_obra = parseFloat((impuestos_asistencia * asistencias[keyObra]["total"] / asis).toFixed(2));
+        var cant = total_asistencia_obra + impuestos_asistencia_obra;
 
-            firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + keyObra + "/trabajadores/" + id_trabajador + "/total_asistencia").set(total_asistencia_obra);
-            firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + keyObra + "/trabajadores/" + id_trabajador + "/impuestos/impuestos_asistencia").set(impuestos_asistencia_obra);
-            if(keyObra != "Atencion a Clientes"){
-                sumaMOKaizenPN(keyObra,cant);
+        firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + keyObra + "/trabajadores/" + id_trabajador + "/total_asistencia").set(total_asistencia_obra);
+        firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + keyObra + "/trabajadores/" + id_trabajador + "/impuestos/impuestos_asistencia").set(impuestos_asistencia_obra);
+        if(keyObra != "Atencion a Clientes" && keyObra != "Vacaciones"){
+            //sumaMOKaizenPN(keyObra,cant);
+			obras_json[keyObra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] = (parseFloat(obras_json[keyObra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(cant)).toFixed(2);
 
-				if(asistencias[keyObra]["procesos"]){
-					//Obra no simple
-	                for(key in asistencias[keyObra]["procesos"]){
-	                    var path = key.split("-");
-	                    sumaMOKaizenPN(keyObra + "/procesos/" + path[0],cant);
-	                    if(path.length > 1){
-	                    	//subproceso
-	                        sumaMOKaizenPN(keyObra + "/procesos/" + path[0] + "/subprocesos/" + key,cant);
-	                    }
-	                }
-	            }
+			if(asistencias[keyObra]["procesos"]){
+				//Obra no simple
+                for(key in asistencias[keyObra]["procesos"]){
+                    var path = key.split("-");
+
+                    var total_asistencia_proc = parseFloat((total_asistencia * asistencias[keyObra]["procesos"][key] / asis).toFixed(2));
+			        var impuestos_asistencia_proc = parseFloat((impuestos_asistencia * asistencias[keyObra]["procesos"][key] / asis).toFixed(2));
+			        var cant_proc = total_asistencia_proc + impuestos_asistencia_proc
+
+                    //sumaMOKaizenPN(keyObra + "/procesos/" + path[0],cant_proc);
+					obras_json[keyObra]["procesos"][path[0]]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] = (parseFloat(obras_json[keyObra]["procesos"][path[0]]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(cant_proc)).toFixed(2);
+                    if(path.length > 1){
+                    	//subproceso
+                        //sumaMOKaizenPN(keyObra + "/procesos/" + path[0] + "/subprocesos/" + key,cant_proc);
+						obras_json[keyObra]["procesos"][path[0]]["subprocesos"][key]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] = (parseFloat(obras_json[keyObra]["procesos"][path[0]]["subprocesos"][key]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(cant_proc)).toFixed(2);
+                    }
+                }
             }
-		}
+        }
 	}
 }
 
-function sumaMOKaizenPN(query,cantidad){
+/*function sumaMOKaizenPN(query,cantidad){
     firebase.database().ref(rama_bd_obras_magico + "/" + query + "/kaizen/PRODUCCION/COPEO/PAG").once('value').then(function(snapshot){
         var anterior = snapshot.val();
+        console.log(anterior);
         var nuevo = (parseFloat(anterior) + parseFloat(cantidad)).toFixed(2);
+        console.log(rama_bd_obras_magico + "/" + query + "/kaizen/PRODUCCION/COPEO/PAG");
+        console.log(nuevo);
         firebase.database().ref(rama_bd_obras_magico + "/" + query + "/kaizen/PRODUCCION/COPEO/PAG").set(nuevo);
     });
-}
+}*/
 
 function sumaAsistenciasPN(week,asis){
 	if(week.lunes.asistencia){
@@ -309,7 +334,7 @@ function asistenciaDiaPN(dia, asistencias, asis){
     if(proc == "Parado"){
         proc = "MISC";
     }
-    if(dia.asistencia){
+    if(dia.asistencia == true){
         asis += 0.2;
         if(!asistencias[dia.obra]){
         	asistencias[dia.obra] = {};
@@ -336,4 +361,5 @@ function asistenciaDiaPN(dia, asistencias, asis){
             }
         }
     }
+    return asis;
 }

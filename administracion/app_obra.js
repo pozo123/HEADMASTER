@@ -8,9 +8,10 @@ var id_direccion_delegacion_obra = "delegacionObra";
 var id_direccion_ciudad_obra = "ciudadObra";
 var id_direccion_cp_obra = "cpObra";
 var id_registrar_button_obra = "registrarObra";
+var id_supervisor_ddl_obra = "supervisorDdlObra";
 var id_fecha_inicio_obra = "fechaInicioObra";
 var id_fecha_final_obra = "fechaFinalObra";
-var id_supervisor_ddl_obra = "supervisorDdlObra";
+
 
 var rama_bd_obras = "obras";
 var rama_bd_clientes = "clientes";
@@ -20,6 +21,8 @@ var procesos = {};
 //Kaiz en funciones
 
 $('#tabAltaObra').click(function(){
+    $('#' + id_cliente_ddl_obra).empty();
+
     jQuery('#' + id_fecha_inicio_obra).datetimepicker(
         {timepicker:false, weeks:true,format:'m.d.Y'}
     );
@@ -58,7 +61,7 @@ $('#tabAltaObra').click(function(){
 });
 
 $('#' + id_registrar_button_obra).click(function () {
-    if(!$('#' + id_nombre_obra_ddl_obra_proy + " option:selected").val() == "" || !$('#' + id_clave_obra).val() || $('#' + id_cliente_ddl_obra + " option:selected").val() === ""){
+    if(!$('#' + id_nombre_obra).val() == "" || !$('#' + id_clave_obra).val() || $('#' + id_cliente_ddl_obra + " option:selected").val() === ""){
         alert("Llena todos los campos requeridos");
     } else {   
         var f_i = new Date($('#' + id_fecha_inicio_obra).val()).getTime();
@@ -121,7 +124,7 @@ $('#' + id_registrar_button_obra).click(function () {
         };
 
         var obra_mag = {      
-            nombre: $('#' + id_nombre_obra_ddl_obra_proy).val(),
+            nombre: $('#' + id_nombre_obra).val(),
             cliente: $('#' + id_cliente_ddl_obra + " option:selected").text(),
             clave: $('#' + id_clave_obra).val(),
             num_procesos: 0,
@@ -140,14 +143,14 @@ $('#' + id_registrar_button_obra).click(function () {
             kaizen: kaiz,
         }
 
-        firebase.database().ref(rama_bd_obras + "/" + $('#' + id_nombre_obra_ddl_obra_proy).val()).set(obra_mag);
+        firebase.database().ref(rama_bd_obras + "/" + $('#' + id_nombre_obra).val()).set(obra_mag);
         
         var superv = {
             nombre: $('#' + id_supervisor_ddl_obra + " option:selected").text(),
             activo: true,
         };
 
-        firebase.database().ref(rama_bd_obras + "/" + $('#' + id_nombre_obra_ddl_obra_proy).val() + "/supervisor/" + $('#' + id_supervisor_ddl_obra + " option:selected").val()).set(superv);
+        firebase.database().ref(rama_bd_obras + "/" + $('#' + id_nombre_obra).val() + "/supervisor/" + $('#' + id_supervisor_ddl_obra + " option:selected").val()).set(superv);
 
         alert("¡Alta exitosa!");
                 
