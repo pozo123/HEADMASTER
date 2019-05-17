@@ -25,8 +25,8 @@ var div_grupal = document.getElementById(id_div_cards_grupales_scoreboard);
 var div_individual = document.getElementById(id_div_cards_ind_scoreboard);
 var div_graph = document.getElementById(id_div_graphs_scoreboard);
 
-var style_grupales = ["max-width: 28%;", "min-width: 28%;", "min-height: 30%;"];
-var style_individual = ["max-width: 90%;", "min-width: 90%;", "min-height: 50%;"];
+var style_grupales = ["max-width: 28%;", "min-width: 28%;", "min-height: 30%;", "1.4em;", "0.7em;",];
+var style_individual = ["max-width: 90%;", "min-width: 90%;", "min-height: 50%;", "2.8em;", "1.4em;", ];
 
 $(document).ready(function() {
     unidad_t = parseFloat(gcd_two_numbers(wait_long,wait_short));
@@ -130,8 +130,9 @@ function scoreboardGrupal(){
         console.log("TODOS");
         for(var i=1;i<inges.length;i++){
             var inge = inges[i].val();
+            console.log(inge.status + inge.nickname);
             if(inge.status){
-                getRegScoreboard(inges[i],id_div_cards_grupales_scoreboard, style_grupales);
+                getRegScoreboard(inges[i],id_div_cards_grupales_scoreboard, style_grupales, true);
             } else {
                 loadDashcard(style_grupales, inges[i].child("nickname").val(), false,id_div_cards_grupales_scoreboard);
             }
@@ -152,16 +153,17 @@ function scoreboardIndividual(ingeSnap){
     //console.log(ingeSnap.child("nickname").val())
     var inge = ingeSnap.val();
     if(inge.status){
-        getRegScoreboard(ingeSnap,id_div_cards_ind_scoreboard, style_individual);
+        getRegScoreboard(ingeSnap,id_div_cards_ind_scoreboard, style_individual, false);
     } else {
-        loadDashcard(style_individual,ingeSnap.child("nickname").val(), false,id_div_cards_ind_scoreboard);
+        loadDashcard(style_individual, ingeSnap.child("nickname").val(), false,id_div_cards_ind_scoreboard);
         //console.log(inge.nickname + ", No Activo");
     }
 }
 
-function getRegScoreboard(ingeSnap, div_cards,styles){
+function getRegScoreboard(ingeSnap, div_cards,styles, grupal){
     var hoy = getWeek(new Date().getTime());
     firebase.database().ref(rama_bd_registros + "/" + hoy[1] + "/" + hoy[0]).orderByChild("status").equalTo(false).once('value').then(function(snapshot){
+        console.log(rama_bd_registros + "/" + hoy[1] + "/" + hoy[0])
         snapshot.forEach(function(regSnap){
             if(regSnap.child("inge").val() == ingeSnap.key){
                 var reg = regSnap.val();
@@ -172,6 +174,7 @@ function getRegScoreboard(ingeSnap, div_cards,styles){
                 var hoy = getWeek(new Date().getTime());
                 var year = hoy[1];
                 var week = hoy[0];
+                console.log(rama_bd_obras + "/" + reg.obra + "/procesos/" + proc_query + "/SCORE")
                 firebase.database().ref(rama_bd_obras + "/" + reg.obra + "/procesos/" + proc_query + "/SCORE").once('value').then(function(snapshot){
                     var horas_programadas = snapshot.child("total_prog").exists() ? parseFloat(snapshot.child("total_prog").val()) : 0;
                     var horas_trabajadas = snapshot.child("total_trabajado").exists() ? parseFloat(snapshot.child("total_trabajado").val()) : 0;
@@ -183,8 +186,11 @@ function getRegScoreboard(ingeSnap, div_cards,styles){
                     horas_trab_ind += horas_reg;
                     
                     //console.log(proc_query + ": " + horas_programadas);
+                    console.log( ingeSnap.child("nickname").val())
                     loadDashcard(styles, ingeSnap.child("nickname").val(), true, div_cards, reg, horas_programadas, (horas_trabajadas).toFixed(2), horas_prog_ind, (horas_trab_ind).toFixed(2));
-                    loadGraph(reg, horas_programadas, (horas_trabajadas).toFixed(2));
+                    if(!grupal){
+                        loadGraph(reg, horas_programadas, (horas_trabajadas).toFixed(2));
+                    }
                 });
 
             }
@@ -280,8 +286,9 @@ function loadDashcard(styles, nickname, activo, div_cards, reg, horas_programada
         card.className = "card card_dash .mx-auto border-secondary mb-3";
         font = "";
     }
-
+    console.log(activo);
     if(activo){
+        console.log("hola")
         //console.log(nickname + ": \nEsp: " + reg.esp + "\nObra: " + reg.obra + "\nProceso: " + reg.proceso + "\nHoras Programadas: " + horas_programadas + "\nHoras Trabajadas: " + horas_trabajadas);
 
         // Header del Card
@@ -296,7 +303,7 @@ function loadDashcard(styles, nickname, activo, div_cards, reg, horas_programada
         var col_obra = document.createElement('div');
         col_obra.className = "col-6";
         var p_obra = document.createElement("p")
-        p_obra.setAttribute("style", "font-size: 1em; color:black;");
+        p_obra.setAttribute("style", "font-size:" +styles[3]+ "color:black;");
         var node_obra = document.createTextNode(reg.obra);
         p_obra.appendChild(node_obra);
         col_obra.appendChild(p_obra);
@@ -305,7 +312,7 @@ function loadDashcard(styles, nickname, activo, div_cards, reg, horas_programada
         var col_horas = document.createElement('div');
         col_horas.className = "col-6";
         var p_horas = document.createElement("p")
-        p_horas.setAttribute("style", "font-size: 1em; font-weight: bold;");
+        p_horas.setAttribute("style", "font-size:" + styles[3] + "font-weight: bold;");
         var node_horas = document.createTextNode(horas_trabajadas + "/ ");
         var span_horas = document.createElement('span');
         span_horas.setAttribute("style", "color:red;");
@@ -329,17 +336,17 @@ function loadDashcard(styles, nickname, activo, div_cards, reg, horas_programada
         row.className = "row";
 
         var col_nickname = document.createElement('div');
-        col_nickname.className = "col-4";
+        col_nickname.className = "container-fluid";
         var p_nickname = document.createElement("p")
-        p_nickname.setAttribute("style", "font-size: 0.9em; color:black;");
+        p_nickname.setAttribute("style", "font-size:" + styles[3] + "color:black;");
         var node_nickname = document.createTextNode(nickname);
         p_nickname.appendChild(node_nickname);
         col_nickname.appendChild(p_nickname);
 
         var col_proceso = document.createElement('div');
-        col_proceso.className = "col-4";
+        col_proceso.className = "container-fluid";
         var p_proceso = document.createElement("p")
-        p_proceso.setAttribute("style", "font-size: 1em; color:black;");
+        p_proceso.setAttribute("style", "font-size:" + styles[3] + "color:black;");
         var node_proceso = document.createTextNode(reg.proceso);
         p_proceso.appendChild(node_proceso);
         col_proceso.appendChild(p_proceso);
@@ -359,7 +366,7 @@ function loadDashcard(styles, nickname, activo, div_cards, reg, horas_programada
         var col3 = document.createElement('div');
         col3.className = "col-6";
         var p_horas_inge_ejecutadas = document.createElement('p');
-        p_horas_inge_ejecutadas.setAttribute("style", "font-size: 0.7em;");
+        p_horas_inge_ejecutadas.setAttribute("style", "font-size:" + styles[4]);
         var node_horas_ejecutadas = document.createTextNode("Ejec: ");
         var span_horas_ejecutadas = document.createElement('span');
         span_horas_ejecutadas.setAttribute("style", "color:red;");
@@ -373,7 +380,7 @@ function loadDashcard(styles, nickname, activo, div_cards, reg, horas_programada
         var col4 = document.createElement('div');
         col4.className = "col-6";
         var p_horas_inge_presupuestadas = document.createElement('p');
-        p_horas_inge_presupuestadas.setAttribute("style", "font-size: 0.7em;");
+        p_horas_inge_presupuestadas.setAttribute("style", "font-size:" + styles[4]);
         var node_horas_presupuestadas = document.createTextNode("Prog: ");
         var span_horas_presupuestadas = document.createElement('span');
         span_horas_presupuestadas.setAttribute("style", "color:red;");
@@ -408,7 +415,7 @@ function loadDashcard(styles, nickname, activo, div_cards, reg, horas_programada
         var col_inactivo = document.createElement('div');
         col_inactivo.className = "col-12";
         var p_inactivo = document.createElement("p")
-        p_inactivo.setAttribute("style", "font-size: 1em; color:red;");
+        p_inactivo.setAttribute("style", "font-size:" + styles[3] + "color:red;");
         var node_inactivo = document.createTextNode("");
         p_inactivo.appendChild(node_inactivo);
         col_inactivo.appendChild(p_inactivo);
@@ -427,7 +434,7 @@ function loadDashcard(styles, nickname, activo, div_cards, reg, horas_programada
         var col_nickname = document.createElement('div');
         col_nickname.className = "col-12";
         var p_nickname = document.createElement("p")
-        p_nickname.setAttribute("style", "font-size: 0.9em; color:black;");
+        p_nickname.setAttribute("style", "font-size:" + styles[3] + "color:black;");
         var node_nickname = document.createTextNode(nickname);
         p_nickname.appendChild(node_nickname);
         col_nickname.appendChild(p_nickname);

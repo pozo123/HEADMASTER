@@ -39,16 +39,6 @@ tr.subgroupDesplegarProcesos {
   transition: 0.3s;
   border-radius: 5px;
 }
-.card_dash {
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  transition: 0.3s;
-  border-radius: 5px;
-}
-.card_dash1 {
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  transition: 0.3s;
-  border-radius: 5px;
-}
 
 /* Responsive columns */
 @media screen and (max-width: 600px) {

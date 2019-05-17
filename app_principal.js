@@ -30,8 +30,6 @@ firebase.auth().onAuthStateChanged(user => {
         } else {
             $("#tabRegistrosAdmon").addClass('hidden');
         }
-        $('body').removeClass("hidden");
-
 
         firebase.database().ref(rama_bd_personal).orderByChild('uid').equalTo(user.uid).once("child_added", function (snapshot) {
             var user_personal = snapshot.val();
@@ -41,10 +39,25 @@ firebase.auth().onAuthStateChanged(user => {
                 var imagen = document.getElementById("img_foto");
                 imagen.src = user_personal.foto.url;
             }
+            console.log(areas_usuario_global);
 
+            if(Object.keys(areas_usuario_global).length > 1){
+                areas_usuario_global.forEach(function(childSnapshot){
+                    if(childSnapshot.val()){
+                        console.log(childSnapshot.key);
+                    }
+                });
+            }
+
+            // Revisar esto
             var usuarioNombre = document.getElementById('usuarioConectado');
             usuarioNombre.innerHTML = user_personal.nickname;
+
+
+
         });
+        $('body').removeClass("hidden");
+
     } else {
         alert("Inicia sesión para entrar a comunidad");
         window.location.reload("index.html");
