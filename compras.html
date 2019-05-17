@@ -123,8 +123,9 @@
                     <li>
                         <a href="#pageSubmenu4" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Catálogos</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu4">
-                            <li class="tab" id="tabCatalogoOdeC"><a href="#" onclick="openTabs('tabCatalogoOdeC','catalogoOdeC')">Catálogo de OdeC</a></li>
-                            <li class="tab" id="tabCatalogoProveedores"><a href="#" onclick="openTabs('tabCatalogoProveedores','catalogoProveedores')">Catálogo de Proveedores</a></li>
+                            <li class="tab" id="tabCatalogoOdeC"><a href="#" onclick="openTabs('tabCatalogoOdeC','catalogoOdeC')">OdeC</a></li>
+                            <li class="tab" id="tabCatalogoProveedores"><a href="#" onclick="openTabs('tabCatalogoProveedores','catalogoProveedores')">Proveedores</a></li>
+                            <li class="tab" id="tabCatalogoObras"><a href="#" onclick="openTabs('tabCatalogoObras','obrasCatalogo')">Obras</a></li>
                         </ul>
                     </li>
                     <li class="tab"><a href="#" data-toggle="modal" data-target="#contraseñaModal">Cambiar contraseña</a></li>
@@ -427,6 +428,17 @@
                                     </div>
                                 </div>
                         </div>
+                        <div id= "obrasCatalogo" class="tabcontent hidden">
+                            <div class="container-fluid">
+                                <h1>Catálogo de Obras</h1>
+                                <div class="row mt-3">
+                                    <div class="container-fluid">
+                                        <table id="dataTableCatalogoObras" class="display" style="width:100%">
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -492,6 +504,7 @@
 <script src="compras/app_compras_importar_proveedores.js"></script>
 <script src="catalogos/app_catalogo_odec.js"></script>
 <script src="catalogos/app_catalogo_proveedores.js"></script>
+<script src="catalogos/app_catalogo_obras.js"></script>
 
 <!-- Excel to Json-->
 <script src="xlsx.full.min.js"></script>
