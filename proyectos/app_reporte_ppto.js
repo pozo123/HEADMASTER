@@ -2,7 +2,7 @@ var id_obra_ddl_reportePpto = "ddlObraReportePpto";
 var id_ppto_ddl_reportePpto = "ddlPptoReportePpto";
 var id_generar_button_reportePpto = "reportePptoButton";
 
-var rama_bd_obras = "proyectos/obras";
+var rama_bd_obras = "obras";
 
 
 $(document).ready(function(){

@@ -1,11 +1,17 @@
 var rama_bd_personal = "personal";
 
+var areas_usuario_global;
+var creden_usuario_global;
+
 firebase.auth().onAuthStateChanged(user => {
     if(user) {
         userUID = user.uid;
         firebase.database().ref(rama_bd_personal + "/" + userUID).once("value").then(function (snapshot) {
 
             var user_bd = snapshot.val();
+
+            areas_usuario_global = user_bd.areas;
+            creden_usuario_global = user_bd.credenciales;
 
             var usuarioNombre = document.getElementById('usuarioConectado');
             var esp = user_bd.esp ? " - " + user_bd.esp.toUpperCase() : "";

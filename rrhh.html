@@ -138,7 +138,12 @@
                             <li class="tab" id="tabPagoNomina"><a href="#" onclick="openTabs('tabPagoNomina','pagoNomina')">Pagos Semanales por parte de la Pagadora</a></li>
                         </ul>
                     </li>
-                    
+                    <li>
+                        <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Catálogos</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu3">
+                            <li class="tab" id="tabCatalogoObras"><a href="#" onclick="openTabs('tabCatalogoObras','obrasCatalogo')">Obras</a></li>
+                        </ul>
+                    </li>
 
                     <li class="tab"><a href="#" data-toggle="modal" data-target="#contraseñaModal">Cambiar contraseña</a></li>
                     <!-- <li class="tab" id="tabPermisos"><a href="#" onclick="openTabs('tabPermisos','permisos')">Permisos de usuario</a></li> -->
@@ -605,8 +610,17 @@
                                 </div>
                             </div>
                     </div>
-
-
+                    <div id= "obrasCatalogo" class="tabcontent hidden">
+                            <div class="container-fluid">
+                                <h1>Catálogo de Obras</h1>
+                                <div class="row mt-3">
+                                    <div class="container-fluid">
+                                        <table id="dataTableCatalogoObras" class="display" style="width:100%">
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -665,16 +679,15 @@
 <!--My scripts-->
 <script src="app_principal.js"></script>        
 <script src="app_desplegar_procesos.js"></script>
-<script src= "app_funciones.js"></script>
-
-
+<script src="app_funciones.js"></script>
+<script src="catalogos/app_catalogo_obras.js"></script>
+<script src="produccion/app_destajista.js"></script>
 <script src="rrhh/app_asistencia.js"></script>
-<script src="rrhh/app_rrhh_importar_trabajadores.js"></script>
-<script src="rrhh/app_rrhh_trabajadores.js"></script>
 <script src="rrhh/app_rrhh_horas_extra.js"></script>
+<script src="rrhh/app_rrhh_importar_trabajadores.js"></script>
 <script src="rrhh/app_rrhh_pagos_diversos.js"></script>
 <script src="rrhh/app_rrhh_pago_nomina.js"></script>
-<script src="produccion/app_destajista.js"></script>
+<script src="rrhh/app_rrhh_trabajadores.js"></script>
 
 
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
