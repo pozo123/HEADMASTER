@@ -41,13 +41,13 @@ firebase.auth().onAuthStateChanged(user => {
             }
             console.log(areas_usuario_global);
 
-            if(Object.keys(areas_usuario_global).length > 1){
+            /*if(Object.keys(areas_usuario_global).length > 1){
                 areas_usuario_global.forEach(function(childSnapshot){
                     if(childSnapshot.val()){
                         console.log(childSnapshot.key);
                     }
                 });
-            }
+            }*/
 
             // Revisar esto
             var usuarioNombre = document.getElementById('usuarioConectado');

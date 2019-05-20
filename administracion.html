@@ -227,6 +227,52 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="atnModalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Editar Atención</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form onsubmit="return false;">
+                                <div class="form-group">
+                                    <label for="nombreEditarCatalogoAtn" class="col-form-label">Nombre:</label>
+                                    <input type="text" class="form-control" id="nombreEditarCatalogoAtn">
+                                </div>
+                                <div class="form-group">
+                                    <label for="areaEditarCatalogoAtn" class="col-form-label">Area:</label>
+                                    <input type="text" class="form-control" id="areaEditarCatalogoAtn">
+                                </div>
+                                <div class="form-group">
+                                    <label for="celularEditarCatalogoAtn" class="col-form-label">Celular:</label>
+                                    <input type="text" class="form-control" id="celularEditarCatalogoAtn">
+                                </div>
+                                <div class="form-group">
+                                    <label for="emailEditarCatalogoAtn" class="col-form-label">Email:</label>
+                                    <input type="text" class="form-control" id="emailEditarCatalogoAtn">
+                                </div>
+                                <div class="form-group">
+                                    <label for="extensionEditarCatalogoAtn" class="col-form-label">Extension:</label>
+                                    <input type="text" class="form-control" id="extensionEditarCatalogoAtn">
+                                </div>
+                            <div class="form-row align-items-center">
+                                <div class="col-md-6 col-sm-12">
+                                    <button id="buttonEditarCatalogoAtn" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cancelar</button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="wrapper">
             <!-- Sidebar -->
             <nav id="sidebar">
@@ -354,6 +400,7 @@
                     <li>
                         <a href="#pageSubmenu7" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Catálogos</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu7">
+                            <li class="tab" id="tabCatalogoAtn"><a href="#" onclick="openTabs('tabCatalogoAtn','AtnCatalogo')">Atn</a></li>
                             <li class="tab" id="tabCatalogoCategorias"><a href="#" onclick="openTabs('tabCatalogoCategorias','categoriasCatalogo')">Categorías de Pptos</a></li>
                             <li class="tab" id="tabCatalogoClientes"><a href="#" onclick="openTabs('tabCatalogoClientes','clientesCatalogo')">Clientes</a></li>
                             <li class="tab" id="tabCatalogoObras"><a href="#" onclick="openTabs('tabCatalogoObras','obrasCatalogo')">Obras</a></li>
@@ -1212,6 +1259,17 @@
                             </div>
                         </div>
                         <!-- Catalogos -->
+                        <div id= "atnCatalogo" class="tabcontent hidden">
+                            <div class="container-fluid">
+                                <h1>Catálogo de Atenciones</h1>
+                                <div class="row mt-3">
+                                    <div class="container-fluid">
+                                        <table id="dataTableCatalogoAtn" class="display" style="width:100%">
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div id= "categoriasCatalogo" class="tabcontent hidden">
                             <div class="container-fluid">
                                 <h1>Catálogo de Categorías de Presupuestos</h1>
@@ -1327,6 +1385,7 @@
 <script src="administracion/app_admon_reporte_diario.js"></script>
 <!--<script src="administracion/app_cuenta_cc.js"></script> -->
 <script src="catalogos/app_catalogo_categorias.js"></script>
+<script src="catalogos/app_catalogo_atn.js"></script>
 <script src="catalogos/app_catalogo_clientes.js"></script>
 <script src="catalogos/app_catalogo_obras.js"></script>
 <script src="catalogos/app_catalogo_personal.js"></script>

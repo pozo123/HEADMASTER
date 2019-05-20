@@ -1,26 +1,32 @@
 var id_tab_catalogo_atn = "tabCatalogoAtn";
 var id_datatable_catalogo_atn =  "dataTableCatalogoAtn";
 
-var id_area_editar_catalogo_atn = "claveEditarCatalogoAtn";
-var id_celular_editar_catalogo_atn = "clienteDdlEditarCatalogoAtn";
-var id_email_editar_catalogo_atn = "calleEditarCatalogoAtn";
-var id_extension_editar_catalogo_atn = "numeroEditarCatalogoAtn";
-var id_nombre_editar_catalogo_atn = "coloniaEditarCatalogoAtn";
+var id_area_editar_catalogo_atn = "areaEditarCatalogoAtn";
+var id_celular_editar_catalogo_atn = "celularEditarCatalogoAtn";
+var id_email_editar_catalogo_atn = "emailEditarCatalogoAtn";
+var id_extension_editar_catalogo_atn = "extensionEditarCatalogoAtn";
+var id_nombre_editar_catalogo_atn = "nombreEditarCatalogoAtn";
 
 var id_button_editar_catalogo_atn = "buttonEditarCatalogoAtn";
-var id_modal_catalogo_atn = "obraModalEditar";
+var id_modal_catalogo_atn = "atnModalEditar";
+
+var id_modal_eliminar_catalogo_atn = "atnModalEliminar";
+var id_nombre_eliminar_catalogo_atn = "nombreEliminarCatalogoAtn";
+var id_button_eliminar_catalogo_atn = "buttonEliminarCatalogoAtn";
 
 var rama_bd_clientes = "clientes";
 
 var numero_catalogo_atn;
 
 $('#' + id_tab_catalogo_atn).click(function() {
+    console.log("Hola");
     loadCatalogoAtn();
 });
 
 function loadCatalogoAtn(){
     var datos_atn = [];
     firebase.database().ref(rama_bd_clientes).once("value").then(function(snapshot){
+        console.log(snapshot.val());
         snapshot.forEach(function(clienSnap){
             clienSnap.child("atencion").forEach(function(atnSnap){
                 var atn = atnSnap.val();
@@ -34,7 +40,7 @@ function loadCatalogoAtn(){
                 {title: "Celular",},
                 {title: "Email",},
                 {title: "Extensión",},
-                {defaultContent: "<button type='button' class='editar btn btn-primary' data-toggle='modal' data-target='#" + id_modal_catalogo_atn + "'><i class='fas fa-edit'></i></button>"},
+                {defaultContent: "<button type='button' class='editar btn btn-primary' data-toggle='modal' data-target='#" + id_modal_catalogo_atn + "'><i class='fas fa-edit'></i></button><button type='button' class='editar btn btn-danger' data-toggle='modal' data-target='#" + id_modal_eliminar_catalogo_atn + "'><i class='fas fa-trash'></i></button>"},
             ] : [
                 {title: "Cliente",},
                 {title: "Nombre",},
@@ -43,6 +49,7 @@ function loadCatalogoAtn(){
                 {title: "Email",},
                 {title: "Extensión",},
             ];
+        console.log(columnas);
         var tabla_atn = $('#'+ id_datatable_catalogo_atn).DataTable({
             destroy: true,
             data: datos_atn,
@@ -56,11 +63,12 @@ function loadCatalogoAtn(){
             ],
             language: idioma_espanol,
         });
-        editar_obra("#" + id_datatable_catalogo_atn + " tbody", tabla_atn);
+        editar_atn("#" + id_datatable_catalogo_atn + " tbody", tabla_atn);
+        eliminar_atn("#" + id_datatable_catalogo_atn + " tbody", tabla_atn);
     });
 }
 
-function editar_obra(tbody, table){
+function editar_atn(tbody, table){
     $(tbody).on("click", "button.editar",function(){
         var data = table.row($(this).parents("tr")).data();
         if(data){
@@ -76,6 +84,16 @@ function editar_obra(tbody, table){
     });
 }
 
+function eliminar_atn(tbody, table){
+    $(tbody).on("click", "button.eliminar",function(){//button.eliminar? Aqui
+        var data = table.row($(this).parents("tr")).data();
+        if(data){
+            $('#' + id_nombre_eliminar_catalogo_atn).val(data[1]);
+            numero_catalogo_atn = data[6];
+            console.log(numero_catalogo_atn);
+        }
+    });
+}
 $('#' + id_button_editar_catalogo_atn).click(function(){
     var atn = {
         nombre: $('#' + id_nombre_editar_catalogo_atn).val(),
@@ -83,8 +101,15 @@ $('#' + id_button_editar_catalogo_atn).click(function(){
         celular: $('#' + id_celular_editar_catalogo_atn).val(),
         email: $('#' + id_email_editar_catalogo_atn).val(),
         extension: $('#' + id_extension_editar_catalogo_atn).val(),
-    }//AQUI FALTA hacer el update, el eliminar y toooooodos los htmls
-    firebase.database().ref(rama_bd_atn + "/" + numero_catalogo_atn).update(atn);
+    }
+    firebase.database().ref(rama_bd_clientes + "/atencion/" + numero_catalogo_atn).update(atn);
     loadCatalogoAtn();
     alert("Cambios registrados");
+});
+
+$('#' + id_button_eliminar_catalogo_atn).click(function(){
+    firebase.database().ref(rama_bd_clientes + "/atencion/" + numero_catalogo_atn).once('value').then(function(snapshot){
+        console.log(snapshot);
+        console.log(snapshot.val());
+    });
 });
