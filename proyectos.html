@@ -642,6 +642,7 @@
                     <li>
                         <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Catálogos</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu3">
+                            <li class="tab" id="tabCatalogoAtn"><a href="#" onclick="openTabs('tabCatalogoAtn','atnCatalogo')">Atn</a></li>
                             <li class="tab" id="tabCatalogoClientes"><a href="#" onclick="openTabs('tabCatalogoClientes','clientesCatalogo')">Clientes</a></li>
                             <li class="tab" id="tabCatalogoObras"><a href="#" onclick="openTabs('tabCatalogoObras','obrasCatalogo')">Obras</a></li>
                             <!--<li class="tab" id="tabBibColaborador"><a href="#" onclick="openTabs('tabBibColaborador','bibColaborador')">Colaboradores</a></li>
@@ -1632,6 +1633,17 @@
                                 </form>
                             </div>
                         </div>-->
+                        <div id= "atnCatalogo" class="tabcontent hidden">
+                            <div class="container-fluid">
+                                <h1>Catálogo de Atenciones</h1>
+                                <div class="row mt-3">
+                                    <div class="container-fluid">
+                                        <table id="dataTableCatalogoAtn" class="display" style="width:100%">
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div id= "clientesCatalogo" class="tabcontent hidden">
                             <div class="container-fluid">
@@ -1882,6 +1894,7 @@
         <script src="app_desplegar_procesos.js"></script>
         <script src="app_funciones.js"></script>
         <script src="app_principal.js"></script>        
+        <script src="catalogos/app_catalogo_atn.js"></script>
         <script src="catalogos/app_catalogo_clientes.js"></script>    
         <script src="catalogos/app_catalogo_obras.js"></script>    
         <script src="numeroLetras.js"></script>

@@ -273,6 +273,37 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="atnModalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Eliminar Atención</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form onsubmit="return false;">
+                                <div class="form-group">
+                                    <label for="nombreEliminarCatalogoAtn" class="col-form-label">¿Eliminar de la base de datos?</label>
+                                    <br/>
+                                    <label class="col-form-label" id="nombreEliminarCatalogoAtn"></label>
+                                </div>
+                            <div class="form-row align-items-center">
+                                <div class="col-md-6 col-sm-12">
+                                    <button id="buttonEliminarCatalogoAtn" type="submit" class="btn btn-outline-danger btn-block">Confirmar</button>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cancelar</button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="wrapper">
             <!-- Sidebar -->
             <nav id="sidebar">
@@ -402,7 +433,7 @@
                     <li>
                         <a href="#pageSubmenu7" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Catálogos</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu7">
-                            <li class="tab" id="tabCatalogoAtn"><a href="#" onclick="openTabs('tabCatalogoAtn','AtnCatalogo')">Atn</a></li>
+                            <li class="tab" id="tabCatalogoAtn"><a href="#" onclick="openTabs('tabCatalogoAtn','atnCatalogo')">Atn</a></li>
                             <li class="tab" id="tabCatalogoCategorias"><a href="#" onclick="openTabs('tabCatalogoCategorias','categoriasCatalogo')">Categorías de Pptos</a></li>
                             <li class="tab" id="tabCatalogoClientes"><a href="#" onclick="openTabs('tabCatalogoClientes','clientesCatalogo')">Clientes</a></li>
                             <li class="tab" id="tabCatalogoObras"><a href="#" onclick="openTabs('tabCatalogoObras','obrasCatalogo')">Obras</a></li>
@@ -1386,8 +1417,8 @@
 <script src="administracion/app_editar_proceso.js"></script>
 <script src="administracion/app_admon_reporte_diario.js"></script>
 <!--<script src="administracion/app_cuenta_cc.js"></script> -->
-<script src="catalogos/app_catalogo_categorias.js"></script>
 <script src="catalogos/app_catalogo_atn.js"></script>
+<script src="catalogos/app_catalogo_categorias.js"></script>
 <script src="catalogos/app_catalogo_clientes.js"></script>
 <script src="catalogos/app_catalogo_obras.js"></script>
 <script src="catalogos/app_catalogo_personal.js"></script>

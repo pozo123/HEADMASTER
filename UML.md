@@ -189,8 +189,37 @@
                      - archivos:
                         - por index (0,1,2)
                            - pdf
-                           - pda
-            - OdeC: (En hoja)
+                           - pda (pad? ya no se :/)
+            - contrato_compras
+               - clave
+               - solpeds
+                  - solped (por clave)
+                     - nombre
+                     - fecha
+                     - foto
+                     - autorizacion
+                     - odecs 
+                        - odec (por clave)
+                           - proveedor (clave)
+                           - costo
+                           - pad
+                           - fecha
+                           - cotizaciones(DEFINIR)
+                           - notas
+                           - pdfs
+                              - pdf(consecutivo)
+                                 - proveedor
+                                 - pdf (link)
+                           - remisiones (DEFINIR)
+                           - pagos
+                              - pago (por push?)
+                                 - cantidad
+                                 - tipo (CO, CR, CH, EF, NC o DE)
+                                 - no_factura (si cr, si no "")
+                                 - notas
+                                 - pdf (factura si CR, evidencia si no)
+                                 - ?? proveedor (segun yo no porque viene de odec)
+            - OdeC: (En hoja) TODO ESTO YA NO
                - year (por num)
                   - semana (por num)
                      - OdeC (por clave)
