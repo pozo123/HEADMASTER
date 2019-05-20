@@ -11,6 +11,8 @@ var id_cambiarpassword_button_perfil = "button_cambio_contraseña";
 var areas_usuario_global;
 var creden_usuario_global;
 
+var id_div_dropdown_areas = "dropdown_areas";
+
 $(document).ready(function() {    
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
@@ -32,6 +34,7 @@ firebase.auth().onAuthStateChanged(user => {
         }
 
         firebase.database().ref(rama_bd_personal).orderByChild('uid').equalTo(user.uid).once("child_added", function (snapshot) {
+
             var user_personal = snapshot.val();
             areas_usuario_global = user_personal.areas;
             creden_usuario_global = user_personal.credenciales;
@@ -39,16 +42,75 @@ firebase.auth().onAuthStateChanged(user => {
                 var imagen = document.getElementById("img_foto");
                 imagen.src = user_personal.foto.url;
             }
-            console.log(areas_usuario_global);
 
-            /*if(Object.keys(areas_usuario_global).length > 1){
-                areas_usuario_global.forEach(function(childSnapshot){
-                    if(childSnapshot.val()){
-                        console.log(childSnapshot.key);
+            // Método para revisar que puedes entrar al html correspondiente, si no te regresa al index
+            var area_bool = false;
+            var url = document.URL.split("/");
+
+            for(key in areas_usuario_global){
+                if(areas_usuario_global[key] && (url[url.length - 1] == key + ".html")){
+                    area_bool = true;
+                }
+            }
+
+            if(!area_bool){
+                window.location.reload("index.html");
+                window.location.assign("index.html");
+            }
+
+
+            // Dropdown Menu para cambiar entre áreas
+
+            if(Object.keys(areas_usuario_global).length > 1){
+                $('#' + id_div_dropdown_areas).removeClass('hidden');
+                var div_dropdown_areas = document.getElementById(id_div_dropdown_areas);
+
+                var button = document.createElement('button');
+                var caret = document.createElement('span');
+                var div = document.createElement('div');
+
+                button.className = 'btn btn-primary dropdown-toggle';
+                button.setAttribute("type", "button");
+                button.setAttribute("data-toggle", "dropdown");
+                button.innerHTML = "Cambiar de área";
+                
+                caret.className = 'caret';
+
+                div.className = 'dropdown-menu';
+
+                button.appendChild(caret);
+
+                div_dropdown_areas.appendChild(button);
+                var cant_areas = 0;
+                for(key in areas_usuario_global){
+                    if(areas_usuario_global[key]){
+                        cant_areas++;
+                        var link = document.createElement('a');
+                        link.setAttribute('href', key + '.html');
+                        link.innerHTML = key;
+                        link.className = "dropdown-item"
+                        div.append(link);
                     }
-                });
-            }*/
+                }
 
+                div_dropdown_areas.appendChild(div);
+            } else {
+                $('#' + id_div_dropdown_areas).addClass('hidden');
+            }
+            if(cant_areas <= 1){
+                $('#' + id_div_dropdown_areas).addClass('hidden');
+            }
+/* 
+                        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li><a href="#">HTML</a></li>
+                <li><a href="#">CSS</a></li>
+                <li><a href="#">JavaScript</a></li>
+            </ul>
+            </div>
+ */
             // Revisar esto
             var usuarioNombre = document.getElementById('usuarioConectado');
             usuarioNombre.innerHTML = user_personal.nickname;
@@ -56,6 +118,7 @@ firebase.auth().onAuthStateChanged(user => {
 
 
         });
+
         $('body').removeClass("hidden");
 
     } else {
