@@ -520,7 +520,7 @@ function generaPptoProy(genera){
                     text:formatMoney(alcance[i].precio),
                     margin: [0,5],
                     alignment: 'center',
-                    fontSize:10,
+                    fontSize:8,
                 }
             ];
             precio_total += parseFloat(alcance[i].precio);

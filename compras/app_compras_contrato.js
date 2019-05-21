@@ -14,6 +14,7 @@ $('#' + id_tab_contrato).click(function(){
     var option = document.createElement('option');
     option.style = "display:none";
     option.text = option.value = "";
+    select.appendChild(option);
 
     firebase.database().ref(rama_bd_obras).orderByChild('nombre').on('child_added',function(snapshot){
         var obra = snapshot.val();
@@ -32,12 +33,13 @@ $('#' + id_obra_ddl_contrato).change(function(){
     var option = document.createElement('option');
     option.style = "display:none";
     option.text = option.value = "";
+    select.appendChild(option);
 
     firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_contrato + " option:selected").val()).once('value').then(function(snapshot){
         var obra = snapshot.val();
         snapshot.child("procesos").forEach(function(procSnap){
-        	if(procSnap.child("num_subprocesos").val() == 0){
-        		if(!procSnap.child("contrato").exists()){
+        	if(procSnap.child("num_subprocesos").val() == 0 || $('#' + id_obra_ddl_contrato + " option:selected").val() == "IQONO MEXICO"){
+        		if(!procSnap.child("contrato_compras").exists()){
 		            var option2 = document.createElement('option');
 		            option2.text = procSnap.key;
 		            option2.value = procSnap.key; 
@@ -45,7 +47,7 @@ $('#' + id_obra_ddl_contrato).change(function(){
 	        	}
         	} else {
         		procSnap.child("subprocesos").forEach(function(subpSnap){
-        			if(!subpSnap.child("contrato").exists()){
+        			if(!subpSnap.child("contrato_compras").exists()){
 	        			var option3 = document.createElement('option');
 			            option3.text = subpSnap.key;
 			            option3.value = subpSnap.key; 
@@ -68,6 +70,12 @@ $('#' + id_guardar_button_contrato).click(function(){
 		var proc = $('#' + id_proc_ddl_contrato + " option:selected").val();
 		var proc_split = proc.split("-");
 		var query = proc_split.length == 1 ? proc : proc_split[0] + "/subprocesos/" + proc;
-		firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_contrato + " option:selected").val() + "/" + query + "/contrato_compras").set(cont);
+		if(query == "PC00"){
+			query == "PC00/subprocesos/PC00-MISC";
+		}
+		firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_contrato + " option:selected").val() + "/procesos/" + query + "/contrato_compras").set(cont);
+		alert("Contrato asignado con éxito");
+		document.getElementById(id_proc_ddl_contrato).selectedIndex = 0;
+		$('#' + id_clave_contrato).val("");
 	}
 });

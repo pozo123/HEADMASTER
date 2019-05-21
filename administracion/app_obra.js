@@ -61,7 +61,7 @@ $('#tabAltaObra').click(function(){
 });
 
 $('#' + id_registrar_button_obra).click(function () {
-    if(!$('#' + id_nombre_obra).val() == "" || !$('#' + id_clave_obra).val() || $('#' + id_cliente_ddl_obra + " option:selected").val() === ""){
+    if(!$('#' + id_nombre_obra).val()|| !$('#' + id_clave_obra).val() || $('#' + id_cliente_ddl_obra + " option:selected").val() === ""){
         alert("Llena todos los campos requeridos");
     } else {   
         var f_i = new Date($('#' + id_fecha_inicio_obra).val()).getTime();

@@ -179,9 +179,9 @@
                   - fecha_final
                   - kaizen: *
                   - terminado
-                  - contrato
+                  - (obsoleto) contrato
                   - nombre
-                  - OdeC: igual que proc
+                  - contrato_compras: igual que proc
                   - SCORE: igual que proc simple
                   - presupuesto: (solo en adic y pc00, pc00-misc = "")
                      - terminado
@@ -190,13 +190,14 @@
                         - por index (0,1,2)
                            - pdf
                            - pda (pad? ya no se :/)
-            - contrato_compras
+            - contrato_compras (en hoja)
                - clave
                - solpeds
                   - solped (por clave)
                      - nombre
                      - fecha
                      - foto
+                     - subproceso (Solo en IQONO MEXICO, menos en MISC)
                      - autorizacion
                      - odecs 
                         - odec (por clave)
@@ -219,28 +220,6 @@
                                  - notas
                                  - pdf (factura si CR, evidencia si no)
                                  - ?? proveedor (segun yo no porque viene de odec)
-            - OdeC: (En hoja) TODO ESTO YA NO
-               - year (por num)
-                  - semana (por num)
-                     - OdeC (por clave)
-                        - clave
-                        - pad: pad*
-                        - precio_ppto
-                        - precio_pag
-                        - pagada: bool
-                        - proveedor
-                        - pagos:
-                           - pago (por push)
-                              - precio_pag
-                              - pad: pad*
-                              - timestamps:
-                                 - pago
-                                 - registro_pago
-                        - timestamps:
-                           - OdeC
-                           - registro_OdeC
-                           - pago
-                           - registro_pago
 - personal (magico) (supervisores son los que estan en prod, se ven en obra)
   - uid (como key):
     - areas:   
@@ -433,6 +412,21 @@
                         - impuestos_asistencia (impuestos_asistencia_trabajador * asistencias_esta_obra/asistencias totales)
                      - total (subtotal + impuestos)
   
+STORAGE:
+- personal
+   - persona (por uid)
+      - imagen de perfil
+- obras
+   - contratos
+      - contrato (por clave)
+         - solped (por clave)
+            - imagen
+            - odecs
+               - odec(por clave)
+                  - imagen
+
+
+
 
 - pad:
   - uid

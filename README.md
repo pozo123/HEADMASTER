@@ -41,6 +41,7 @@ REESTRUCTURA_BD:
 
  Obsoletos: 
  - app_prod_gestionar_pptos
+ - app_compras_odec_kaizen (la cambie por app_compras_odec)
  - app_colaboradores_compras
  - app_colaboradores_produccion
  - app_colaboradores_rrhh

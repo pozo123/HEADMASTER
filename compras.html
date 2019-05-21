@@ -104,8 +104,10 @@
                     <li>
                         <a href="#pageSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Compras</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu1">
-                            <li class="tab" id="tabOdeC"><a href="#" onclick="openTabs('tabOdeC','OdeC')">Ordenes de Compra</a></li>
-                            <li class="tab" id="tabPagSum"><a href="#" onclick="openTabs('tabPagSum','pagos')">Pagos de OdeC</a></li>
+                            <li class="tab" id="tabContrato"><a href="#" onclick="openTabs('tabContrato','contrato')">Contratos</a></li>
+                            <li class="tab" id="tabSolped"><a href="#" onclick="openTabs('tabSolped','solped')">Solpeds</a></li>
+                            <li class="tab" id="tabOdeC"><a href="#" onclick="openTabs('tabOdeC','OdeC')">Ordenes de Compra</a></li><!--
+                            <li class="tab" id="tabPagSum"><a href="#" onclick="openTabs('tabPagSum','pagos')">Pagos de OdeC</a></li>-->
                         </ul>
                     </li>  
                     <li>
@@ -119,7 +121,7 @@
                         <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Obras</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu3">
                             <li class="tab tabCatalogoProceso" id="tabCatalogoProceso"><a href="#" onclick="openTabs('tabCatalogoProceso','catalogoProceso')">Catálogo de procesos</a></li>
-                            <li class="tab tabAsignaContrato" id="tabAsignaContrato"><a href="#" onclick="openTabs('tabAsignaContrato','asignaContrato')">Asigna contrato a proceso</a></li>
+                            <!--<li class="tab tabAsignaContrato" id="tabAsignaContrato"><a href="#" onclick="openTabs('tabAsignaContrato','asignaContrato')">Asigna contrato a proceso</a></li>-->
                         </ul>
                     </li>
                     <li>
@@ -127,7 +129,7 @@
                         <ul class="collapse list-unstyled" id="pageSubmenu4">
                             <li class="tab" id="tabCatalogoAtn"><a href="#" onclick="openTabs('tabCatalogoAtn','atnCatalogo')">Atn</a></li>
                             <li class="tab" id="tabCatalogoObras"><a href="#" onclick="openTabs('tabCatalogoObras','obrasCatalogo')">Obras</a></li>
-                            <li class="tab" id="tabCatalogoOdeC"><a href="#" onclick="openTabs('tabCatalogoOdeC','catalogoOdeC')">OdeC</a></li>
+                            <!--<li class="tab" id="tabCatalogoOdeC"><a href="#" onclick="openTabs('tabCatalogoOdeC','catalogoOdeC')">OdeC</a></li>-->
                             <li class="tab" id="tabCatalogoProveedores"><a href="#" onclick="openTabs('tabCatalogoProveedores','catalogoProveedores')">Proveedores</a></li>
                         </ul>
                     </li>
@@ -165,64 +167,176 @@
                             </div>                          
                         </div>
 
-                        <div id="OdeC" class="tabcontent hidden">
-                            <h1>Dar de altas Ordenes de Compras</h1>
-                            <p>Página para dar de alta ordenes de compras por Obra y Proceso</p>
+                        <div id="contrato" class="tabcontent hidden">
+                            <h1>Contratos</h1>
+                            <p>Página para dar de alta contratos para procesos</p>
                             <div class="container-fluid">
                                 <div class="row align-items-center">
                                     <div class="col-lg-3"></div>
                                     <div class="col-lg-6">
                                         <form action="#" onsubmit="return false;">                   
-                                                <div class="form-group">
+                                            <div class="form-group">
+                                                <label for="obraDdlContrato">Obra:</label>
+                                                <select id="obraDdlContrato" class="form-control" onChange=""></select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="procDdlContrato">Proceso:</label>
+                                                <select id ="procDdlContrato" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="claveContrato">Clave:</label>
+                                                <input type="text" id="claveContrato"class="form-control" placeholder= "Clave">
+                                            </div> 
+                                            <div class="form-row">
+                                                <div class= "col-lg-6">
+                                                    <button id="guardarButtonContrato" type="button" class="btn btn-outline-success btn-block">Generar</button>
+                                                </div>
+                                                <div class= "col-lg-6">
+                                                    <button type="reset" id = ""class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class="col-lg-3"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="solped" class="tabcontent hidden">
+                            <h1>Solpeds</h1>
+                            <p>Página para dar de alta solpeds en contratos</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">                   
+                                            <div class="form-group">
+                                                <label for="obraDdlSolped">Obra:</label>
+                                                <select id="obraDdlSolped" class="form-control" onChange=""></select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="contratoDdlSolped">Contrato:</label>
+                                                <select id ="contratoDdlSolped" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group" id="subpGroupSolped">
+                                                <label for="subpDdlSolped">Subproceso:</label>
+                                                <select id ="subpDdlSolped" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="claveSolped">Clave:</label>
+                                                <input type="text" id="claveSolped"class="form-control" placeholder= "Clave">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="nombreSolped">Nombre:</label>
+                                                <input type="text" id="nombreSolped"class="form-control" placeholder= "Nombre">
+                                            </div>
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-6 col-sm-12">
+                                                    <label for="fechaSolped">Fecha de Generación de Solped:</label>
+                                                </div>
+                                                <div class="col-lg-6 col-sm-12">
+                                                    <input class="form-control" type="text" id="fechaSolped" placeholder="" readonly="readonly">
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <label for="fotoFileSolped">Selecciona archivo de Excel en el formato deseado</label>
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="fotoFileSolped" accept="image/* , .pdf">
+                                                    <label class = "custom-file-label" id="fotoLabelSolped">Archivo no seleccionado</label>
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="form-row">
+                                                <div class= "col-lg-6">
+                                                    <button id="actualizarButtonSolped" type="button" class="btn btn-outline-success btn-block">Actualizar</button>
+                                                </div>
+                                                <div class= "col-lg-6">
+                                                    <button type="reset" id = "resetSolped"class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class= "col-lg-12">
+                                                    <button id="pdfButtonSolped" type="button" class="btn btn-outline-warning btn-block hidden">PDF</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class="col-lg-3"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="OdeC" class="tabcontent hidden">
+                            <h1>Dar de alta Ordenes de Compra</h1>
+                            <p>Página para dar de alta y gestionar ordenes de compra</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-12">
+                                        <form action="#" onsubmit="return false;">   
+                                            <div class="form-row align-items-center">                
+                                                <div class="col-lg-3">
                                                     <label for="obraDdlOdeC">Obra:</label>
                                                     <select id="obraDdlOdeC" class="form-control" onChange=""></select>
                                                 </div>
-                                                <div class="form-group hidden" id ="groupProcOdec">
-                                                    <label for="procDdlOdeC">Proceso:</label>
+                                                <div class="col-lg-3" id ="groupProcOdeC">
+                                                    <label for="procDdlOdeC">Proceso / Contrato:</label>
                                                     <select id ="procDdlOdeC" class="form-control"></select>
-
-                                                    <div class="form-group hidden" id = "groupSubpOdec">
-                                                        <label for="subpDdlOdeC">Subproceso:</label>
-                                                        <select id ="subpDdlOdeC" class="form-control"></select>
-                                                    </div>
                                                 </div>
-
-                                                    
-                                                <div class="form-group">
+                                                <div class="col-lg-3">
+                                                    <label for="solpedDdlOdeC">Solped:</label>
+                                                    <select id ="solpedDdlOdeC" class="form-control"></select>
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-3">
                                                     <label for="claveOdeC">Orden de Compra</label>
                                                     <input type="text" id="claveOdeC"class="form-control" placeholder= "Clave">
                                                 </div> 
-                                                <div class="form-group">
-                                                    <label for="proveedorOdeC">Proveedor</label>
+                                                <div class="col-lg-3">
+                                                    <label for="proveedorOdeC">Proveedor (clave)</label>
                                                     <input type="text" id="proveedorOdeC"class="form-control" placeholder= "Ingresa la clave del proveedor">
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="col-lg-3">
+                                                    <label for="proveedorNomOdeC">Proveedor (nombre)</label>
+                                                    <input type="text" id="proveedorNomOdeC"class="form-control" placeholder= "Ingresa el nombre del proveedor">
+                                                </div>
+                                                <div class="col-lg-3">
                                                     <label for="cantidadOdeC">$ Costo</label>
                                                     <input type="text" id="cantidadOdeC"class="form-control" placeholder= "Ingresa la cantidad nueva">
                                                 </div>
-                                                <br/>
-                                                <div class="form-row align-items-center">
-                                                    <div class="col-lg-6 col-sm-12">
-                                                        <label for="fechaOdeC">Fecha de Generación de Orden de Compra:</label>
-                                                    </div>
-                                                    <div class="col-lg-6 col-sm-12">
-                                                        <input class="form-control" type="text" id="fechaOdeC" placeholder="" readonly="readonly">
-                                                    </div>
-                                                </div>
-                                                <div class="form-row">
-                                                    <div class= "col-lg-6">
-                                                        <button id="actualizarOdeC" type="button" class="btn btn-outline-success btn-block">Generar</button>
-                                                    </div>
-                                                    <div class= "col-lg-6">
-                                                        <button type="reset" id = ""class="btn btn-outline-danger btn-block">Borrar Todo</button>
-                                                    </div>
-                                                </div>
-                                            </form>
+                                            </div>
                                             <br/>
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-3 col-sm-12">
+                                                    <label for="fechaOdeC">Fecha de Generación de Orden de Compra:</label>
+                                                </div>
+                                                <div class="col-lg-3 col-sm-12">
+                                                    <input class="form-control" type="text" id="fechaOdeC" placeholder="" readonly="readonly">
+                                                </div>
+                                                <div class= "col-lg-3">
+                                                    <button id="actualizarOdeC" type="button" class="btn btn-outline-success btn-block">Generar</button>
+                                                </div>
+                                                <div class= "col-lg-3">
+                                                    <button type="reset" id = ""class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <br/>
+                                    <div class="col-lg-12">
+                                        <hr class="style2">
+                                        <h1>Catálogo de Órdenes de Compra</h1>
+                                        <div class="row mt-3">
+                                            <div class="container-fluid">
+                                                <table id="dataTableCatalogoOdeC" class="display" style="width:100%"></table>
+                                            </div>
                                         </div>
-                                        <div class="col-lg-3"></div>
                                     </div>
                                 </div>
+                            </div>
                         </div>
 
                         <div id="pagos" class="tabcontent hidden">
@@ -408,7 +522,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Catalogo OdeC -->
+                        <!-- Catalogos -->
                         <div id= "atnCatalogo" class="tabcontent hidden">
                             <div class="container-fluid">
                                 <h1>Catálogo de Atenciones</h1>
@@ -419,17 +533,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div id= "catalogoOdeC" class="tabcontent hidden dataTables_wrapper">
-                                <div class="container-fluid">
-                                    <h1>Catálogo de Órdenes de Compra</h1>
-                                    <p>Despliegue de todas las órdenes de compra dadas de alta</p>
-                                    <div class="row mt-3">
-                                        <div class="container-fluid">
-                                            <table id="dataTableCatalogoOdeC" class="display" style="width:100%"></table>
-                                        </div>
-                                    </div>
-                                </div>
                         </div>
                         <div id= "catalogoProveedores" class="tabcontent hidden dataTables_wrapper">
                                 <div class="container-fluid">
@@ -509,12 +612,14 @@
             </script>
 
 <!--My scripts-->
-<script src="app_principal.js"></script>        
 <script src="app_desplegar_procesos.js"></script>
-<script src="compras/app_compras_asigna_contrato.js"></script>
-<script src="compras/app_compras_odec_kaizen.js"></script>
-<script src="compras/app_compras_pag_kaizen.js"></script>
 <script src="app_funciones.js"></script>
+<script src="app_principal.js"></script>        
+<script src="compras/app_compras_asigna_contrato.js"></script>
+<script src="compras/app_compras_contrato.js"></script>
+<script src="compras/app_compras_odec.js"></script>
+<script src="compras/app_compras_pag_kaizen.js"></script>
+<script src="compras/app_compras_solped.js"></script>
 <script src="compras/app_compras_importar_proveedores.js"></script>
 <script src="catalogos/app_catalogo_atn.js"></script>
 <script src="catalogos/app_catalogo_odec.js"></script>
