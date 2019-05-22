@@ -140,8 +140,8 @@
                         <ul class="collapse list-unstyled" id="pageSubmenu1">
                             <li class="tab" id="tabContrato"><a href="#" onclick="openTabs('tabContrato','contrato')">Contratos</a></li>
                             <li class="tab" id="tabSolped"><a href="#" onclick="openTabs('tabSolped','solped')">Solpeds</a></li>
-                            <li class="tab" id="tabOdeC"><a href="#" onclick="openTabs('tabOdeC','OdeC')">Ordenes de Compra</a></li><!--
-                            <li class="tab" id="tabPagSum"><a href="#" onclick="openTabs('tabPagSum','pagos')">Pagos de OdeC</a></li>-->
+                            <li class="tab" id="tabOdeC"><a href="#" onclick="openTabs('tabOdeC','OdeC')">Ordenes de Compra</a></li>
+                            <li class="tab" id="tabPagosCompras"><a href="#" onclick="openTabs('tabPagosCompras','pagosCompras')">Pagos</a></li>
                         </ul>
                     </li>  
                     <li>
@@ -377,7 +377,7 @@
                             </div>
                         </div>
 
-                        <div id="pagos" class="tabcontent hidden">
+                        <div id="pagosCompras" class="tabcontent hidden">
                                 <h1>Pagos de Ordenes de Compra</h1>
                                 <p>Página para realizar registros de pagos</p>
                                 <div class="container-fluid">
@@ -386,40 +386,46 @@
                                         <div class="col-lg-6">
                                             <form action="#" onsubmit="return false;">                   
                                                     <div class="form-group">
-                                                        <label for="obraDdlPagSum">Obra:</label>
-                                                        <select id="obraDdlPagSum" class="form-control" onChange=""></select>
+                                                        <label for="obraDdlPagCompras">Obra:</label>
+                                                        <select id="obraDdlPagCompras" class="form-control" onChange=""></select>
                                                     </div>
-                                                    <div class="form-group hidden" id ="groupProcPagSum">
-                                                        <label for="procDdlPagSum">Proceso:</label>
-                                                        <select id ="procDdlPagSum" class="form-control"></select>
-    
-                                                        <div class="form-group hidden" id = "groupSubpPagSum">
-                                                            <label for="subpDdlPagSum">Subproceso:</label>
-                                                            <select id ="subpDdlPagSum" class="form-control"></select>
-                                                        </div>
-                                                    </div>
-
                                                     <div class="form-group">
-                                                        <label for="clavePagSum">Orden de Compra:</label>
-                                                        <select id="clavePagSum" class="form-control" onChange=""></select>
+                                                        <label for="solpedDdlPagCompras">Solped:</label>
+                                                        <select id ="solpedDdlPagCompras" class="form-control"></select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="odecDdlPagCompras">Orden de Compra:</label>
+                                                        <select id ="odecDdlPagCompras" class="form-control"></select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="tipoDdlPagCompras">Tipo de Pago:</label>
+                                                        <select id ="tipoDdlPagCompras" class="form-control"></select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="cantidadPagCompras">Cantidad Pagada:</label>
+                                                        <input type="text" id="cantidadPagCompras"class="form-control" placeholder= "Ingresa la cantidad pagada">
+                                                    </div>
+                                                    <div class="form-group hidden">
+                                                        <label for="numFacturaPagCompras">Numero de Factura:</label>
+                                                        <select id="numFacturaPagCompras" class="form-control" onChange=""></select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="notasPagCompras">Notas:</label>
+                                                        <select id="notasPagCompras" class="form-control" onChange=""></select>
                                                     </div>
     
-                                                    <div class="form-group">
-                                                        <label for="cantidadPagSum">$ Cantidad Pagada</label>
-                                                        <input type="text" id="cantidadPagSum"class="form-control" placeholder= "Ingresa la cantidad nueva">
-                                                    </div>
                                                     <br/>
                                                     <div class="form-row align-items-center">
                                                         <div class="col-lg-6 col-sm-12">
-                                                            <label for="fechaPagSum">Fecha de Generación de Pago:</label>
+                                                            <label for="fechaPagCompras">Fecha de Generación de Pago:</label>
                                                         </div>
                                                         <div class="col-lg-6 col-sm-12">
-                                                            <input class="form-control" type="text" id="fechaPagSum" placeholder="" readonly="readonly">
+                                                            <input class="form-control" type="text" id="fechaPagCompras" placeholder="" readonly="readonly">
                                                         </div>
                                                     </div>
                                                     <div class="form-row">
                                                         <div class= "col-lg-6">
-                                                            <button id="actualizarPagSum" type="button" class="btn btn-outline-success btn-block">Realizar Pago</button>
+                                                            <button id="actualizarPagCompras" type="button" class="btn btn-outline-success btn-block">Realizar Pago</button>
                                                         </div>
                                                         <div class= "col-lg-6">
                                                             <button type="reset" id = ""class="btn btn-outline-danger btn-block">Borrar Todo</button>

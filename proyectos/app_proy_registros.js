@@ -211,6 +211,7 @@ function sumaScoreProc(query,cant){
     firebase.database().ref(rama_bd_obras + "/" + query + "/SCORE").once('value').then(function(snapshot){
         //if(snapshot.exists()){
             var total = snapshot.child("total_trabajado").exists() ? parseFloat(snapshot.child("total_trabajado").val()) : 0;
+            total = isNaN(total) ? 0 : total;
             var horas_trabajador = snapshot.child("inges/" + user_global + "/horas_trabajadas").exists() ? parseFloat(snapshot.child("inges/" + user_global + "/horas_trabajadas").val()) : 0;
             total += cant;
             horas_trabajador += cant;

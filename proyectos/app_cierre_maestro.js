@@ -31,44 +31,44 @@ function endDay(){
 
 function cierreMaestro(automatico){
     if(automatico){
-    var cm = {pad: pistaDeAuditoria(), cerrados:{}};
-    firebase.database().ref(rama_bd_personal).once('value').then(function(snapshot){
-        snapshot.forEach(function(inge_snap){
-            if(inge_snap.child("areas/proyectos").val()){
-                var ing = inge_snap.val();
-                if(ing.status == true){
-                    var hoy = getWeek(new Date().getTime());
-                    firebase.database().ref(rama_bd_registros).once('value').then(function(childSnap){
-                        childSnap.forEach(function(yearSnap){
-                            if(yearSnap.hasChildren()){
-                                yearSnap.forEach(function(weekSnap){
-                                    if(weekSnap.hasChildren()){
-                                        weekSnap.forEach(function(regSnap){
-                                            var reg = regSnap.val();
-                                            if(reg.status == false && reg.inge == inge_snap.key){
-                                                console.log(yearSnap.key + "/" + weekSnap.key + "/" + regSnap.key);
-                                                cierraRegistroMaestro(regSnap, yearSnap.key + "/" + weekSnap.key + "/" + regSnap.key);
-                                            }
-                                        });
-                                    }
-                                });
+        var cm = {pad: pistaDeAuditoria(), cerrados:{}};
+        firebase.database().ref(rama_bd_personal).once('value').then(function(snapshot){
+            snapshot.forEach(function(inge_snap){
+                if(inge_snap.child("areas/proyectos").val()){
+                    var ing = inge_snap.val();
+                    if(ing.status == true){
+                        var hoy = getWeek(new Date().getTime());
+                        firebase.database().ref(rama_bd_registros).once('value').then(function(childSnap){
+                            childSnap.forEach(function(yearSnap){
+                                if(yearSnap.hasChildren()){
+                                    yearSnap.forEach(function(weekSnap){
+                                        if(weekSnap.hasChildren()){
+                                            weekSnap.forEach(function(regSnap){
+                                                var reg = regSnap.val();
+                                                if(reg.status == false && reg.inge == inge_snap.key){
+                                                    console.log(yearSnap.key + "/" + weekSnap.key + "/" + regSnap.key);
+                                                    cierraRegistroMaestro(regSnap, yearSnap.key + "/" + weekSnap.key + "/" + regSnap.key);
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                            var fal = false;
+                            firebase.database().ref(rama_bd_personal + "/" + inge_snap.key + "/status").set(fal);                           
+                            if(automatico){
+                                cm.cerrados[ing.uid] = {nombre: ing.nombre};
+                                console.log("Sesion de " + ing.nombre + " cerrada.");
+                            } else {
+                                alert("Sesion de " + ing.nombre + " cerrada.");
                             }
+                            setTimeout(refreshAll(), 30000);
                         });
-                        var fal = false;
-                        firebase.database().ref(rama_bd_personal + "/" + inge_snap.key + "/status").set(fal);                           
-                        if(automatico){
-                            cm.cerrados[ing.uid] = {nombre: ing.nombre};
-                            console.log("Sesion de " + ing.nombre + " cerrada.");
-                        } else {
-                            alert("Sesion de " + ing.nombre + " cerrada.");
-                        }
-                        setTimeout(refreshAll(), 30000);
-                    });
+                    }
                 }
-            }
+            });
         });
-    });
-    firebase.database().ref("info_web/cierreMaestro").push(cm);
+        firebase.database().ref("info_web/cierreMaestro").push(cm);
     }
 }
 

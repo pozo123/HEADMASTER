@@ -371,8 +371,8 @@ $('#' + id_registrar_button_ppto_proy).click(function () {
                     nombre: $('#' + id_nombre_ppto_proy).val(),
                     OdeC: "",
                     SCORE: {
-                        total_prog: "",
-                        total_trabajado: "",
+                        total_prog: 0,
+                        total_trabajado: 0,
                         programado: false,
                         inges: "",
                     }, 

@@ -24,6 +24,14 @@ REESTRUCTURA_BD:
   - Poner nota en registro si creden == 2
   - generador de pptos (solo pdf) -> contratos de obra
 
+  - Cierre maestro:
+     - checar asincronía
+     - Habilitar modal
+     - Revisar pad
+     - Agregar toLocale en pad
+     - if(automatico)
+     - sacar pad aunque no automatico
+
  KICK-OFF 
  - subir y editar por req (req = {id, alcance, nombre_corto, familia})
  - asignar a proc (al dar de alta el proc, con ddcb)
@@ -97,29 +105,6 @@ DIEGO:
     - crear los fields necesarios para el UML
     - corregir un error
     - programar el boton
- - Reportes:
-    - app_reporte_supervisores
-       - filtros
-          - obra
-          - proceso
-          - periodo de tiempo
-       - datos
-          - OdeC
-          - Asistencias/faltas
-          - $$
-          - completez
-          - fechas?
-    - app_reporte_rrhh
-       - filtros
-          - obra
-          - proceso
-          - trabajador
-          - periodo de tiempo
-       - datos
-          - diversos (ddcheckbox)
-          - horas trabajadas
-          - horas extra
-          - falta
  
 TO DO:
  - Produccion
@@ -133,6 +118,7 @@ TO DO:
      - editable
  - Proyectos
    - Revisar reporte_obras
+   - Gestionar horas (por proc y distribuir por wey);
  - Admin
    - Inve$time
    - Centro de costos.
@@ -149,42 +135,3 @@ TO DO:
    - Manual de usuario, por secciÃ³n y global.
 
  - Cambiar idioma_espanol en tablas de apps como datos_kaizen y asistencia y desplegar_procesos
-
-Obras divididas ya existentes
-   - CPBR -> Son el mismo
-   - zentral -> Partirla en t1 y t2, todo lo que ya va a torre 1
-   - via -> Partirla en comercios y oficinas, todo lo ya trabajado va en com
-Ya terminadas? 
-   - Amira -> cerrada
-   - Blume -> cerrada
-   - Box Metepec -> cerrada
-   - LA CITE (td y te) -> clausurada
-   - Periferico 2840 -> = pc00
-
-OBRAS:
- - Kaizen:
-   - FOR US -> :S
-   - MARINA 196-48
-   - UNICO 149
-   - ACANTO
-   - AVERANDA T-A
-   - ENTTORNO T-F
-   - NEO
-   - VIA 515 oficinas
-   - ZENTRAL T2
- - Terminator:
-   - Mayo:
-      - ICON
-      - EPIC
-      - WEST PARK
-      - COSMOCRAT
-      - AVERANDA T-B
-      - ENTTORNO T-E
-      - ZENTRAL T1
-   - Junio:
-      - SAN ANTONIO 88 / 95
-      - VIA 515 COM
-   - Agosto:
-      - MINAS
-      - LAS VENTANAS
-      - CENTRAL PARK T-A/T-B

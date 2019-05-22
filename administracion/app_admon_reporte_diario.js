@@ -27,7 +27,11 @@ $('#' + id_tab_reporte_diario).click(function() {
             snapshot.forEach(function(regSnap){
                 var reg = regSnap.val();
                 if(new Date(reg.checkin).toLocaleDateString("es-ES",options) == hoy.toLocaleDateString("es-ES",options)){
-                    var h = reg.status ? (parseFloat(reg.horas)/3600000).toFixed(2) : ((parseFloat(hoy.getTime()) - parseFloat(reg.checkin))/360000).toFixed(2);
+                    var h = reg.status ? (parseFloat(reg.horas)/3600000).toFixed(2) : ((parseFloat(hoy.getTime()) - parseFloat(reg.checkin))/3600000).toFixed(2);
+                    console.log(reg.inge);
+
+                    console.log((hoy.getTime() - reg.checkin)/3600000);
+                    console.log(h);
                     var regis = {
                         obra: reg.obra,
                         proc: reg.proceso,
