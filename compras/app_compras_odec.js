@@ -11,20 +11,23 @@ var id_proveedor_nom_odec = "proveedorNomOdeC";
 var id_notas_odec = "notasOdeC";
 var id_actualizar_valor_odec = "actualizarOdeC";
 
+var id_modal_pdf_odec = "pdfModalOdeC"
+var id_pdf_file_odec = "pdfFileOdeC";
+var id_pdf_label_odec = "pdfLabelOdeC";
+var id_agregar_pdf_button_odec = "agregarPdfButtonOdeC";
+var id_cerrar_modal_button_odec = "cerrarModalButtonOdeC";
 var id_datatable_catalogo_odec =  "dataTableCatalogoOdeC";
 var options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
 
 var tab_odec = "tabOdeC";
 var rama_bd_obras = "obras";
 var rama_bd_proveedores = "compras/proveedores";
+var rama_storage_obras = "obras";
 var caso;
 var subprocs = [];
+var pdfSeleccionado;
 
-//falta: 
-//Mover html
-//datatable (jalar de catalogo_odec)
-//field prvee nombre
-//funcionalidad autollenado nombre / clave y alert (proveedor)
+//falta:
 //En tabla 3 botones
 //Revisar toda la app :/ porque cambió el formato de contrato y así
 
@@ -231,15 +234,26 @@ function loadDataTableOdeC(){
                     	solpedSnap.child("odecs").forEach(function(odecSnap){
                             var odec = odecSnap.val();
                             var not = odec.notas ? odec.notas : "-";
+                            var pdf_link = "";
+                            var pdf_consec = -1;
+                            odecSnap.child("pdfs").forEach(function(pdfSnap){
+                            	pdf_consec = pdfSnap.key;
+                            	pdf_link = pdfSnap.child("pdf").val();
+                            });
+                            pdf_consec++;
                             datos_odec.push([
                                 obraSnap.key,
                                 procSnap.child("contrato_compras/clave").val(),
+                                solpedSnap.key,
                                 procSnap.key,
                                 odecSnap.key,
                                 odec.proveedor,
                                 formatMoney(odec.costo),
                                 not,
                                 new Date(odec.fecha).toLocaleDateString("es-ES",options),
+                                "<button type='button' class='editar btn btn-primary' data-toggle='modal' data-target='#" + id_modal_pdf_odec + "'><i class='fas fa-file-pdf'>",
+                                "<button type='button' class='editar btn btn-warning' onclick='showPdfOdec(\"" + pdf_link + "\")'><i class='fas fa-eye'></i></button>",
+                                pdf_consec,
                             ]);
                         });
                     });
@@ -249,15 +263,26 @@ function loadDataTableOdeC(){
                             solpedSnap.child("odecs").forEach(function(odecSnap){
                                 var odec = odecSnap.val();
                                 var not = odec.notas ? odec.notas : "-";
+                                var pdf_link = "";
+                                var pdf_consec = -1;
+                                odecSnap.child("pdfs").forEach(function(pdfSnap){
+                                	pdf_consec = pdfSnap.key;
+                                	pdf_link = pdfSnap.child("pdf").val();
+                                });
+                                pdf_consec++;
                                 datos_odec.push([
                                 	obraSnap.key,
 	                                subpSnap.child("contrato_compras/clave").val(),
+	                                solpedSnap.key,
 	                                subpSnap.key,
 	                                odecSnap.key,
 	                                odec.proveedor,
 	                                formatMoney(odec.costo),
 	                                not,
 	                                new Date(odec.fecha).toLocaleDateString("es-ES",options),
+	                                "<button type='button' class='editar btn btn-primary' data-toggle='modal' data-target='#" + id_modal_pdf_odec + "'><i class='fas fa-file-pdf'>",
+	                                "<button type='button' class='editar btn btn-warning' onclick='showPdfOdec(\"" + pdf_link + "\")'><i class='fas fa-eye'></i></button>",
+	                                pdf_consec,
                                 ]);
                             });
                         });
@@ -266,7 +291,7 @@ function loadDataTableOdeC(){
             });
         });
 
-        tabla_registros = $('#'+ id_datatable_catalogo_odec).DataTable({
+        tabla_odec = $('#'+ id_datatable_catalogo_odec).DataTable({
             destroy: true,
             data: datos_odec,
             dom: 'Bfrtip',
@@ -274,15 +299,91 @@ function loadDataTableOdeC(){
             columns: [
                 {title: "Obra"},
                 {title: "Contrato"},
+                {title: "Solped"},
                 {title: "Proceso"},
                 {title: "Clave"},
                 {title: "Proveedor"},
                 {title: "Precio"},              
                 {title: "Notas"},
                 {title: "Fecha"},
+                {title: "Agregar pdf"},
+                {title: "Imprimir pdf"},
+                {title: "Num pdfs"},
                 //AQUI Añadir los botones
+            ],
+            "columnDefs": [ 
+                { "visible": false, "targets": [11] },
             ],
             language: idioma_espanol, // Esta en app_bibliotecas
         });
+        agregarPdfOdeC("#" + id_datatable_catalogo_odec + " tbody", tabla_odec);
     });
 }
+
+function showPdfOdec(link){
+	if(link == ""){
+		alert("No hay documento para esta OdeC");
+	} else {
+		window.open(link, '_blank');
+	}
+}
+
+function agregarPdfOdeC(tbody, table){
+    $(tbody).on("click", "button.editar",function(){
+        var data = table.row($(this).parents("tr")).data();
+        if(data){
+        	$('#' + id_pdf_label_odec).text("Archivo no seleccionado");
+			pdfSeleccionado = "";
+            $('#' + id_agregar_pdf_button_odec).click(function(){
+			    console.log("contrato: " + data[1]);
+			    console.log("solped: " + data[2]);
+			    console.log("odec: " + data[4]);
+			    console.log("nombre: " + pdfSeleccionado.name);
+				var storageRef = firebase.storage().ref(rama_storage_obras + "/contratos/" + data[1] + "/" + data[2] + "/odecs/" + data[4] + "/" + pdfSeleccionado.name);
+			    var uploadTask = storageRef.put(pdfSeleccionado);
+			    uploadTask.on('state_changed', function(snapshot){
+			        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+			        console.log('Upload is ' + progress + '% done');
+			        switch (snapshot.state) {
+			            case firebase.storage.TaskState.PAUSED: // or 'paused'
+			            console.log('Upload is paused');
+			            break;
+			            case firebase.storage.TaskState.RUNNING: // or 'running'
+			            console.log('Upload is running');
+			            break;
+			        }
+			    }, function(error) {
+			        // Handle unsuccessful uploads
+			    }, function() {
+			        // Handle successful uploads on complete
+			        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+			        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+			            console.log('File available at', downloadURL);
+			            //aqui
+			            var pdf = {
+			            	proveedor: data[3],
+			            	pdf: downloadURL,   
+						}
+						var query;
+						if(data[0] == "IQONO MEXICO"){
+							query = data[3].split("-")[0];
+						} else {
+							query = data[3].split("-").length > 1 ? data[3].split("-")[0] + "/subprocesos/" + data[3] : data[3];
+						}
+						firebase.database().ref(rama_bd_obras + "/" + data[0] + "/procesos/" + query + "/contrato_compras/solpeds/" + data[2] + "/odecs/" + data[4] + "/pdfs/" + data[11]).update(pdf);
+			            
+			            alert("Actualización exitosa");
+			            loadDataTableOdeC();
+			            $('#' + id_cerrar_modal_button_odec).click();
+			        });
+			    });
+			});
+        }
+    });
+}
+
+$('#' + id_pdf_file_odec).on("change", function(event){
+    pdfSeleccionado = event.target.files[0];
+    $('#' + id_pdf_label_odec).text(pdfSeleccionado.name);
+});
+

@@ -190,7 +190,7 @@
                         - por index (0,1,2)
                            - pdf
                            - pda (pad? ya no se :/)
-            - contrato_compras (en hoja)
+            - contrato_compras (en hoja menos en IQONO MEXICO, ahi en proc)
                - clave
                - solpeds
                   - solped (por clave)

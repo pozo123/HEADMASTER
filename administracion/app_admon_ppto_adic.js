@@ -30,6 +30,7 @@ var id_bancarios_check_ppto_adic = "bancariosCheckPptoAdic";
 var id_fiscales_check_ppto_adic = "fiscalesCheckPptoAdic";
 
 //Funcionalidad (kaizen)
+var id_hora_score_ppto_adic = "horaScorePptoAdic";
 var id_proyectos_ppto_adic = "proyectosPptoAdic";
 var id_suministros_ppto_adic = "suministrosPptoAdic";
 var id_copeo_ppto_adic = "copeoPptoAdic";
@@ -79,12 +80,15 @@ $('#' + id_file_ppto_adic).on("change",(function(event) {
     fileName = excelSeleccionado.name;
     $('#' + id_filename_ppto_adic).text(fileName);
     document.getElementById(id_importar_button_ppto_adic).disabled = false;
+    $('#' + id_importar_button_ppto_adic).removeClass('btn-outline-success');
+    $('#' + id_importar_button_ppto_adic).addClass('btn-outline-danger');
 }));
 
 $('#tabPresupuestoAdic').click(function() {
     $("#" + id_existente_check_ppto_adic).prop('checked', false);
     $('#' + id_proc_ddl_ppto_adic).empty();    
     $('#' + id_obra_ddl_ppto_adic).empty();
+    $("#" + id_hora_score_ppto_adic).val(600);
 
     document.getElementById(id_anticipo1_rb_ppto_adic).checked = true;
 
@@ -143,6 +147,8 @@ $('#' + id_imagen_file_ppto_adic).on("change", function(event){
     fotoSeleccionada = event.target.files[0];
     $('#' + id_imagen_name_ppto_adic).text(fotoSeleccionada.name);
     document.getElementById(id_imagen_button_ppto_adic).disabled = false;
+    $('#' + id_importar_button_ppto_adic).removeClass('btn-outline-success');
+    $('#' + id_importar_button_ppto_adic).addClass('btn-outline-danger');
 });
 
 $('#' + id_imagen_button_ppto_adic).click(function() {
@@ -154,6 +160,8 @@ $('#' + id_imagen_button_ppto_adic).click(function() {
         imagen_anexo = reader.result;
         alert("Imagen cargada")
         document.getElementById(id_imagen_button_ppto_adic).disabled = true;
+        $('#' + id_importar_button_ppto_adic).addClass('btn-outline-success');
+        $('#' + id_importar_button_ppto_adic).removeClass('btn-outline-danger');
     }
 });
 
@@ -260,6 +268,8 @@ $('#' + id_importar_button_ppto_adic).on("click",function() {
             } else {
                 alert("Documento cargado con exito");
                 document.getElementById(id_importar_button_ppto_adic).disabled = true;
+                $('#' + id_importar_button_ppto_adic).addClass('btn-outline-success');
+                $('#' + id_importar_button_ppto_adic).removeClass('btn-outline-danger');
             }
         }
     };
@@ -308,7 +318,16 @@ $("#" + id_suministros_ppto_adic).change(function(){
     loadProfitsPptoAdic();
 });
 
-$("#" + id_proyectos_ppto_adic).change(function(){
+$("#" + id_proyectos_ppto_adic).focus(function(){
+    if(!isNaN(parseFloat($("#" + id_proyectos_ppto_adic).val()))){
+        $("#" + id_proyectos_ppto_adic).val(parseFloat($("#" + id_proyectos_ppto_adic).val()) / parseFloat($("#" + id_hora_score_ppto_adic).val()))
+    }
+});
+
+$("#" + id_proyectos_ppto_adic).focusout(function(){
+    if($("#" + id_proyectos_ppto_adic).val() != ""){
+        $("#" + id_proyectos_ppto_adic).val(parseFloat($("#" + id_proyectos_ppto_adic).val()) * parseFloat($("#" + id_hora_score_ppto_adic).val()));
+    }
     loadProfitsPptoAdic();
 });
 
@@ -738,7 +757,7 @@ function generaPptoAdic(genera){
         ],
     ];
     var bod = [];
-    bod.push([{  colSpan:6,border: [true, true, true, true],text: 'DESCRIPCIÓN DEL PRESUPUESTO',bold: true,margin: [0,1],fillColor: '#ffdd00',alignment: 'center',fontSize: 10,},'','','','','',]);
+    bod.push([{  colSpan:6,border: [true, true, true, true],text: 'DESCRIPCIÓN DEL PRESUPUESTO',bold: true,margin: [0,1],fillColor: '#ffff93',alignment: 'center',fontSize: 10,},'','','','','',]);
     for(i=0;i<alcance.length;i++){
         bod.push(alcance[i]);
     }
@@ -992,7 +1011,7 @@ function generaPptoAdic(genera){
                 text: 'EXCLUSIONES',
                 bold: true,
                 margin: [0,2],
-                fillColor: '#ffdd00',
+                fillColor: '#ffff93',
                 alignment: 'center',
                 fontSize: 10,
             },
@@ -1051,7 +1070,7 @@ function generaPptoAdic(genera){
                 text: 'REQUERIMIENTOS ANTES DE INICIAR',
                 bold: true,
                 margin: [0,1],
-                fillColor: '#ffdd00',
+                fillColor: '#ffff93',
                 alignment: 'center',
                 fontSize: 10,
             },
