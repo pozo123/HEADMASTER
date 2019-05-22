@@ -50,6 +50,7 @@ $('#' + id_ref_proveedor).change(function(){
 $('#' + id_registrar_button_proveedor).click(function(){
 	firebase.database().ref(rama_bd_compras + "/num_proveedores_id").once('value').then(function(snapshot){
 		var max = parseInt($('#' + id_ref_proveedor).val());
+		console.log(max);
 		if(parseInt(snapshot.val()) < max){
 			max++;
 			firebase.database().ref(rama_bd_compras + "/num_proveedores_id").set(max);

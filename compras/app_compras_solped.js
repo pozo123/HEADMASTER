@@ -32,6 +32,7 @@ function resetTabSolped(){
     $('#' + id_subp_ddl_solped).empty();
     $('#' + id_foto_label_solped).text("Archivo no seleccionado");
     $('#' + id_subp_group_solped).addClass('hidden');
+    $('#' + id_pdf_button_solped).addClass('hidden');
     fotoSeleccionada = "";
 	jQuery('#' + id_fecha_solped).datetimepicker(
         {timepicker:false, weeks:true,format:'m.d.Y'}
@@ -59,6 +60,7 @@ $('#' + id_obra_ddl_solped).change(function(){
 	$('#' + id_contrato_ddl_solped).empty();
 	$('#' + id_subp_ddl_solped).empty();
 	$('#' + id_subp_group_solped).addClass('hidden');
+	$('#' + id_pdf_button_solped).addClass('hidden');
 	var select = document.getElementById(id_contrato_ddl_solped);
     var option = document.createElement('option');
     option.style = "display:none";
@@ -89,14 +91,13 @@ $('#' + id_contrato_ddl_solped).change(function(){
 	if($('#' + id_obra_ddl_solped + " option:selected").val() == "IQONO MEXICO" && $('#' + id_contrato_ddl_solped + " option:selected").val() != "MISC"){
 		$('#' + id_subp_group_solped).removeClass('hidden');
 		$('#' + id_subp_ddl_solped).empty();
+		$('#' + id_pdf_button_solped).addClass('hidden');
 		var select = document.getElementById(id_subp_ddl_solped);
 	    var option = document.createElement('option');
 	    option.style = "display:none";
 	    option.text = option.value = "";
 	    select.appendChild(option);
 		json_obras_solped.child($('#' + id_obra_ddl_solped + " option:selected").val() + "/procesos").forEach(function(procSnap){
-			console.log(procSnap.key);
-			console.log($('#' + id_contrato_ddl_solped + " option:selected").val());
 			if(procSnap.key == $('#' + id_contrato_ddl_solped + " option:selected").val()){
 				procSnap.child("subprocesos").forEach(function(subpSnap){
 					var option2 = document.createElement('option');
@@ -106,6 +107,8 @@ $('#' + id_contrato_ddl_solped).change(function(){
 				});
 			}
 		});
+	} else {
+		$('#' + id_subp_group_solped).addClass('hidden');
 	}
 	$('#' + id_nombre_solped).val("");
 	$('#' + id_clave_solped).val("");
@@ -115,16 +118,14 @@ $('#' + id_clave_solped).change(function(){
 	var proc = $('#' + id_contrato_ddl_solped + " option:selected").val();
 	var query = proc.split("-").length > 1 ? proc.split("-")[0] + "/subprocesos/" + proc : proc;
 	solpedSnap = json_obras_solped.child($('#' + id_obra_ddl_solped + " option:selected").val() + "/procesos/" + query + "/contrato_compras/solpeds/" + $('#' + id_clave_solped).val());
-	console.log(query);
-	console.log(json_obras_solped.val());
-	console.log(solpedSnap.val());
 	if(solpedSnap.exists()){
 		highLight(id_nombre_solped);
 		$('#' + id_nombre_solped).val(solpedSnap.child("nombre").val());
-        
-        var fech = new Date(solpedSnap.child("fecha").val());
-        var f_string = (fech.getMonth() + 1) + "." + fech.getDate() + "." + fech.getFullYear();
-        $("#" + id_fecha_solped).val(f_string)
+        if(solpedSnap.child("fecha").val() != ""){
+	        var fech = new Date(solpedSnap.child("fecha").val());
+	        var f_string = (fech.getMonth() + 1) + "." + fech.getDate() + "." + fech.getFullYear();
+	        $("#" + id_fecha_solped).val(f_string)
+	    }
 
 		$('#' + id_pdf_button_solped).removeClass('hidden');
 	} else {
@@ -138,8 +139,10 @@ $('#' + id_foto_solped).on("change", function(event){
 });
 
 $('#' + id_actualizar_button_solped).click(function(){
-	if($('#' + id_obra_ddl_solped + " option:selected").val() == "" || $('#' + id_contrato_ddl_solped + " option:selected").val() == "" || $('#' + id_clave_solped).val() == "" || (!$('#' + id_subp_ddl_solped).hasClass('hidden') && $('#' + id_subp_ddl_solped + " option:selected").val() == "")){
+	if($('#' + id_obra_ddl_solped + " option:selected").val() == "" || $('#' + id_contrato_ddl_solped + " option:selected").val() == "" || $('#' + id_clave_solped).val() == "" || (!$('#' + id_subp_group_solped).hasClass('hidden') && ($('#' + id_subp_ddl_solped + " option:selected").val() == "" || !$('#' + id_subp_ddl_solped + " option:selected").val()))){
 		alert("Llena todos los campos requeridos");
+		console.log($('#' + id_subp_group_solped).hasClass('hidden'));
+		console.log(!$('#' + id_subp_group_solped).hasClass('hidden'));
 	} else {
 		var proc = $('#' + id_contrato_ddl_solped + " option:selected").val();
 		var query = proc.split("-").length > 1 ? proc.split("-")[0] + "/subprocesos/" + proc : proc;
@@ -149,12 +152,12 @@ $('#' + id_actualizar_button_solped).click(function(){
 			} else {
 				var solp = {
                     nombre: $('#' + id_nombre_solped).val(),
-                    fecha: new Date($('#' + id_fecha_solped).val()).getTime(),
+                    fecha: $('#' + id_fecha_solped).val() == "" ? "" : new Date($('#' + id_fecha_solped).val()).getTime(),
                     foto: "",
                     autorizacion: false,
                     odecs: "",
 				}
-				if(!$('#' + id_subp_ddl_solped).hasClass('hidden')){
+				if(!$('#' + id_subp_group_solped).hasClass('hidden')){
 					solp["subproceso"] = $('#' + id_subp_ddl_solped + " option:selected").val();
 				}
 				firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_solped + " option:selected").val() + "/procesos/" + query + "/contrato_compras/solpeds/" + $('#' + id_clave_solped).val()).update(solp);
@@ -185,9 +188,12 @@ $('#' + id_actualizar_button_solped).click(function(){
 		            console.log('File available at', downloadURL);
 		            var solp = {
 	                    nombre: $('#' + id_nombre_solped).val(),
-	                    fecha: new Date($('#' + id_fecha_solped).val()).getTime(),
+	                    fecha: $('#' + id_fecha_solped).val() == "" ? "" : new Date($('#' + id_fecha_solped).val()).getTime(),
 	                    foto: downloadURL,
 	                    autorizacion: true,
+					}
+					if(!$('#' + id_subp_group_solped).hasClass('hidden')){
+						solp["subproceso"] = $('#' + id_subp_ddl_solped + " option:selected").val();
 					}
 
 					firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_solped + " option:selected").val() + "/procesos/" + query + "/contrato_compras/solpeds/" + $('#' + id_clave_solped).val()).update(solp);

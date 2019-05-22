@@ -8,6 +8,7 @@ var id_clave_odec = "claveOdeC";
 var id_cantidad_odec = "cantidadOdeC";
 var id_proveedor_odec = "proveedorOdeC";
 var id_proveedor_nom_odec = "proveedorNomOdeC";
+var id_notas_odec = "notasOdeC";
 var id_actualizar_valor_odec = "actualizarOdeC";
 
 var id_datatable_catalogo_odec =  "dataTableCatalogoOdeC";
@@ -121,7 +122,7 @@ $("#" + id_proc_ddl_odec).change(function(){
 	        option2.value = solpedSnap.key;
 	        select.appendChild(option2);
 	        if($('#' + id_obra_ddl_odec + " option:selected").val() == "IQONO MEXICO"){
-	        	subprocs[solpedSnap.key] = solpedSnap.child("subproceso");
+	        	subprocs[solpedSnap.key] = solpedSnap.child("subproceso").val();
 	        }
 		});
 	});
@@ -143,8 +144,10 @@ $('#' + id_proveedor_odec).change(function(){
 $('#' + id_proveedor_nom_odec).change(function(){
 	firebase.database().ref(rama_bd_proveedores).orderByChild("razonSocial").equalTo($('#' + id_proveedor_nom_odec).val()).once('value').then(function(snapshot){
 		if(snapshot.exists()){
-			$('#' + id_proveedor_odec).val(snapshot.key);
-			highLight(id_proveedor_odec);
+			snapshot.forEach(function(childSnap){
+				$('#' + id_proveedor_odec).val(childSnap.key);
+				highLight(id_proveedor_odec);
+			});
 		} else {
 			alert("No existe ningún proveedor con ese nombre");
 			$('#' + id_proveedor_nom_odec).val("");
@@ -161,7 +164,6 @@ $('#' + id_actualizar_valor_odec).click(function(){
 			caso = "IQONO MEXICO";
 		}
        /*AQUI- cotizaciones(DEFINIR)
-       - notas
        - pdfs
           - pdf(consecutivo)
              - proveedor
@@ -173,6 +175,7 @@ $('#' + id_actualizar_valor_odec).click(function(){
 			costo: $('#' + id_cantidad_odec).val(),
 			pad: pistaDeAuditoria(),
 			fecha: new Date($('#' + id_fecha_odec).val()).getTime(),
+			notas: $('#' + id_notas_odec).val(),
 		}
 
 		var query;
@@ -227,16 +230,16 @@ function loadDataTableOdeC(){
                     procSnap.child("contrato_compras/solpeds").forEach(function(solpedSnap){
                     	solpedSnap.child("odecs").forEach(function(odecSnap){
                             var odec = odecSnap.val();
+                            var not = odec.notas ? odec.notas : "-";
                             datos_odec.push([
                                 obraSnap.key,
-                                procSnap.contrato_compras.clave,
+                                procSnap.child("contrato_compras/clave").val(),
                                 procSnap.key,
                                 odecSnap.key,
                                 odec.proveedor,
                                 formatMoney(odec.costo),
-                                odec.notas,
+                                not,
                                 new Date(odec.fecha).toLocaleDateString("es-ES",options),
-                                odec.timestamps.registro_OdeC,
                             ]);
                         });
                     });
@@ -245,14 +248,15 @@ function loadDataTableOdeC(){
                         subpSnap.child("contrato_compras/solpeds").forEach(function(solpedSnap){
                             solpedSnap.child("odecs").forEach(function(odecSnap){
                                 var odec = odecSnap.val();
+                                var not = odec.notas ? odec.notas : "-";
                                 datos_odec.push([
                                 	obraSnap.key,
-	                                subpSnap.contrato_compras.clave,
+	                                subpSnap.child("contrato_compras/clave").val(),
 	                                subpSnap.key,
 	                                odecSnap.key,
 	                                odec.proveedor,
 	                                formatMoney(odec.costo),
-	                                odec.notas,
+	                                not,
 	                                new Date(odec.fecha).toLocaleDateString("es-ES",options),
                                 ]);
                             });
