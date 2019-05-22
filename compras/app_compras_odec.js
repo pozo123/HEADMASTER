@@ -27,9 +27,6 @@ var caso;
 var subprocs = [];
 var pdfSeleccionado;
 
-//falta:
-//En tabla 3 botones
-//Revisar toda la app :/ porque cambió el formato de contrato y así
 
 $('#' + tab_odec).click(function(){
 	$('#' + id_obra_ddl_odec).empty();
@@ -166,13 +163,6 @@ $('#' + id_actualizar_valor_odec).click(function(){
 		if($('#' + id_obra_ddl_odec + " option:selected").val() == "IQONO MEXICO" && $('#' + id_proc_ddl_odec + " option:selected").val() != "MISC"){
 			caso = "IQONO MEXICO";
 		}
-       /*AQUI- cotizaciones(DEFINIR)
-       - pdfs
-          - pdf(consecutivo)
-             - proveedor
-             - pdf (link)
-       - remisiones (DEFINIR)
-       - pagos*/
 		var odec = {
 			proveedor: $('#' + id_proveedor_odec).val(),
 			costo: $('#' + id_cantidad_odec).val(),
@@ -222,7 +212,6 @@ function sumaOdeCKaizen(query, cant){
 	});
 }
 
-//AQUI añadir botones subir pdf, bajar pdf, aprovar (como checkbox)
 function loadDataTableOdeC(){
 	var datos_odec = [];
 
@@ -309,7 +298,6 @@ function loadDataTableOdeC(){
                 {title: "Agregar pdf"},
                 {title: "Imprimir pdf"},
                 {title: "Num pdfs"},
-                //AQUI Añadir los botones
             ],
             "columnDefs": [ 
                 { "visible": false, "targets": [11] },
@@ -359,7 +347,6 @@ function agregarPdfOdeC(tbody, table){
 			        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
 			        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
 			            console.log('File available at', downloadURL);
-			            //aqui
 			            var pdf = {
 			            	proveedor: data[3],
 			            	pdf: downloadURL,   

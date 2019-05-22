@@ -219,7 +219,6 @@
                                  - no_factura (si cr, si no "")
                                  - notas
                                  - pdf (factura si CR, evidencia si no)
-                                 - ?? proveedor (segun yo no porque viene de odec)
 - personal (magico) (supervisores son los que estan en prod, se ven en obra)
   - uid (como key):
     - areas:   

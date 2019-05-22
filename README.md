@@ -96,9 +96,6 @@ DIEGO:
  - Definir quién llena las horas ppto de SCORE en los procs/pptos, y cómo (no sólo en kaizen)
  - desplegar kaizen lo del cambio de obra, cargarKaizen hay que descomentarlo de funciones y probarlo, que se sumen en totales y asi todo bien
  - app_prod_entrada_estimacion
- - Todo lo de Gantt
- - Desplegar CC
- - Boton respaldo (aunque baje solo el json)
  - Manual de usuario
  - diversos en bd, alta, editar, etc, hacer todo en una tabla
  - app_cuenta_cc 

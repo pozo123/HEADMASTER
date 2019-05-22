@@ -378,65 +378,74 @@
                         </div>
 
                         <div id="pagosCompras" class="tabcontent hidden">
-                                <h1>Pagos de Ordenes de Compra</h1>
-                                <p>Página para realizar registros de pagos</p>
-                                <div class="container-fluid">
-                                    <div class="row align-items-center">
-                                        <div class="col-lg-3"></div>
-                                        <div class="col-lg-6">
-                                            <form action="#" onsubmit="return false;">                   
-                                                    <div class="form-group">
-                                                        <label for="obraDdlPagCompras">Obra:</label>
-                                                        <select id="obraDdlPagCompras" class="form-control" onChange=""></select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="solpedDdlPagCompras">Solped:</label>
-                                                        <select id ="solpedDdlPagCompras" class="form-control"></select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="odecDdlPagCompras">Orden de Compra:</label>
-                                                        <select id ="odecDdlPagCompras" class="form-control"></select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="tipoDdlPagCompras">Tipo de Pago:</label>
-                                                        <select id ="tipoDdlPagCompras" class="form-control"></select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="cantidadPagCompras">Cantidad Pagada:</label>
-                                                        <input type="text" id="cantidadPagCompras"class="form-control" placeholder= "Ingresa la cantidad pagada">
-                                                    </div>
-                                                    <div class="form-group hidden">
-                                                        <label for="numFacturaPagCompras">Numero de Factura:</label>
-                                                        <select id="numFacturaPagCompras" class="form-control" onChange=""></select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="notasPagCompras">Notas:</label>
-                                                        <select id="notasPagCompras" class="form-control" onChange=""></select>
-                                                    </div>
-    
-                                                    <br/>
-                                                    <div class="form-row align-items-center">
-                                                        <div class="col-lg-6 col-sm-12">
-                                                            <label for="fechaPagCompras">Fecha de Generación de Pago:</label>
-                                                        </div>
-                                                        <div class="col-lg-6 col-sm-12">
-                                                            <input class="form-control" type="text" id="fechaPagCompras" placeholder="" readonly="readonly">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-row">
-                                                        <div class= "col-lg-6">
-                                                            <button id="actualizarPagCompras" type="button" class="btn btn-outline-success btn-block">Realizar Pago</button>
-                                                        </div>
-                                                        <div class= "col-lg-6">
-                                                            <button type="reset" id = ""class="btn btn-outline-danger btn-block">Borrar Todo</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                                <br/>
+                            <h1>Pagos de Ordenes de Compra</h1>
+                            <p>Página para realizar registros de pagos</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">                   
+                                            <div class="form-group">
+                                                <label for="obraDdlPagCompras">Obra:</label>
+                                                <select id="obraDdlPagCompras" class="form-control" onChange=""></select>
                                             </div>
-                                            <div class="col-lg-3"></div>
-                                        </div>
+                                            <div class="form-group">
+                                                <label for="solpedDdlPagCompras">Solped:</label>
+                                                <select id ="solpedDdlPagCompras" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="odecDdlPagCompras">Orden de Compra:</label>
+                                                <select id ="odecDdlPagCompras" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="tipoDdlPagCompras">Tipo de Pago:</label>
+                                                <select id ="tipoDdlPagCompras" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group hidden" id="numFacturaGroupPagCompras">
+                                                <label for="numFacturaPagCompras">Numero de Factura:</label>
+                                                <input type="text" id="numFacturaPagCompras" class="form-control" onChange=""></select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="cantidadPagCompras">Cantidad Pagada:</label>
+                                                <input type="text" id="cantidadPagCompras"class="form-control" placeholder= "Ingresa la cantidad pagada">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="notasPagCompras">Notas:</label>
+                                                <input type="text" select id="notasPagCompras" class="form-control" onChange=""></select>
+                                            </div>
+
+                                            <br/>
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-6 col-sm-12">
+                                                    <label for="fechaPagCompras">Fecha de Generación de Pago:</label>
+                                                </div>
+                                                <div class="col-lg-6 col-sm-12">
+                                                    <input class="form-control" type="text" id="fechaPagCompras" placeholder="" readonly="readonly">
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="form-row">
+                                                <label for="comprobanteFilePagCompras">Selecciona archivo de Excel en el formato deseado</label>
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="comprobanteFilePagCompras" accept="image/* , .pdf">
+                                                    <label class = "custom-file-label" id="comprobanteLabelPagCompras">Archivo no seleccionado</label>
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="form-row">
+                                                <div class= "col-lg-6">
+                                                    <button id="actualizarPagCompras" type="button" class="btn btn-outline-success btn-block">Realizar Pago</button>
+                                                </div>
+                                                <div class= "col-lg-6">
+                                                    <button type="reset" id = ""class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <br/>
                                     </div>
+                                    <div class="col-lg-3"></div>
+                                </div>
+                            </div>
                         </div>
 
                         
@@ -663,7 +672,7 @@
 <script src="compras/app_compras_contrato.js"></script>
 <script src="compras/app_compras_importar_proveedores.js"></script>
 <script src="compras/app_compras_odec.js"></script>
-<script src="compras/app_compras_pag_kaizen.js"></script>
+<script src="compras/app_compras_pagos.js"></script>
 <script src="compras/app_compras_proveedor.js"></script>
 <script src="compras/app_compras_solped.js"></script>
 <script src="catalogos/app_catalogo_atn.js"></script>
