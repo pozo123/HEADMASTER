@@ -72,7 +72,7 @@ function calculaKaizen(obra,tipo,proceso,subproceso){
             procSnap.child("subprocesos").forEach(function(subpSnap){
               calculaProfitKaiz(json_obra["procesos"][procSnap.key]["subprocesos"][subpSnap.key]);
             });
-            sumaValoresKaiz(json_obra["procesos"][procSnap],"proceso");
+            sumaValoresKaiz(json_obra["procesos"][procSnap.key],"proceso");
           }
         });
         sumaValoresKaiz(json_obra,"obra");
@@ -101,7 +101,7 @@ function sumaValoresKaiz(pointer,tipo){
   var suma_kaiz = kaiz;
   var child = tipo == "proceso" ? "subprocesos" : "procesos";
   for(key in pointer[child]){
-    var kaiz_local = pointer["subprocesos"][key]["kaizen"];
+    var kaiz_local = pointer[child][key]["kaizen"];
     suma_kaiz["PROYECTOS"]["PPTO"] += parseFloat(kaiz_local["PROYECTOS"]["PPTO"]);
     suma_kaiz["PROYECTOS"]["PAG"] += parseFloat(kaiz_local["PROYECTOS"]["PAG"]);
     suma_kaiz["PRODUCCION"]["COPEO"]["PREC"] += parseFloat(kaiz_local["PRODUCCION"]["COPEO"]["PREC"]);
@@ -138,10 +138,10 @@ function calculaProfitKaiz(pointer){
   var costo_cop = prod_cop_copeo > 0 ? prod_cop_copeo : prod_cop_prec;
   var costo_sum = prod_sum_odec > 0 ? prod_sum_odec : prod_sum_cuant;
   kaiz_local["PROFIT"]["PROG"]["BRUTO"] = (admin_est_ppto + admin_ant_ppto) * 0.8 - costo_cop - costo_sum - proy_ppto;
-  kaiz_local["PROFIT"]["PROG"]["NETO"] = profit_prog_bruto * 0.6;
+  kaiz_local["PROFIT"]["PROG"]["NETO"] = ((admin_est_ppto + admin_ant_ppto) * 0.8 - costo_cop - costo_sum - proy_ppto) * 0.6;
 
   kaiz_local["PROFIT"]["REAL"]["BRUTO"] = (admin_ant_pag + admin_est_pag) * 0.8 - prod_cop_pag - prod_sum_pag - proy_pag;
-  kaiz_local["PROFIT"]["REAL"]["NETO"] = profit_real_bruto * 0.6;
+  kaiz_local["PROFIT"]["REAL"]["NETO"] = ((admin_ant_pag + admin_est_pag) * 0.8 - prod_cop_pag - prod_sum_pag - proy_pag) * 0.6;
 }
 
 function sumaEnFirebase(query, cantidad){

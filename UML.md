@@ -423,6 +423,8 @@ STORAGE:
             - odecs
                - odec(por clave)
                   - imagen
+                  - pagos
+                     - imagenes
 
 
 

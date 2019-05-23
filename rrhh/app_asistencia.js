@@ -555,7 +555,7 @@ function guardarAsistencias(){
                 var flagmi;
                 var flagju;
                 var flagvi;
-                if($('#' + id_obra_ddl_asistencia + " option:selected").val() == "Atencion a Clientes"){//AQUI si vacaciones
+                if($('#' + id_obra_ddl_asistencia + " option:selected").val() == "Atencion a Clientes"){
                     flaglu = $("#chamba_" + id_trabajador + "_lu").val() != "" && $("#chamba_" + id_trabajador + "_lu").val() != "Otra obra" && $("#chamba_" + id_trabajador + "_lu").val() != "Otro año";
                     flagma = $("#chamba_" + id_trabajador + "_ma").val() != "" && $("#chamba_" + id_trabajador + "_ma").val() != "Otra obra" && $("#chamba_" + id_trabajador + "_ma").val() != "Otro año";
                     flagmi = $("#chamba_" + id_trabajador + "_mi").val() != "" && $("#chamba_" + id_trabajador + "_mi").val() != "Otra obra" && $("#chamba_" + id_trabajador + "_mi").val() != "Otro año";
@@ -580,7 +580,7 @@ function guardarAsistencias(){
 function updateDia(id_trabajador,dia,semana,year){
     var dia_corto = dia.substring(0,2);
     var proceso;
-    if($('#' + id_obra_ddl_asistencia + " option:selected").val() == "Atencion a Clientes"){//AQUI Vacaciones
+    if($('#' + id_obra_ddl_asistencia + " option:selected").val() == "Atencion a Clientes"){
         if($("#chamba_" + id_trabajador + "_" + dia_corto).val() == ""){
             proceso = "Falta";
         } else {

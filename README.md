@@ -23,6 +23,11 @@ REESTRUCTURA_BD:
   - Para anexos jalar archivos excel y jalar el formato (mezcla apps importar con apps ppto)
   - Poner nota en registro si creden == 2
   - generador de pptos (solo pdf) -> contratos de obra
+  - app_funciones algo truena al calcular profits
+
+  - HE cargar horas anteriores los está dividiendo entre sueldo. Revisar si viene de rama_Bd_nomina o rama_bd_trabajadores
+  - Editar trabajadores
+  - Supervisores -> pago y distribución
 
   - Cierre maestro:
      - checar asincronía
@@ -44,7 +49,7 @@ REESTRUCTURA_BD:
  - app_reporte_obras -> (REVISAR HTML, faltan divs y sobran dropdown checkboxes) reestructura_bd. 
  - app_distribucion_supervisores (los pagos de la pagadora)
  - app_gestionar_supervisores -> (REVISAR HTML) reestructura_bd, solo se asigna por obra, se comenta un ddl
- - app_rrhh_editar_trabajadores
+ - app_rrhh_editar_trabajadores -> app nueva
  - app_atributo
 
  Obsoletos: 

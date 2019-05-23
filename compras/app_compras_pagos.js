@@ -14,6 +14,7 @@ var id_comprobante_label_pag_compras = "comprobanteLabelPagCompras";
 var id_acutalizar_button_pag_compras = "actualizarPagCompras";
 
 var rama_bd_obras = "obras";
+var rama_storage_obras = "obras";
 
 var id_tab_pag_compras = "tabPagosCompras";
 
@@ -28,12 +29,16 @@ var tipos_pago_compras = [
 	{text: "Nota de Credito", value: "NC"},
 ];
 
+var solpeds = {};
+
 $('#' + id_tab_pag_compras).click(function(){
 	$('#' + id_obra_ddl_pag_compras).empty();
 	$('#' + id_solped_ddl_pag_compras).empty();
 	$('#' + id_odec_ddl_pag_compras).empty();
 	$('#' + id_tipo_ddl_pag_compras).empty();
 	$('#' + id_num_factura_group_pag_compras).addClass('hidden');
+	fileSeleccionado = "";
+	solpeds = {};
 
 	jQuery('#' + id_fecha_pag_compras).datetimepicker(
         {timepicker:false, weeks:true,format:'m.d.Y'}
@@ -70,7 +75,7 @@ $('#' + id_tab_pag_compras).click(function(){
 
 $("#" + id_obra_ddl_pag_compras).change(function(){
 	$('#' + id_solped_ddl_pag_compras).empty();
-	subprocs = [];
+	solpeds = {};
     var select = document.getElementById(id_solped_ddl_pag_compras);
     var option = document.createElement('option');
     option.style = "display:none";
@@ -83,10 +88,11 @@ $("#" + id_obra_ddl_pag_compras).change(function(){
 					var solped = solpedSnap.val();
 			    	var option2 = document.createElement('OPTION');
 			        option2.text = solpedSnap.key;
-			        option2.value = procSnap.key + "/contrato_compras/solpeds/" + solpedSnap.key;
+			        option2.value = solpedSnap.key;
 			        select.appendChild(option2);
+			        solpeds[solpedSnap.key] = {solped: solpedSnap.key, path: procSnap.key, contrato: procSnap.child("contrato_compras/clave").val()};
 			        if($('#' + id_obra_ddl_pag_compras + " option:selected").val() == "IQONO MEXICO"){
-			        	subprocs[solpedSnap.key] = solpedSnap.child("subproceso").val();
+			        	solpeds[solpedSnap.key]["subproceso"] = solpedSnap.child("subproceso").val();
 			        }
 				});
 			} else {
@@ -95,8 +101,9 @@ $("#" + id_obra_ddl_pag_compras).change(function(){
 						var solped = solpedSnap.val();
 				    	var option2 = document.createElement('OPTION');
 				        option2.text = solpedSnap.key;
-				        option2.value = procSnap.key + "/subprocesos/" + subpSnap.key + "/contrato_compras/solpeds/" + solpedSnap.key;
+				        option2.value = solpedSnap.key;
 				        select.appendChild(option2);
+						solpeds[solpedSnap.key] = {solped: solpedSnap.key, path: procSnap.key + "/subprocesos/" + subpSnap.key, contrato: subpSnap.child("contrato_compras/clave").val()};
 					});
 				});
 			}
@@ -108,6 +115,7 @@ $('#' + id_tipo_ddl_pag_compras).change(function(){
 	if($('#' + id_tipo_ddl_pag_compras).val() == "CR"){
 		$('#' + id_num_factura_group_pag_compras).removeClass('hidden');
 	} else {
+		$('#' + id_num_factura_pag_compras).val("");
 		$('#' + id_num_factura_group_pag_compras).addClass('hidden');
 	}
 });
@@ -119,7 +127,8 @@ $('#' + id_solped_ddl_pag_compras).change(function(){
     option.style = "display:none";
     option.text = option.value = "";
     select.appendChild(option);
-    firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_pag_compras + " option:selected").val() + "/procesos/" + $('#' + id_solped_ddl_pag_compras + " option:selected").val() + "/odecs").once('value').then(function(snapshot){
+    var solp = solpeds[$('#' + id_solped_ddl_pag_compras + " option:selected").val()];
+    firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_pag_compras + " option:selected").val() + "/procesos/" + solp.path + "/contrato_compras/solpeds/" + solp.solped + "/odecs").once('value').then(function(snapshot){
     	snapshot.forEach(function(odecSnap){
     		var odec = odecSnap.val();
 	    	var option2 = document.createElement('OPTION');
@@ -136,9 +145,85 @@ $('#' + id_comprobante_file_pag_compras).on("change", function(event){
 });
 
 $('#' + id_acutalizar_button_pag_compras).click(function(){
-	//Subir pago a su OdeC
-	//añadir valores a kaizen
-	//Si tipo es devolucion o nota de credito entonces se resta tanto en:
-	//la odec (sumar como pago pero como es tipo queda claro que es negativo?)
-	//como en kaizen-odec (y pag?)
+	if(fileSeleccionado == "" || (!$('#' + id_num_factura_group_pag_compras).hasClass('hidden') && $('#' + id_num_factura_pag_compras).val() == "") || $('#' + id_cantidad_pag_compras).val() == "" || $('#' + id_tipo_ddl_pag_compras + " option:selected").val() == ""){
+		alert("Llena todos los campos requeridos");
+	} else {
+		var solp = solpeds[$('#' + id_solped_ddl_pag_compras + " option:selected").val()];
+		var storageRef = firebase.storage().ref(rama_storage_obras + "/contratos/" + solp.contrato + "/" + solp.solped + "/odecs/" + $('#' + id_odec_ddl_pag_compras + " option:selected").val() + "/pagos/" + fileSeleccionado.name);
+	    var uploadTask = storageRef.put(fileSeleccionado);
+	    uploadTask.on('state_changed', function(snapshot){
+	        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+	        console.log('Upload is ' + progress + '% done');
+	        switch (snapshot.state) {
+	            case firebase.storage.TaskState.PAUSED: // or 'paused'
+	            console.log('Upload is paused');
+	            break;
+	            case firebase.storage.TaskState.RUNNING: // or 'running'
+	            console.log('Upload is running');
+	            break;
+	        }
+	    }, function(error) {
+	        // Handle unsuccessful uploads
+	    }, function() {
+	        // Handle successful uploads on complete
+	        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+	        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+	            console.log('File available at', downloadURL);
+				var pago = {
+			        cantidad: $('#' + id_cantidad_pag_compras).val(),
+			        tipo: $('#' + id_tipo_ddl_pag_compras + " option:selected").val(),
+			        no_factura: $('#' + id_num_factura_pag_compras).val(),
+			        notas: $('#' + id_notas_pag_compras).val(),
+			        pdf: downloadURL,
+				}
+				var query;
+				if(data[0] == "IQONO MEXICO"){
+					query = data[3].split("-")[0];
+				} else {
+					query = data[3].split("-").length > 1 ? data[3].split("-")[0] + "/subprocesos/" + data[3] : data[3];
+				}
+				firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_pag_compras + " option:selected").val() + "/procesos/" + solp.path + "/contrato_compras/solpeds/" + solp.solped + "/odecs/" + $('#' + id_odec_ddl_pag_compras + " option:selected").val() + "/pagos").push(pago);
+	            var negativo = 1;
+	            if(pago.tipo == "DE" || pago.tipo == "NC"){
+	            	negativo = -1;
+	            	//Restar a costo de odec
+	            }
+
+	            var cant = parseFloat($('#' + id_cantidad_pag_compras).val()) * negativo;
+	            var query_kaiz = "/kaizen/PRODUCCION/SUMINISTROS/PAG";
+	            var query_kaiz_odec = "/kaizen/PRODUCCION/SUMINISTROS/OdeC";
+	            var query_o = rama_bd_obras + $('#' + id_obra_ddl_pag_compras + " option:selected").val();
+	            sumaEnFirebase(query_o + query_kaiz, cant);
+	            if(negativo == -1){
+	            	sumaEnFirebase(query_o + query_kaiz_odec, cant);
+	            	sumaEnFirebase(query_o + "/procesos/" + solp.path + "/contrato_compras/solpeds/" + solp.solped + "/odecs/" + $('#' + id_odec_ddl_pag_compras + " option:selected").val() + "/costo", cant);
+	            }
+	            var split = solp.path.split("-");
+	            var query_p;
+	            var query_s = "";
+	            if(split.length > 1){
+	            	query_p = query_o + "/procesos/" + solp.path.split("/")[0];
+	            	query_s = query_p + solp.path;
+	            } else {
+	            	query_p = query_o + "/procesos/" + solp.path;
+	            	if($('#' + id_obra_ddl_pag_compras + " option:selected").val() == "IQONO MEXICO"){
+	            		query_s = query_p + "/subprocesos/" + solp.subproceso;
+	            	}
+	            }
+	            if(query_s != ""){
+	            	sumaEnFirebase(query_s + query_kaiz, cant);
+	            	if(negativo == -1){
+	            		sumaEnFirebase(query_s + query_kaiz_odec, cant);
+	            	}
+	            }
+	            sumaEnFirebase(query_p + query_kaiz, cant);
+	            if(negativo == -1){
+	            	sumaEnFirebase(query_p + query_kaiz_odec, cant);
+	            }
+
+	            alert("Actualización exitosa");
+	            calculaKaizen($('#' + id_obra_ddl_pag_compras + " option:selected").val(),"global");
+	        });
+	    });
+	}
 });

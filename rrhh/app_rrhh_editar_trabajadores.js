@@ -43,9 +43,11 @@ $('#' + id_tab_editarTrabajadores).click(function(){
 
 function loadTablaTrabajadores(){
 	var datos_trabajadores = [];
-	firebase.database().ref(rama_bd_trabajadores).on("child_added",function(snapshot){
-		var trabajador = snapshot.val();
-		datos_trabajadores.push([trabajador.id_trabajador, trabajador.nombre, trabajador.fecha_antiguedad, trabajador.puesto, trabajador.sueldo_base, trabajador.jefe, trabajador.especialidad, trabajador.activo, trabajador.clave_pagadora, trabajador.claves.RFC, trabajador.claves.IMSS, trabajador.claves.CURP, trabajador.info_personal.fecha_nacimiento, trabajador.info_personal.estado_civil, trabajador.info_personal.sexo, trabajador.info_personal.domicilio, trabajador.datos_bancarios.banco, trabajador.datos_bancarios.cuenta, trabajador.datos_bancarios.clabe, trabajador.tallas.camisa, trabajador.tallas.pantalon, trabajador.tallas.zapatos]);
+	firebase.database().ref(rama_bd_trabajadores).once("value").then(function(snapshot){
+		snapshot.forEach(function(childSnap){
+			var trabajador = childSnap.val();
+			datos_trabajadores.push([trabajador.id_trabajador, trabajador.nombre, trabajador.fecha_antiguedad, trabajador.puesto, trabajador.sueldo_base, trabajador.jefe, trabajador.especialidad, trabajador.activo, trabajador.clave_pagadora, trabajador.claves.RFC, trabajador.claves.IMSS, trabajador.claves.CURP, trabajador.info_personal.fecha_nacimiento, trabajador.info_personal.estado_civil, trabajador.info_personal.sexo, trabajador.info_personal.domicilio, trabajador.datos_bancarios.banco, trabajador.datos_bancarios.cuenta, trabajador.datos_bancarios.clabe, trabajador.tallas.camisa, trabajador.tallas.pantalon, trabajador.tallas.zapatos]);
+		});
 		var tabla_trabajadores = $('#'+ id_datatable_editarTrabajadores).DataTable({
             destroy: true,
 			data: datos_trabajadores,
@@ -84,6 +86,7 @@ function loadTablaTrabajadores(){
 };
 
 function editar_trabajador(tbody, table){
+	//Cargar ddls con valores de listas (estan en app trabajador)
 	$(tbody).on("click", "button.editar",function(){
 		var data = table.row($(this).parents("tr")).data();
 		if(data){
