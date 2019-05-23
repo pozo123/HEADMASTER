@@ -344,7 +344,7 @@ $('#' + id_button_generar_reporte_obras).click(function() {
 					var dataObra = {
 						datasets: [{
 							data: datos_pptos[i],
-							backgroundColor: colorsO
+							backgroundColor: colors
 						}],
 						labels: labels_pptos[i]
 					}
