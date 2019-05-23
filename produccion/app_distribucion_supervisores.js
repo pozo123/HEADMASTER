@@ -9,7 +9,7 @@ var tab_distribucionSupervisores = "tabDistSuper";
 var rama_bd_obras_magico = "obras";
 var rama_bd_personal = "personal";
 
-$('#' + tab_distribucionSupervisores).click(function{
+$('#' + tab_distribucionSupervisores).click(function(){
   $('#' + id_supervisores_ddl_distribucionSupervisores).empty();
   var select = document.getElementById(id_supervisores_ddl_distribucionSupervisores);
   var option = document.createElement('option');
@@ -88,7 +88,7 @@ $('#' + id_registrar_button_distribucionSupervisores).click(function(){
     			pda: pistaDeAuditoria(),
     		}
     		var dia = getWeek(new Date().getTime());
-    		firebase.database().ref(rama_bd_colaboradores_prod + "/" + $('#' + id_supervisores_ddl_distribucionSupervisores " option:selected").val() + "/nomina/" + dia[1] + "/" + dia[0]).set(pago);
+    		firebase.database().ref(rama_bd_colaboradores_prod + "/" + $('#' + id_supervisores_ddl_distribucionSupervisores + " option:selected").val() + "/nomina/" + dia[1] + "/" + dia[0]).set(pago);
 	    }
 	}
 });
