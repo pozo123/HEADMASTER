@@ -76,22 +76,71 @@ function loadTablaTrabajadores(){
 				{title: "Camisa"},
 				{title: "Pantalon"},
 				{title: "Zapatos"},	
-				{defaultContent: "<button type='button' class='editar btn btn-primary' data-toggle='modal' data-target='#excModalEditar'><i class='fas fa-edit'></i></button> <button type='button' class='editar btn btn-danger'><i class='fas fa-trash'></i></button>"},
+				{defaultContent: "<button type='button' class='editar btn btn-primary' data-toggle='modal' data-target='#" + id_modal_editarTrabajadores + "'><i class='fas fa-edit'>"},//</i></button> <button type='button' class='editar btn btn-danger'><i class='fas fa-trash'></i></button>"},
 			],
             language: idioma_espanol,
 		});
 		editar_trabajador("#" + id_datatable_editarTrabajadores + " tbody", tabla_trabajadores);
-		eliminar_trabajador("#" + id_datatable_editarTrabajadores + " tbody", tabla_trabajadores);
+		//eliminar_trabajador("#" + id_datatable_editarTrabajadores + " tbody", tabla_trabajadores);
 	});
 };
 
 function editar_trabajador(tbody, table){
-	//Cargar ddls con valores de listas (estan en app trabajador)
+	var options_esp = ["IE", "IHS", "GRL"]; 
+	var options_puesto = ["Almacenista", "Ayudante", "Empacadora", "Encargado", "Medio Oficial", "Oficial", "Segurista"]; 
+	var options_edoc = ["Casado/a", "Soltero/a", "Viudo/a", "Union Libre", "Divorciado/a"]; 
+	$('#' + id_especialidad_ddl_editarTrabajadores).empty();
+	$('#' + id_puesto_ddl_editarTrabajadores).empty();
+	$('#' + id_estado_civil_ddl_editarTrabajadores).empty();
 	$(tbody).on("click", "button.editar",function(){
 		var data = table.row($(this).parents("tr")).data();
-		if(data){
-			firebase.database().ref(rama_bd_trabajadores + "/" + data[0]).once('child_added').then(function(snapshot){
+			if(data){
+				jQuery('#' + id_fecha_nacimiento_editarTrabajadores).datetimepicker(
+			        {timepicker:false, weeks:true,format:'m.d.Y'}
+				);
+				var select_esp = document.getElementById(id_especialidad_ddl_editarTrabajadores); 
+				var select_puesto = document.getElementById(id_puesto_ddl_editarTrabajadores); 
+				var select_edoc = document.getElementById(id_estado_civil_ddl_editarTrabajadores); 
+
+				var option4 = document.createElement('option');
+				option4.style = "display:none";
+				option4.text = option4.value = "";
+				select_esp.appendChild(option4);
+				var option5 = document.createElement('option');
+				option5.style = "display:none";
+				option5.text = option5.value = "";
+				select_puesto.appendChild(option5);
+				var option6 = document.createElement('option');
+				option6.style = "display:none";
+				option6.text = option6.value = "";
+				select_edoc.appendChild(option6);
+				for(var i=0; i<options_esp.length; i++){
+					var opt = options_esp[i];
+				    var el = document.createElement("option");
+				    el.textContent = opt;
+				    el.value = opt;
+				    select_esp.appendChild(el);
+				}
+
+				for(var i=0; i<options_puesto.length; i++){
+				    var opt = options_puesto[i];
+				    var el = document.createElement("option");
+				    el.textContent = opt;
+				    el.value = opt;
+				    select_puesto.appendChild(el);
+				}
+
+				for(var i=0; i<options_edoc.length; i++){
+				    var opt = options_edoc[i];
+				    var el = document.createElement("option");
+				    el.textContent = opt;
+				    el.value = opt;
+				    select_edoc.appendChild(el);
+				}
+			firebase.database().ref(rama_bd_trabajadores + "/" + data[0]).once('value').then(function(snapshot){
 				var trabajador = snapshot.val();
+				console.log(trabajador);
+				console.log(data[0]);
 				var ddl_puesto = document.getElementById(id_puesto_ddl_editarTrabajadores);
 				for(var i = 0; i<ddl_puesto.length;i++){
 	                if(ddl_puesto[i].text == trabajador.puesto){
@@ -165,7 +214,6 @@ $('#' + id_editar_button_editarTrabajadores).click(function(){
 			jefe: $('#' + id_jefe_editarTrabajadores).val(),
 			id_trabajador: trabajador_seleccionado,
 			fecha_antiguedad: trab.fecha_antiguedad,
-			obra_asignada: trab.obra_asignada,
 			especialidad: $('#' + id_especialidad_ddl_editarTrabajadores + " option:selected").val(),
 			activo: document.getElementById(id_activo_cb_editarTrabajadores).checked,
 			clave_pagadora: $('#' + id_clave_pagadora_editarTrabajadores).val(),
@@ -190,7 +238,6 @@ $('#' + id_editar_button_editarTrabajadores).click(function(){
 				pantalon: $('#' + id_pantalon_editarTrabajadores).val(),
 				zapatos: $('#' + id_zapatos_editarTrabajadores).val(),
 			},
-			nomina: trab.nomina,
 		}
 		firebase.database().ref(rama_bd_trabajadores + "/" + trabajador_seleccionado).update(trabajador);
 		loadTablaTrabajadores();

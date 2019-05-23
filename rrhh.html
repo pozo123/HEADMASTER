@@ -101,8 +101,8 @@
                                         <select id="especialidadDdlEditarTrabajadores" class="form-control"></select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="activoCbEditarTrabajadores">Activo</label>
-                                        <input type="checkbox" class="custom-control-input" id="activoCbEditarTrabajadores">
+                                        <label for="activoCbEditarTrabajadores" class="form-check-label">Activo</label>
+                                        <input type="checkbox" class="custom-checkbox" id="activoCbEditarTrabajadores">
                                     </div>
                                     <div class="form-group">
                                         <label for="clavePagadoraEditarTrabajadores">Clave Pagadora</label>
@@ -120,7 +120,10 @@
                                         <label for="CURPEditarTrabajadores">CURP</label>
                                         <input type="text" name="" id="CURPEditarTrabajadores" class="form-control" placeholder="CURP">
                                     </div>
-                                    "fechaNacimientoEditarTrabajadores";
+                                    <div class="form-group">
+                                        <label for="fechaNacimientoEditarTrabajadores">Fecha de Nacimiento</label>
+                                        <input class="form-control" type="text" id="fechaNacimientoEditarTrabajadores" placeholder="" readonly="readonly">
+                                    </div>
                                     <div class="form-group">
                                         <label for="estadoCivilDdlEditarTrabajadores">Estado Civil</label>
                                         <select id="estadoCivilDdlEditarTrabajadores" class="form-control"></select>
@@ -742,11 +745,22 @@
                                             <label for="supervisoresDdlDistSuper">Supervisor:</label>
                                             <select id="supervisoresDdlDistSuper" class="form-control"></select>
                                         </div>
+                                        <div class="form-group">
+                                            <label for="yearDdlDistSuper">Año:</label>
+                                            <select id="yearDdlDistSuper" class="form-control"></select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="weekDdlDistSuper">Semana:</label>
+                                            <select id="weekDdlDistSuper" class="form-control"></select>
+                                        </div>
 
                                         <div class="form-group">
                                             <label for="cantidadPagadoraDistSuper">Cantidad pagada:</label>
                                             <input type="text" name="" id="cantidadPagadoraDistSuper" class="form-control" placeholder="Cuenta Bancaria">
                                         </div>
+                                        <div class="form-group">
+                                            <div id="divObrasDistSuper"></div>
+                                        </div>   
                                         <div class="row">
                                             <button id="buttonDistSuper" type="button" class="btn btn-outline-success btn-block">Distribuir</button>
                                         </div>
@@ -755,9 +769,6 @@
                                 </div>
                                 <div class="col-lg-3"></div>
 
-                                <div class="container-fluid">
-                                    <div id="divObrasDistSuper"></div>
-                                </div>   
                             </div>
                         </div>
                     </div>

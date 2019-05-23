@@ -349,7 +349,7 @@ function cargaRenglonHorasExtra(trabajador,procesos,nuevo,fecha_in,horas_in,proc
     if(!nuevo){
         var date = new Date(fecha_in);
         $("#" + fecha.id).val((date.getMonth() + 1) + "." + date.getDate() + "." + date.getFullYear());
-        $('#' + horas.id).val((parseFloat(horas_in) / parseFloat(trabajador.sueldo_base)).toFixed(2));
+        $('#' + horas.id).val((parseFloat(horas_in) * 24 / parseFloat(trabajador.sueldo_base)).toFixed(2));
         for(var i = 0; i<proc.length;i++){
             if(proc[i].text == proc_in){
                 proc.selectedIndex = i;

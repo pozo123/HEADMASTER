@@ -100,7 +100,7 @@ $('#' + id_proceso_ddl_procesos).change(function(){
 });
 
 $('#' + id_agregar_procesos).click(function() {
-    if($('#' + id_nombre_procesos).val() ||$('#' + id_fecha_inicio_procesos).val() === "" || $('#' + id_fecha_final_procesos).val() === "" || (($("#" + id_subproceso_checkbox_proceso).checked == true) && ($('#' + id_categoria_ddl_procesos + " option:selected").val() === "" || $('#' + id_proceso_ddl_procesos + " option:selected").val() === "")) || $('#' + id_obra_ddl_procesos + " option:selected").val() === ""){
+    if($('#' + id_nombre_procesos).val() == "" ||$('#' + id_fecha_inicio_procesos).val() === "" || $('#' + id_fecha_final_procesos).val() === "" || (($("#" + id_subproceso_checkbox_proceso).checked == true) && ($('#' + id_categoria_ddl_procesos + " option:selected").val() === "" || $('#' + id_proceso_ddl_procesos + " option:selected").val() === "")) || $('#' + id_obra_ddl_procesos + " option:selected").val() === ""){
         alert("Llena todos los campos requeridos");
     } else {
         var f_i = new Date($('#' + id_fecha_inicio_procesos).val()).getTime();

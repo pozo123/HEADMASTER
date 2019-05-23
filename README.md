@@ -24,10 +24,7 @@ REESTRUCTURA_BD:
   - Poner nota en registro si creden == 2
   - generador de pptos (solo pdf) -> contratos de obra
   - app_funciones algo truena al calcular profits
-
-  - HE cargar horas anteriores los está dividiendo entre sueldo. Revisar si viene de rama_Bd_nomina o rama_bd_trabajadores
-  - Editar trabajadores
-  - Supervisores -> pago y distribución
+  - Supervisores -> gestionar
 
   - Cierre maestro:
      - checar asincronía
