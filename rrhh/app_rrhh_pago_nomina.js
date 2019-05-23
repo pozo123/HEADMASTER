@@ -38,6 +38,7 @@ $('#' + id_year_ddl_pago_nomina).change(function(){
 	$('#' + id_datatable_pago_nomina).empty();
     $('#' + id_datatable_pago_nomina).addClass('hidden');
     $('#' + id_table_pago_nomina).empty();
+    $('#' + id_semana_ddl_pago_nomina).empty();
 	loadSemanasPagoNomina($('#' + id_year_ddl_pago_nomina + " option:selected").val());
 });
 

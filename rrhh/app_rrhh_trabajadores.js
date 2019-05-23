@@ -31,7 +31,7 @@ var id_groupId_trabajador = "groupIdTrabajador"
 var id_registrar_button_trabajador = "registrarTrabajador";//button
 
 var rama_bd_trabajadores = "rrhh/trabajadores";
-var rama_bd_destajistas = "rrhh/destajistas";
+var rama_bd_destajistas = "produccion/destajistas";
 var rama_bd_obras_magico = "obras";
 
 var id_tab_trabajadores = "tabTrabajadores";
@@ -60,8 +60,8 @@ $('#' + id_tab_trabajadores).click(function(){
 	var select_edoc = document.getElementById(id_estado_civil_ddl_trabajador); 
 	var select_dest = document.getElementById(id_destajista_ddl_trabajador); 
 
-	var options_esp = ["ALM", "EMP", "IE", "IHS", "OE", "RTC", "UHS"]; 
-	var options_puesto = ["Almacenista", "Ayudante", "Ayudante General", "Empacadora", "Encargado", "Medio Oficial", "Oficial", "Supervisor", "Supervisor de Obra"]; 
+	var options_esp = ["IE", "IHS", "GRL"]; 
+	var options_puesto = ["Almacenista", "Ayudante", "Empacadora", "Encargado", "Medio Oficial", "Oficial", "Segurista"]; 
 	var options_edoc = ["Casado/a", "Soltero/a", "Viudo/a", "Union Libre", "Divorciado/a"]; 
 	
 	var option3 = document.createElement('option');

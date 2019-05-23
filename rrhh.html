@@ -67,6 +67,111 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="modalEditarTrabajadores" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Editar Trabajador</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form onsubmit="return false;">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <label for="nombreEditarTrabajadores">Nombre</label>
+                                        <input type="text" name="" id="nombreEditarTrabajadores" class="form-control" placeholder="Nombre">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="puestoDdlEditarTrabajadores">Puesto</label>
+                                        <select id="puestoDdlEditarTrabajadores" class="form-control"></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sueldoBaseEditarTrabajadores">Sueldo Base</label>
+                                        <input type="text" name="" id="sueldoBaseEditarTrabajadores" class="form-control" placeholder="Sueldo base">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="jefeEditarTrabajadores">Jefe</label>
+                                        <input type="text" name="" id="jefeEditarTrabajadores" class="form-control" placeholder="Jefe">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="especialidadDdlEditarTrabajadores">Especialidad</label>
+                                        <select id="especialidadDdlEditarTrabajadores" class="form-control"></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="activoCbEditarTrabajadores">Activo</label>
+                                        <input type="checkbox" class="custom-control-input" id="activoCbEditarTrabajadores">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="clavePagadoraEditarTrabajadores">Clave Pagadora</label>
+                                        <input type="text" name="" id="clavePagadoraEditarTrabajadores" class="form-control" placeholder="Clave pagadora">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="RFCEditarTrabajadores">RFC</label>
+                                        <input type="text" name="" id="RFCEditarTrabajadores" class="form-control" placeholder="RFC">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="IMSSEditarTrabajadores">IMSS</label>
+                                        <input type="text" name="" id="IMSSEditarTrabajadores" class="form-control" placeholder="IMSS">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="CURPEditarTrabajadores">CURP</label>
+                                        <input type="text" name="" id="CURPEditarTrabajadores" class="form-control" placeholder="CURP">
+                                    </div>
+                                    "fechaNacimientoEditarTrabajadores";
+                                    <div class="form-group">
+                                        <label for="estadoCivilDdlEditarTrabajadores">Estado Civil</label>
+                                        <select id="estadoCivilDdlEditarTrabajadores" class="form-control"></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sexoEditarTrabajadores">Sexo</label>
+                                        <input type="text" name="" id="sexoEditarTrabajadores" class="form-control" placeholder="Sexo">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="domicilioEditarTrabajadores">Domicilio</label>
+                                        <input type="text" name="" id="domicilioEditarTrabajadores" class="form-control" placeholder="Domicilio">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="bancoEditarTrabajadores">Banco</label>
+                                        <input type="text" name="" id="bancoEditarTrabajadores" class="form-control" placeholder="Banco">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cuentaEditarTrabajadores">Cuenta</label>
+                                        <input type="text" name="" id="cuentaEditarTrabajadores" class="form-control" placeholder="Cuenta">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="clabeEditarTrabajadores">CLABE</label>
+                                        <input type="text" name="" id="clabeEditarTrabajadores" class="form-control" placeholder="CLABE">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="camisaEditarTrabajadores">Camisa</label>
+                                        <input type="text" name="" id="camisaEditarTrabajadores" class="form-control" placeholder="Camisa">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pantalonEditarTrabajadores">Pantalon</label>
+                                        <input type="text" name="" id="pantalonEditarTrabajadores" class="form-control" placeholder="Pantalon">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="zapatosEditarTrabajadores">Zapatos</label>
+                                        <input type="text" name="" id="zapatosEditarTrabajadores" class="form-control" placeholder="Zapatos">
+                                    </div>
+                                </div>
+                            <div class="form-row align-items-center">
+                                <div class="col-md-6 col-sm-12">
+                                    <button id="editarTrabajadorButton" type="submit" class="btn btn-outline-danger btn-block">Editar</button>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <button id="" data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cancelar</button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="wrapper">
             <!-- Sidebar -->
             <nav id="sidebar">
@@ -131,6 +236,7 @@
                             <li class="tab" id="tabTrabajadores"><a href="#" onclick="openTabs('tabTrabajadores','altaTrabajadores')">Alta de Trabajadores</a></li>
                             <li class="tab" id="tabDestajistas"><a href="#" onclick="openTabs('tabDestajistas','altaDestajistas')">Alta de Destajistas</a></li>
                             <li class="tab" id="tabImportarTrabajadores"><a href="#" onclick="openTabs('tabImportarTrabajadores','importarTrabajadores')">Importar Trabajadores</a></li>
+                            <li class="tab" id="tabEditarTrabajadores"><a href="#" onclick="openTabs('tabEditarTrabajadores','editarTrabajadores')">Editar Trabajadores</a></li>
                         </ul>
                     </li>
 
@@ -408,7 +514,17 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div id= "editarTrabajadores" class="tabcontent hidden">
+                            <div class="container-fluid">
+                                <h1>Editar Trabajadores</h1>
+                                <div class="row mt-3">
+                                    <div class="container-fluid">
+                                        <table id="dataTableEditarTrabajadores" class="display" style="width:100%">
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div id="importarTrabajadores" class="tabcontent hidden">
                             <h1>Importar Trabajadores</h1>
                             <p>Pestaña para dar de alta trabajadores</p>
@@ -419,7 +535,7 @@
                                         <form action="#" onsubmit="return false;">
 
                                             <div class="form-group">
-                                                <label for="DDL_obra">Selecciona archivo de Excel en el formato deseado</label>
+                                                <label for="importarTrabajadoresLabelFile">Selecciona archivo de Excel en el formato deseado</label>
                                                 <div class="custom-file">
                                                     <input type="file" class="custom-file-input" id="importarTrabajadoresFile" accept=".xlsx, .xls, .csv">
                                                     <label class = "custom-file-label" id="importarTrabajadoresLabelFile"> Archivo no seleccionado</label>
@@ -685,6 +801,7 @@
 <script src="catalogos/app_catalogo_obras.js"></script>
 <script src="produccion/app_destajista.js"></script>
 <script src="rrhh/app_asistencia.js"></script>
+<script src="rrhh/app_rrhh_editar_trabajadores.js"></script>
 <script src="rrhh/app_rrhh_horas_extra.js"></script>
 <script src="rrhh/app_rrhh_importar_trabajadores.js"></script>
 <script src="rrhh/app_rrhh_pagos_diversos.js"></script>

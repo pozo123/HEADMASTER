@@ -85,7 +85,7 @@ function editar_atn(tbody, table){
 }
 
 function eliminar_atn(tbody, table){
-    $(tbody).on("click", "button.eliminar",function(){//button.eliminar? Aqui
+    $(tbody).on("click", "button.eliminar",function(){
         var data = table.row($(this).parents("tr")).data();
         if(data){
             console.log(data[1]);

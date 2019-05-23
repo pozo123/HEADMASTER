@@ -195,6 +195,7 @@ $('#' + id_actualizar_valor_odec).click(function(){
 		}
 		firebase.database().ref(rama_bd_obras + "/" + query + "/contrato_compras/solpeds/" + $('#' + id_solped_ddl_odec + " option:selected").val() + "/odecs/" + $('#' + id_clave_odec).val()).set(odec);
 		alert("Actualizado");
+		loadDataTableOdeC();
 		$('#' + id_proc_ddl_odec).empty();
 	    $('#' + id_group_proc_odec).addClass('hidden');
 	    $('#' + id_clave_odec).val("");
