@@ -13,14 +13,14 @@ var id_fecha_pago_kaizen = "fechaPagoKaizen";
 
 var id_guardar_button_pago_kaizen = "guardarButtonPagoKaizen";
 
-var tab_pago_kaizeno = "tabPagoKaizen";
+var tab_pago_kaizen = "tabPagoKaizen";
 
 var rama_bd_flujos = "administracion/flujos";
 var rama_bd_obras_magico = "obras";
 
 var caso;
 
-$('#' + tab_pag_suministros_kaizen).click(function(){
+$('#' + tab_pago_kaizen).click(function(){
 	$('#' + id_obra_ddl_pago_kaizen).empty();
     $('#' + id_proc_ddl_pago_kaizen).empty();
     $('#' + id_subp_ddl_pago_kaizen).empty();
@@ -127,7 +127,7 @@ $('#' + id_guardar_button_pago_kaizen).click(function(){
 			folio: $('#' + id_folio_pago_kaizen).val(),
 		}
 		var query = $('#' + id_obra_ddl_pago_kaizen + " option:selected").val();
-		firebase.database.ref(rama_bd_flujos + "/" + query).once('value').then(function(snapshot){
+		firebase.database().ref(rama_bd_flujos + "/" + query).once('value').then(function(snapshot){
 			var nuevo_total_obra = monto;
 			if(snapshot.child("total").exists()){
 				nuevo_total_obra += snapshot.child("total").val();

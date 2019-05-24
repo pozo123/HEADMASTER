@@ -372,7 +372,7 @@
                                     </div>  
                                     <div class= "col-md-6" id = "">
                                         <input type="radio" name="status_obra" id="terminadaStatusObraRbRegistroAdmin" aria-label="">
-                                        <label>Termin</label>
+                                        <label>Terminar</label>
                                     </div>        
                                 </div>
     
@@ -438,6 +438,12 @@
                             <li class="tab" id="tabCatalogoClientes"><a href="#" onclick="openTabs('tabCatalogoClientes','clientesCatalogo')">Clientes</a></li>
                             <li class="tab" id="tabCatalogoObras"><a href="#" onclick="openTabs('tabCatalogoObras','obrasCatalogo')">Obras</a></li>
                             <li class="tab" id="tabCatalogoPersonal"><a href="#" onclick="openTabs('tabCatalogoPersonal','personalCatalogo')">Personal</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#pageSubmenu8" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pagos por parte del cliente</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu8">
+                            <li class="tab" id="tabPagoKaizen"><a href="#" onclick="openTabs('tabPagoKaizen','pagoKaizen')">Pagos Kaizen</a></li>
                         </ul>
                     </li>
                     <li class="tab"><a href="#" data-toggle="modal" data-target="#contraseñaModal">Cambiar contraseña</a></li>
@@ -1030,7 +1036,7 @@
                                         </div>
                                     </div>
                                     </div>
-                                </div>
+                                
                          </div>
 
                         <!-- Clientes -->
@@ -1199,9 +1205,6 @@
                             <div class="container-fluid">
                                 <form action="#" onsubmit="return false;">
                                     <div class="form-row align-items-center">
-                                        <div class = "col-lg-3">
-
-                                        </div>
                                         <div class = "col-lg-6">
                                                 <div class="form-group">
                                                     <label for="colaboradorDdlAreas">Selecciona el Colaborador</label>
@@ -1236,13 +1239,97 @@
 
                                                 <button id="guardarAreas" type="button" class="btn btn-outline-success btn-block">Actualizar</button>
                                         </div>
-                                        <div class = "col-lg-3">
-
-                                        </div>
+                                        <div class = "col-lg-3"></div>
                                     </div>
                                 </form>
                             </div>
                         </div>
+                        <!-- Pagos Kaizen-->
+
+                        <div id="pagoKaizen" class="tabcontent hidden">
+                            <h1>Pagos</h1>
+                            <p> Pagos por parte del cliente</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">
+                                            <div class="form-group">
+                                                <label for="obraDdlPagoKaizen">Obra:</label>
+                                                <select id ="obraDdlPagoKaizen" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group hidden" id="procGroupPagoKaizen">
+                                                <label for="procDdlPagoKaizen">Proceso:</label>
+                                                <select id ="procDdlPagoKaizen" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group hidden" id="subpGroupPagoKaizen">
+                                                <label for="subpDdlPagoKaizen">Subroceso:</label>
+                                                <select id ="subpDdlPagoKaizen" class="form-control"></select>
+                                            </div>
+                
+                                            <div class="form-group">
+                                                <label for="montoPagoKaizen" class="col-form-label">Monto:</label>
+                                                <input type="text" class="form-control" id="montoPagoKaizen">
+                                            </div>
+                
+                                            <div class="form-group">
+                                                <label for="folioPagoKaizen" class="col-form-label">Folio:</label>
+                                                <input type="text" class="form-control" id="folioPagoKaizen">
+                                            </div>
+                
+                                            <div class="form-group">
+                                                <label for="">Recibo de pago / Factura</label>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="tipo" id="tipoReciboRBPagoKaizen" value="option1">
+                                                    <label class="form-check-label" for="tipoReciboRBPagoKaizen">Recibo</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="tipo" id="tipoFacturaRBPagoKaizen" value="option2">
+                                                    <label class="form-check-label" for="tipoFacturaRBPagoKaizen">Factura</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="">Estimación / Anticipo</label>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="formato" id="formatoEstRBPagoKaizen" value="option1">
+                                                    <label class="form-check-label" for="formatoEstRBPagoKaizen">Estimación</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="formato" id="formatoAntRBPagoKaizen" value="option2">
+                                                    <label class="form-check-label" for="formatoAntRBPagoKaizen">Anticipo:</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="fechaPagoKaizen">Fecha del pago</label>
+                                                <input class="form-control" type="text" id="fechaPagoKaizen" placeholder="" readonly="readonly">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="">Selecciona archivo evidencia del pago realizado</label>
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="" accept="image/*">
+                                                    <label class = "custom-file-label" id="">Archivo no seleccionado</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <button id="guardarButtonPagoKaizen" type="button" class="btn btn-outline-success btn-lg btn-block">Guardar Pago</button>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <button id="" type="reset" class="btn btn-outline-danger btn-lg btn-block">Borrar Todo</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-lg-3"></div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Reporte-->
                         <div id="reporte" class="tabcontent hidden">
                             <h1>Generador de reportes</h1><br/>
@@ -1422,6 +1509,7 @@
 <script src="administracion/app_procesos.js"></script>
 <script src="administracion/app_editar_proceso.js"></script>
 <script src="administracion/app_admon_reporte_diario.js"></script>
+<script src="administracion/app_admon_pago_kaizen.js"></script>
 <!--<script src="administracion/app_cuenta_cc.js"></script> -->
 <script src="catalogos/app_catalogo_atn.js"></script>
 <script src="catalogos/app_catalogo_categorias.js"></script>

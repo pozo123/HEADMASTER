@@ -177,7 +177,6 @@ function getRegScoreboard(ingeSnap, div_cards,styles, grupal){
                 firebase.database().ref(rama_bd_obras + "/" + reg.obra + "/procesos/" + proc_query + "/SCORE").once('value').then(function(snapshot){
                     var horas_programadas = snapshot.child("total_prog").exists() ? parseFloat(snapshot.child("total_prog").val()) : 0;
                     var horas_trabajadas = snapshot.child("total_trabajado").exists() ? parseFloat(snapshot.child("total_trabajado").val()) : 0;
-                    console.log(horas)
                     var horas_prog_ind = snapshot.child("inges/" + ingeSnap.key + "/horas_programadas").exists() ? parseFloat(snapshot.child("inges/" + ingeSnap.key + "/horas_programadas").val()) : 0;
                     var horas_trab_ind = snapshot.child("inges/" + ingeSnap.key + "/horas_trabajadas").exists() ? parseFloat(snapshot.child("inges/" + ingeSnap.key + "/horas_trabajadas").val()) : 0;
 
