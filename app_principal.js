@@ -22,6 +22,8 @@ $(document).ready(function() {
         version = snapshot.child("version").val();
         verifyVersion();
     });
+
+
 });
 
 firebase.auth().onAuthStateChanged(user => {
@@ -32,9 +34,7 @@ firebase.auth().onAuthStateChanged(user => {
         } else {
             $("#tabRegistrosAdmon").addClass('hidden');
         }
-
         firebase.database().ref(rama_bd_personal).orderByChild('uid').equalTo(user.uid).once("child_added", function (snapshot) {
-
             var user_personal = snapshot.val();
             areas_usuario_global = user_personal.areas;
             creden_usuario_global = user_personal.credenciales;
@@ -42,23 +42,20 @@ firebase.auth().onAuthStateChanged(user => {
                 var imagen = document.getElementById("img_foto");
                 imagen.src = user_personal.foto.url;
             }
-
             // Método para revisar que puedes entrar al html correspondiente, si no te regresa al index
             var area_bool = false;
             var url = document.URL.split("/");
-
             for(key in areas_usuario_global){
-                if(areas_usuario_global[key] && (url[url.length - 1] == key + ".html")){
+                if(areas_usuario_global[key] && ((url[url.length - 1] == key + ".html") || (url[url.length - 1] == key + ".html#"))){
                     area_bool = true;
                 }
             }
-
+            console.log(area_bool)
             if(!area_bool){
+                alert("es con refresh?")
                 window.location.reload("index.html");
                 window.location.assign("index.html");
             }
-
-
             // Dropdown Menu para cambiar entre áreas
 
             if(Object.keys(areas_usuario_global).length > 1){
