@@ -1,5 +1,5 @@
 var id_obras_ddl_supervisores = "obraDdlSupervisores";
-//var id_supervisores_ddl_supervisores = "supervisoresDdlSupervisores";
+var id_supervisores_ddl_supervisores = "supervisoresDdlSupervisores";
 var id_div_obra_supervisores = "divObraSupervisores";
 var id_div_supervisor_supervisores = "divSupervisorSupervisores";
 
@@ -29,7 +29,7 @@ $('#tabGestionarSup').click(function(){
     var select2 = document.getElementById(id_obras_ddl_supervisores) ;
     var option3 = document.createElement('option');
     option3.style = "display:none";
-    option3.text = option.value = "";
+    option3.text = option3.value = "";
     select2.appendChild(option3);
 
     firebase.database().ref(rama_bd_obras_magico).orderByChild('nombre').on('child_added',function(snapshot){
@@ -44,31 +44,44 @@ $('#tabGestionarSup').click(function(){
 });
 
 $('#' + id_obras_ddl_supervisores).change(function(){
+    loadSupsGestSup();
+});
+
+function loadSupsGestSup(){
     var div = document.getElementById(id_div_obra_supervisores);
     //document.getElementById(id_supervisores_ddl_supervisores).selectedIndex = 0;
+    $('#' + id_supervisores_ddl_supervisores).empty();
     $('#' + id_div_obra_supervisores).empty();
     var nombre_obra = $('#' + id_obras_ddl_supervisores + " option:selected").val();
     firebase.database().ref(rama_bd_obras_magico + "/" + nombre_obra).once('value').then(function(snapshot){
         var obra = snapshot.val();
         snapshot.child("supervisor").forEach(function(childSnap){
-            var row = document.createElement('div');
-            var label = document.createElement('label');
-            label.innerHTML = childSnap.val().nombre;
-            var button = document.createElement('button');
-            button.id = childSnap.key;
-            button.innerHTML = "Eliminar";
-            button.click(function(){
-                var fal = false;
-                firebase.database().ref(rama_bd_obras_magico + "/" + obra.nombre + "/supervisor/" + this.id + "/activo").set(fal);
-            });
-            row.appendChild(label);
-            row.appendChild(button);
-            div.appendChild(row);
+            if(childSnap.child("activo").val()){
+                var row = document.createElement('div');
+                var col1 = document.createElement('div');
+                var col2 = document.createElement('div');
+                var label = document.createElement('label');
+                label.innerHTML = childSnap.val().nombre;
+                var button = document.createElement('button');
+                button.id = childSnap.key;
+                button.innerHTML = "Eliminar";
+                button.className = "btn btn-outline-danger";
+                button.onclick =function(){
+                    var fal = false;
+                    firebase.database().ref(rama_bd_obras_magico + "/" + obra.nombre + "/supervisor/" + this.id + "/activo").set(fal);
+                    alert("Eliminado");
+                    loadSupsGestSup();
+                };
+                col1.appendChild(label);
+                col2.appendChild(button);
+                row.appendChild(col1);
+                row.appendChild(col2);
+                div.appendChild(row);
+            }
         });
     });
 
-    var select = document.createElement('select');
-    select.id = "supParaObraDdl";
+    var select = document.getElementById(id_supervisores_ddl_supervisores);//document.createElement('select');
     var option = document.createElement('option');
     option.style = "display:none";
     option.text = option.value = "";
@@ -86,18 +99,21 @@ $('#' + id_obras_ddl_supervisores).change(function(){
 
     var buttonAdd = document.createElement('button');
     buttonAdd.innerHTML = "Agregar";
-    buttonAdd.click(function(){
-        var sup_uid = $('#supParaObraDdl option:selected').val();
+    buttonAdd.className = "btn btn-outline-success btn-block";
+    buttonAdd.onclick = function(){
+        var sup_uid = $('#' + id_supervisores_ddl_supervisores + ' option:selected').val();
         var sup = {
-            nombre: $('#supParaObraDdl option:selected').text(),
+            nombre: $('#' + id_supervisores_ddl_supervisores + ' option:selected').text(),
             activo: true,
         }
         firebase.database().ref(rama_bd_obras_magico + "/" + nombre_obra + "/supervisor/" + sup_uid).set(sup);
-    });
+        alert("Agregado");
+        loadSupsGestSup();
+    };
 
-    div.appendChild(select);
+    //div.appendChild(select);
     div.appendChild(buttonAdd);
-});
+};
 
 /*
 $('#' + id_supervisores_ddl_supervisores).change(function() {

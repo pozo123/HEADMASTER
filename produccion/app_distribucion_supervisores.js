@@ -14,23 +14,10 @@ var rama_bd_pagos_nomina = "rrhh/pagos_nomina"
 
 $('#' + tab_distribucionSupervisores).click(function(){
 	$('#' + id_supervisores_ddl_distribucionSupervisores).empty();
-	var select3 = document.getElementById(id_supervisores_ddl_distribucionSupervisores);
-	var option = document.createElement('option');
-	option.style = "display:none";
-	option.text = option.value = "";
-	select3.appendChild(option);
-
-	firebase.database().ref(rama_bd_personal).once('value').then(function(snapshot){
-		snapshot.forEach(function(perSnap){
-			var sup = perSnap.val();
-			if(perSnap.child("areas/produccion").val() && sup.activo){
-				var option2 = document.createElement('option');
-				option2.text = sup.nickname;
-				option2.value = sup.uid; 
-				select3.appendChild(option2);
-			}
-		});
-	});  
+	$('#' + id_year_ddl_distribucionSupervisores).empty();
+	$('#' + id_week_ddl_distribucionSupervisores).empty();
+	
+	loadSupervisoresDistSup();
 
 	var semana_actual = getWeek(new Date().getTime())[0];
 	var year_actual = getWeek(new Date().getTime())[1];
@@ -50,42 +37,100 @@ $('#' + tab_distribucionSupervisores).click(function(){
 	}
 });
 
+$('#' + id_year_ddl_distribucionSupervisores).change(function(){
+    $('#' + id_week_ddl_distribucionSupervisores).empty();
+    var select = document.getElementById(id_week_ddl_distribucionSupervisores);
+    var year = $('#' + id_year_ddl_distribucionSupervisores + " option:selected").val();
+    if(year < getWeek(new Date().getTime())[1]){
+        var ult_sem = getWeek(new Date(year,11,31).getTime())[0];
+        for(i=ult_sem;i>0;i--){
+            var option = document.createElement('option');
+            option.text = option.value = i;
+            select.appendChild(option);
+        }
+    } else {
+        for(i=getWeek(new Date().getTime())[0];i>0;i--){
+            var option = document.createElement('option');
+            option.text = option.value = i;
+            select.appendChild(option);
+        }
+    }
+    loadSupervisoresDistSup();
+});
+
+$('#' + id_week_ddl_distribucionSupervisores).change(function(){
+	loadSupervisoresDistSup();
+});
+
+function loadSupervisoresDistSup(){
+	$('#' + id_supervisores_ddl_distribucionSupervisores).empty();
+
+	var year = $('#' + id_year_ddl_distribucionSupervisores + " option:selected").val();
+	var week = $('#' + id_week_ddl_distribucionSupervisores + " option:selected").val();
+
+	var select3 = document.getElementById(id_supervisores_ddl_distribucionSupervisores);
+	var option = document.createElement('option');
+	option.style = "display:none";
+	option.text = option.value = "";
+	select3.appendChild(option);
+
+	firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week).once('value').then(function(pnSnap){
+		firebase.database().ref(rama_bd_personal).once('value').then(function(snapshot){
+			snapshot.forEach(function(perSnap){
+				var sup = perSnap.val();
+				if(perSnap.child("areas/produccion").val() && sup.activo && sup.credenciales == 3 && !perSnap.child("areas/administracion").val()){
+					var existe = false;
+					pnSnap.forEach(function(obraSnap){//Tambien entran totales, pero no hay bronca
+						if(obraSnap.child("supervisores/" + perSnap.key).exists()){
+							existe = true;
+						}
+					});
+					if(!existe){
+						var option2 = document.createElement('option');
+						option2.text = sup.nickname;
+						option2.value = sup.uid; 
+						select3.appendChild(option2);
+					}
+				}
+			});
+		});  
+	});
+}
+
 $('#' + id_supervisores_ddl_distribucionSupervisores).change(function(){
 	$('#' + id_div_obras_distribucionSupervisores).empty();
 	var div = document.getElementById(id_div_obras_distribucionSupervisores);
+	//AQUI revisar si ya hay entrada de este sup en esta obra en esta semana
 	firebase.database().ref(rama_bd_obras_magico).once('value').then(function(snapshot){
+		var obras = [];
 		snapshot.forEach(function(childSnap){
 			if(!childSnap.child("terminada").val()){
-				console.log(childSnap.key);
-				var act = false;
 				childSnap.child("supervisor").forEach(function(supSnap){
-					//console.log(supSnap.key);
 					if(supSnap.key == $('#' + id_supervisores_ddl_distribucionSupervisores + " option:selected").val()){
-						act = true;
-						console.log(childSnap.key)
+						obras[obras.length] = childSnap.key;
 					}
 				});
-				var obra = childSnap.val();
-				if(act){
-					var row = document.createElement('div');
-					row.class = 'row align-items-center';
-					var col1 = document.createElement('div');
-					col1.className = 'col-lg-3';
-					var col2 = document.createElement('div');
-					col2.className = 'col-lg-3';
-					var label = document.createElement('label');
-	          		label.innerHTML = obra.nombre;
-	          		var textfield = document.createElement('input');
-	          		textfield.type = "text";
-	          		textfield.id = obra.nombre + "_distSuper";
-	          		col1.appendChild(label);
-	          		col2.appendChild(textfield);
-	          		row.appendChild(col1);
-	          		row.appendChild(col2);
-	          		div.appendChild(row);
-				}
 			}
 		});
+		for(i=0; i<obras.length;i++){
+			var row = document.createElement('div');
+			row.class = 'row align-items-center';
+			var col1 = document.createElement('div');
+			col1.className = 'col-lg-3';
+			var col2 = document.createElement('div');
+			col2.className = 'col-lg-3';
+			var label = document.createElement('label');
+      		label.innerHTML = obras[i];
+      		var textfield = document.createElement('input');
+      		textfield.type = "text";
+      		textfield.id = obras[i] + "_distSuper";
+      		textfield.value = (100 / obras.length).toFixed(2);
+      		col1.appendChild(label);
+      		col2.appendChild(textfield);
+      		row.appendChild(col1);
+      		row.appendChild(col2);
+      		div.appendChild(row);
+      	}
 	});
 });
 
@@ -97,10 +142,9 @@ $('#' + id_registrar_button_distribucionSupervisores).click(function(){
 	  	$('[id$=_distSuper]').each(function(){
 	    	sum += parseFloat($(this).val());
 	    });
-	    if(sum != 100){
+	    if(Math.abs(sum - 100) > 0.05){
 	    	alert("Los valores deben ser porcentajes y el total debe sumar 100");
 	    } else {
-	    	var dist = {};
 	    	$('[id$=_distSuper]').each(function(){
 	    		var text_id = this.id.split("_");
 	    		text_id = text_id[text_id.length - 1];
@@ -113,16 +157,16 @@ $('#' + id_registrar_button_distribucionSupervisores).click(function(){
 	    		var year = $('#' + id_year_ddl_distribucionSupervisores + " option:selected").val();
 	    		var week = $('#' + id_week_ddl_distribucionSupervisores + " option:selected").val();
 	    		firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + obra + "/supervisores/" + $('#' + id_supervisores_ddl_distribucionSupervisores + " option:selected").val()).set(entrada);
-	    		dist[obra] = parseFloat($(this).val());
+	    		sumaEnFirebase(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + obra + "/total");
+	    		sumaEnFirebase(rama_bd_pagos_nomina + "/" + year + "/" + week + "/total");
+	    		//console.log(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + obra + "/total");
+	    		//console.log(rama_bd_pagos_nomina + "/" + year + "/" + week + "/total");
+	    		//console.log(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + obra + "/supervisores/" + $('#' + id_supervisores_ddl_distribucionSupervisores + " option:selected").val());
+	    		//console.log(entrada);
 				sumaEnFirebase(rama_bd_obras_magico + "/" + obra + "/procesos/MISC/kaizen/PRODUCCION/COPEO/PAG", valor);
+				//console.log(rama_bd_obras_magico + "/" + obra + "/procesos/MISC/kaizen/PRODUCCION/COPEO/PAG");
+				//console.log(valor);
 	    	});
-    		//var pago = {
-    		//	cantidad: $('#' + id_cantidad_pagadora_distribucionSupervisores).val(),
-    		//	distribucion: dist,
-    		//	pda: pistaDeAuditoria(),
-    		//}
-    		//var dia = getWeek(new Date().getTime());
-    		//firebase.database().ref(rama_bd_colaboradores_prod + "/" + $('#' + id_supervisores_ddl_distribucionSupervisores + " option:selected").val() + "/nomina/" + dia[1] + "/" + dia[0]).set(pago);
 	    }
 	}
 });

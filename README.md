@@ -20,11 +20,14 @@ REESTRUCTURA_BD:
     - gestionar_presu -> depende de def_ppto. Tambien gestiona procs, no?
     - reporte_ppto -> depende de def_ppto   
 
+  - InvestTime
   - Para anexos jalar archivos excel y jalar el formato (mezcla apps importar con apps ppto)
   - Poner nota en registro si creden == 2
   - generador de pptos (solo pdf) -> contratos de obra
   - app_funciones algo truena al calcular profits
   - Supervisores -> gestionar
+  - Si dia salida != dia entrada, horas = -1. App para poner horas a registro corrupto, sumar en reg y en score
+  - Meter archivo de evidencia a app_pago_kaizen
 
   - Cierre maestro:
      - checar asincronía
@@ -41,12 +44,6 @@ REESTRUCTURA_BD:
  - liberar
 
  HTMLs:
- - app_admin_registro
- - app_admon_pago_kaizen -> (REVISAR HTML) nueva app + pad + checo si obra terminada
- - app_reporte_obras -> (REVISAR HTML, faltan divs y sobran dropdown checkboxes) reestructura_bd. 
- - app_distribucion_supervisores (los pagos de la pagadora)
- - app_gestionar_supervisores -> (REVISAR HTML) reestructura_bd, solo se asigna por obra, se comenta un ddl
- - app_rrhh_editar_trabajadores -> app nueva
  - app_atributo
 
  Obsoletos: 
@@ -67,8 +64,6 @@ REESTRUCTURA_BD:
  - app_graphs (hice funcion nueva en app_proy_scoreboard)
      
  Por probar:
- - app_pagos_nomina
- - app_rrhh_pagos_diversos -> terminar: sumar, distribuir, y KAIZEN, ya no al kaizen si atencion a clientes, distribuir horas si semana quebrada, que carguen los ddls, si funciona con multiples diversos
  - app_reporte_obras ->(editÃ©, ahora tiene checkboxes... creo :S)
  - app_gestionar_supervisores
  - app_atributo
