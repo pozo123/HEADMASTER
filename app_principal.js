@@ -7,9 +7,11 @@ var rama_storage_personal  = "personal"
 var id_newpassword_perfil = "newpass";
 var id_confirmpass_perfil = "confirm";
 var id_cambiarpassword_button_perfil = "button_cambio_contraseña";
+var id_week_label = "weekLabel";
 
 var areas_usuario_global;
 var creden_usuario_global;
+var uid_usuario_global;
 
 var id_div_dropdown_areas = "dropdown_areas";
 
@@ -22,12 +24,16 @@ $(document).ready(function() {
         version = snapshot.child("version").val();
         verifyVersion();
     });
+    document.getElementById(id_week_label).innerHTML = "Semana " + getWeek(new Date().getTime())[0];
+});
 
-
+$('#botonMagico').click(function(){
+    //replaceStringsInKeysAndValues("House Leon", "HAUS LEON");
 });
 
 firebase.auth().onAuthStateChanged(user => {
     if(user) {
+        uid_usuario_global = user.uid;
         userUID = user.uid;
         if(user.uid == "sD2NRaTu4Ug4e0gqluYaHpxNZbP2" || user.uid == "WCpLarWgMKfwGsvAdrqlqjQxy243"){
             //$("#tabRegistrosAdmon").removeClass('hidden');AQUI descomentar
@@ -38,6 +44,11 @@ firebase.auth().onAuthStateChanged(user => {
             var user_personal = snapshot.val();
             areas_usuario_global = user_personal.areas;
             creden_usuario_global = user_personal.credenciales;
+            if(creden_usuario_global == 0){
+                $('#botonMagicoAdmon').removeClass('hidden');
+            } else {
+                $('#botonMagicoAdmon').addClass('hidden');
+            }
             if(user_personal.foto){
                 var imagen = document.getElementById("img_foto");
                 imagen.src = user_personal.foto.url;

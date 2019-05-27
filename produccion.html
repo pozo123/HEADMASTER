@@ -142,6 +142,9 @@
                     <div class="text-center">
                         <h6 class="card-title" id="usuarioConectado"></h6>
                     </div>
+                    <div class="text-center">
+                        <h6 class="card-title" id="weekLabel"></h6>
+                    </div>
                 </ul>
                 <ul class="list-unstyled components">
 
@@ -637,17 +640,17 @@
                                     <div class="row align-items-center">
                                         <div class="col-lg-3"></div>
                                         <div class="col-lg-6">
-                                            <form action="#" onsubmit="return false;">
+                                            <form action="#" onsubmit="return false;" id="formGestionarSup">
                                                 <div class="form-group">
                                                     <label for="obraDdlSupervisores">Obra:</label>
-                                                    <select id="obraDdlSupervisores" class="form-control" style="width:400px"></select>
+                                                    <select id="obraDdlSupervisores" class="form-control"></select>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="supervisoresDdlSupervisores">Supervisor:</label>
-                                                    <select id="supervisoresDdlSupervisores" class="form-control" style="width:400px"></select>
+                                                    <select id="supervisoresDdlSupervisores" class="form-control"></select>
                                                 </div>
-                                                <div id="divObraSupervisores"></div>
-                                                <div id="divSupervisorSupervisores"></div>
+                                                <div id="divObraSupervisores" class="form-row"></div>
+                                                <div id="divSupervisorSupervisores" class="form-row"></div>
                                             </form>
                                             <br/>
                                         </div>

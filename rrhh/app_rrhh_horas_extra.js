@@ -152,7 +152,7 @@ $("#" + id_obra_ddl_horasExtra).change(function(){
                     trabSnap.child("horas_extra").forEach(function(childSnap){
                         //console.log("1");
                         var entrada = childSnap.val();
-                        datos_horasExtra.push([trabSnap.key,tSnap.child(trabSnap.key).val().nombre,new Date(entrada.fecha).toLocaleDateString("es-ES",options),entrada.proceso,formatMoney(entrada.horas)]);
+                        datos_horasExtra.push([trabSnap.key,tSnap.child(trabSnap.key).val().nombre,new Date(entrada.fecha).toLocaleDateString("es-ES",options),entrada.proceso,entrada.horas,formatMoney(entrada.horas)]);
                     });
                     //Asincronía? :S
                     var tabla_procesos = $('#'+ id_datatable_horasExtra).DataTable({
@@ -165,6 +165,7 @@ $("#" + id_obra_ddl_horasExtra).change(function(){
                             {title: "NOMBRE",width: 350},
                             {title: "FECHA",width: 70},
                             {title: "PROCESO",width: 70},
+                            {title: "HORAS"},
                             {title: "PRECIO TOTAL POR HORAS EXTRA"}
                         ],
                         language: idioma_espanol,

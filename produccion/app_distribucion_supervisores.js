@@ -87,7 +87,7 @@ function loadSupervisoresDistSup(){
 					});
 					if(!existe){
 						var option2 = document.createElement('option');
-						option2.text = sup.nickname;
+						option2.text = sup.nombre;
 						option2.value = sup.uid; 
 						select3.appendChild(option2);
 					}
@@ -168,5 +168,6 @@ $('#' + id_registrar_button_distribucionSupervisores).click(function(){
 				//console.log(valor);
 	    	});
 	    }
+	    loadSupervisoresDistSup();
 	}
 });

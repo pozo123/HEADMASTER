@@ -102,6 +102,8 @@ $('#' + id_year_ddl_diversos).change(function(){
 });
 
 $('#' + id_semana_ddl_diversos).change(function(){
+    document.getElementById(id_guardar_button_diversos).disabled = false;
+    document.getElementById(id_terminar_button_diversos).disabled = false;
     $('#' + id_carga_semana_anterior_button_diversos).addClass('hidden');
     $('#' + id_datatable_diversos).empty();
     $('#' + id_datatable_div_diversos).addClass('hidden');
@@ -115,6 +117,8 @@ $('#' + id_semana_ddl_diversos).change(function(){
         var nomina = snapshot.val();
         var terminada = nomina ? nomina.diversos_terminados : false;
         if(terminada){
+            $('#' + id_guardar_button_diversos).addClass('hidden');
+            $('#' + id_terminar_button_diversos).addClass('hidden');
             //console.log("hola")
             $('#' + id_diverso_group_diversos).addClass('hidden');
             $('#' + id_datatable_div_diversos).removeClass('hidden');
@@ -148,7 +152,9 @@ $('#' + id_semana_ddl_diversos).change(function(){
                 ],
                 language: idioma_espanol,
             });
-        } else{
+        } else {
+            $('#' + id_guardar_button_diversos).removeClass('hidden');
+            $('#' + id_terminar_button_diversos).removeClass('hidden');
             $('#' + id_diverso_group_diversos).removeClass('hidden');
         }
     });
@@ -614,14 +620,17 @@ $('#' + id_terminar_button_diversos).click(function(){
                                             //console.log("3");
                                             var diver = diversoSnap.val();
                                             total_div = total_div + parseFloat(diver.cantidad);
+                                            console.log(diver.distribuible);
                                             if(diver.distribuible){
-                                                distribuyeEnAsistencias(obras_json,diver.cantidad,trabSnap,year,week,diver.diverso);
+                                                //distribuyeEnAsistencias(obras_json,diver.cantidad,trabSnap,year,week,diver.diverso);
                                             } else {
                                                 var diverso = {
                                                     cantidad: diver.cantidad,
                                                     diverso: diver.diverso,
                                                     proceso: diver.proceso,
                                                 }
+                                                //console.log("pushing to pagos_nomina");
+                                                //console.log(diverso);
                                                 firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + diver.obra + "/trabajadores/" + trabSnap.key + "/diversos").push(diverso);
                                                 //var query = diver.obra;
                                                 if(diver.obra != "Atencion a Clientes" && diver.obra != "Vacaciones"){
@@ -668,7 +677,9 @@ $('#' + id_terminar_button_diversos).click(function(){
                     alert("Pagos diversos de esta semana terminados");
                     document.getElementById(id_diverso_ddl_diversos).selectedIndex = 0;
                     document.getElementById(id_year_ddl_diversos).selectedIndex = 0;
-                    setTimeout(function(){location.reload();}, 2000);
+                    document.getElementById(id_guardar_button_diversos).disabled = true;
+                    document.getElementById(id_terminar_button_diversos).disabled = true;
+                    //setTimeout(function(){location.reload();}, 4000);
                 });
 
             } else {

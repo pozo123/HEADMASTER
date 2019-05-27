@@ -1,5 +1,6 @@
 var id_semana_ddl_pago_nomina = "semanaDdlPagoNomina";
 var id_year_ddl_pago_nomina = "yearDdlPagoNomina";
+var id_num_ren_pago_nomina = "numRenPagoNomina";
 var id_terminar_button_pago_nomina = "terminarButtonPagoNomina";
 
 var id_datatable_pago_nomina = "dataTablePagoNomina";
@@ -76,6 +77,7 @@ $('#' + id_semana_ddl_pago_nomina).change(function(){
 	trabajadores = [];
     var year = $('#' + id_year_ddl_pago_nomina + " option:selected").val();
 	var semana = $('#' + id_semana_ddl_pago_nomina + " option:selected").text();
+	console.log(semana);
 	//firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + semana).once('value').then(function(snapshot){
 		//var terminada = snapshot.val().terminada;
 		var terminada = $('#' + id_semana_ddl_pago_nomina + " option:selected").val();
@@ -87,12 +89,13 @@ $('#' + id_semana_ddl_pago_nomina).change(function(){
 					var trabajador = trabSnap.val();
 					if(trabSnap.child("nomina/" + year + "/" + semana).exists()){
 						var nom = trabSnap.child("nomina/" + year + "/" + semana).val();
+
 						var tot_HE = isNaN(parseFloat(nom.total_horas_extra)) ? 0 : parseFloat(nom.total_horas_extra);
 						var tot_as = isNaN(parseFloat(nom.total_asistencia)) ? 0 :  parseFloat(nom.total_asistencia);
 						var tot_div = isNaN(parseFloat(nom.total_diversos)) ? 0 : parseFloat(nom.total_diversos);
-						var imp_as = isNaN(parseFloat(nom.impuestos.impuestos_asistencia)) ? 0 : parseFloat(nom.impuestos.impuestos_asistencia);
-						var imp_div = isNaN(parseFloat(nom.impuestos.impuestos_diversos)) ? 0 : parseFloat(nom.impuestos.impuestos_diversos);
-						var imp_HE = isNaN(parseFloat(nom.impuestos.impuestos_horas_extra)) ? 0 : parseFloat(nom.impuestos.impuestos_horas_extra);
+						var imp_as = nom.impuestos == undefined ? 0 : (isNaN(parseFloat(nom.impuestos.impuestos_asistencia)) ? 0 : parseFloat(nom.impuestos.impuestos_asistencia));
+						var imp_div = nom.impuestos == undefined ? 0 : (isNaN(parseFloat(nom.impuestos.impuestos_diversos)) ? 0 : parseFloat(nom.impuestos.impuestos_diversos));
+						var imp_HE = nom.impuestos == undefined ? 0 : (isNaN(parseFloat(nom.impuestos.impuestos_horas_extra)) ? 0 : parseFloat(nom.impuestos.impuestos_horas_extra));
 
 						var subtotal = formatMoney(tot_as + tot_HE + tot_div);
 						var impuestos = formatMoney(imp_as + imp_div + imp_HE);
@@ -127,17 +130,59 @@ $('#' + id_semana_ddl_pago_nomina).change(function(){
 						if(obraSnap.key != "total" && obraSnap.key != "terminada" && obraSnap.key != "asistencias_terminadas" && obraSnap.key != "horas_extra_terminadas" && obraSnap.key != "diversos_terminados"){
 							obraSnap.child("trabajadores").forEach(function(trabSnap){
 								//Si no existe ya, crealo.
-								if(!trabajadores[trabSnap.key]){
-									cargaRenglonPagoNomina(tSnap.child(trabSnap.key));
+								console.log(trabSnap.val());
+								if(trabSnap.child("dias/jueves/asistencia").val() || trabSnap.child("dias/viernes/asistencia").val() ||
+								trabSnap.child("dias/lunes/asistencia").val() || trabSnap.child("dias/martes/asistencia").val() ||
+								trabSnap.child("dias/miercoles/asistencia").val() || trabSnap.child("horas_extra").numChildren() > 0 || 
+								trabSnap.child("diversos").numChildren() > 0){
+									if(!trabajadores[trabSnap.key]){
+										cargaRenglonPagoNomina(tSnap.child(trabSnap.key));
+									}
 								}
 							});
 						}
 					});
+					sortTablePagoNomina();
+					document.getElementById(id_num_ren_pago_nomina).innerHTML = "Mostrando " + trabajadores.filter(Boolean).length + " entradas";
 				});
 			});
 		}
 	//});
 });
+
+function sortTablePagoNomina(){
+	var rows, switching, i, x, y, shouldSwitch;
+	switching = true;
+	/*Make a loop that will continue until
+	no switching has been done:*/
+	while (switching) {
+		//start by saying: no switching is done:
+		switching = false;
+		rows = tablePagoNomina.rows;
+		/*Loop through all table rows (except the
+		first, which contains table headers):*/
+		for (i = 1; i < (rows.length - 1); i++) {
+		  //start by saying there should be no switching:
+		  shouldSwitch = false;
+		  /*Get the two elements you want to compare,
+		  one from current row and one from the next:*/
+		  x = rows[i].getElementsByTagName("TD")[0];
+		  y = rows[i + 1].getElementsByTagName("TD")[0];
+		  //check if the two rows should switch place:
+		  if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+		    //if so, mark as a switch and break the loop:
+		    shouldSwitch = true;
+		    break;
+		  }
+		}
+		if (shouldSwitch) {
+		  /*If a switch has been marked, make the switch
+		  and mark that a switch has been done:*/
+		  rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+		  switching = true;
+		}
+	}
+}
 
 function cargaRenglonPagoNomina(trabSnap){
 	var row = tablePagoNomina.insertRow(1);
@@ -146,7 +191,7 @@ function cargaRenglonPagoNomina(trabSnap){
     var cell_pago = row.insertCell(2);
 
     var id_label = document.createElement('label');
-    id_label.innerHTML = trabSnap.key;
+    id_label.innerHTML = trabSnap.child("clave_pagadora").exists() ? trabSnap.child("clave_pagadora").val() : "HEAD ID: " + trabSnap.key;
     var nombre_label = document.createElement('label');
     nombre_label.innerHTML = trabSnap.val().nombre;
     cell_id.appendChild(id_label);
@@ -157,7 +202,6 @@ function cargaRenglonPagoNomina(trabSnap){
     cant.id = "cant_pagada_" + trabSnap.key;
     cant.placeholder = "Cantidad pagada";
     cell_pago.appendChild(cant);
-
 	trabajadores[trabSnap.key] = trabSnap.key;
 }
 

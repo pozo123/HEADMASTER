@@ -182,7 +182,7 @@ function cierraRegistro(regSnap){
     var reg = regSnap.val();
     var checkin = parseInt(reg.checkin);
     esp = reg.esp;
-    var horas = new Date().getTime() - checkin;
+    var horas = new Date().getDay() == new Date(checkin).getDay() ? new Date().getTime() - checkin : -1;
     var updates = {
         horas: horas,
         status: true,
@@ -191,7 +191,7 @@ function cierraRegistro(regSnap){
         alert("Error. Contacte al administrador del sistema");
     } else {
         firebase.database().ref(rama_bd_registros + "/" + path).update(updates);
-        if(reg.obra != "Otros"){
+        if(reg.obra != "Otros" && horas != -1){
             var cant_horas = parseFloat(horas / 3600000);
             //var cant = cant_horas * precio_hora;
             var proc_path = reg.proceso.split("-");

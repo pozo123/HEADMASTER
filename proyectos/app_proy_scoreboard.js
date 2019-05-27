@@ -4,6 +4,8 @@ var id_notFullscreen_scoreboard = "notFullScreen";
 var id_div_graphs_scoreboard = "divGraphsScoreboard";
 var id_div_cards_grupales_scoreboard = "divCardsGrupalesScoreboard";
 var id_div_cards_ind_scoreboard = "divCardsIndScoreboard";
+var id_dashboard_header = "dashboardHeader";
+var id_clock_scoreboard = "clockScoreboard";
 
 var rama_bd_obras = "obras";
 var rama_bd_personal = "personal";
@@ -28,6 +30,8 @@ var div_graph = document.getElementById(id_div_graphs_scoreboard);
 var style_grupales = ["max-width: 28%;", "min-width: 28%;", "min-height: 30%;", "1.4em;", "0.7em;",];
 var style_individual = ["max-width: 90%;", "min-width: 90%;", "min-height: 50%;", "2.8em;", "1.4em;", ];
 
+var interval_clock;
+
 $(document).ready(function() {
     unidad_t = parseFloat(gcd_two_numbers(wait_long,wait_short));
     wait_short = wait_short / unidad_t;
@@ -38,6 +42,8 @@ $(document).ready(function() {
 
 /* View in fullscreen */
 function openFullscreen() {
+    $('#' + id_dashboard_header).addClass('hidden');
+    startTime();
     if (elem.requestFullscreen) {
       elem.requestFullscreen();
     } else if (elem.mozRequestFullScreen) { /* Firefox */
@@ -51,6 +57,9 @@ function openFullscreen() {
   
   /* Close fullscreen */
   function closeFullscreen() {
+    $('#' + id_dashboard_header).removeClass('hidden');
+    clearInterval(interval_clock);
+    document.getElementById(id_clock_scoreboard).innerHTML = "";
     if (document.exitFullscreen) {
       document.exitFullscreen();
     } else if (document.mozCancelFullScreen) { /* Firefox */
@@ -61,6 +70,21 @@ function openFullscreen() {
       document.msExitFullscreen();
     }
   }
+
+function startTime() {
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  m = checkTime(m);
+  document.getElementById(id_clock_scoreboard).innerHTML =
+  h + ":" + m;
+  interval_clock = setInterval(startTime, 30000);
+}
+
+function checkTime(i) {
+  if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+  return i;
+}
 
 $('#' + id_fullscreen_scoreboard).click(function(){
     openFullscreen();
@@ -83,7 +107,7 @@ $('#' + id_notFullscreen_scoreboard).click(function(){
     scoreboardGrupal();
     inges = [];
     modo_display = false;
-    console.log("clear");
+    //console.log("clear");
 });
 
 function cyclePresentation(){
@@ -115,7 +139,7 @@ function scoreboardGrupal(){
     $('#' + id_div_graphs_scoreboard).empty();
     $('#' + id_div_cards_ind_scoreboard).empty();
     $('#' + id_div_cards_grupales_scoreboard).empty();
-    console.log("Hola");
+    //console.log("Hola");
     div_grupal.setAttribute("style", "height: 100vh;");
     div_individual.setAttribute("style", "height: 0vh;");
     div_graph.setAttribute("style", "height: 0vh;");
@@ -127,17 +151,17 @@ function scoreboardGrupal(){
                 inges[inges.length] = childSnap;
             }
         });
-        console.log("TODOS");
+        //console.log("TODOS");
         for(var i=1;i<inges.length;i++){
             var inge = inges[i].val();
-            console.log(inge.status + inge.nickname);
+            //console.log(inge.status + inge.nickname);
             if(inge.status){
                 getRegScoreboard(inges[i],id_div_cards_grupales_scoreboard, style_grupales, true);
             } else {
                 loadDashcard(style_grupales, inges[i].child("nickname").val(), false,id_div_cards_grupales_scoreboard);
             }
         }
-        console.log("FIN TODOS");
+        //console.log("FIN TODOS");
     });
 }
 
@@ -163,7 +187,7 @@ function scoreboardIndividual(ingeSnap){
 function getRegScoreboard(ingeSnap, div_cards,styles, grupal){
     var hoy = getWeek(new Date().getTime());
     firebase.database().ref(rama_bd_registros + "/" + hoy[1] + "/" + hoy[0]).orderByChild("status").equalTo(false).once('value').then(function(snapshot){
-        console.log(rama_bd_registros + "/" + hoy[1] + "/" + hoy[0])
+        //console.log(rama_bd_registros + "/" + hoy[1] + "/" + hoy[0])
         snapshot.forEach(function(regSnap){
             if(regSnap.child("inge").val() == ingeSnap.key){
                 var reg = regSnap.val();
@@ -184,9 +208,9 @@ function getRegScoreboard(ingeSnap, div_cards,styles, grupal){
                     horas_trabajadas += horas_reg;
                     horas_trab_ind += horas_reg;
 
-                    console.log(horas_trabajadas)
-                    console.log(horas_programadas)
-                    console.log(horas_trab_ind)
+                    //console.log(horas_trabajadas)
+                    //console.log(horas_programadas)
+                    //console.log(horas_trab_ind)
                     
                     //console.log(proc_query + ": " + horas_programadas);
                     loadDashcard(styles, ingeSnap.child("nickname").val(), true, div_cards, reg, horas_programadas, (horas_trabajadas).toFixed(2), horas_prog_ind, (horas_trab_ind).toFixed(2));
@@ -270,9 +294,9 @@ function loadDashcard(styles, nickname, activo, div_cards, reg, horas_programada
     //console.log(reg);
     var font = "";
     var card = document.createElement('div');
-    console.log(styles[0]);
+    //console.log(styles[0]);
     card.setAttribute("style", styles[0] + styles[1] + styles[2]);
-    console.log(card);
+    //console.log(card);
     if(reg != undefined){
         if(reg.esp === "ie"){
             card.className = "card card_dash .mx-auto border-danger mb-3";
@@ -288,9 +312,9 @@ function loadDashcard(styles, nickname, activo, div_cards, reg, horas_programada
         card.className = "card card_dash .mx-auto border-secondary mb-3";
         font = "";
     }
-    console.log(activo);
+    //console.log(activo);
     if(activo){
-        console.log("hola")
+        //console.log("hola")
         //console.log(nickname + ": \nEsp: " + reg.esp + "\nObra: " + reg.obra + "\nProceso: " + reg.proceso + "\nHoras Programadas: " + horas_programadas + "\nHoras Trabajadas: " + horas_trabajadas);
 
         // Header del Card

@@ -553,6 +553,9 @@
                     <div class="text-center">
                         <h6 class="card-title" id="usuarioConectado"></h6>
                     </div>
+                    <div class="text-center">
+                        <h6 class="card-title" id="weekLabel"></h6>
+                    </div>
                 </ul>
                 <ul class="list-unstyled components" id = "tabRegistrosProy">
                     <div class="card text-center text-white bg-dark">
@@ -635,6 +638,7 @@
                                 <li class="tab" id="tabReporte"><a href="#" onclick="openTabs('tabReporte','reporte')">Reporte de registros</a></li>
                                 <li class="tab" id="tabReporteObra"><a href="#" onclick="openTabs('tabReporteObra','reporteObra')">Reporte de obras</a></li>
                                 <li class="tab" id="tabReportePpto"><a href="#" onclick="openTabs('tabReportePpto','reportePpto')">Reporte de presupuestos</a></li>
+                                <li class="tab" id="tabCorruptos"><a href="#" onclick="openTabs('tabCorruptos','corruptos')">Registros Corruptos</a></li>
                         </ul>
                     </li>
                     <li class="tab"><a href="#" data-toggle="modal" data-target="#contraseñaModal">Cambiar contraseña</a></li>
@@ -686,7 +690,8 @@
                 <div class="row">
                     <div class="container-fluid">
                         <div id="dashboard" class="tabcontent dashboard">
-                            <h3>Dashboard</h3>
+                            <h3 id="dashboardHeader">Dashboard</h3>
+                            <h3 id="clockScoreboard"></h3>
                             <div class= "row subDash">
                                 <div class= "col-lg-12">
                                     <div class="card-deck" id ="divCardsGrupalesScoreboard"></div>                           
@@ -1550,6 +1555,28 @@
                                 </div>
                             </div>
                         </div>
+                        <div id="corruptos" class="tabcontent hidden">
+                            <h1>Registros Corruptos</h1><br/>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">
+                                            <div class="form-group" id="ingeGroupCorruptos">
+                                                <label for="ingeDdlCorruptos">Colaborador:</label>
+                                                <select id="ingeDdlCorruptos" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group" id="regsDivCorruptos">
+                                            </div>
+                                            <div class="row">
+                                                <button type="button" name="" id="actualizarButtonCorruptos" class="btn btn-outline-success btn-block">Actualizar</button>
+                                            </div>     
+                                        </form>
+                                    </div>
+                                    <div class = "col-lg-3"></div>
+                                </div>
+                            </div>
+                        </div>
                         <!--
                         <div id="permisos" class="tabcontent hidden">
                             <h1>Permisos de usuario</h1>
@@ -1907,6 +1934,7 @@
         <script src="proyectos/app_presupuesto.js"></script>
         <script src="proyectos/app_proy_actualizar_esp.js"></script>
         <script src="proyectos/app_proy_cuant_kaizen.js"></script>
+        <script src="proyectos/app_proy_corruptos.js"></script>
         <script src="proyectos/app_proy_registros.js"></script>
         <script src="proyectos/app_proy_scoreboard.js"></script>
         <script src="proyectos/app_reporte.js"></script>
