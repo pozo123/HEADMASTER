@@ -141,8 +141,6 @@ $('#' + id_foto_solped).on("change", function(event){
 $('#' + id_actualizar_button_solped).click(function(){
 	if($('#' + id_obra_ddl_solped + " option:selected").val() == "" || $('#' + id_contrato_ddl_solped + " option:selected").val() == "" || $('#' + id_clave_solped).val() == "" || (!$('#' + id_subp_group_solped).hasClass('hidden') && ($('#' + id_subp_ddl_solped + " option:selected").val() == "" || !$('#' + id_subp_ddl_solped + " option:selected").val()))){
 		alert("Llena todos los campos requeridos");
-		console.log($('#' + id_subp_group_solped).hasClass('hidden'));
-		console.log(!$('#' + id_subp_group_solped).hasClass('hidden'));
 	} else {
 		var proc = $('#' + id_contrato_ddl_solped + " option:selected").val();
 		var query = proc.split("-").length > 1 ? proc.split("-")[0] + "/subprocesos/" + proc : proc;

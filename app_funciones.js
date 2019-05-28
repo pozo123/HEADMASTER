@@ -144,18 +144,25 @@ function calculaProfitKaiz(pointer){
   kaiz_local["PROFIT"]["REAL"]["NETO"] = ((admin_ant_pag + admin_est_pag) * 0.8 - prod_cop_pag - prod_sum_pag - proy_pag) * 0.6;
 }
 
-function sumaEnFirebase(query, cantidad){
+function sumaEnFirebase(query, cant){
+  var cantidad = isNaN(parseFloat(cant)) ? 0 : parseFloat(cant);
+  console.log(cantidad); 
     firebase.database().ref(query).once('value').then(function(snapshot){
         if(snapshot.exists()){
             var anterior = parseFloat(snapshot.val());
             if(isNaN(anterior)){
                 console.log("Valor anterior es NaN");
             } else {
-                var nuevo = anterior + parseFloat(cantidad);
+                var nuevo = anterior + cantidad;
                 firebase.database().ref(query).set(nuevo);
             }
         } else {
-            console.log("El snapshot de " + query + " no existe");
+            //console.log("El snapshot de " + query + " no existe");
+            if(isNaN(parseFloat(cantidad))){
+              console.log("Cantidad es NaN");
+            } else {
+              firebase.database().ref(query).set(cantidad);
+            }
         }
     });
 }

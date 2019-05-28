@@ -363,20 +363,14 @@
                                     <label for="actividadOtrosRegistroAdmin">¿En qué vas a trabajar?</label>
                                     <textarea class="form-control" id="actividadOtrosRegistroAdmin" rows="5"></textarea>
                                 </div>
-
-                                <div class="row text-center" id="statusObraGroupRegistroAdmin">
-                                    <div class= "col-md-6" id = "">
-                                        <input type="radio" name="status_obra" id="activaStatusObraRbRegistroAdmin" aria-label="">
-                                        <label>Activa</label>
-                                    </div>
-                                    <div class= "col-md-6" id = "">
-                                        <input type="radio" name="status_obra" id="cierreStatusObraRbRegistroAdmin" aria-label="">
-                                        <label>Cierre</label>
-                                    </div>  
-                                    <div class= "col-md-6" id = "">
-                                        <input type="radio" name="status_obra" id="terminadaStatusObraRbRegistroAdmin" aria-label="">
-                                        <label>Terminar</label>
-                                    </div>        
+                                <div class="form-group hidden" id="statusObraGroupRegistroAdmin">
+                                    <label for="actividadOtrosRegistroAdmin">Status:</label>
+                                    <select id ="statusObraDdlRegistroAdmin" class="form-control">
+                                        <option value="" style="display:none"></option>
+                                        <option value="activa">Activa</option>
+                                        <option value="terminar">Terminar</option>
+                                        <option value="cierre">Cierre</option>
+                                    </select>
                                 </div>
     
                                 <button type="button" name="" id="entradaButtonRegistroAdmin" class="btn btn-success btn-lg btn-block">Entrada</button> 
@@ -431,6 +425,7 @@
                         <ul class="collapse list-unstyled" id="pageSubmenu6">
                             <li class="tab" id="tabReporte"><a href="#" onclick="openTabs('tabReporte','reporte')">Reporte de Registros</a></li>
                             <li class="tab" id="tabReporteDiario"><a href="#">Reporte Diario</a></li>
+                            <li class="tab hidden" id="tabReporteInvestime"><a href="#" onclick="openTabs('tabReporteInvestime','reporteInvestime')">Reporte Inve$Time</a></li>
                         </ul>
                     </li>
                     <li>
@@ -444,7 +439,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="#pageSubmenu8" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pagos por parte del cliente</a>
+                        <a href="#pageSubmenu8" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pagos del cliente</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu8">
                             <li class="tab" id="tabPagoKaizen"><a href="#" onclick="openTabs('tabPagoKaizen','pagoKaizen')">Pagos Kaizen</a></li>
                         </ul>
@@ -1286,7 +1281,7 @@
                                             </div>
                 
                                             <div class="form-group">
-                                                <label for="">Recibo de pago / Factura</label>
+                                                <!--<label for="">Recibo de pago / Factura</label>-->
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" name="tipo" id="tipoReciboRBPagoKaizen" value="option1">
                                                     <label class="form-check-label" for="tipoReciboRBPagoKaizen">Recibo</label>
@@ -1298,14 +1293,14 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="">Estimación / Anticipo</label>
+                                                <!--<label for="">Estimación / Anticipo</label>-->
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" name="formato" id="formatoEstRBPagoKaizen" value="option1">
                                                     <label class="form-check-label" for="formatoEstRBPagoKaizen">Estimación</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" name="formato" id="formatoAntRBPagoKaizen" value="option2">
-                                                    <label class="form-check-label" for="formatoAntRBPagoKaizen">Anticipo:</label>
+                                                    <label class="form-check-label" for="formatoAntRBPagoKaizen">Anticipo</label>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -1316,8 +1311,8 @@
                                             <div class="form-group">
                                                 <label for="">Selecciona archivo evidencia del pago realizado</label>
                                                 <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" id="" accept="image/*">
-                                                    <label class = "custom-file-label" id="">Archivo no seleccionado</label>
+                                                    <input type="file" class="custom-file-input" id="filePagoKaizen" accept="image/*">
+                                                    <label class = "custom-file-label" id="fileLabelPagoKaizen">Archivo no seleccionado</label>
                                                 </div>
                                             </div>
 
@@ -1386,6 +1381,41 @@
                                     <div class="row mt-3">
                                         <div class="container-fluid">
                                             <table id="dataTableReporte" class="display" style="width:100%">
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="reporteInvestime" class="tabcontent hidden">
+                            <h1>Generador de reportes</h1><br/>
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <form action="#" onsubmit="return false;">
+                                        <div class="form-row align-items-center">
+                                            <div class="col-lg-3 col-sm-12">
+                                                <label for="fechaInicioReporteInvestime">Fecha inicio de reporte:</label>
+                                            </div>
+                                            <div class="col-lg-3 col-sm-12">
+                                                <input class="form-control" type="text" id="fechaInicioReporteInvestime" placeholder="" readonly="readonly">
+                                            </div>
+                                            <div class="col-lg-3 col-sm-12">
+                                                <label for="fichaFinalReporteInvestime">Fecha final del reporte:</label>
+                                            </div>
+                                            <div class="col-lg-3 col-sm-12">
+                                                <input class="form-control" type="text" id="fichaFinalReporteInvestime" placeholder="" readonly="readonly">
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        <p>*Para generar reporte de un solo día coloca en "Fecha inicio de reporte" el día deseado y deja en blanco "Fecha final del reporte"</p>
+                                        <div class="row">
+                                            <button type="button" name="" id="generarButtonReporteInvestime" class="btn btn-block btn-primary">Generar Reporte</button>                                                                           
+                                        </div>     
+                                    </form>
+
+                                    <div class="row mt-3">
+                                        <div class="container-fluid">
+                                            <table id="dataTableReporteInvestime" class="display" style="width:100%">
                                             </table>
                                         </div>
                                     </div>
@@ -1517,6 +1547,7 @@
 <script src="administracion/app_procesos.js"></script>
 <script src="administracion/app_editar_proceso.js"></script>
 <script src="administracion/app_admon_reporte_diario.js"></script>
+<script src="administracion/app_admon_reporte_investime.js"></script>
 <script src="administracion/app_admon_pago_kaizen.js"></script>
 <!--<script src="administracion/app_cuenta_cc.js"></script> -->
 <script src="catalogos/app_catalogo_atn.js"></script>

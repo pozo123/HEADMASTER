@@ -259,9 +259,9 @@ function sumaTotalesPN(week, year){
 					var tot_HE = isNaN(parseFloat(trab.total_horas_extra)) ? 0 : parseFloat(trab.total_horas_extra);
 					var tot_as = isNaN(parseFloat(trab.total_asistencia)) ? 0 :  parseFloat(trab.total_asistencia);
 					var tot_div = isNaN(parseFloat(trab.total_diversos)) ? 0 : parseFloat(trab.total_diversos);
-					var imp_as = isNaN(parseFloat(trab.impuestos.impuestos_asistencia)) ? 0 : parseFloat(trab.impuestos.impuestos_asistencia);
-					var imp_div = isNaN(parseFloat(trab.impuestos.impuestos_diversos)) ? 0 : parseFloat(trab.impuestos.impuestos_diversos);
-					var imp_HE = isNaN(parseFloat(trab.impuestos.impuestos_horas_extra)) ? 0 : parseFloat(trab.impuestos.impuestos_horas_extra);
+					var imp_as = trab.impuestos == undefined ? 0 : (isNaN(parseFloat(trab.impuestos.impuestos_asistencia)) ? 0 : parseFloat(trab.impuestos.impuestos_asistencia));
+					var imp_div = trab.impuestos == undefined ? 0 : (isNaN(parseFloat(trab.impuestos.impuestos_diversos)) ? 0 : parseFloat(trab.impuestos.impuestos_diversos));
+					var imp_HE = trab.impuestos == undefined ? 0 : (isNaN(parseFloat(trab.impuestos.impuestos_horas_extra)) ? 0 : parseFloat(trab.impuestos.impuestos_horas_extra));
 
 					var total_trab = tot_HE + tot_as + tot_div + imp_as + imp_div + imp_HE;
 					total_obra = total_obra + total_trab;
@@ -375,36 +375,38 @@ function sumaAsistenciasPN(week,asis){
 }
 
 function asistenciaDiaPN(dia, asistencias, asis){
-    var proc = dia.proceso;
-    if(proc == "Parado"){
-        proc = "MISC";
-    }
-    if(dia.asistencia == true){
-        asis += 0.2;
-        if(!asistencias[dia.obra]){
-        	asistencias[dia.obra] = {};
-		}
-    	if(asistencias[dia.obra]["total"]) {
-            asistencias[dia.obra]["total"] = asistencias[dia.obra]["total"] + 0.2;
-        } else {
-            asistencias[dia.obra]["total"] = 0.2;
-        }
-        if(dia.obra != proc){ 
-            if(asistencias[dia.obra]){
-                if(!asistencias[dia.obra]["procesos"]){
-                    asistencias[dia.obra]["procesos"] = {};
-                }
-                if(asistencias[dia.obra]["procesos"][proc]){
-                    asistencias[dia.obra]["procesos"][proc] = asistencias[dia.obra]["procesos"][proc] + 0.2;
-                } else {
-                    asistencias[dia.obra]["procesos"][proc] = 0.2;
-                }
-            } else {
-                asistencias[dia.obra] = {};
-                asistencias[dia.obra]["procesos"] = {};
-                asistencias[dia.obra]["procesos"][proc] = 0.2;
-            }
-        }
-    }
+	if(dia != undefined){
+	    var proc = dia.proceso;
+	    if(proc == "Parado"){
+	        proc = "MISC";
+	    }
+	    if(dia.asistencia == true){
+	        asis += 0.2;
+	        if(!asistencias[dia.obra]){
+	        	asistencias[dia.obra] = {};
+			}
+	    	if(asistencias[dia.obra]["total"]) {
+	            asistencias[dia.obra]["total"] = asistencias[dia.obra]["total"] + 0.2;
+	        } else {
+	            asistencias[dia.obra]["total"] = 0.2;
+	        }
+	        if(dia.obra != proc){ 
+	            if(asistencias[dia.obra]){
+	                if(!asistencias[dia.obra]["procesos"]){
+	                    asistencias[dia.obra]["procesos"] = {};
+	                }
+	                if(asistencias[dia.obra]["procesos"][proc]){
+	                    asistencias[dia.obra]["procesos"][proc] = asistencias[dia.obra]["procesos"][proc] + 0.2;
+	                } else {
+	                    asistencias[dia.obra]["procesos"][proc] = 0.2;
+	                }
+	            } else {
+	                asistencias[dia.obra] = {};
+	                asistencias[dia.obra]["procesos"] = {};
+	                asistencias[dia.obra]["procesos"][proc] = 0.2;
+	            }
+	        }
+	    }
+	}
     return asis;
 }

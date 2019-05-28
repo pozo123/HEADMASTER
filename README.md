@@ -12,25 +12,37 @@ Depto. de Innovacion y Optimizacion
         - destajistas (editar: Todo (creo, checar funcionalidad))
         - Diversos (editar: distribuible)
 
+  - Falta Kaizen:
+     - Proy:
+        - ppto
+        - pag
+     - copeo:
+        - prec
+        - copeo
+     - admin:
+        - los dos pptos
+        - estimaciones/est
+
   - gestionar_presu -> depende de def_ppto. Tambien gestiona procs, no?
   - reporte_ppto -> depende de def_ppto   
-  - InvestTime
   - app_funciones algo truena al calcular profits
-  - App para poner horas a registro corrupto, sumar en reg y en score -> Sólo falta probar las sumasEnFirebase
-  - Meter archivo de evidencia a app_pago_kaizen
 
   - reg -LfKD9-qk6Kh_vims3jY de rojas se guardo en proyectos/obras
   - cM3eoNLl81K1W9r de luis igual
 
-  - Revisar pago total a las obras y los kaizens que se haya hecho bien, mas encontrar el error
-
   - Junta Hector
+     - Error -> !asistencia, check
+     - sem 20, probs desde 0, pero ahora con respaldos.
+        - Resetearla
      - En pagos nomina si hay semana pero todo esta en false no lo cargues
      - Carga en pagos a los que tienen diversos aunque no tengan asistencia. Con quitar el reload.
      - Checar que los botones se disableen bien en diversos
      - Ya se carga la clave de la pagadora en pagos nomina. Si no tiene "HEAD ID" + id
+     - editar trabajador
      - label con cuantos renglones en PagoNom
      - horas extra horas Y $
+     - Facilitar mas?
+        - Definir excel para pagadora
 
   - app_rrh_nomina_completa
      - Mostrar avances de las 3 apps de asistencia, aunque no esten terminados.

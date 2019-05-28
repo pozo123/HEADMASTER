@@ -51,7 +51,7 @@ function loadRegistrosCorruptos(uid){
 			yearSnap.forEach(function(weekSnap){
 				weekSnap.forEach(function(regSnap){
 					var reg = regSnap.val();
-					if(reg.inge == uid && reg.horas == -1){
+					if(reg.inge == uid && (reg.horas == -1 || reg.horas == 0)){
 						//console.log(reg);
 						var row1 = document.createElement('div');
 						row1.className = "row"
@@ -108,6 +108,7 @@ function loadRegistrosCorruptos(uid){
 }
 
 $('#' + id_actualizar_button_corruptos).click(function(){
+	var horas_score = {};
 	$('[id^=horas_corr_').each(function(){
 		var reg = regs[this.id.substring(this.id.split("_")[0].length + this.id.split("_")[1].length + 2,this.id.length)];
 		var horas = parseFloat($('#' + this.id).val()) * 3600000;
@@ -121,11 +122,22 @@ $('#' + id_actualizar_button_corruptos).click(function(){
         } else {
             query = rama_bd_obras + "/" + reg.obra + "/procesos/" + reg.proceso;//+1 ms para compensar el -1 sumado al corromper
         }
+        if(!horas_score[reg.inge]){
+        	horas_score[reg.inge] = {};
+        }
+        horas_score[reg.inge][query] = horas_score[reg.inge][query] ? horas_score[reg.inge][query] + parseFloat($('#' + this.id).val()) : parseFloat($('#' + this.id).val());
 
-        sumaEnFirebase(rama_bd_obras + "/" + query + "/SCORE/total_trabajado", horas + 1);
-        sumaEnFirebase(rama_bd_obras + "/" + query + "/SCORE/inges/" + reg.inge + "/horas_trabajadas", horas + 1);
         
 		firebase.database().ref(rama_bd_registros + "/" + reg.year + "/" + reg.week + "/" + reg.uid + "/horas").set(horas);
 	});
+
+	for(inge in horas_score){
+		for(query in horas_score[inge]){
+		    sumaEnFirebase(query + "/SCORE/total_trabajado", horas_score[inge][query]);
+		    sumaEnFirebase(query + "/SCORE/inges/" + inge + "/horas_trabajadas", horas_score[inge][query]);
+		}
+	}
+
 	alert("Horas actualizadas");
+	loadRegistrosCorruptos();
 });

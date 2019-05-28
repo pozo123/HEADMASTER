@@ -36,9 +36,11 @@ firebase.auth().onAuthStateChanged(user => {
         uid_usuario_global = user.uid;
         userUID = user.uid;
         if(user.uid == "sD2NRaTu4Ug4e0gqluYaHpxNZbP2" || user.uid == "WCpLarWgMKfwGsvAdrqlqjQxy243"){
-            //$("#tabRegistrosAdmon").removeClass('hidden');AQUI descomentar
+            $("#tabRegistrosAdmon").removeClass('hidden');
+            $("#tabReporteInvestime").removeClass('hidden');
         } else {
             $("#tabRegistrosAdmon").addClass('hidden');
+            $("#tabReporteInvestime").addClass('hidden');
         }
         firebase.database().ref(rama_bd_personal).orderByChild('uid').equalTo(user.uid).once("child_added", function (snapshot) {
             var user_personal = snapshot.val();

@@ -10,25 +10,27 @@
                      - total
                      - ingresos
                         - cu (por push)
-                           - pad: pad*
-                           - folio
-                           - tipo_pago: ("recibo" o "factura")
-                           - monto
                            - fecha_pago
                            - fecha_registro
+                           - folio
                            - formato ("estimacion" o "anticipo")
+                           - monto
+                           - pad: pad*
+                           - tipo_pago: ("recibo" o "factura")
+                           - file: url
    - investime
       - registros
          - año (ej 2019)
             - semana (ej 3)
                - registro (por uid)
                   - familia
-                      - subfamilia
-                         - actividad
-                         - activo
-                         - checkin
-                         - checkout
-                         - colaborador (por uid)
+                  - subfamilia
+                  - actividad
+                  - activo
+                  - checkin
+                  - checkout
+                  - colaborador (por uid)
+                  - status_obra
       - familias
          - Globales
             - subfamilias (por nombre)
@@ -425,6 +427,12 @@ STORAGE:
                   - imagen
                   - pagos
                      - imagenes
+   - procesos
+      - proceso (clave)
+         - subprocesos (si aplica)
+            - subproceso (clave)
+               - pagos
+                  - imagenes
 
 
 
