@@ -4,7 +4,6 @@ var id_odec_ddl_pag_compras = "odecDdlPagCompras"
 var id_tipo_ddl_pag_compras = "tipoDdlPagCompras"
 
 var id_cantidad_pag_compras = "cantidadPagCompras";
-var id_num_factura_group_pag_compras = "numFacturaGroupPagCompras";
 var id_num_factura_pag_compras = "numFacturaPagCompras";
 var id_notas_pag_compras = "notasPagCompras";
 
@@ -13,12 +12,15 @@ var id_comprobante_file_pag_compras = "comprobanteFilePagCompras";
 var id_comprobante_label_pag_compras = "comprobanteLabelPagCompras";
 var id_acutalizar_button_pag_compras = "actualizarPagCompras";
 
+var id_datatable_catalogo_pag_compras =  "dataTableCatalogoPagCompras";
+var options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+
 var rama_bd_obras = "obras";
 var rama_storage_obras = "obras";
 
 var id_tab_pag_compras = "tabPagosCompras";
 
-var query;
+//var query;
 var fileSeleccionado = "";
 var tipos_pago_compras = [
 	{text: "Efectivo", value: "EF"},
@@ -36,7 +38,7 @@ $('#' + id_tab_pag_compras).click(function(){
 	$('#' + id_solped_ddl_pag_compras).empty();
 	$('#' + id_odec_ddl_pag_compras).empty();
 	$('#' + id_tipo_ddl_pag_compras).empty();
-	$('#' + id_num_factura_group_pag_compras).addClass('hidden');
+	document.getElementById(id_num_factura_pag_compras).disabled = true;
 	fileSeleccionado = "";
 	solpeds = {};
 
@@ -109,14 +111,15 @@ $("#" + id_obra_ddl_pag_compras).change(function(){
 			}
 		});
 	});
+	loadDataTablePagosCompras();
 });
 
 $('#' + id_tipo_ddl_pag_compras).change(function(){
 	if($('#' + id_tipo_ddl_pag_compras).val() == "CR"){
-		$('#' + id_num_factura_group_pag_compras).removeClass('hidden');
+		document.getElementById(id_num_factura_pag_compras).disabled = false;
 	} else {
 		$('#' + id_num_factura_pag_compras).val("");
-		$('#' + id_num_factura_group_pag_compras).addClass('hidden');
+		document.getElementById(id_num_factura_pag_compras).disabled = true;
 	}
 });
 
@@ -144,8 +147,94 @@ $('#' + id_comprobante_file_pag_compras).on("change", function(event){
     $('#' + id_comprobante_label_pag_compras).text(fileSeleccionado.name);
 });
 
+function loadDataTablePagosCompras(){
+	var datos_pagos_compras = [];
+
+    firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_pag_compras + " option:selected").val()).once('value').then(function(obraSnap){
+        obraSnap.child("procesos").forEach(function(procSnap){
+            if(procSnap.child("num_subprocesos") == 0 || obraSnap.key == "IQONO MEXICO"){
+                procSnap.child("contrato_compras/solpeds").forEach(function(solpedSnap){
+                	solpedSnap.child("odecs").forEach(function(odecSnap){
+                		odecSnap.child("pagos").forEach(function(pagoSnap){
+                			var pago = pagoSnap.val();
+	                        datos_pagos_compras.push([
+	                            obraSnap.key == "IQONO MEXICO" ? solpedSnap.child("subproceso").val() : procSnap.key,
+	                            procSnap.child("contrato_compras/clave").val(),
+	                            solpedSnap.key,
+	                            odecSnap.key,
+	                            pagoSnap.key,
+	                            pago.cantidad,
+	                            pago.tipo,
+	                            pago.no_factura ? pago.no_factura : "-",
+	                            pago.notas,
+	                            new Date(pago.fecha).toLocaleDateString("es-ES",options),
+	                            "<button type='button' class='editar btn btn-warning' onclick='showPdfPagoCompras(\"" + pago.pdf + "\")'><i class='fas fa-eye'></i></button>",
+	                        ]);
+                		});
+                    });
+                });
+            } else {
+                procSnap.child("subprocesos").forEach(function(subpSnap){
+                    subpSnap.child("contrato_compras/solpeds").forEach(function(solpedSnap){
+                        solpedSnap.child("odecs").forEach(function(odecSnap){
+                        	odecSnap.child("pagos").forEach(function(pagoSnap){
+                        		var pago = pagoSnap.val();
+	                            datos_pagos_compras.push([
+	                            	subpSnap.key,
+	                                subpSnap.child("contrato_compras/clave").val(),
+	                                solpedSnap.key,
+		                            odecSnap.key,
+		                            pagoSnap.key,
+		                            pago.cantidad,
+		                            pago.tipo,
+		                            pago.no_factura ? pago.no_factura : "-",
+		                            pago.notas,
+		                            new Date(pago.fecha).toLocaleDateString("es-ES",options),
+		                            "<button type='button' class='editar btn btn-warning' onclick='showPdfPagoCompras(\"" + pago.pdf + "\")'><i class='fas fa-eye'></i></button>",
+		                        ]);
+                        	});
+                        });
+                    });
+                });
+            }
+        });
+
+        tabla_odec = $('#'+ id_datatable_catalogo_pag_compras).DataTable({
+            destroy: true,
+            data: datos_pagos_compras,
+            dom: 'Bfrtip',
+            buttons: ['excel'],
+            columns: [
+                {title: "Proceso"},
+                {title: "Contrato"},
+                {title: "Solped"},
+                {title: "OdeC"},
+                {title: "Clave"},
+                {title: "Cantidad"},
+                {title: "Tipo"},              
+                {title: "No. Factura"},
+                {title: "Notas"},
+                {title: "Fecha"},
+                {title: "Imprimir pdf"},
+            ],/*
+            "columnDefs": [ 
+                { "visible": false, "targets": [4] },
+            ],*/
+            language: idioma_espanol, // Esta en app_bibliotecas
+        });
+    });
+}
+
+function showPdfPagoCompras(link){
+	if(link == ""){
+		alert("No hay documento para esta OdeC");
+	} else {
+		window.open(link, '_blank');
+	}
+}
+
 $('#' + id_acutalizar_button_pag_compras).click(function(){
-	if(fileSeleccionado == "" || (!$('#' + id_num_factura_group_pag_compras).hasClass('hidden') && $('#' + id_num_factura_pag_compras).val() == "") || $('#' + id_cantidad_pag_compras).val() == "" || $('#' + id_tipo_ddl_pag_compras + " option:selected").val() == ""){
+	if(fileSeleccionado == "" || (document.getElementById(id_num_factura_pag_compras).disabled == false && $('#' + id_num_factura_pag_compras).val() == "") || $('#' + id_cantidad_pag_compras).val() == "" || $('#' + id_tipo_ddl_pag_compras + " option:selected").val() == ""){
 		alert("Llena todos los campos requeridos");
 	} else {
 		var solp = solpeds[$('#' + id_solped_ddl_pag_compras + " option:selected").val()];
@@ -174,14 +263,15 @@ $('#' + id_acutalizar_button_pag_compras).click(function(){
 			        tipo: $('#' + id_tipo_ddl_pag_compras + " option:selected").val(),
 			        no_factura: $('#' + id_num_factura_pag_compras).val(),
 			        notas: $('#' + id_notas_pag_compras).val(),
+			        fecha: new Date($('#' + id_fecha_pag_compras).val()).getTime(),
 			        pdf: downloadURL,
 				}
-				var query;
-				if(data[0] == "IQONO MEXICO"){
+				/*var query;
+				if($('#' + id_obra_ddl_pag_compras + " option:selected").val() == "IQONO MEXICO"){
 					query = data[3].split("-")[0];
 				} else {
 					query = data[3].split("-").length > 1 ? data[3].split("-")[0] + "/subprocesos/" + data[3] : data[3];
-				}
+				}*/
 				firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_pag_compras + " option:selected").val() + "/procesos/" + solp.path + "/contrato_compras/solpeds/" + solp.solped + "/odecs/" + $('#' + id_odec_ddl_pag_compras + " option:selected").val() + "/pagos").push(pago);
 	            var negativo = 1;
 	            if(pago.tipo == "DE" || pago.tipo == "NC"){
@@ -222,6 +312,7 @@ $('#' + id_acutalizar_button_pag_compras).click(function(){
 	            }
 
 	            alert("Actualización exitosa");
+	            loadDataTablePagosCompras();
 	            calculaKaizen($('#' + id_obra_ddl_pag_compras + " option:selected").val(),"global");
 	        });
 	    });

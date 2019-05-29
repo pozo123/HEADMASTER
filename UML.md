@@ -220,6 +220,7 @@
                                  - tipo (CO, CR, CH, EF, NC o DE)
                                  - no_factura (si cr, si no "")
                                  - notas
+                                 - fecha
                                  - pdf (factura si CR, evidencia si no)
 - personal (magico) (supervisores son los que estan en prod, se ven en obra)
   - uid (como key):

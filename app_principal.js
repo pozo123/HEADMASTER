@@ -35,7 +35,7 @@ firebase.auth().onAuthStateChanged(user => {
     if(user) {
         uid_usuario_global = user.uid;
         userUID = user.uid;
-        if(user.uid == "sD2NRaTu4Ug4e0gqluYaHpxNZbP2" || user.uid == "WCpLarWgMKfwGsvAdrqlqjQxy243"){
+        if(user.uid == "sD2NRaTu4Ug4e0gqluYaHpxNZbP2"){//} || user.uid == "WCpLarWgMKfwGsvAdrqlqjQxy243"){
             $("#tabRegistrosAdmon").removeClass('hidden');
             $("#tabReporteInvestime").removeClass('hidden');
         } else {
@@ -46,7 +46,9 @@ firebase.auth().onAuthStateChanged(user => {
             var user_personal = snapshot.val();
             areas_usuario_global = user_personal.areas;
             creden_usuario_global = user_personal.credenciales;
+
             if(creden_usuario_global == 0){
+                $("#tabReporteInvestime").removeClass('hidden');
                 $('#botonMagicoAdmon').removeClass('hidden');
             } else {
                 $('#botonMagicoAdmon').addClass('hidden');

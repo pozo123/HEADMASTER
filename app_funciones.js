@@ -7,13 +7,30 @@ var rama_bd_mensajes = "mensajes";
 var rama_bd_version = "info_web/version";
 
 
-function trickleDownKaizen(obra, hoja, query_kaiz, cantidad){
+function msToHoursAndMinutes(ms){
+  var m = ms / 60000;
+  var horas = Math.floor(m / 60);
+  var mins = ("0" + Math.floor(m % 60)).slice(-2);
+  return horas + ":" + mins;
+}
+
+function trickleDownKaizen(obra, hoja, query_kaiz, cantidad, calc_profit){
   var split = hoja.split("-");
   if(split.length > 1){
     sumaEnFirebase(rama_bd_obras + "/" + obra + "/procesos/" + split[0] + "/subprocesos/" + hoja + "/kaizen/" + query_kaiz, cantidad);
   }
   sumaEnFirebase(rama_bd_obras + "/" + obra + "/procesos/" + split[0] + "/kaizen/" + query_kaiz, cantidad);
   sumaEnFirebase(rama_bd_obras + "/" + obra + "/kaizen/" + query_kaiz, cantidad);
+  if(calc_profit){
+    setTimeout(function(){
+      console.log("Calculando Kaizen");
+      if(split.length > 1){
+        calculaKaizen(obra,"unico",split[0],hoja);
+      } else {
+        calculaKaizen(obra,"unico",hoja);
+      }
+    }, 3000);
+  }
 }
 
 function gcd_two_numbers(x, y) {
@@ -86,11 +103,12 @@ function calculaKaizen(obra,tipo,proceso,subproceso){
             }
             sumaValoresKaiz(json_obra["procesos"][proceso],"proceso");
           }
+          //calculaProfitKaiz(json_obra["procesos"][proceso]);
         }
         sumaValoresKaiz(json_obra,"obra");
       }
       console.log(json_obra);
-      //firebase.database().ref(rama_bd_obras + "/" + obra).update(json_obra);
+      firebase.database().ref(rama_bd_obras + "/" + obra).update(json_obra);
     } else { 
       alert("No existe esa obra");
     }
@@ -98,7 +116,10 @@ function calculaKaizen(obra,tipo,proceso,subproceso){
 }
 
 function sumaValoresKaiz(pointer,tipo){
-  var suma_kaiz = kaiz;
+  //console.log("sumando valores de ");
+  //console.log(pointer.clave);
+  var suma_kaiz = JSON.parse(JSON.stringify(kaiz));
+  //var suma_kaiz = kaiz;
   var child = tipo == "proceso" ? "subprocesos" : "procesos";
   for(key in pointer[child]){
     var kaiz_local = pointer[child][key]["kaizen"];
@@ -115,11 +136,17 @@ function sumaValoresKaiz(pointer,tipo){
     suma_kaiz["ADMINISTRACION"]["ESTIMACIONES"]["PPTO"] += parseFloat(kaiz_local["ADMINISTRACION"]["ESTIMACIONES"]["PPTO"]);
     suma_kaiz["ADMINISTRACION"]["ANTICIPOS"]["PAG"] += parseFloat(kaiz_local["ADMINISTRACION"]["ANTICIPOS"]["PAG"]);
     suma_kaiz["ADMINISTRACION"]["ANTICIPOS"]["PPTO"] += parseFloat(kaiz_local["ADMINISTRACION"]["ANTICIPOS"]["PPTO"]);
+    suma_kaiz["PROFIT"]["PROG"]["BRUTO"] += parseFloat(kaiz_local["PROFIT"]["PROG"]["BRUTO"]);
+    suma_kaiz["PROFIT"]["PROG"]["NETO"] += parseFloat(kaiz_local["PROFIT"]["PROG"]["NETO"]);
+    suma_kaiz["PROFIT"]["REAL"]["BRUTO"] += parseFloat(kaiz_local["PROFIT"]["REAL"]["BRUTO"]);
+    suma_kaiz["PROFIT"]["REAL"]["NETO"] += parseFloat(kaiz_local["PROFIT"]["REAL"]["NETO"]);
   }
   pointer["kaizen"] = suma_kaiz;
 }
 //Recibe snapshot del objeto que tenga un kaizen (proc o subproc). Obra no porque ese se calcula sumando, por lo de prec/copeo y cuant/odec
 function calculaProfitKaiz(pointer){
+  //console.log("calculando profit de ");
+  //console.log(pointer.clave);
   var kaiz_local = pointer["kaizen"];
   var proy_ppto = parseFloat(kaiz_local["PROYECTOS"]["PPTO"]);
   var proy_pag = parseFloat(kaiz_local["PROYECTOS"]["PAG"]);
@@ -137,16 +164,16 @@ function calculaProfitKaiz(pointer){
 
   var costo_cop = prod_cop_copeo > 0 ? prod_cop_copeo : prod_cop_prec;
   var costo_sum = prod_sum_odec > 0 ? prod_sum_odec : prod_sum_cuant;
-  kaiz_local["PROFIT"]["PROG"]["BRUTO"] = (admin_est_ppto + admin_ant_ppto) * 0.8 - costo_cop - costo_sum - proy_ppto;
-  kaiz_local["PROFIT"]["PROG"]["NETO"] = ((admin_est_ppto + admin_ant_ppto) * 0.8 - costo_cop - costo_sum - proy_ppto) * 0.6;
+  kaiz_local["PROFIT"]["PROG"]["BRUTO"] = (admin_est_ppto + admin_ant_ppto) * (1 - porcentaje_indirectos) - costo_cop - costo_sum - proy_ppto;
+  kaiz_local["PROFIT"]["PROG"]["NETO"] = ((admin_est_ppto + admin_ant_ppto) * (1 - porcentaje_indirectos) - costo_cop - costo_sum - proy_ppto) * 0.6;
 
-  kaiz_local["PROFIT"]["REAL"]["BRUTO"] = (admin_ant_pag + admin_est_pag) * 0.8 - prod_cop_pag - prod_sum_pag - proy_pag;
-  kaiz_local["PROFIT"]["REAL"]["NETO"] = ((admin_ant_pag + admin_est_pag) * 0.8 - prod_cop_pag - prod_sum_pag - proy_pag) * 0.6;
+  kaiz_local["PROFIT"]["REAL"]["BRUTO"] = (admin_ant_pag + admin_est_pag) * (1 - porcentaje_indirectos) - prod_cop_pag - prod_sum_pag - proy_pag;
+  kaiz_local["PROFIT"]["REAL"]["NETO"] = ((admin_ant_pag + admin_est_pag) * (1 - porcentaje_indirectos) - prod_cop_pag - prod_sum_pag - proy_pag) * 0.6;
 }
 
 function sumaEnFirebase(query, cant){
   var cantidad = isNaN(parseFloat(cant)) ? 0 : parseFloat(cant);
-  console.log(cantidad); 
+  //console.log(cantidad); 
     firebase.database().ref(query).once('value').then(function(snapshot){
         if(snapshot.exists()){
             var anterior = parseFloat(snapshot.val());
@@ -257,15 +284,15 @@ function pistaDeAuditoria(){
 function calculaUtilidad(costos, criterio, valor){
   var precioVenta;
   if(criterio == "porcentaje"){
-    precioVenta = costos/(0.8-valor);
+    precioVenta = costos/((1-porcentaje_indirectos)-valor);
     return precioVenta;
   } 
   if(criterio == "cantidad"){
-    precioVenta = (valor + costos)/0.8;
+    precioVenta = (valor + costos)/(1-porcentaje_indirectos);
     return precioVenta;
   }
   if(criterio == "precioVenta"){
-    var profitCantidad = 0.8*valor - costos;
+    var profitCantidad = (1-porcentaje_indirectos)*valor - costos;
     var profitPorcentaje = profitCantidad/valor;
     return profitPorcentaje;
     //return profitCantidad;
@@ -361,6 +388,9 @@ function getWeekDiaria(semana,year){
 }
 
 function deformatMoney(string){
+  if(string == ""){
+    string = "0";
+  }
   var sin_comas = string.replace(/,/g,"");
   return parseFloat(sin_comas.replace("$",""));
 }

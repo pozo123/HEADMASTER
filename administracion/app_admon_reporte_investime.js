@@ -83,12 +83,13 @@ function getRegsReporteAdmin(datos_reporte, data){
 		                var reg = regSnap.val();
 		                if(reg.checkin >= fecha_i_timestamp && reg.checkin <= fecha_f_timestamp){
 		                    var horas =(parseFloat(reg.horas)/3600000).toFixed(3);
+                            var horas_string = reg.checkout == 0 ? "-" : msToHoursAndMinutes(parseInt(reg.checkout) - parseInt(reg.checkin));
 	                        datos_reporte.push([
 	                            reg.familia,
 	                            reg.subfamilia,
 	                            reg.actividad,
 	                            new Date(reg.checkin).toLocaleDateString("es-ES", options),
-	                            (parseFloat(parseInt(reg.checkout) - parseInt(reg.checkin)) / 3600000).toFixed(2),
+	                            horas_string,
 	                            reg.status_obra,
 	                        ]);
 		                }

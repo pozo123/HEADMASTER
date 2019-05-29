@@ -1,6 +1,24 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <!--Favicon-->
+        <link rel="apple-touch-icon" sizes="57x57" href="favicon/apple-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="favicon/apple-icon-60x60.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="favicon/apple-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="favicon/apple-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="favicon/apple-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="favicon/apple-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="favicon/apple-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="favicon/apple-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-icon-180x180.png">
+        <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="favicon/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+        <link rel="manifest" href="/manifest.json">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+        <meta name="theme-color" content="#ffffff">
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -209,21 +227,23 @@
                             <p>Página para dar de alta contratos para procesos</p>
                             <div class="container-fluid">
                                 <div class="row align-items-center">
-                                    <div class="col-lg-3"></div>
-                                    <div class="col-lg-6">
-                                        <form action="#" onsubmit="return false;">                   
-                                            <div class="form-group">
-                                                <label for="obraDdlContrato">Obra:</label>
-                                                <select id="obraDdlContrato" class="form-control" onChange=""></select>
+                                    <div class="col-lg-12">
+                                        <form action="#" onsubmit="return false;"> 
+                                            <div class="form-row align-items-center">                  
+                                                <div class="col-lg-4">
+                                                    <label for="obraDdlContrato">Obra:</label>
+                                                    <select id="obraDdlContrato" class="form-control" onChange=""></select>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="procDdlContrato">Proceso:</label>
+                                                    <select id ="procDdlContrato" class="form-control"></select>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="claveContrato">Clave:</label>
+                                                    <input type="text" id="claveContrato"class="form-control" placeholder= "Clave">
+                                                </div> 
                                             </div>
-                                            <div class="form-group">
-                                                <label for="procDdlContrato">Proceso:</label>
-                                                <select id ="procDdlContrato" class="form-control"></select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="claveContrato">Clave:</label>
-                                                <input type="text" id="claveContrato"class="form-control" placeholder= "Clave">
-                                            </div> 
+                                            <br/>
                                             <div class="form-row">
                                                 <div class= "col-lg-6">
                                                     <button id="guardarButtonContrato" type="button" class="btn btn-outline-success btn-block">Generar</button>
@@ -235,7 +255,16 @@
                                         </form>
                                         <br/>
                                     </div>
-                                    <div class="col-lg-3"></div>
+                                    <br/>
+                                    <div class="col-lg-12">
+                                        <hr class="style2">
+                                        <h1>Catálogo de Contratos</h1>
+                                        <div class="row mt-3">
+                                            <div class="container-fluid">
+                                                <table id="dataTableCatalogoContrato" class="display" style="width:100%"></table>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -244,42 +273,42 @@
                             <p>Página para dar de alta solpeds en contratos</p>
                             <div class="container-fluid">
                                 <div class="row align-items-center">
-                                    <div class="col-lg-3"></div>
-                                    <div class="col-lg-6">
-                                        <form action="#" onsubmit="return false;">                   
-                                            <div class="form-group">
-                                                <label for="obraDdlSolped">Obra:</label>
-                                                <select id="obraDdlSolped" class="form-control" onChange=""></select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="contratoDdlSolped">Contrato:</label>
-                                                <select id ="contratoDdlSolped" class="form-control"></select>
-                                            </div>
-                                            <div class="form-group" id="subpGroupSolped">
-                                                <label for="subpDdlSolped">Subproceso:</label>
-                                                <select id ="subpDdlSolped" class="form-control"></select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="claveSolped">Clave:</label>
-                                                <input type="text" id="claveSolped"class="form-control" placeholder= "Clave">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="nombreSolped">Nombre:</label>
-                                                <input type="text" id="nombreSolped"class="form-control" placeholder= "Nombre">
-                                            </div>
-                                            <div class="form-row align-items-center">
-                                                <div class="col-lg-6 col-sm-12">
-                                                    <label for="fechaSolped">Fecha de Generación de Solped:</label>
+                                    <div class="col-lg-12">
+                                        <form action="#" onsubmit="return false;"> 
+                                            <div class="form-row align-items-center">                
+                                                <div class="col-lg-3">
+                                                    <label for="obraDdlSolped">Obra:</label>
+                                                    <select id="obraDdlSolped" class="form-control" onChange=""></select>
                                                 </div>
-                                                <div class="col-lg-6 col-sm-12">
+                                                <div class="col-lg-3">
+                                                    <label for="contratoDdlSolped">Contrato:</label>
+                                                    <select id ="contratoDdlSolped" class="form-control"></select>
+                                                </div>
+                                                <div class="col-lg-3" id="subpGroupSolped">
+                                                    <label for="subpDdlSolped">Subproceso:</label>
+                                                    <select id ="subpDdlSolped" class="form-control"></select>
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <label for="claveSolped">Clave:</label>
+                                                    <input type="text" id="claveSolped"class="form-control" placeholder= "Clave">
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <label for="nombreSolped">Nombre:</label>
+                                                    <input type="text" id="nombreSolped"class="form-control" placeholder= "Nombre">
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="form-row align-items-center">                
+                                                <div class="form-row align-items-center col-lg-6">
+                                                    <label for="fechaSolped">Fecha de Generación:</label>
                                                     <input class="form-control" type="text" id="fechaSolped" placeholder="" readonly="readonly">
                                                 </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <label for="fotoFileSolped">Selecciona archivo de Excel en el formato deseado</label>
-                                                <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" id="fotoFileSolped" accept="image/* , .pdf">
-                                                    <label class = "custom-file-label" id="fotoLabelSolped">Archivo no seleccionado</label>
+                                                <div class="form-row align-items-center col-lg-6">
+                                                    <label for="fotoFileSolped">Selecciona archivo de evidencia</label>
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input" id="fotoFileSolped" accept="image/* , .pdf">
+                                                        <label class = "custom-file-label" id="fotoLabelSolped">Archivo no seleccionado</label>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <br/>
@@ -299,7 +328,16 @@
                                         </form>
                                         <br/>
                                     </div>
-                                    <div class="col-lg-3"></div>
+                                    <br/>
+                                    <div class="col-lg-12">
+                                        <hr class="style2">
+                                        <h1>Catálogo de Solpeds</h1>
+                                        <div class="row mt-3">
+                                            <div class="container-fluid">
+                                                <table id="dataTableCatalogoSolped" class="display" style="width:100%"></table>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -312,54 +350,55 @@
                                     <div class="col-lg-12">
                                         <form action="#" onsubmit="return false;">   
                                             <div class="form-row align-items-center">                
-                                                <div class="col-lg-3">
+                                                <div class="col-lg-4">
                                                     <label for="obraDdlOdeC">Obra:</label>
                                                     <select id="obraDdlOdeC" class="form-control" onChange=""></select>
                                                 </div>
-                                                <div class="col-lg-3" id ="groupProcOdeC">
+                                                <div class="col-lg-4" id ="groupProcOdeC">
                                                     <label for="procDdlOdeC">Proceso / Contrato:</label>
                                                     <select id ="procDdlOdeC" class="form-control"></select>
                                                 </div>
-                                                <div class="col-lg-3">
+                                                <div class="col-lg-4">
                                                     <label for="solpedDdlOdeC">Solped:</label>
                                                     <select id ="solpedDdlOdeC" class="form-control"></select>
                                                 </div>
-                                                <div class="col-lg-3">
-                                                    <label for="notasOdeC">Notas:</label>
-                                                    <input type="text" id ="notasOdeC" class="form-control"></select>
-                                                </div>
                                             </div>
                                             <br/>
                                             <div class="form-row align-items-center">
-                                                <div class="col-lg-3">
+                                                <div class="col-lg-4">
                                                     <label for="claveOdeC">Orden de Compra</label>
                                                     <input type="text" id="claveOdeC"class="form-control" placeholder= "Clave">
                                                 </div> 
-                                                <div class="col-lg-3">
+                                                <div class="col-lg-4">
                                                     <label for="proveedorOdeC">Proveedor (clave)</label>
                                                     <input type="text" id="proveedorOdeC"class="form-control" placeholder= "Ingresa la clave del proveedor">
                                                 </div>
-                                                <div class="col-lg-3">
+                                                <div class="col-lg-4">
                                                     <label for="proveedorNomOdeC">Proveedor (nombre)</label>
                                                     <input type="text" id="proveedorNomOdeC"class="form-control" placeholder= "Ingresa el nombre del proveedor">
-                                                </div>
-                                                <div class="col-lg-3">
-                                                    <label for="cantidadOdeC">$ Costo</label>
-                                                    <input type="text" id="cantidadOdeC"class="form-control" placeholder= "Ingresa la cantidad nueva">
                                                 </div>
                                             </div>
                                             <br/>
                                             <div class="form-row align-items-center">
-                                                <div class="col-lg-3 col-sm-12">
-                                                    <label for="fechaOdeC">Fecha de Generación de Orden de Compra:</label>
+                                                <div class="col-lg-4">
+                                                    <label for="notasOdeC">Notas:</label>
+                                                    <input type="text" id ="notasOdeC" class="form-control"></select>
                                                 </div>
-                                                <div class="col-lg-3 col-sm-12">
+                                                <div class="col-lg-4">
+                                                    <label for="cantidadOdeC">$ Costo</label>
+                                                    <input type="text" id="cantidadOdeC"class="form-control" placeholder= "Ingresa la cantidad nueva">
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="fechaOdeC">Fecha de Generación:</label>
                                                     <input class="form-control" type="text" id="fechaOdeC" placeholder="" readonly="readonly">
                                                 </div>
-                                                <div class= "col-lg-3">
+                                            </div>
+                                            <br/>
+                                            <div class="form-row align-items-center">
+                                                <div class= "col-lg-6">
                                                     <button id="actualizarOdeC" type="button" class="btn btn-outline-success btn-block">Generar</button>
                                                 </div>
-                                                <div class= "col-lg-3">
+                                                <div class= "col-lg-6">
                                                     <button type="reset" id = ""class="btn btn-outline-danger btn-block">Borrar Todo</button>
                                                 </div>
                                             </div>
@@ -385,53 +424,53 @@
                             <p>Página para realizar registros de pagos</p>
                             <div class="container-fluid">
                                 <div class="row align-items-center">
-                                    <div class="col-lg-3"></div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-12">
                                         <form action="#" onsubmit="return false;">                   
-                                            <div class="form-group">
-                                                <label for="obraDdlPagCompras">Obra:</label>
-                                                <select id="obraDdlPagCompras" class="form-control" onChange=""></select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="solpedDdlPagCompras">Solped:</label>
-                                                <select id ="solpedDdlPagCompras" class="form-control"></select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="odecDdlPagCompras">Orden de Compra:</label>
-                                                <select id ="odecDdlPagCompras" class="form-control"></select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="tipoDdlPagCompras">Tipo de Pago:</label>
-                                                <select id ="tipoDdlPagCompras" class="form-control"></select>
-                                            </div>
-                                            <div class="form-group hidden" id="numFacturaGroupPagCompras">
-                                                <label for="numFacturaPagCompras">Numero de Factura:</label>
-                                                <input type="text" id="numFacturaPagCompras" class="form-control" onChange=""></select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="cantidadPagCompras">Cantidad Pagada:</label>
-                                                <input type="text" id="cantidadPagCompras"class="form-control" placeholder= "Ingresa la cantidad pagada">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="notasPagCompras">Notas:</label>
-                                                <input type="text" select id="notasPagCompras" class="form-control" onChange=""></select>
-                                            </div>
-
-                                            <br/>
-                                            <div class="form-row align-items-center">
-                                                <div class="col-lg-6 col-sm-12">
-                                                    <label for="fechaPagCompras">Fecha de Generación de Pago:</label>
+                                            <div class="form-row align-items-center">                
+                                                <div class="col-lg-4">
+                                                    <label for="obraDdlPagCompras">Obra:</label>
+                                                    <select id="obraDdlPagCompras" class="form-control" onChange=""></select>
                                                 </div>
-                                                <div class="col-lg-6 col-sm-12">
+                                                <div class="col-lg-4">
+                                                    <label for="solpedDdlPagCompras">Solped:</label>
+                                                    <select id ="solpedDdlPagCompras" class="form-control"></select>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="odecDdlPagCompras">Orden de Compra:</label>
+                                                    <select id ="odecDdlPagCompras" class="form-control"></select>
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="form-row align-items-center">                
+                                                <div class="col-lg-4">
+                                                    <label for="tipoDdlPagCompras">Tipo de Pago:</label>
+                                                    <select id ="tipoDdlPagCompras" class="form-control"></select>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="numFacturaPagCompras">Numero de Factura:</label>
+                                                    <input type="text" id="numFacturaPagCompras" class="form-control" onChange=""></select>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="cantidadPagCompras">Cantidad Pagada:</label>
+                                                    <input type="text" id="cantidadPagCompras"class="form-control" placeholder= "Ingresa la cantidad pagada">
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="form-row align-items-center">                
+                                                <div class="col-lg-4">
+                                                    <label for="notasPagCompras">Notas:</label>
+                                                    <input type="text" select id="notasPagCompras" class="form-control" onChange=""></select>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="fechaPagCompras">Fecha de Generación de Pago:</label>
                                                     <input class="form-control" type="text" id="fechaPagCompras" placeholder="" readonly="readonly">
                                                 </div>
-                                            </div>
-                                            <br/>
-                                            <div class="form-row">
-                                                <label for="comprobanteFilePagCompras">Selecciona archivo de Excel en el formato deseado</label>
-                                                <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" id="comprobanteFilePagCompras" accept="image/* , .pdf">
-                                                    <label class = "custom-file-label" id="comprobanteLabelPagCompras">Archivo no seleccionado</label>
+                                                <div class="col-lg-4">
+                                                    <label for="comprobanteDivPagCompras">Selecciona archivo de evidencia</label>
+                                                    <div class="custom-file" id="comprobanteDivPagCompras">
+                                                        <label class = "custom-file-label" id="comprobanteLabelPagCompras">Archivo no seleccionado</label>
+                                                        <input type="file" class="custom-file-input" id="comprobanteFilePagCompras" accept="image/* , .pdf">
+                                                    </div>
                                                 </div>
                                             </div>
                                             <br/>
@@ -446,7 +485,16 @@
                                         </form>
                                         <br/>
                                     </div>
-                                    <div class="col-lg-3"></div>
+                                    <br/>
+                                    <div class="col-lg-12">
+                                        <hr class="style2">
+                                        <h1>Catálogo de Pagos</h1>
+                                        <div class="row mt-3">
+                                            <div class="container-fluid">
+                                                <table id="dataTableCatalogoPagCompras" class="display" style="width:100%"></table>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

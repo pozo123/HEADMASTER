@@ -13,6 +13,9 @@ var id_actualizar_button_solped = "actualizarButtonSolped";
 var id_reset_button_solped = "resetSolped";
 var id_pdf_button_solped = "pdfButtonSolped";
 
+var id_datatable_catalogo_solped =  "dataTableCatalogoSolped";
+var options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+
 var rama_bd_obras = "obras";
 var rama_storage_obras = "obras";
 
@@ -54,6 +57,7 @@ function resetTabSolped(){
 			}
 		});
     });
+    loadTablaSolped();
 };
 
 $('#' + id_obra_ddl_solped).change(function(){
@@ -87,6 +91,79 @@ $('#' + id_obra_ddl_solped).change(function(){
     });
 });
 
+function loadTablaSolped(){
+	var datos_solped = [];
+    firebase.database().ref(rama_bd_obras).once('value').then(function(snapshot){
+        snapshot.forEach(function(obraSnap){
+            obraSnap.child("procesos").forEach(function(procSnap){
+                if(procSnap.child("num_subprocesos") == 0 || obraSnap.key == "IQONO MEXICO"){
+                    procSnap.child("contrato_compras/solpeds").forEach(function(solpedSnap){
+                    	var solped = solpedSnap.val();
+                        datos_solped.push([
+                            obraSnap.key,
+                            procSnap.child("contrato_compras/clave").val(),
+                            procSnap.key,
+                            solpedSnap.key,
+                            solped.nombre,
+                            new Date(solped.fecha).toLocaleDateString("es-ES",options),
+                            solped.subproceso ? solped.subproceso : "-",
+                            solped.autorizacion ? "Autorizado" : "Documento pendiente",
+                            //AQUI definir funcion y parametro y asi
+                            "<button type='button' class='editar btn btn-warning' onclick='showPdfSolped(\"" + solped.foto + "\")'><i class='fas fa-eye'></i></button>",
+                        ]);
+                });
+                } else {
+                    procSnap.child("subprocesos").forEach(function(subpSnap){
+                        subpSnap.child("contrato_compras/solpeds").forEach(function(solpedSnap){
+                            solpedSnap.child("odecs").forEach(function(odecSnap){
+                                var solped = solpedSnap.val();
+                                datos_solped.push([//AQUI definir info
+                                	obraSnap.key,
+                            		subpSnap.child("contrato_compras/clave").val(),
+                            		procSnap.key,
+                            		solpedSnap.key,
+                            		solped.nombre,
+                            		new Date(solped.fecha).toLocaleDateString("es-ES",options),
+                            		subpSnap.key,
+                            		solped.autorizacion ? "Autorizado" : "Documento pendiente",
+		                            //AQUI definir funcion y parametro y asi
+		                            "<button type='button' class='editar btn btn-warning' onclick='showPdfSolped(\"" + solped.foto + "\")'><i class='fas fa-eye'></i></button>",
+                                ]);
+                            });
+                        });
+                    });
+                }
+            });
+        });
+
+        tabla_solped = $('#'+ id_datatable_catalogo_solped).DataTable({
+            destroy: true,
+            data: datos_solped,
+            dom: 'Bfrtip',
+            buttons: ['excel'],
+            columns: [
+                {title: "Obra"},
+                {title: "Contrato"},
+                {title: "Proceso"},
+                {title: "Clave"},
+                {title: "Nombre"},
+                {title: "Fecha"},              
+                {title: "Subproceso"},
+                {title: "Autorizacion"},
+                {title: "Imprimir pdf"},
+            ],
+            language: idioma_espanol, // Esta en app_bibliotecas
+        });
+    });
+}
+
+function showPdfSolped(link){
+	if(link == ""){
+		alert("No hay documento para esta OdeC");
+	} else {
+		window.open(link, '_blank');
+	}
+}
 $('#' + id_contrato_ddl_solped).change(function(){
 	if($('#' + id_obra_ddl_solped + " option:selected").val() == "IQONO MEXICO" && $('#' + id_contrato_ddl_solped + " option:selected").val() != "MISC"){
 		$('#' + id_subp_group_solped).removeClass('hidden');

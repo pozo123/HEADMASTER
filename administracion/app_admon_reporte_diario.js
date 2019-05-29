@@ -76,14 +76,14 @@ function generateReporteDiario(json){
                     if(keyReg == 0){
                         regs.push([{text: inges[key]["nombre"], noWrap: true},
                             {text: inges[key]["regs"][keyReg]["obra"], noWrap: true},
-                            {text: inges[key]["regs"][keyReg]["proc"], noWrap: true},
+                            {text: inges[key]["regs"][keyReg]["proc"]},//, noWrap: false},
                             {text: inges[key]["regs"][keyReg]["horas"], noWrap: true},
                             {table: {widths: ['*'],heights: [20],body: [['']]},}
                         ]);
                     } else {
                         regs.push([{text: '', noWrap: true},
                             {text: inges[key]["regs"][keyReg]["obra"], noWrap: true},
-                            {text: inges[key]["regs"][keyReg]["proc"], noWrap: true},
+                            {text: inges[key]["regs"][keyReg]["proc"],},// noWrap: true},
                             {text: inges[key]["regs"][keyReg]["horas"], noWrap: true},
                             {table: {widths: ['*'],heights: [20],body: [['']]},}
                         ]);
@@ -111,7 +111,7 @@ function generateReporteDiario(json){
             {
                 style: 'tableExample',
                 table: {
-                    widths: ['auto','auto','auto','auto','*'],
+                    widths: ['auto','auto',100,'auto','*'],
                     headerRows: 1,
                     body: regs,
                 },

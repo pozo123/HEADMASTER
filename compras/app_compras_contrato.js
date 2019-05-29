@@ -3,6 +3,8 @@ var id_proc_ddl_contrato = "procDdlContrato";
 var id_clave_contrato = "claveContrato";
 var id_guardar_button_contrato = "guardarButtonContrato";
 
+var id_datatable_catalogo_contrato =  "dataTableCatalogoContrato";
+
 var id_tab_contrato = "tabContrato";
 
 var rama_bd_obras = "obras";
@@ -25,7 +27,52 @@ $('#' + id_tab_contrato).click(function(){
             select.appendChild(option2);
         }
     });
+    loadTablaContrato();
 });
+
+function loadTablaContrato(){
+	var datos_cont = [];
+    firebase.database().ref(rama_bd_obras).once('value').then(function(snapshot){
+        snapshot.forEach(function(obraSnap){
+            obraSnap.child("procesos").forEach(function(procSnap){
+                if(procSnap.child("num_subprocesos") == 0 || obraSnap.key == "IQONO MEXICO"){
+                	if(procSnap.child("contrato_compras").exists()){
+	                	var cont = procSnap.child("contrato_compras").val();
+	                    datos_cont.push([
+	                        obraSnap.key,
+	                        procSnap.key,
+	                        cont.clave,
+	                    ]);
+	                }
+                } else {
+                    procSnap.child("subprocesos").forEach(function(subpSnap){
+                        if(subpSnap.child("contrato_compras").exists()){
+	                        var cont = subpSnap.child("contrato_compras").val();
+		                    datos_cont.push([
+		                        obraSnap.key,
+		                        procSnap.key,
+		                        cont.clave,
+		                    ]);
+		                }
+                    });
+                }
+            });
+        });
+
+        tabla_cont = $('#'+ id_datatable_catalogo_contrato).DataTable({
+            destroy: true,
+            data: datos_cont,
+            dom: 'Bfrtip',
+            buttons: ['excel'],
+            columns: [
+                {title: "Obra"},
+                {title: "Proceso"},
+                {title: "Contrato"},
+            ],
+            language: idioma_espanol, // Esta en app_bibliotecas
+        });
+    });
+}
 
 $('#' + id_obra_ddl_contrato).change(function(){
 	$('#' + id_proc_ddl_contrato).empty();
@@ -77,5 +124,6 @@ $('#' + id_guardar_button_contrato).click(function(){
 		alert("Contrato asignado con éxito");
 		document.getElementById(id_proc_ddl_contrato).selectedIndex = 0;
 		$('#' + id_clave_contrato).val("");
+		loadTablaContrato();
 	}
 });

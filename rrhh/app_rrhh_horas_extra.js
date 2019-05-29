@@ -152,7 +152,8 @@ $("#" + id_obra_ddl_horasExtra).change(function(){
                     trabSnap.child("horas_extra").forEach(function(childSnap){
                         //console.log("1");
                         var entrada = childSnap.val();
-                        datos_horasExtra.push([trabSnap.key,tSnap.child(trabSnap.key).val().nombre,new Date(entrada.fecha).toLocaleDateString("es-ES",options),entrada.proceso,entrada.horas,formatMoney(entrada.horas)]);
+                        var horas = parseFloat(entrada.horas) * 24 / tSnap.child(trabSnap.key + "/sueldo_base").val();
+                        datos_horasExtra.push([trabSnap.key,tSnap.child(trabSnap.key).val().nombre,new Date(entrada.fecha).toLocaleDateString("es-ES",options),entrada.proceso,horas,formatMoney(entrada.horas)]);
                     });
                     //Asincronía? :S
                     var tabla_procesos = $('#'+ id_datatable_horasExtra).DataTable({
