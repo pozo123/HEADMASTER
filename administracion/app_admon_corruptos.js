@@ -51,8 +51,10 @@ function loadRegistrosCorruptos(uid){
 			yearSnap.forEach(function(weekSnap){
 				weekSnap.forEach(function(regSnap){
 					var reg = regSnap.val();
-					if(reg.inge == uid && (reg.horas == -1 || reg.horas == 0)){
+					if(reg.inge == uid && (reg.horas == -1 || (!reg.status && new Date().getDay() != new Date(reg.checkin).getDay()) || (reg.horas == 0 && reg.status))){
 						//console.log(reg);
+						var status = reg.status ? "Terminado" : "Activo";//AQUI usarlo para eso
+
 						var row1 = document.createElement('div');
 						row1.className = "row"
 						var row2 = document.createElement('div');

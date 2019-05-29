@@ -35,17 +35,40 @@ firebase.auth().onAuthStateChanged(user => {
     if(user) {
         uid_usuario_global = user.uid;
         userUID = user.uid;
-        if(user.uid == "sD2NRaTu4Ug4e0gqluYaHpxNZbP2"){//} || user.uid == "WCpLarWgMKfwGsvAdrqlqjQxy243"){
-            $("#tabRegistrosAdmon").removeClass('hidden');
-            $("#tabReporteInvestime").removeClass('hidden');
-        } else {
-            $("#tabRegistrosAdmon").addClass('hidden');
-            $("#tabReporteInvestime").addClass('hidden');
-        }
         firebase.database().ref(rama_bd_personal).orderByChild('uid').equalTo(user.uid).once("child_added", function (snapshot) {
             var user_personal = snapshot.val();
             areas_usuario_global = user_personal.areas;
             creden_usuario_global = user_personal.credenciales;
+            if(user.uid == "sD2NRaTu4Ug4e0gqluYaHpxNZbP2"){//} || user.uid == "WCpLarWgMKfwGsvAdrqlqjQxy243"){
+                //AQUI buscar reg activo y cargarlo a los labels de group_salida_investime
+                if(user_personal.status){
+                    firebase.database().ref(rama_bd_registros_registros_admin).orderByKey().limitToLast(1).once('child_added').then(function(snapshot){
+                        snapshot.forEach(function(weekSnap){
+                            weekSnap.forEach(function(regSnap){
+                                if(regSnap.val().activo == true){
+                                    var reg = regSnap.val();
+                                    $('#id_label_familia_reg_investime').removeClass('hidden');
+                                    $('#id_label_subfamilia_reg_investime').removeClass('hidden');
+                                    $('#id_label_actividad_reg_investime').removeClass('hidden');
+
+                                    $('#id_label_familia_reg_investime').text(reg.familia);
+                                    $('#id_label_subfamilia_reg_investime').text(reg.subfamilia);
+                                    $('#id_label_actividad_reg_investime').text(reg.actividad);
+                                }
+                            });
+                        });
+                    });
+                } else {
+                    $('#id_label_familia_reg_investime').addClass('hidden');
+                    $('#id_label_subfamilia_reg_investime').addClass('hidden');
+                    $('#id_label_actividad_reg_investime').addClass('hidden');
+                }
+                $("#tabRegistrosAdmon").removeClass('hidden');
+                $("#tabReporteInvestime").removeClass('hidden');
+            } else {
+                $("#tabRegistrosAdmon").addClass('hidden');
+                $("#tabReporteInvestime").addClass('hidden');
+            }
 
             if(creden_usuario_global == 0){
                 $("#tabReporteInvestime").removeClass('hidden');

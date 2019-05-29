@@ -394,6 +394,11 @@
                                 <button type="button" name="" id="entradaButtonRegistroAdmin" class="btn btn-success btn-lg btn-block">Entrada</button> 
                             </div>
                             <div class="container-fluid">
+                                <label for="salidaButtonRegistroAdmin" id="id_label_familia_reg_investime"></label>
+                                <br/>
+                                <label for="salidaButtonRegistroAdmin" id="id_label_subfamilia_reg_investime"></label>
+                                <br/>
+                                <label for="salidaButtonRegistroAdmin" id="id_label_actividad_reg_investime"></label>
                                 <button type="button" name="" id="salidaButtonRegistroAdmin" class="btn btn-danger btn-lg btn-block hidden">Salida</button>
                             </div>
                         </div>
@@ -445,6 +450,7 @@
                             <li class="tab" id="tabReporte"><a href="#" onclick="openTabs('tabReporte','reporte')">Reporte de Registros</a></li>
                             <li class="tab" id="tabReporteDiario"><a href="#">Reporte Diario</a></li>
                             <li class="tab hidden" id="tabReporteInvestime"><a href="#" onclick="openTabs('tabReporteInvestime','reporteInvestime')">Reporte Inve$Time</a></li>
+                            <li class="tab" id="tabCorruptos"><a href="#" onclick="openTabs('tabCorruptos','corruptos')">Registros Corruptos</a></li>
                         </ul>
                     </li>
                     <li>
@@ -1532,6 +1538,29 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div id="corruptos" class="tabcontent hidden">
+                            <h1>Registros Corruptos</h1><br/>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">
+                                            <div class="form-group" id="ingeGroupCorruptos">
+                                                <label for="ingeDdlCorruptos">Colaborador:</label>
+                                                <select id="ingeDdlCorruptos" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group" id="regsDivCorruptos">
+                                            </div>
+                                            <div class="row">
+                                                <button type="button" name="" id="actualizarButtonCorruptos" class="btn btn-outline-success btn-block">Actualizar</button>
+                                            </div>     
+                                        </form>
+                                    </div>
+                                    <div class = "col-lg-3"></div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- Catalogos -->
                         <div id= "atnCatalogo" class="tabcontent hidden">
                             <div class="container-fluid">
@@ -1651,6 +1680,7 @@
 <script src="administracion/app_admon_areas.js"></script>        
 <script src="administracion/app_admin_registro.js"></script>        
 <script src="administracion/app_admon_colaborador.js"></script>
+<script src="administracion/app_admon_corruptos.js"></script>
 <script src="administracion/app_admon_ppto_adic.js"></script>
 <script src="administracion/app_obra.js"></script>
 <script src="administracion/app_cliente.js"></script>

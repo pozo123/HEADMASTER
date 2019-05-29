@@ -7,7 +7,7 @@ var rama_bd_registros_registros_admin = "administracion/investime/registros";
 
 var tab_investime = "tabReporteInvestime";
 
-var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+var optionsInvestime = { weekday: 'short', year: '2-digit', month: 'short', day: 'numeric' , hour: "numeric", minute: "numeric"};
 jQuery.datetimepicker.setLocale('es');
 
 $('#' + tab_investime).click(function() {
@@ -84,11 +84,13 @@ function getRegsReporteAdmin(datos_reporte, data){
 		                if(reg.checkin >= fecha_i_timestamp && reg.checkin <= fecha_f_timestamp){
 		                    var horas =(parseFloat(reg.horas)/3600000).toFixed(3);
                             var horas_string = reg.checkout == 0 ? "-" : msToHoursAndMinutes(parseInt(reg.checkout) - parseInt(reg.checkin));
+                            console.log("hola");
+                            console.log(new Date(reg.checkin).toLocaleDateString("es-ES", optionsInvestime));
 	                        datos_reporte.push([
 	                            reg.familia,
 	                            reg.subfamilia,
 	                            reg.actividad,
-	                            new Date(reg.checkin).toLocaleDateString("es-ES", options),
+	                            new Date(reg.checkin).toLocaleDateString("es-ES", optionsInvestime),
 	                            horas_string,
 	                            reg.status_obra,
 	                        ]);

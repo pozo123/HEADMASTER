@@ -6,18 +6,14 @@ HTMLs:
 
 TO DO:
  - ADMON
-   - Quitar candado evidencia en pagos kaizen (admin)
    - Regs corruptos:
-     - quitarlos de proy, ponerlo en admin
-     - filtrar los horas == 0 porque esta activo de hoy :P
-     - revisar corruptos activos (==0 porque activo pero desde ayer)
+     - label "activo";
      - poner la hora de entrada, no solo la fecha
      - corregir poniendo la hora de salida, no la cantidad de horas
    - Centro de costos.
      - alta cuenta
      - añadir al desplegar
  - COMPRAS
-   - catalogo de pagos con botones agregar pdf e imprimir pdf (como en odecs)}
    - app_compras_credito -> definida en foto
    - Definir cómo terminar OdeC
  - PRODUCCION
@@ -46,7 +42,7 @@ TO DO:
      - Destajistas (en prod y en rrhh, editable (todo?) en rrhh)
      - Diversos, editable (en prod y en rrhh, editable (distribuible) en rrhh)
  - GENERALES
-   - Index
+   - Index -> nuevo diseño de landing page
    - Cambiar idioma_espanol en tablas de apps como datos_kaizen y asistencia y desplegar_procesos
    - Definir y programar la columna PROYECTOS/PAG (cuando, quien y como)
    - Definir y programar la columna COPEO/COPEO (cuando, quien y como)
@@ -60,24 +56,6 @@ TO DO:
    - Errores:
      - reg -LfKD9-qk6Kh_vims3jY de rojas se guardo en proyectos/obras
      - cM3eoNLl81K1W9r de luis igual
-    
-- Junta Taba
-   - Editar odec es como hacer una alta nueva. Solped igual. Contratos no se puede editar. Tampoco pagos.
-   - Catalogos de: solped, contratos
-   - Error pagos check
-   - Orden HTML
-
-- Junta Hector
-   //- Error -> !asistencia, check
-   //- sem 20, probs desde 0, pero ahora con respaldos.
-      //- Resetearla
-   //- En pagos nomina si hay semana pero todo esta en false no lo cargues
-   //- Carga en pagos a los que tienen diversos aunque no tengan asistencia. Con quitar el reload.
-   //- Checar que los botones se disableen bien en diversos
-   //- Ya se carga la clave de la pagadora en pagos nomina. Si no tiene "HEAD ID" + id
-   //- editar trabajador
-   //- label con cuantos renglones en PagoNom
-   //- horas extra horas Y $
 
  Obsoletos: 
  - app_prod_gestionar_pptos
