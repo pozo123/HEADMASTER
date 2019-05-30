@@ -282,7 +282,7 @@ $('#' + id_acutalizar_button_pag_compras).click(function(){
 	            var cant = parseFloat($('#' + id_cantidad_pag_compras).val()) * negativo;
 	            var query_kaiz = "/kaizen/PRODUCCION/SUMINISTROS/PAG";
 	            var query_kaiz_odec = "/kaizen/PRODUCCION/SUMINISTROS/OdeC";
-	            var query_o = rama_bd_obras + $('#' + id_obra_ddl_pag_compras + " option:selected").val();
+	            var query_o = rama_bd_obras + "/" + $('#' + id_obra_ddl_pag_compras + " option:selected").val();
 	            sumaEnFirebase(query_o + query_kaiz, cant);
 	            if(negativo == -1){
 	            	sumaEnFirebase(query_o + query_kaiz_odec, cant);
@@ -293,7 +293,7 @@ $('#' + id_acutalizar_button_pag_compras).click(function(){
 	            var query_s = "";
 	            if(split.length > 1){
 	            	query_p = query_o + "/procesos/" + solp.path.split("/")[0];
-	            	query_s = query_p + solp.path;
+	            	query_s = query_o + "/procesos/" + solp.path;
 	            } else {
 	            	query_p = query_o + "/procesos/" + solp.path;
 	            	if($('#' + id_obra_ddl_pag_compras + " option:selected").val() == "IQONO MEXICO"){
