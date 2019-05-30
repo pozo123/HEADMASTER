@@ -158,8 +158,9 @@ function loadProfits(){
 	var costos = parseFloat($('#' + id_proyectos_utilidad).val()) + parseFloat($('#' + id_copeo_utilidad).val()) + parseFloat($('#' + id_suministros_utilidad).val());
 	var precio = parseFloat($('#' + id_precio_venta_utilidad).val());
 
-	$('#' + id_profit_cantidad_utilidad).val(precio*(1-porcentaje_indirectos)-costos);
-	$('#' + id_profit_porcentaje_utilidad).val(100*parseFloat($('#' + id_profit_cantidad_utilidad).val())/(porcentaje_indirectos*precio + costos));
+	var u = precio*(1-porcentaje_indirectos)-costos;//Si hay utilidad en Costo indirecto: IGUAL
+	$('#' + id_profit_cantidad_utilidad).val(u);
+	$('#' + id_profit_porcentaje_utilidad).val(100*u/costos);//Si hay utilidad en Costo indirecto: (100*(u/(porcentaje_indirectos*precio + costos)))
 	highLight(id_profit_porcentaje_utilidad);
 	highLight(id_profit_cantidad_utilidad);
 }
@@ -182,16 +183,20 @@ $("#" + id_precio_venta_utilidad).change(function(){
 
 $("#" + id_profit_porcentaje_utilidad).change(function(){
 	var costos = parseFloat($('#' + id_proyectos_utilidad).val()) + parseFloat($('#' + id_copeo_utilidad).val()) + parseFloat($('#' + id_suministros_utilidad).val());
-	$('#' + id_precio_venta_utilidad).val((costos * (1 + parseFloat($("#" + id_profit_porcentaje_utilidad).val())/100))/(1 - porcentaje_indirectos * (1 + parseFloat($("#" + id_profit_porcentaje_utilidad).val())/100)));
-	$('#' + id_profit_cantidad_utilidad).val(parseFloat($('#' + id_precio_venta_utilidad).val())*(1 - porcentaje_indirectos) - costos);
+	var ut_p = parseFloat($("#" + id_profit_porcentaje_utilidad).val())/100;
+	var pv = (costos*(1+ut_p)/(1-porcentaje_indirectos));//Si hay utlidad en Costo indirecto: (costos * (1 + ut_p))/(1 - porcentaje_indirectos * (1 + ut_p));
+	$('#' + id_precio_venta_utilidad).val(pv);
+	$('#' + id_profit_cantidad_utilidad).val(pv*(1 - porcentaje_indirectos) - costos);//Si hay utlidad en Costo indirecto: IGUAL
 	highLight(id_precio_venta_utilidad);
 	highLight(id_profit_cantidad_utilidad);
 });
 
 $("#" + id_profit_cantidad_utilidad).change(function(){
 	var costos = parseFloat($('#' + id_proyectos_utilidad).val()) + parseFloat($('#' + id_copeo_utilidad).val()) + parseFloat($('#' + id_suministros_utilidad).val());
-	$('#' + id_precio_venta_utilidad).val((parseFloat($("#" + id_profit_cantidad_utilidad).val()) + costos)/(1-porcentaje_indirectos));
-	$('#' + id_profit_porcentaje_utilidad).val(100*parseFloat($("#" + id_profit_cantidad_utilidad).val())/(parseFloat($('#' + id_precio_venta_utilidad).val()) - parseFloat($("#" + id_profit_cantidad_utilidad).val())));
+	var u = parseFloat($("#" + id_profit_cantidad_utilidad).val());
+	var pv = (u + costos)/(1-porcentaje_indirectos);//Si hay utilidad en Costo indirecto: IGUAL
+	$('#' + id_precio_venta_utilidad).val(pv);
+	$('#' + id_profit_porcentaje_utilidad).val(100*u/costos);//Si hay utilidad en Costo indirecto: (100*u/(pv - u));
 	highLight(id_precio_venta_utilidad);
 	highLight(id_profit_porcentaje_utilidad);
 });

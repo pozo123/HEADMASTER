@@ -80,12 +80,14 @@ $("#" + id_obra_ddl_kaizen_ppto).change(function(){
         snapshot.forEach(function(procSnap){
         	if(procSnap.key != "PC00" && procSnap.key != "ADIC" && procSnap.child("num_subprocesos").val() == 0){
 		        var option2 = document.createElement('OPTION');
-		        option2.text = option2.value = procSnap.key;
+		        option2.text = procSnap.key + " (" + procSnap.child("nombre").val() + ")";
+		        option2.value = procSnap.key;
 		        select.appendChild(option2);
         	} else {
         		procSnap.child("subprocesos").forEach(function(subpSnap){
 			        var option2 = document.createElement('OPTION');
-			        option2.text = option2.value = subpSnap.key;
+			        option2.text = subpSnap.key + " (" + subpSnap.child("nombre").val() + ")";
+			        option2.value = subpSnap.key;
 			        select.appendChild(option2);
         		});
         	}
@@ -162,10 +164,11 @@ $('#' + id_button_load_kaizen_ppto).click(function(){
 function loadProfitsKaizenPpto(){
 	var costos = deformatMoney($('#' + id_proyectos_kaizen_ppto).val()) + deformatMoney($('#' + id_copeo_kaizen_ppto).val()) + deformatMoney($('#' + id_suministros_kaizen_ppto).val());
 	var precio = deformatMoney($('#' + id_precio_venta_kaizen_ppto).val());
-
-	$('#' + id_profit_cantidad_kaizen_ppto).val(formatMoney(precio*(1-parseFloat($('#' + id_porcentaje_indirecto_kaizen_ppto).val())/100)-costos));
-	$('#' + id_profit_porcentaje_kaizen_ppto).val((100*deformatMoney($('#' + id_profit_cantidad_kaizen_ppto).val())/(parseFloat($('#' + id_porcentaje_indirecto_kaizen_ppto).val())*precio/100 + costos)).toFixed(2));
-	$('#' + id_profit_neto_kaizen_ppto).text("Profit Neto: " + formatMoney(deformatMoney($('#' + id_profit_cantidad_kaizen_ppto).val())*0.6));
+	var p_ind = parseFloat($('#' + id_porcentaje_indirecto_kaizen_ppto).val())/100;
+	var u = precio*(1-p_ind)-costos;//Si hay utlidad en Costo indirecto: IGUAL
+	$('#' + id_profit_cantidad_kaizen_ppto).val(formatMoney(u));
+	$('#' + id_profit_porcentaje_kaizen_ppto).val((100*u/costos).toFixed(2));//Si hay utlidad en Costo indirecto: (100*u/(c+p_ind*precio))
+	$('#' + id_profit_neto_kaizen_ppto).text("Profit Neto: " + formatMoney(u*0.6));
 	highLight(id_profit_porcentaje_kaizen_ppto);
 	highLight(id_profit_cantidad_kaizen_ppto);
 }
@@ -189,18 +192,23 @@ $("#" + id_precio_venta_kaizen_ppto).change(function(){
 
 $("#" + id_profit_porcentaje_kaizen_ppto).change(function(){
 	var costos = deformatMoney($('#' + id_proyectos_kaizen_ppto).val()) + deformatMoney($('#' + id_copeo_kaizen_ppto).val()) + deformatMoney($('#' + id_suministros_kaizen_ppto).val());
-	$('#' + id_precio_venta_kaizen_ppto).val(formatMoney((costos * (1 + parseFloat($("#" + id_profit_porcentaje_kaizen_ppto).val())/100))/(1 - (parseFloat($('#' + id_porcentaje_indirecto_kaizen_ppto).val())/100) * (1 + parseFloat($("#" + id_profit_porcentaje_kaizen_ppto).val())/100))));
-	$('#' + id_profit_cantidad_kaizen_ppto).val(formatMoney(deformatMoney($('#' + id_precio_venta_kaizen_ppto).val())*(1 - parseFloat($('#' + id_porcentaje_indirecto_kaizen_ppto).val())/100) - costos));
+	var ut_p = parseFloat($("#" + id_profit_porcentaje_kaizen_ppto).val())/100;
+	var p_ind = parseFloat($('#' + id_porcentaje_indirecto_kaizen_ppto).val())/100;
+	var pv = (costos * (1 + ut_p))/(1 - (p_ind));
+	$('#' + id_precio_venta_kaizen_ppto).val(formatMoney(pv));
+	$('#' + id_profit_cantidad_kaizen_ppto).val(formatMoney(pv*(1 - p_ind) - costos));
 	$('#' + id_profit_neto_kaizen_ppto).text("Profit Neto: " + formatMoney(deformatMoney($('#' + id_profit_cantidad_kaizen_ppto).val())*0.6));
 	highLight(id_precio_venta_kaizen_ppto);
 	highLight(id_profit_cantidad_kaizen_ppto);
 });
 
 $("#" + id_profit_cantidad_kaizen_ppto).change(function(){
-	$("#" + id_profit_cantidad_kaizen_ppto).val(formatMoney(eval($("#" + id_profit_cantidad_kaizen_ppto).val())));
+	var u = eval($("#" + id_profit_cantidad_kaizen_ppto).val());
+	$("#" + id_profit_cantidad_kaizen_ppto).val(formatMoney(u));
+	var p_ind = parseFloat($('#' + id_porcentaje_indirecto_kaizen_ppto).val())/100;
 	var costos = deformatMoney($('#' + id_proyectos_kaizen_ppto).val()) + deformatMoney($('#' + id_copeo_kaizen_ppto).val()) + deformatMoney($('#' + id_suministros_kaizen_ppto).val());
-	$('#' + id_precio_venta_kaizen_ppto).val(formatMoney((deformatMoney($("#" + id_profit_cantidad_kaizen_ppto).val()) + costos)/(1-parseFloat($('#' + id_porcentaje_indirecto_kaizen_ppto).val())/100)));
-	$('#' + id_profit_porcentaje_kaizen_ppto).val((100*deformatMoney($("#" + id_profit_cantidad_kaizen_ppto).val())/(deformatMoney($('#' + id_precio_venta_kaizen_ppto).val()) - deformatMoney($("#" + id_profit_cantidad_kaizen_ppto).val()))).toFixed(2));
+	$('#' + id_precio_venta_kaizen_ppto).val(formatMoney((u + costos)/(1-p_ind)));
+	$('#' + id_profit_porcentaje_kaizen_ppto).val((100*u/costos).toFixed(2));
 	$('#' + id_profit_neto_kaizen_ppto).text("Profit Neto: " + formatMoney(deformatMoney($('#' + id_profit_cantidad_kaizen_ppto).val())*0.6));
 	highLight(id_precio_venta_kaizen_ppto);
 	highLight(id_profit_porcentaje_kaizen_ppto);

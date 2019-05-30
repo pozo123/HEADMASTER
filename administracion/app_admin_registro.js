@@ -46,9 +46,28 @@ $(document).ready(function(){
 function modoRegistrosAdmin(){
     firebase.database().ref(rama_bd_personal).orderByKey().equalTo(uid_usuario_global).on('child_added', function(snapshot){
         if(snapshot.child("status").val() == true){
+            firebase.database().ref(rama_bd_registros_registros_admin).orderByKey().limitToLast(1).once('child_added').then(function(snapshot){
+                snapshot.forEach(function(weekSnap){
+                    weekSnap.forEach(function(regSnap){
+                        if(regSnap.val().activo == true){
+                            var reg = regSnap.val();
+                            $('#id_label_familia_reg_investime').removeClass('hidden');
+                            $('#id_label_subfamilia_reg_investime').removeClass('hidden');
+                            $('#id_label_actividad_reg_investime').removeClass('hidden');
+
+                            $('#id_label_familia_reg_investime').text(reg.familia);
+                            $('#id_label_subfamilia_reg_investime').text(reg.subfamilia);
+                            $('#id_label_actividad_reg_investime').text(reg.actividad);
+                        }
+                    });
+                });
+            });
 			$('#' + id_group_entrada_registroAdmin).addClass("hidden");
 			$('#' + id_salida_button_registroAdmin).removeClass("hidden");
         } else {
+            $('#id_label_familia_reg_investime').addClass('hidden');
+            $('#id_label_subfamilia_reg_investime').addClass('hidden');
+            $('#id_label_actividad_reg_investime').addClass('hidden');
             $('#' + id_group_entrada_registroAdmin).removeClass("hidden");
             $('#' + id_salida_button_registroAdmin).addClass("hidden");
         }

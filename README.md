@@ -6,10 +6,8 @@ HTMLs:
 
 TO DO:
  - ADMON
-   - Regs corruptos:
-     - label "activo";
-     - poner la hora de entrada, no solo la fecha
-     - corregir poniendo la hora de salida, no la cantidad de horas
+   - Investime
+     - Errores del mail
    - Centro de costos.
      - alta cuenta
      - añadir al desplegar

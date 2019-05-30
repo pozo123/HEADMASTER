@@ -46,7 +46,6 @@ $('#' + id_generar_button_reporte_investime).click(function() {
 
 function getRegsReporteAdmin(datos_reporte, data){
 
-    var fecha_i;
     var fecha_i_timestamp;
     var fecha_i_year;
     var fecha_i_week;
@@ -58,18 +57,17 @@ function getRegsReporteAdmin(datos_reporte, data){
     if($('#' + id_fecha_final_reporte_investime).val() === ""){
         if($('#' + id_fecha_inicio_reporte_investime).val() === ""){
             //Si no se selecciona ninguna fecha se hacen los reportes con todos los valores
-            fecha_i = new Date(2018,8,1);//Tiempo 0, no hay registros anteriores
+            fecha_i_timestamp = new Date(2018,8,1).getTime();//Tiempo 0, no hay registros anteriores
             fecha_f_timestamp = new Date().getTime() + (24*3600*1000);
         } else {
             //Si sólo se selecciona un día se utiliza la info de ese día en particular
-            fecha_i = new Date($('#' + id_fecha_inicio_reporte_investime).val());
+            fecha_i_timestamp = new Date($('#' + id_fecha_inicio_reporte_investime).val()).getTime();
             fecha_f_timestamp = fecha_i_timestamp + (24*3600*1000);
         }
     } else {
-        fecha_i = new Date($('#' + id_fecha_inicio_reporte_investime).val());
+        fecha_i_timestamp = new Date($('#' + id_fecha_inicio_reporte_investime).val()).getTime();
         fecha_f_timestamp = new Date($('#' + id_fecha_final_reporte_investime).val()).getTime() + (24*3600*1000); 
     }
-    fecha_i_timestamp = fecha_i.getTime();
     var fecha_i_year = getWeek(fecha_i_timestamp)[1]
     var fecha_i_week = getWeek(fecha_i_timestamp)[0]
     var fecha_f_year = getWeek(fecha_f_timestamp)[1]
@@ -84,8 +82,7 @@ function getRegsReporteAdmin(datos_reporte, data){
 		                if(reg.checkin >= fecha_i_timestamp && reg.checkin <= fecha_f_timestamp){
 		                    var horas =(parseFloat(reg.horas)/3600000).toFixed(3);
                             var horas_string = reg.checkout == 0 ? "-" : msToHoursAndMinutes(parseInt(reg.checkout) - parseInt(reg.checkin));
-                            console.log("hola");
-                            console.log(new Date(reg.checkin).toLocaleDateString("es-ES", optionsInvestime));
+                            //console.log(new Date(reg.checkin).toLocaleDateString("es-ES", optionsInvestime));
 	                        datos_reporte.push([
 	                            reg.familia,
 	                            reg.subfamilia,
