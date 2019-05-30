@@ -6,8 +6,6 @@ HTMLs:
 
 TO DO:
  - ADMON
-   - Investime
-     - Errores del mail
    - Centro de costos.
      - alta cuenta
      - añadir al desplegar
@@ -18,7 +16,7 @@ TO DO:
    - En producción revisar qué cosas pueden ver/usar supervisores. Cargar ddls sólo con las asignadas
      - En generador de precios. (jala raro, diferente si entras o si vienes de otra pestaña)
    - Gestionar sups solo si creden <3 o admin
-   - app_prod_entrada_estimacion
+*   - app_prod_entrada_estimacion
    - Desplegar Kaizen
      - avance.pag > avance.real = pag en rojo 
      - hacer que las columnas prec y cuant se hagan grises si el otro tiene datos
@@ -26,19 +24,19 @@ TO DO:
  - PROYECTOS
    - reporte_obras -> definir y programar
    - reporte_ppto -> definir y programar
-   - gestionar_presu -> Gestionar horas score (distribuir por wey);
+*   - gestionar_presu -> Gestionar horas score (distribuir por wey);
  - RRHH
-   - App_revertir_cierre, que cierre pago_nomina, diversos, HE O asistencias, dependiendo de un ddl? añoño. Verla bien y mapear los efectos de cada app.
+**   - App_revertir_cierre, que cierre pago_nomina, diversos, HE O asistencias, dependiendo de un ddl? añoño. Verla bien y mapear los efectos de cada app.
      - Limpiar semana 20 en trabajadores y en pagos nomina
         - Dejar asistencias y HE, limpiar lo demas
-   - app_rrh_nomina_completa
+*   - app_rrh_nomina_completa
      - Mostrar avances de las 3 apps de asistencia, aunque no esten terminados.
      - Poner descargable a excel con formato para mandarlo a la pagadora
      - columna "obra" tiene la obra más frecuentada esa semana, si no tiene asistencias descargar como "-" o "NA"
 - CATALOGOS
    - Total
-     - Destajistas (en prod y en rrhh, editable (todo?) en rrhh)
-     - Diversos, editable (en prod y en rrhh, editable (distribuible) en rrhh)
+*     - Destajistas (en prod y en rrhh, editable (todo?) en rrhh) -> solo faltan htmls
+*     - Diversos, editable (en prod y en rrhh, editable (distribuible) en rrhh)
  - GENERALES
    - Index -> nuevo diseño de landing page
    - Cambiar idioma_espanol en tablas de apps como datos_kaizen y asistencia y desplegar_procesos
