@@ -194,6 +194,52 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="destModalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Editar Destajista</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form onsubmit="return false;">
+                                <div class="form-group">
+                                    <label for="nombreEditarCatalogoDest" class="col-form-label">Nombre:</label>
+                                    <input type="text" class="form-control" id="nombreEditarCatalogoDest">
+                                </div>
+                                <div class="form-group">
+                                    <label for="telEditarCatalogoDest" class="col-form-label">Telefono:</label>
+                                    <input type="text" class="form-control" id="telEditarCatalogoDest">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cuentaEditarCatalogoDest" class="col-form-label">Cuenta bancaria:</label>
+                                    <input type="text" class="form-control" id="cuentaEditarCatalogoDest">
+                                </div>
+                                <div class="form-group">
+                                    <label for="espIeCbEditarCatalogoDest" class="form-check-label">IE</label>
+                                    <input type="checkbox" class="custom-checkbox" id="espIeCbEditarCatalogoDest">
+                                </div>
+                                <div class="form-group">
+                                    <label for="espIhsCbEditarCatalogoDest" class="form-check-label">IHS</label>
+                                    <input type="checkbox" class="custom-checkbox" id="espIhsCbEditarCatalogoDest">
+                                </div>
+                            <div class="form-row align-items-center">
+                                <div class="col-md-6 col-sm-12">
+                                    <button id="buttonEditarCatalogoDest" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cancelar</button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="wrapper">
             <!-- Sidebar -->
             <nav id="sidebar">
@@ -276,6 +322,7 @@
                         <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Catálogos</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu3">
                             <li class="tab" id="tabCatalogoObras"><a href="#" onclick="openTabs('tabCatalogoObras','obrasCatalogo')">Obras</a></li>
+                            <li class="tab" id="tabCatalogoDest"><a href="#" onclick="openTabs('tabCatalogoDest','destCatalogo')">Destajistas</a></li>
                         </ul>
                     </li>
 
@@ -797,6 +844,28 @@
                             </div>
                         </div>
                     </div>
+                    <div id= "destCatalogo" class="tabcontent hidden">
+                        <div class="container-fluid">
+                            <h1>Catálogo de Obras</h1>
+                            <div class="row mt-3">
+                                <div class="container-fluid">
+                                    <table id="dataTableCatalogoDest" class="display" style="width:100%">
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id= "destCatalogo" class="tabcontent hidden">
+                            <div class="container-fluid">
+                                <h1>Catálogo de Obras</h1>
+                                <div class="row mt-3">
+                                    <div class="container-fluid">
+                                        <table id="dataTableCatalogoDest" class="display" style="width:100%">
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     <div id= "obrasCatalogo" class="tabcontent hidden">
                             <div class="container-fluid">
                                 <h1>Catálogo de Obras</h1>
@@ -868,6 +937,7 @@
 <script src="app_desplegar_procesos.js"></script>
 <script src="app_funciones.js"></script>
 <script src="catalogos/app_catalogo_obras.js"></script>
+<script src="catalogos/app_catalogo_destajistas.js"></script>
 <script src="produccion/app_destajista.js"></script>
 <script src="rrhh/app_asistencia.js"></script>
 <script src="rrhh/app_rrhh_editar_trabajadores.js"></script>

@@ -11,6 +11,7 @@ var id_button_editar_catalogo_dest = "buttonEditarCatalogoDest";
 var id_modal_catalogo_dest = "destModalEditar";
 
 var rama_bd_destajistas = "produccion/destajistas";
+var rama_bd_trabajadores = "rrhh/trabajadores";
 
 var nombre_cat_dest;
 
@@ -29,14 +30,12 @@ function loadCatalogoDest(){
                 {title: "Nombre",},
                 {title: "Teléfono",},
                 {title: "Cuenta Bancaria",},
-                {title: "Celular",},
                 {title: "Especialidad",},
-                {defaultContent: "<button type='button' class='editar btn btn-primary' data-toggle='modal' data-target='#" + id_modal_catalogo_atn + "'><i class='fas fa-edit'></i></button><button type='button' class='eliminar btn btn-danger' data-toggle='modal' data-target='#" + id_modal_eliminar_catalogo_atn + "'><i class='fas fa-trash'></i></button>"},
+                {defaultContent: "<button type='button' class='editar btn btn-primary' data-toggle='modal' data-target='#" + id_modal_catalogo_dest + "'><i class='fas fa-edit'></i>"},
             ] : [
                 {title: "Nombre",},
                 {title: "Teléfono",},
                 {title: "Cuenta Bancaria",},
-                {title: "Celular",},
                 {title: "Especialidad",},
             ];
         var tabla_dest = $('#'+ id_datatable_catalogo_dest).DataTable({
@@ -56,11 +55,11 @@ function editar_dest(tbody, table){
         var data = table.row($(this).parents("tr")).data();
         if(data){
             //console.log(data);
-            $('#' + id_nombre_editar_catalogo_dest).val(data[1]);
-            $('#' + id_tel_editar_catalogo_dest).val(data[2]);
-            $('#' + id_cuenta_editar_catalogo_dest).val(data[3]);
-            $('#' + id_ie_checkbox_editar_catalogo_dest).prop('checked', data[4] == "IE" || data[4] == "Ambas");
-            $('#' + id_ihs_checkbox_editar_catalogo_dest).prop('checked', data[4] == "IHS" || data[4] == "Ambas");
+            $('#' + id_nombre_editar_catalogo_dest).val(data[0]);
+            $('#' + id_tel_editar_catalogo_dest).val(data[1]);
+            $('#' + id_cuenta_editar_catalogo_dest).val(data[2]);
+            $('#' + id_ie_checkbox_editar_catalogo_dest).prop('checked', data[3] == "IE" || data[3] == "Ambas");
+            $('#' + id_ihs_checkbox_editar_catalogo_dest).prop('checked', data[3] == "IHS" || data[3] == "Ambas");
             nombre_cat_dest = data[0];
         }
     });
@@ -77,6 +76,8 @@ $('#' + id_button_editar_catalogo_dest).click(function(){
         }
     } else if($('#' + id_ihs_checkbox_editar_catalogo_dest).prop('checked')){
         esp = "IHS";
+    } else {
+        esp = "-";
     }
     var nom = $('#' + id_nombre_editar_catalogo_dest).val();
     var dest = {
@@ -90,6 +91,13 @@ $('#' + id_button_editar_catalogo_dest).click(function(){
         update[nombre_cat_dest] = null;
         update[nom] = dest;
         firebase.database().ref(rama_bd_tipos_presupuesto).update(update);
+        firebase.database().ref(rama_bd_trabajadores).once('value').then(function(snapshot){
+            snapshot.forEach(function(trabSnap){
+                if(trabSnap.child("jefe").val() == nombre_cat_dest){
+                    firebase.database().ref(rama_bd_trabajadores + "/" + trabSnap.key + "/jefe").set(nom);
+                }
+            });
+        });
     } else {
         firebase.database().ref(rama_bd_destajistas + "/" + nom).update(dest);
     }

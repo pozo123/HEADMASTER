@@ -35,12 +35,11 @@ TO DO:
      - columna "obra" tiene la obra más frecuentada esa semana, si no tiene asistencias descargar como "-" o "NA"
 - CATALOGOS
    - Total
-*     - Destajistas (en prod y en rrhh, editable (todo?) en rrhh) -> solo faltan htmls
 *     - Diversos, editable (en prod y en rrhh, editable (distribuible) en rrhh)
  - GENERALES
    - Index -> nuevo diseño de landing page
    - Cambiar idioma_espanol en tablas de apps como datos_kaizen y asistencia y desplegar_procesos
-   - Definir y programar la columna PROYECTOS/PAG (cuando, quien y como)
+   - Definir y programar la columna PROYECTOS/PAG (cuando, quien y como) -> desde gestionar procs en proy. Al terminar sumo lo ppto a pag, se puede desterminar.
    - Definir y programar la columna COPEO/COPEO (cuando, quien y como)
    - Titulos de obra en catalogo de proceso en negritas y mas grandes
    - Borrar obsoletos comentados en htmls

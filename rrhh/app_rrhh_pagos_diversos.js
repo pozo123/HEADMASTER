@@ -517,6 +517,8 @@ function guardarDiversos(){
                             var dif_impuestos = diferencia * 0.16;
                             sumaEnFirebase(rama_bd_trabajadores + "/" + id_trabajador + "/nomina/" + year + "/" + semana + "/impuestos/impuestos_diversos", dif_impuestos);
                             sumaEnFirebase(rama_bd_trabajadores + "/" + id_trabajador + "/nomina/" + year + "/" + semana + "/total_diversos", diferencia);
+                            //AQUI segun yo no hay que corregir en pagos nomina porque no guardo nada ahi hasta terminar
+                            /*
                             sumaEnFirebase(rama_bd_pagos_nomina + "/" + year + "/" + semana + "/" + div.obr + "/trabajadores/" + id_trabajador + "/impuestos/impuestos_diversos", dif_impuestos);
                             sumaEnFirebase(rama_bd_pagos_nomina + "/" + year + "/" + semana + "/" + div.obr + "/trabajadores/" + id_trabajador + "/total_diversos", diferencia);
                             firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + semana + "/" + div.obr + "/trabajadores/" + id_trabajador + "/diversos").once('value').then(function(dSnap){
@@ -527,6 +529,7 @@ function guardarDiversos(){
                                     }
                                 });
                             });
+                            */
                         }
                     }
                 });
@@ -622,7 +625,8 @@ $('#' + id_terminar_button_diversos).click(function(){
                                             total_div = total_div + parseFloat(diver.cantidad);
                                             console.log(diver.distribuible);
                                             if(diver.distribuible){
-                                                //distribuyeEnAsistencias(obras_json,diver.cantidad,trabSnap,year,week,diver.diverso);
+                                                //AQUI estaba comentado... por???
+                                                distribuyeEnAsistencias(obras_json,diver.cantidad,trabSnap,year,week,diver.diverso);
                                             } else {
                                                 var diverso = {
                                                     cantidad: diver.cantidad,
