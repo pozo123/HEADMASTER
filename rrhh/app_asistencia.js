@@ -626,20 +626,12 @@ function updateDia(id_trabajador,dia,semana,year){
         firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + semana + "/" + $('#' + id_obra_ddl_asistencia + " option:selected").val() + "/trabajadores/" + id_trabajador + "/dias/" + dia).set(asis);   
 }
 
-$('#' + id_terminar_button_asistencia).click(function(){
+/*$('#' + id_terminar_button_asistencia).click(function(){
     var year = $('#' + id_year_ddl_asistencia + " option:selected").val();
     var week = $('#' + id_semana_ddl_asistencia + " option:selected").val();
     firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week).once('value').then(function(snapshot){
         var semana = snapshot.val();
         var listo = true;
-        /*if(!semana.horas_extra_terminadas){
-            listo = false;
-            alert("No se han terminado de registrar las horas extra");
-        }
-        if(!semana.diversos_terminados){
-            listo = false;
-            alert("No se han terminado de registrar los pagos diversos");
-        }*/
         if(listo){
             var tru = true;
             firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/asistencias_terminadas").set(tru);
@@ -648,31 +640,7 @@ $('#' + id_terminar_button_asistencia).click(function(){
             alert("Datos de la semana guardados y bloqueados");
         }
     })
-});
-
-function asignarObras(year, week){
-    firebase.database().ref(rama_bd_trabajadores).once('value').then(function(snapshot){
-        snapshot.forEach(function(trabSnap){
-            var obra_asignada = {};
-            var count = 0;
-            trabSnap.child("nomina/" + year + "/" + week).forEach(function(daySnap){
-                var flag = false;
-                var i = 0;
-                while(i<count && !flag){
-                    if(obra_asignada[i] == daySnap.val().obra){
-                        flag = true;
-                    }
-                    i++;
-                }
-                if(!flag){
-                    obra_asignada[count] = daySnap.val().obra;
-                    count++;
-                }
-            });
-            firebase.database().ref(rama_bd_trabajadores + "/" + trabSnap.key + "/obra_asignada").set(obra_asignada);
-        });
-    });
-}
+});*/
 
 function headersAsistencia() {
   var row = tableAsistencia.insertRow(0);
