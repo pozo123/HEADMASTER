@@ -1,40 +1,52 @@
 var rama_bd_personal = "personal";
-var id_dropdownMenu = "dropdownMenu";
+var id_loginEmail = "loginEmail";
+var id_password = "loginPassowrd";
+
+var btn_forgot_password = "btn_forgot_password";
+var btn_iniciar_sesion = "iniciarSesion";
+
 
 $(document).ready(function() {
-
     firebase.auth().onAuthStateChanged(user => {
         if(user) {
-            $("#navComunidad").removeClass("hidden");
-            $("#loginEmail").addClass("hidden");
-            $("#loginPassword").addClass("hidden");
-            $("#loginAceptar").addClass("hidden");
-            $("#cerrar").removeClass("hidden");
-
             firebase.database().ref(rama_bd_personal + "/" + user.uid + "/areas").once('value').then(function(snapshot){
                 snapshot.forEach(function(childSnapshot){
                     if(childSnapshot.val()){
                         var area = childSnapshot.key;
-                        var a = document.createElement('a');
-                        a.className = "dropdown-item";
-                        a.href = "" + area + ".html";
-                        var t = document.createTextNode(area);
-                        a.appendChild(t);
-                        var div = document.getElementById(id_dropdownMenu);
-                        div.appendChild(a);
+                        console.log(area);
                     }
                 });
             });
 
         } else {
-            $("#cerrar").addClass("hidden");
         }
     }); 
-    
-
 });
 
-$("#forgot").click(function () { 
+$('#' + btn_iniciar_sesion).click(function () { 
+    var userEmail = document.getElementById(id_loginEmail).value;
+    var userPass = document.getElementById(id_password).value;
+    
+    firebase.auth().signInWithEmailAndPassword(userEmail, userPass).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // ...
+        //Abre modal con reset password
+        window.alert("Error: " + errorMessage);
+    });
+    
+    firebase.auth().onAuthStateChanged(user => {
+        if(user) {
+            // aquí escribir código
+            
+        } else {
+            alert("No se pudo entrar al sistema. Contacta a algún administrador")
+        }
+    }); 
+});
+
+$('#' + btn_forgot_password).click(function () { 
     var auth = firebase.auth();
     firebase.auth().useDeviceLanguage();
     var emailAddress = document.getElementById("loginEmail").value;
@@ -45,42 +57,3 @@ $("#forgot").click(function () {
       // An error happened.
     });
 });
-
-$("#loginAceptar").click(function () { 
-
-    var userEmail = document.getElementById("loginEmail").value;
-    var userPass = document.getElementById("loginPassword").value;
-
-    firebase.auth().signInWithEmailAndPassword(userEmail, userPass).catch(function(error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // ...
-        //Abre modal con reset password
-        window.alert("Error: " + errorMessage);
-    });
-
-    firebase.auth().onAuthStateChanged(user => {
-        if(user) {
-            $("#navComunidad").removeClass("hidden");
-            $("#loginEmail").addClass("hidden");
-            $("#loginPassword").addClass("hidden");
-            $("#loginAceptar").addClass("hidden");
-            $("#cerrar").removeClass("hidden");
-
-        } else {
-            $("#cerrar").add("hidden");
-        }
-    }); 
-});
-
-$("#cerrar").click((function () {
-    firebase.auth().signOut().then(function() {
-        // Sign-out successful.
-      }).catch(function(error) {
-        // An error happened.
-      });
-
-      location.reload();
-
-}));
