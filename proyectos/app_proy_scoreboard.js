@@ -199,20 +199,16 @@ function getRegScoreboard(ingeSnap, div_cards,styles, grupal){
                 var year = hoy[1];
                 var week = hoy[0];
                 firebase.database().ref(rama_bd_obras + "/" + reg.obra + "/procesos/" + proc_query + "/SCORE").once('value').then(function(snapshot){
-                    var horas_programadas = snapshot.child("total_prog").exists() ? parseFloat(snapshot.child("total_prog").val()) : 0;
-                    var horas_trabajadas = snapshot.child("total_trabajado").exists() ? parseFloat(snapshot.child("total_trabajado").val()) : 0;
+                    var horas_programadas = snapshot.child("total_prog").exists() ? (isNaN(parseFloat(snapshot.child("total_prog").val())) ? 0 : parseFloat(snapshot.child("total_prog").val())) : 0;
+                    var horas_trabajadas = snapshot.child("total_trabajado").exists() ? (isNaN(parseFloat(snapshot.child("total_trabajado").val())) ? 0 : parseFloat(snapshot.child("total_trabajado").val())) : 0;
                     var horas_prog_ind = snapshot.child("inges/" + ingeSnap.key + "/horas_programadas").exists() ? parseFloat(snapshot.child("inges/" + ingeSnap.key + "/horas_programadas").val()) : 0;
                     var horas_trab_ind = snapshot.child("inges/" + ingeSnap.key + "/horas_trabajadas").exists() ? parseFloat(snapshot.child("inges/" + ingeSnap.key + "/horas_trabajadas").val()) : 0;
 
+                    console.log("horas_trabajadas sin reg" + horas_trabajadas);
                     var horas_reg = (new Date().getTime() - parseFloat(reg.checkin))/3600000;
                     horas_trabajadas += horas_reg;
                     horas_trab_ind += horas_reg;
 
-                    //console.log(horas_trabajadas)
-                    //console.log(horas_programadas)
-                    //console.log(horas_trab_ind)
-                    
-                    //console.log(proc_query + ": " + horas_programadas);
                     loadDashcard(styles, ingeSnap.child("nickname").val(), true, div_cards, reg, horas_programadas, (horas_trabajadas).toFixed(2), horas_prog_ind, (horas_trab_ind).toFixed(2));
                     if(!grupal){
                         loadGraph(reg, horas_programadas, (horas_trabajadas).toFixed(2));

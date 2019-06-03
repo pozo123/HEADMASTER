@@ -28,7 +28,7 @@ $(document).ready(function() {
 });
 
 $('#botonMagico').click(function(){
-    //replaceStringsInKeysAndValues("House Leon", "HAUS LEON");
+    //replaceStringsInKeysAndValues("Bajío 115 ", "CASA ROMA");
 });
 
 firebase.auth().onAuthStateChanged(user => {
