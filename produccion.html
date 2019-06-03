@@ -167,10 +167,7 @@
                 <ul class="list-unstyled components">
 
                     <li>
-                        <a href="#pageSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Kaizen</a>
-                        <ul class="collapse list-unstyled" id="pageSubmenu1">
-                            <li class="tab" id="tabKaizen"><a href="#" onclick="openTabs('tabKaizen','kaizen')">Kaizen</a></li>
-                        </ul>
+                        <li class="tab" id="tabKaizen"><a href="#" onclick="openTabs('tabKaizen','kaizen')">Kaizen</a></li>
                     </li>                  
                     <li>
                         <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Obras</a>
@@ -217,9 +214,6 @@
                         <span></span>
                         <span></span>
                     </button>
-                    
-                    <button type="button" class="btn btn-outline-dark btn-xs" id="fullScreen"><i class="fas fa-expand"></i></button>
-                    <button type="button" class="btn btn-outline-dark btn-xs hidden" id="notFullScreen"><i class="fas fa-compress"></i></button>
                     <br/>       
                 </div>               
                 <div class="row">
@@ -227,111 +221,70 @@
 
                         <!-- Kaizen-->
                         <div id="kaizen" class="tabcontent kaizen">
-                            <div class="container-fluid hidden">
-                                <h3>Diagrama de Gantt</h3>
-                                <div class="row">
-                                    <div style="position:relative" class="gantt" id="kaizenGlobalDiv"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <span>Profit presupuestado global Bruto: </span>
-                                        <label id="totalProfitProgGlobal"></label>
-                                    </div>
-
-                                    <div class="col-lg-6">
-                                        <span>Profit real global Bruto: </span>
-                                        <label id="totalProfitRealGlobal"></label>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <span>Profit presupuestado global Neto: </span>
-                                        <label id="totalProfitNetoProgGlobal"></label>
-                                    </div>
-
-                                    <div class="col-lg-6">
-                                        <span>Profit real global Neto: </span>
-                                        <label id="totalProfitNetoRealGlobal"></label>
-                                    </div>
-                                </div>
-
-
-                            </div>
                             <div class="container-fluid">
                                 <h3>Kaizen</h3>
-                                <p>Al hacer click en las celdas, se pueden editar valores</p>
-                                <div class="row">
-                                    <div style="position:relative" class="gantt" id="kaizenGlobalDiv"></div>
-                                </div>
+
                                 <div class = "row">
-                                    <form action="#" onsubmit="return false;">                                 
-                                        <div class="form-group">
-                                            <label for="obrasDdlDesplegarKaizen">Obra:</label>
-                                            <select id="obrasDdlDesplegarKaizen" class="form-control" style="width:400px"></select>
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label for="precioScoreDesplegarKaizen">Precio por hora SCORE:</label>
-                                            <input type="text" id="precioScoreDesplegarKaizen" class="form-control"  style="width:400px" placeholder="Precio/Hora SCORE">
-                                        </div>
-                                        <div class="form-group dataTables_wrapper">
-                                            <button type="button" class="btn btn-warning" id="desplegarSubButtonDesplegarKaizen">Desplegar</button>
-                                            <button type="button" class="btn btn-danger" id="colapsarSubButtonDesplegarKaizen">Colapsar</button>
-                                        </div>
-                                        <div class="form-group">
-                                            <button id="actualizarKaizenButton" type="button"style="width:400px" class="btn btn-outline-success btn-block">Actualizar Datos</button>
-                                        </div>
-                                        <div class = "container-table100">
-                                                <div class="tableKaizen ver2">
-                                                        <table id="" class = "display">
-                                                            <thead>
-                                                                <tr class="row100 head">
-                                                                    <th class="header_obra" colspan="2" rowspan="2">OBRA</th>
-                                                                    <th class="header_proyectos" colspan="2" rowspan="2">PROYECTOS</th>
-                                                                    <th class="header_produccion" colspan="6" colspan="2">PRODUCCION</th>
-                                                                    <th class="header_avance" colspan="2" rowspan="2">AVANCE</th>
-                                                                    <th class="header_admin" colspan="5">ADMINISTRACION</th>
-                                                                    <th class="header_profit" colspan="2" rowspan="2">PROFIT</th>
-                                                                    <tr class="row100 head">
-                                                                        <th class="header_produccion column100" colspan="3">SUMINISTROS</th>
-                                                                        <th class="header_produccion column100" colspan="3">COPEO</th>
-                                                                        <th class="header_admin column100" colspan="3">ESTIMACIONES</th>
-                                                                        <th class="header_admin column100" colspan="2">ANTICIPOS</th>
-                                                                    </tr>
-                                                                    <tr class="row100 head">
-                                                                        <th class="header_obra column100">CLAVE</th>
-                                                                        <th class="header_obra column100">PROCESO</th>
-                                                                        <th class="header_proyectos column100">PPTO</th>
-                                                                        <th class="header_proyectos column100">PAG</th>
-                                                                        <th class="header_produccion column100">CUANT</th>
-                                                                        <th class="header_produccion column100">OdeC</th>
-                                                                        <th class="header_produccion column100">PAG</th>
-                                                                        <th class="header_produccion column100">PREC</th>
-                                                                        <th class="header_produccion column100">COPEO</th>
-                                                                        <th class="header_produccion column100">PAG</th>
-                                                                        <th class="header_avance column100">PAG</th>
-                                                                        <th class="header_avance column100">REAL</th>
-                                                                        <th class="header_admin column100">PPTO</th>
-                                                                        <th class="header_admin column100">EST</th>
-                                                                        <th class="header_admin column100">PAG</th>
-                                                                        <th class="header_admin column100">PPTO</th>
-                                                                        <th class="header_admin column100">PAG</th>
-                                                                        <th class="header_profit column100">PPTO</th>
-                                                                        <th class="header_profit column100">REAL</th>
-                                                                    </tr>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody id = "dataTableDesplegarKaizen">
-            
-                                                            </tbody>
-                                                            
-                                                        </table>
-                                                    </div>
-                                        </div>
-                                    </form>
-                                    <br/>
+                                    <div class= "col-lg-4 col-sm-12">
+                                        <select id="obrasDdlDesplegarKaizen" class="form-control"></select>
+                                    </div>
+                                    <div class= "col-lg-4 col-sm-6">
+                                        <button id="desplegarSubButtonDesplegarKaizen" type="button" class="btn btn-outline-dark btn-block">Desplegar (sub)procesos</button>
+                                    </div>
+                                    <div class= "col-lg-4 col-sm-6">
+                                        <button id="colapsarSubButtonDesplegarKaizen" type="button" class="btn btn-outline-info btn-block">Colapsar (sub)procesos</button>
+                                    </div>                              
                                 </div>
+
+                                <br/>
+                                <div class ="container-table100">
+                                    <div class="tableKaizen ver2">
+                                        <table id="" class = "display">
+                                            <thead>
+                                                <tr class="row100 head">
+                                                    <th class="header_obra" colspan="2" rowspan="2">OBRA</th>
+                                                    <th class="header_proyectos" colspan="2" rowspan="2">PROYECTOS</th>
+                                                    <th class="header_produccion" colspan="6" colspan="2">PRODUCCION</th>
+                                                    <th class="header_avance" colspan="2" rowspan="2">AVANCE</th>
+                                                    <th class="header_admin" colspan="5">ADMINISTRACION</th>
+                                                    <th class="header_profit" colspan="2" rowspan="2">PROFIT</th>
+                                                    <tr class="row100 head">
+                                                        <th class="header_produccion column100" colspan="3">SUMINISTROS</th>
+                                                        <th class="header_produccion column100" colspan="3">COPEO</th>
+                                                        <th class="header_admin column100" colspan="3">ESTIMACIONES</th>
+                                                        <th class="header_admin column100" colspan="2">ANTICIPOS</th>
+                                                    </tr>
+                                                    <tr class="row100 head">
+                                                        <th class="header_obra column100">CLAVE</th>
+                                                        <th class="header_obra column100">PROCESO</th>
+                                                        <th class="header_proyectos column100">PPTO</th>
+                                                        <th class="header_proyectos column100">PAG</th>
+                                                        <th class="header_produccion column100">CUANT</th>
+                                                        <th class="header_produccion column100">OdeC</th>
+                                                        <th class="header_produccion column100">PAG</th>
+                                                        <th class="header_produccion column100">PREC</th>
+                                                        <th class="header_produccion column100">COPEO</th>
+                                                        <th class="header_produccion column100">PAG</th>
+                                                        <th class="header_avance column100">PAG</th>
+                                                        <th class="header_avance column100">REAL</th>
+                                                        <th class="header_admin column100">PPTO</th>
+                                                        <th class="header_admin column100">EST</th>
+                                                        <th class="header_admin column100">PAG</th>
+                                                        <th class="header_admin column100">PPTO</th>
+                                                        <th class="header_admin column100">PAG</th>
+                                                        <th class="header_profit column100">PPTO</th>
+                                                        <th class="header_profit column100">REAL</th>
+                                                    </tr>
+                                                </tr>
+                                            </thead>
+                                            <tbody id = "dataTableDesplegarKaizen">
+
+                                            </tbody>
+                                            
+                                        </table>
+                                    </div>
+                                </div>
+
                             </div>                            
                         </div>
                         <!--Obras-->
@@ -655,22 +608,25 @@
                         <div id="gestionarSup" class="tabcontent hidden">
                                 <h1>Gestionar supervisores</h1>
                                 <p>Página para gestionar a los supervisores y sus obras asignadas</p>
+
                                 <div class="container-fluid">
-                                    <div class="row align-items-center">
+                                    <div class="row">
                                         <div class="col-lg-3"></div>
                                         <div class="col-lg-6">
-                                            <form action="#" onsubmit="return false;" id="formGestionarSup">
-                                                <div class="form-group">
-                                                    <label for="obraDdlSupervisores">Obra:</label>
-                                                    <select id="obraDdlSupervisores" class="form-control"></select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="supervisoresDdlSupervisores">Supervisor:</label>
-                                                    <select id="supervisoresDdlSupervisores" class="form-control"></select>
-                                                </div>
-                                                <div id="divObraSupervisores" class="form-row"></div>
-                                                <div id="divSupervisorSupervisores" class="form-row"></div>
-                                            </form>
+                                                <form action="#" onsubmit="return false;">
+                                                    <div class="form-group">
+                                                        <label for="obraDdlSupervisores">Obra</label>
+                                                        <select id="obraDdlSupervisores" class="form-control"></select>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="supervisoresDdlSupervisores">Supervisor</label>
+                                                        <select id="supervisoresDdlSupervisores" class="form-control"></select>
+                                                    </div>
+                                                    <div id="divObraSupervisores">
+        
+                                                    </div>          
+                                                </form>                  
                                             <br/>
                                         </div>
                                         <div class="col-lg-3"></div>
@@ -691,7 +647,7 @@
                         </div>
                         <div id= "categoriasCatalogo" class="tabcontent hidden">
                             <div class="container-fluid">
-                                <h1>Catálogo de Categorías de Presupuestos</h1>
+                                <h1>Catálogo de Categorías de Subprocesos</h1>
                                 <div class="row mt-3">
                                     <div class="container-fluid">
                                         <table id="dataTableCatalogoCategorias" class="display" style="width:100%">

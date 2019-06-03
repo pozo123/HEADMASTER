@@ -2,7 +2,6 @@ var id_obras_ddl_supervisores = "obraDdlSupervisores";
 var id_supervisores_ddl_supervisores = "supervisoresDdlSupervisores";
 var id_div_obra_supervisores = "divObraSupervisores";
 var id_div_supervisor_supervisores = "divSupervisorSupervisores";
-var id_form_supervisores = "formGestionarSup";
 
 var rama_bd_obras_magico = "obras";
 var rama_bd_personal = "personal";
@@ -49,17 +48,17 @@ $('#' + id_obras_ddl_supervisores).change(function(){
 });
 
 function loadSupsGestSup(){
-    var div = document.getElementById(id_form_supervisores);
+    var div = document.getElementById(id_div_obra_supervisores);
     //document.getElementById(id_supervisores_ddl_supervisores).selectedIndex = 0;
-    $('#' + id_supervisores_ddl_supervisores).empty();
-    $('#' + id_div_obra_supervisores).empty();
+    //$('#' + id_supervisores_ddl_supervisores).empty();
+    $('#' + id_div_obra_supervisores).html('');
     var nombre_obra = $('#' + id_obras_ddl_supervisores + " option:selected").val();
     firebase.database().ref(rama_bd_obras_magico + "/" + nombre_obra).once('value').then(function(snapshot){
         var obra = snapshot.val();
         snapshot.child("supervisor").forEach(function(childSnap){
             if(childSnap.child("activo").val()){
                 var row = document.createElement('div');
-                row.className = "form-row";
+                row.className = "form-group row";
                 var col1 = document.createElement('div');
                 col1.className = "col-lg-6";
                 var col2 = document.createElement('div');
@@ -102,6 +101,8 @@ function loadSupsGestSup(){
     });
     //var divButton = document.createElement('div');
     //divButton.className = "form-row";
+    var row1 = document.createElement('div');
+    row1.className = "form-group row";
     var buttonAdd = document.createElement('button');
     buttonAdd.innerHTML = "Agregar";
     buttonAdd.className = "btn btn-outline-success btn-block";
@@ -121,7 +122,8 @@ function loadSupsGestSup(){
     };
 
     //div.appendChild(select);
-    div.appendChild(buttonAdd);
+    row1.appendChild(buttonAdd);
+    div.appendChild(row1);
     //div.appendChild(divButton);
 };
 
