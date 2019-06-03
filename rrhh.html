@@ -240,6 +240,37 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="diverModalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="nombreLabelEditarDiver">Editar Diverso</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form onsubmit="return false;">
+                                <div class="form-group">
+                                    <label id="" class="col-form-label"></label>
+                                    <label for="distCbEditarCatalogoDiver" class="col-form-label">Distribuible:</label>
+                                    <input type="checkbox" class="form-control" id="distCbEditarCatalogoDiver">
+                                </div>
+                            <div class="form-row align-items-center">
+                                <div class="col-md-6 col-sm-12">
+                                    <button id="buttonEditarCatalogoDiver" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cancelar</button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="wrapper">
             <!-- Sidebar -->
             <nav id="sidebar">
@@ -323,6 +354,7 @@
                         <ul class="collapse list-unstyled" id="pageSubmenu3">
                             <li class="tab" id="tabCatalogoObras"><a href="#" onclick="openTabs('tabCatalogoObras','obrasCatalogo')">Obras</a></li>
                             <li class="tab" id="tabCatalogoDest"><a href="#" onclick="openTabs('tabCatalogoDest','destCatalogo')">Destajistas</a></li>
+                            <li class="tab" id="tabCatalogoDiver"><a href="#" onclick="openTabs('tabCatalogoDiver','diverCatalogo')">Diversos</a></li>
                         </ul>
                     </li>
 
@@ -846,7 +878,7 @@
                     </div>
                     <div id= "destCatalogo" class="tabcontent hidden">
                         <div class="container-fluid">
-                            <h1>Catálogo de Obras</h1>
+                            <h1>Catálogo de Destajistas</h1>
                             <div class="row mt-3">
                                 <div class="container-fluid">
                                     <table id="dataTableCatalogoDest" class="display" style="width:100%">
@@ -855,12 +887,12 @@
                             </div>
                         </div>
                     </div>
-                    <div id= "destCatalogo" class="tabcontent hidden">
+                    <div id= "diverCatalogo" class="tabcontent hidden">
                             <div class="container-fluid">
-                                <h1>Catálogo de Obras</h1>
+                                <h1>Catálogo de Diversos</h1>
                                 <div class="row mt-3">
                                     <div class="container-fluid">
-                                        <table id="dataTableCatalogoDest" class="display" style="width:100%">
+                                        <table id="dataTableCatalogoDiver" class="display" style="width:100%">
                                         </table>
                                     </div>
                                 </div>
@@ -938,6 +970,7 @@
 <script src="app_funciones.js"></script>
 <script src="catalogos/app_catalogo_obras.js"></script>
 <script src="catalogos/app_catalogo_destajistas.js"></script>
+<script src="catalogos/app_catalogo_diversos.js"></script>
 <script src="produccion/app_destajista.js"></script>
 <script src="rrhh/app_asistencia.js"></script>
 <script src="rrhh/app_rrhh_editar_trabajadores.js"></script>

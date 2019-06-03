@@ -214,6 +214,17 @@ $("#" + id_profit_cantidad_kaizen_ppto).change(function(){
 	highLight(id_profit_porcentaje_kaizen_ppto);
 });
 
+$("#" + id_precio_venta_kaizen_ppto).focus(function(){
+	if($("#" + id_precio_venta_kaizen_ppto).val() == ""){
+		$("#" + id_precio_venta_kaizen_ppto).val(0);
+	} else {
+		$("#" + id_precio_venta_kaizen_ppto).val(deformatMoney($("#" + id_precio_venta_kaizen_ppto).val()) == 0 ? "" : deformatMoney($("#" + id_precio_venta_kaizen_ppto).val()));
+	}
+});
+
+$("#" + id_precio_venta_kaizen_ppto).focusout(function(){
+	$("#" + id_precio_venta_kaizen_ppto).val(formatMoney(eval($("#" + id_precio_venta_kaizen_ppto).val())));
+});
 
 $("#" + id_suministros_kaizen_ppto).focus(function(){
 	if($("#" + id_suministros_kaizen_ppto).val() == ""){

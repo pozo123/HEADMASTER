@@ -6,6 +6,7 @@ HTMLs:
 
 TO DO:
  - ADMON
+   - ReplaceString in database "Bajío 115" por "CASA ROMA"
    - Centro de costos.
      - alta cuenta
      - añadir al desplegar
@@ -16,12 +17,19 @@ TO DO:
    - En producción revisar qué cosas pueden ver/usar supervisores. Cargar ddls sólo con las asignadas
      - En generador de precios. (jala raro, diferente si entras o si vienes de otra pestaña)
    - Gestionar sups solo si creden <3 o admin
+   - Pestaña con solpeds, odecs, etc por obra
+   - app_prod_remisiones (definir y programar)
 *   - app_prod_entrada_estimacion
    - Desplegar Kaizen
      - avance.pag > avance.real = pag en rojo 
      - hacer que las columnas prec y cuant se hagan grises si el otro tiene datos
      - Desplegar Kaizen: TODO en colores por columna, sin el negro
  - PROYECTOS
+   - Reporte de registros -> tabla con horas ppto de cada proc que salga
+   - Revisar carga de horas a kaizen/PROYECTOS/PPTO a partir de generar ppto
+   - NaN en cards horas trabajadas por proc
+   - Revisar funcionalidad de utilidad en generador de pptos (adic y pc00) y en profit kaizen
+   - Añadir documento de evidencia en pptos (adic y pc00)
    - reporte_obras -> definir y programar
    - reporte_ppto -> definir y programar
 *   - gestionar_presu -> Gestionar horas score (distribuir por wey);
@@ -33,9 +41,6 @@ TO DO:
      - Mostrar avances de las 3 apps de asistencia, aunque no esten terminados.
      - Poner descargable a excel con formato para mandarlo a la pagadora
      - columna "obra" tiene la obra más frecuentada esa semana, si no tiene asistencias descargar como "-" o "NA"
-- CATALOGOS
-   - Total
-*     - Diversos, editable (en prod y en rrhh, editable (distribuible) en rrhh)
  - GENERALES
    - Index -> nuevo diseño de landing page
    - Cambiar idioma_espanol en tablas de apps como datos_kaizen y asistencia y desplegar_procesos

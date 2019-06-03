@@ -101,6 +101,6 @@ $('#' + id_button_editar_catalogo_dest).click(function(){
     } else {
         firebase.database().ref(rama_bd_destajistas + "/" + nom).update(dest);
     }
-    loadCatalogoAtn();
+    loadCatalogoDest();
     alert("Cambios registrados");
 });

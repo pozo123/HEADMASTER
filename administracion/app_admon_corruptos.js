@@ -2,6 +2,7 @@ var id_regs_div_corruptos = "regsDivCorruptos";
 var id_inge_ddl_corruptos = "ingeDdlCorruptos";
 var id_inge_group_corruptos = "ingeGroupCorruptos";
 var id_actualizar_button_corruptos = "actualizarButtonCorruptos";
+var id_cerrar_button_corruptos = "cerrarButtonCorruptos";
 
 var id_tab_corruptos = "tabCorruptos";
 
@@ -9,6 +10,7 @@ var rama_bd_personal = "personal";
 var rama_bd_registros = "proyectos/registros";
 
 var regs = [];
+var reg_corrupto_activo;
 
 $('#' + id_tab_corruptos).click(function(){
 	/*
@@ -20,7 +22,6 @@ $('#' + id_tab_corruptos).click(function(){
         </div>
     */
     
-
 	if(areas_usuario_global.administracion){
 		$('#' + id_inge_group_corruptos).removeClass('hidden');
 		$('#' + id_inge_ddl_corruptos).empty();
@@ -55,6 +56,7 @@ function loadRegistrosCorruptos(uid){
 	regs = [];
 	$('#' + id_regs_div_corruptos).empty();
 	$('#' + id_actualizar_button_corruptos).removeClass('hidden');
+	$('#' + id_cerrar_button_corruptos).addClass('hidden');
 	firebase.database().ref(rama_bd_registros).once('value').then(function(snapshot){
 		snapshot.forEach(function(yearSnap){
 			yearSnap.forEach(function(weekSnap){
@@ -91,7 +93,7 @@ function loadRegistrosCorruptos(uid){
 						var year = fech.getFullYear();
 					    fecha.innerHTML =  month + "/" + day + "/" + year;
 					    var checkin = document.createElement('label');
-						var ci = fech.getHours() + ":" + fech.getMinutes();
+						var ci = fech.getHours() + ":" + ("0" + fech.getMinutes()).slice(-2);
 					    checkin.innerHTML =  ci;
 					    var obra = document.createElement('label');
 					    obra.innerHTML = reg.obra;
@@ -106,6 +108,17 @@ function loadRegistrosCorruptos(uid){
 						hora_salida.type = "text";
 						hora_salida.className = "form-control"
 						hora_salida.id = "hora_salida_" + regs.length;
+
+						var button_cerrar;
+						if(!reg.status){
+							$('#' + id_cerrar_button_corruptos).removeClass('hidden');
+							reg_corrupto_activo = {
+								regKey: regSnap.key,
+								inge_uid: reg.inge,
+								year: yearSnap.key,
+								week: weekSnap.key,
+							}
+						}
 
 						div_checkout.appendChild(hora_salida);
 
@@ -150,6 +163,18 @@ function loadRegistrosCorruptos(uid){
 		}
 	});
 }
+
+$('#' + id_cerrar_button_corruptos).click(function(){
+	var update_reg = {
+		horas: -1,
+		status: true,
+	}
+	console.log(rama_bd_registros + "/" + reg_corrupto_activo.year + "/" + reg_corrupto_activo.week + "/" + reg_corrupto_activo.regKey);
+	firebase.database().ref(rama_bd_registros + "/" + reg_corrupto_activo.year + "/" + reg_corrupto_activo.week + "/" + reg_corrupto_activo.regKey).update(update_reg);
+	var fal = false;
+	console.log(rama_bd_personal + "/" + reg_corrupto_activo.inge_uid + "/status");
+	firebase.database().ref(rama_bd_personal + "/" + reg_corrupto_activo.inge_uid + "/status").set(fal);
+});
 
 $('#' + id_actualizar_button_corruptos).click(function(){
 	var horas_score = {};
