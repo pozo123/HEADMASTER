@@ -3,6 +3,7 @@ var id_inge_ddl_corruptos = "ingeDdlCorruptos";
 var id_inge_group_corruptos = "ingeGroupCorruptos";
 var id_actualizar_button_corruptos = "actualizarButtonCorruptos";
 var id_cerrar_button_corruptos = "cerrarButtonCorruptos";
+var id_datatable_corruptos = "dataTableCorruptos";
 
 var id_tab_corruptos = "tabCorruptos";
 
@@ -21,8 +22,8 @@ $('#' + id_tab_corruptos).click(function(){
             </span>
         </div>
     */
-    
 	if(areas_usuario_global.administracion){
+    	loadTableCorruptos();
 		$('#' + id_inge_group_corruptos).removeClass('hidden');
 		$('#' + id_inge_ddl_corruptos).empty();
 
@@ -47,6 +48,43 @@ $('#' + id_tab_corruptos).click(function(){
 		loadRegistrosCorruptos(uid_usuario_global);
 	}
 });
+
+function loadTableCorruptos(){
+    var datos_corruptos = [];
+    firebase.database().ref(rama_bd_personal).once('value').then(function(persSnap){
+	    firebase.database().ref(rama_bd_registros).once('value').then(function(snapshot){
+			snapshot.forEach(function(yearSnap){
+				yearSnap.forEach(function(weekSnap){
+					weekSnap.forEach(function(regSnap){
+						var reg = regSnap.val();
+						if(reg.horas == -1 || (!reg.status && new Date().getDay() != new Date(reg.checkin).getDay()) || (reg.horas == 0 && reg.status)){
+							var fech = new Date(reg.checkin);
+							var month = fech.getMonth() + 1;
+							var day = fech.getDate();
+							var year = fech.getFullYear();
+							datos_corruptos.push([persSnap.child(reg.inge + "/nickname").val(), reg.obra, reg.proceso, month + "/" + day + "/" + year, fech.getHours() + ":" + ("0" + fech.getMinutes()).slice(-2), reg.status ? "Terminado" : "Activo"]);
+						}
+					});
+				});
+			});
+			var tabla_diver = $('#'+ id_datatable_corruptos).DataTable({
+	            destroy: true,
+	            data: datos_corruptos,
+	            dom: 'Bfrtip',
+	            buttons: ['excel'],
+	            columns: [
+	            	{title: "Colaborador",},
+	            	{title: "Obra",},
+	            	{title: "Proceso",},
+	            	{title: "Fecha de inicio",},
+	            	{title: "Hora de inicio",},
+	            	{title: "Status",},
+	            ],
+	            language: idioma_espanol,
+	        });
+		});
+    });
+}
 
 $('#' + id_inge_ddl_corruptos).change(function(){
 	loadRegistrosCorruptos($('#' + id_inge_ddl_corruptos + " option:selected").val());
@@ -112,6 +150,7 @@ function loadRegistrosCorruptos(uid){
 						var button_cerrar;
 						if(!reg.status){
 							$('#' + id_cerrar_button_corruptos).removeClass('hidden');
+							$('#' + id_actualizar_button_corruptos).addClass('hidden');
 							reg_corrupto_activo = {
 								regKey: regSnap.key,
 								inge_uid: reg.inge,
@@ -174,6 +213,9 @@ $('#' + id_cerrar_button_corruptos).click(function(){
 	var fal = false;
 	console.log(rama_bd_personal + "/" + reg_corrupto_activo.inge_uid + "/status");
 	firebase.database().ref(rama_bd_personal + "/" + reg_corrupto_activo.inge_uid + "/status").set(fal);
+	alert("Cierre exitoso");
+	loadRegistrosCorruptos(reg_corrupto_activo.inge_uid);
+	loadTableCorruptos();
 });
 
 $('#' + id_actualizar_button_corruptos).click(function(){
@@ -198,7 +240,7 @@ $('#' + id_actualizar_button_corruptos).click(function(){
 	        if(!horas_score[reg.inge]){
 	        	horas_score[reg.inge] = {};
 	        }
-	        horas_score[reg.inge][query] = horas_score[reg.inge][query] ? horas_score[reg.inge][query] + parseFloat($('#' + this.id).val()) : parseFloat($('#' + this.id).val());
+	        horas_score[reg.inge][query] = horas_score[reg.inge][query] ? horas_score[reg.inge][query] + horas*3600000 : horas*3600000;
 
 			firebase.database().ref(rama_bd_registros + "/" + reg.year + "/" + reg.week + "/" + reg.uid + "/horas").set(horas);
 		}
@@ -213,4 +255,5 @@ $('#' + id_actualizar_button_corruptos).click(function(){
 
 	alert("Horas actualizadas");
 	loadRegistrosCorruptos();
+	loadTableCorruptos();
 });
