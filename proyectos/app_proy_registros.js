@@ -17,8 +17,10 @@ var path = "";
 var precio_hora = 1300;
 var user_global;
 
-function modoRegistros(){
-    console.log("a ver que hace")
+function modoRegistros(automatico){
+    if(automatico){
+        alert("Salida forzada debido a que el registro actual inició en otro día");
+    }
     firebase.database().ref(rama_bd_personal).orderByKey().equalTo(user_global).on('child_added', function(snapshot){
         if(snapshot.child("status").val() == true){
             modoActivoRegistros();
@@ -36,9 +38,9 @@ $(document).ready(function() {
             firebase.database().ref(rama_bd_personal + "/" + user_global).once('value').then(function(snapshot){
                 esp = snapshot.child("esp").val();
                 if(snapshot.child("areas/proyectos").val() && !snapshot.child("areas/administracion").val()){
-                    firebase.database().ref(rama_bd_personal + "/" + user_global).on("child_changed", function(){modoRegistros()});
-                    modoRegistros();
-                    setInterval(modoRegistros, 60000);
+                    firebase.database().ref(rama_bd_personal + "/" + user_global).on("child_changed", function(){modoRegistros(true)});
+                    modoRegistros(false);
+                    //setInterval(modoRegistros, 60000);
 
                     var select = document.getElementById(id_obra_ddl_registros);
                     var option = document.createElement('option');
@@ -143,7 +145,7 @@ $('#' + id_entrada_button_registros).click(function(){
         var cu_reg = firebase.database().ref(rama_bd_registros + "/" + hoy[1] + "/" + hoy[0]).push(reg).key;
         var tru = true;
         firebase.database().ref(rama_bd_personal + "/" + user_global + "/status").set(tru).then(() => {
-            modoRegistros();
+            modoRegistros(false);
         });
         path = hoy[1] + "/" + hoy[0] + "/" + cu_reg;
     }
@@ -171,11 +173,11 @@ $('#' + id_salida_button_registros).click(function(){
                 }
                 var fal = false;
                 firebase.database().ref(rama_bd_personal + "/" + user_global + "/status").set(fal).then(() => {
-                    modoRegistros();
+                    modoRegistros(false);
                 });
             });
         } else {
-            modoRegistros();
+            modoRegistros(false);
         }
     });
 });
