@@ -8,7 +8,10 @@ tr.subgroupDesplegarProcesos {
    background-color: cornsilk !important;
 }
 
-
+.vertical-align {
+  display: flex;
+  align-items: center;
+}
 
 
 #gridWrapper {

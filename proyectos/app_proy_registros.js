@@ -17,6 +17,18 @@ var path = "";
 var precio_hora = 1300;
 var user_global;
 
+function modoRegistros(){
+    console.log("a ver que hace")
+    firebase.database().ref(rama_bd_personal).orderByKey().equalTo(user_global).on('child_added', function(snapshot){
+        if(snapshot.child("status").val() == true){
+            modoActivoRegistros();
+        } else {
+            $('#' + id_entrada_group_registros).removeClass("hidden");
+            $('#' + id_salida_button_registros).addClass("hidden");
+        }
+    });
+}
+
 $(document).ready(function() {
     firebase.auth().onAuthStateChanged(user => {
         if(user) {
@@ -24,6 +36,7 @@ $(document).ready(function() {
             firebase.database().ref(rama_bd_personal + "/" + user_global).once('value').then(function(snapshot){
                 esp = snapshot.child("esp").val();
                 if(snapshot.child("areas/proyectos").val() && !snapshot.child("areas/administracion").val()){
+                    firebase.database().ref(rama_bd_personal + "/" + user_global).on("child_changed", function(){modoRegistros()});
                     modoRegistros();
                     setInterval(modoRegistros, 60000);
 
@@ -58,17 +71,6 @@ function modoActivoRegistros(){
     $('#tabActualizarEsp').addClass('hidden');
     $('#' + id_entrada_group_registros).addClass("hidden");
     $('#' + id_salida_button_registros).removeClass("hidden");
-}
-
-function modoRegistros(){
-    firebase.database().ref(rama_bd_personal).orderByKey().equalTo(user_global).on('child_added', function(snapshot){
-        if(snapshot.child("status").val() == true){
-            modoActivoRegistros();
-        } else {
-            $('#' + id_entrada_group_registros).removeClass("hidden");
-            $('#' + id_salida_button_registros).addClass("hidden");
-        }
-    });
 }
 
 $('#' + id_obra_ddl_registros).change(function(){
