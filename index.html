@@ -41,12 +41,12 @@
             </div>
         
             <!-- Login Form -->
-            <form>
+            <form onsubmit="return false;">
               <input type="text" id="loginEmail" class="fadeIn second" name="login" placeholder="Usuario">
-              <input type="text" id="loginPassowrd" class="fadeIn third" name="login" placeholder="Contraseña">
+              <input type="password" id="loginPassowrd" class="fadeIn third" name="login" placeholder="Contraseña">
               <input type="submit" id = "iniciarSesion" class="fadeIn fourth" value="Entrar">
               <div class = "fadeIn fourth">
-                  <a id = "btn_forgot_password" class="underlineHover1 contraseña" href="#">¿Olvidaste tu contraseña?</a>
+                  <a class="underlineHover1 contraseña" href="#"><span id="btn_forgot_password">¿Olvidaste tu contraseña?</span></a>
               </div>
              
             </form>

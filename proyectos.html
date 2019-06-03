@@ -619,12 +619,11 @@
                 </div>    
                 <ul class="list-unstyled components">
                     <li>
-                        <a href="#pageSubmenu4" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Dashboard</a>
+                        <a href="#pageSubmenu4" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Principal</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu4">
-                            <li class="tab" id="tabDashboard"><a href="#" onclick="openTabs('tabDashboard','dashboard')">Dashboard</a></li>
+                            <li class="tab" id="tabDashboard"><a href="#" onclick="openTabs('tabDashboard','dashboard')">Scoreboard</a></li>
                             <li class="tab" id="tabActualizarEsp"><a href="#" onclick="openTabs('tabActualizarEsp','actualizarEsp')">Actualizar Especializacion</a></li>
-                            <!--<li class="tab" id="tabDashgrid"><a href="#" onclick="openTabs('tabDashgrid','dashgrid')">Gestionar Dashgrid</a></li>-->
-                            <li class="tab" id="tabCuant"><a href="#" onclick="openTabs('tabCuant','suministros')">Suministros</a></li>
+                            <li class="tab" id="tabActivar"><a href="#" onclick="openTabs('tabActivar','activarPresupuesto')">Gestionar horas de trabajo (pendiente)</a></li>
                             <li class="tab tabCatalogoProceso" id="tabCatalogoProceso"><a href="#" onclick="openTabs('tabCatalogoProceso','catalogoProceso')">Catálogo de procesos</a></li>
                         </ul>
                     </li>
@@ -632,18 +631,13 @@
                         <a href="#pageSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Presupuestos</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu1">
                             <li class="tab" id="tabPresupuesto"><a href="#" onclick="openTabs('tabPresupuesto','presupuesto')">Generar Presupuesto</a></li>
-                            <li class="tab" id="tabActivar"><a href="#" onclick="openTabs('tabActivar','activarPresupuesto')">Gestionar presupuestos</a></li>
                             <li class="tab" id="tabImprimirPresupuesto"><a href="#" onclick="openTabs('tabImprimirPresupuesto','imprimirPresupuesto')">Imprimir PDF de presupuesto</a></li>
-                            <li class="tab" id="tabPagos"><a href="#" onclick="openTabs('tabPagos','pagos')">Pagos de presupuestos</a></li>
-                            <li class="tab" id="tabAsignaProc"><a href="#" onclick="openTabs('tabAsignaProc','asignaProc')">Asignacion de Presupuestos a Procesos</a></li>
                         </ul>
                     </li>
 
                     <li>
                         <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Dar de alta</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu2">
-                            <!--<li class="tab" id="tabAltaColaborador"><a href="#" onclick="openTabs('tabAltaColaborador','altaColaborador')">Colaborador HEAD</a></li>-->
-                            <!--<li class="tab" id="tabAltaCliente"><a href="#" onclick="openTabs('tabAltaCliente','altaCliente')">Despachos</a></li>-->
                             <li class="tab" id="tabAltaAtencion"><a href="#" onclick="openTabs('tabAltaAtencion','altaAtencion')">AT'N</a></li>
                             <li class="tab" id="tabAltaReqsExcs"><a href="#" onclick="openTabs('tabAltaReqsExcs','altaReqsExcs')">Requisitos/Exclusiones</a></li>
                             <li class="tab" id="tabAltaTiposGens"><a href="#" onclick="openTabs('tabAltaTiposGens','altaTiposGens')">Tipos de presupuesto/Géneros</a></li>
@@ -654,24 +648,17 @@
                         <a href="#pageSubmenu5" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Reportes</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu5">
                                 <li class="tab" id="tabReporte"><a href="#" onclick="openTabs('tabReporte','reporte')">Reporte de registros</a></li>
-                                <li class="tab" id="tabReporteObra"><a href="#" onclick="openTabs('tabReporteObra','reporteObra')">Reporte de obras</a></li>
-                                <li class="tab" id="tabReportePpto"><a href="#" onclick="openTabs('tabReportePpto','reportePpto')">Reporte de presupuestos</a></li>
+ <!--                                <li class="tab" id="tabReporteObra"><a href="#" onclick="openTabs('tabReporteObra','reporteObra')">Reporte de obras</a></li>
+                                <li class="tab" id="tabReportePpto"><a href="#" onclick="openTabs('tabReportePpto','reportePpto')">Reporte de presupuestos</a></li> -->
                         </ul>
                     </li>
                     <li class="tab"><a href="#" data-toggle="modal" data-target="#contraseñaModal">Cambiar contraseña</a></li>
-                    <!--<li class="tab" id="tabPermisos"><a href="#" onclick="openTabs('tabPermisos','permisos')">Permisos de usuario</a></li>-->
                     <li>
                         <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Catálogos</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu3">
                             <li class="tab" id="tabCatalogoAtn"><a href="#" onclick="openTabs('tabCatalogoAtn','atnCatalogo')">Atn</a></li>
                             <li class="tab" id="tabCatalogoClientes"><a href="#" onclick="openTabs('tabCatalogoClientes','clientesCatalogo')">Clientes</a></li>
                             <li class="tab" id="tabCatalogoObras"><a href="#" onclick="openTabs('tabCatalogoObras','obrasCatalogo')">Obras</a></li>
-                            <!--<li class="tab" id="tabBibColaborador"><a href="#" onclick="openTabs('tabBibColaborador','bibColaborador')">Colaboradores</a></li>
-                            <li class="tab" id="tabBibPresupuestos"><a href="#" onclick="openTabs('tabBibPresupuestos','bibPresupuestos')">Presupuestos</a></li>
-                            <li class="tab" id="tabBibAtencion"><a href="#" onclick="openTabs('tabBibAtencion','bibAtencion')">AT'N</a></li>
-                            <li class="tab" id="tabBibReqsExcs"><a href="#" onclick="openTabs('tabBibReqsRecs','bibReqsExcs')">Requisitos/Exclusiones</a></li>
-                            <li class="tab" id="tabBibTiposGens"><a href="#" onclick="openTabs('tabBibTiposGens','bibTiposGens')">Tipos de presupuesto/Géneros</a></li>
-                            <li class="tab" id="tabBibPagos"><a href="#" onclick="openTabs('tabBibPagos','bibPagos')">Tipos de pagos</a></li>-->
                         </ul>
                     </li>
                 </ul>
@@ -681,9 +668,6 @@
                     <div class="text-center">
                         <button type="button" class="btn btn-danger" id="cerrarSesion">Cerrar sesión</button>
                     </div>
-                </ul>
-                <ul class="list-unstyled components hidden" id="pageSubmenuCierre">
-                    <li id="cierreMaestro"class="tab hidden"><a href="#" data-toggle="modal" data-target="#cierreMaestroModal">Cierre Maestro</a></li>
                 </ul>
                 <ul class="list-unstyled components hidden" id="pageSubmenuActRegs">
                     <button id="botonChidoRegs" type="button" class="btn btn-outline-info btn-lg btn-block">Actualizar Registros</button>
@@ -707,7 +691,7 @@
                 <div class="row">
                     <div class="container-fluid">
                         <div id="dashboard" class="tabcontent dashboard">
-                            <h3 id="dashboardHeader">Dashboard</h3>
+                            <h3 id="dashboardHeader">Scoreboard</h3>
                             <h3 id="clockScoreboard"></h3>
                             <div class= "row subDash">
                                 <div class= "col-lg-12">
@@ -803,102 +787,6 @@
                                                 <div class="form-row">
                                                     <div class= "col-lg-6">
                                                         <button id="actualizarButtonEsp" type="button" class="btn btn-outline-success btn-block">Actualizar</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                            <br/>
-                                        </div>
-                                        <div class="col-lg-3"></div>
-                                    </div>
-                                </div>
-                        </div>
-
-                         <div id="suministros" class="tabcontent hidden">
-                            <h1>Dar de altas Suministros</h1>
-                            <p>Página para dar subir suministros al kaizen</p>
-                            <div class="container-fluid">
-                                <div class="row align-items-center">
-                                    <div class="col-lg-3"></div>
-                                    <div class="col-lg-6">
-                                        <form action="#" onsubmit="return false;">                   
-                                                <div class="form-group">
-                                                    <label for="obraDdlCuant">Obra:</label>
-                                                    <select id="obraDdlCuant" class="form-control"></select>
-                                                </div>
-                                                <div class="form-group hidden" id ="groupProcCuant">
-                                                    <label for="procDdlCuant">Proceso:</label>
-                                                    <select id ="procDdlCuant" class="form-control"></select>
-
-                                                    <div class="form-group hidden" id = "groupSubpCuant">
-                                                        <label for="subpDdlCuant">Subproceso:</label>
-                                                        <select id ="subpDdlCuant" class="form-control"></select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="descripcionCuant">*Descripción:</label>
-                                                    <input type="text" name="" id="descripcionCuant"class="form-control" placeholder="Descripción">
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="cantidadCuant">$ Nuevo:</label>
-                                                    <input type="text" id="cantidadCuant"class="form-control" placeholder= "Ingresa la cantidad nueva">
-                                                </div>
-
-                                                <div class="form-row">
-                                                    <label for="anteriorCuant">Cantidad Anterior:</label>
-                                                    <label id="anteriorCuant">$--.--</label>
-                                                </div>
-                                                <div class="form-row">
-                                                    <label for="nuevoCuant">Cantidad Actualizada:</label>
-                                                    <label id="nuevoCuant">$--.--</label>
-                                                </div>
-                                            
-                                                <br/>
-                                                <div class="form-row">
-                                                    <div class= "col-lg-6">
-                                                        <button id="actualizarCuant" type="button" class="btn btn-outline-success btn-block">Actualizar</button>
-                                                    </div>
-                                                    <div class= "col-lg-6">
-                                                        <button type="reset" id = ""class="btn btn-outline-danger btn-block">Borrar Todo</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                            <br/>
-                                        </div>
-                                        <div class="col-lg-3"></div>
-                                    </div>
-                                </div>
-                        </div>
-
-                        <div id="asignaProc" class="tabcontent hidden">
-                            <h1>Asignación de Presupuestos a Procesos</h1>
-                            <p>Página para asignar presupuestos previos a procesos de una obra especifica</p>
-                            <div class="container-fluid">
-                                <div class="row align-items-center">
-                                    <div class="col-lg-3"></div>
-                                    <div class="col-lg-6">
-                                        <form action="#" onsubmit="return false;">                   
-                                                <div class="form-group">
-                                                    <label for="obraDdlAsignaProc">Obra:</label>
-                                                    <select id="obraDdlAsignaProc" class="form-control" onChange=""></select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="pptoDdlAsignaProc">Presupuesto:</label>
-                                                    <select id="pptoDdlAsignaProc" class="form-control" onChange=""></select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="procDdlAsignaProc">Proceso:</label>
-                                                    <select id="procDdlAsignaProc" class="form-control" onChange=""></select>
-                                                </div>
-                                            
-                                                <br/>
-                                                <div class="form-row">
-                                                    <div class= "col-lg-6">
-                                                        <button id="asignarButtonAsignaProc" type="button" class="btn btn-outline-success btn-block">Actualizar</button>
-                                                    </div>
-                                                    <div class= "col-lg-6">
-                                                        <button type="reset" id = ""class="btn btn-outline-danger btn-block">Borrar Todo</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -1088,7 +976,8 @@
                                     </div>
                                 </div>
                          </div>
-                            
+                        
+                         <!-- Cambiar a gest horas-->
                         <div id="activarPresupuesto" class="tabcontent hidden">
                             <h1>Gestiona un contrato</h1>
                             <p>Selecciona un presupuesto</p>
@@ -1208,64 +1097,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!--<div id="altaObra" class="tabcontent hidden">
-                            <h1>Obra</h1><br/>
-                            <p>* Los campos son obligatorios</p>
-                            <div class="container-fluid">
-                                <div class="row align-items-center">
-                                    <div class="col-lg-12">
-                                        <form action ="#" onsubmit="return false;">
-
-                                            <div class="form-group">
-                                                <label for="obraNombreProy">*Obra:</label>
-                                                <select class="form-control" name="" id="obraNombreProy"></select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="obraClave">*Clave de la obra (máx 5 caracteres):</label>
-                                                <input type="text" name="" id="obraClave" class="form-control" placeholder="Ingresa la clave de la obra">
-                                            </div>
-                                            
-                                            <div class="form-group">
-                                                <label for="cliente">*Cliente:</label>
-                                                <select class="form-control" name="" id="cliente"></select>
-                                            </div>
-                                            <hr class="style2">
-                                            <div class="form-group">
-                                                <h4>*Dirección</h4><br/>
-                                                <div class="form-row">
-                                                    <div class="col-lg-4">
-                                                        <input type="text" id="calleObra" class="form-control" placeholder="Nombre de la calle">
-                                                    </div>
-                                                    <div class="col-lg-2">
-                                                        <input type="text" id="numObra"  class="form-control" placeholder="Número">
-                                                    </div>
-                                                    <div class="col-lg-3">
-                                                        <input type="text" id="coloniaObra" class="form-control" placeholder="Colonia">
-                                                    </div>
-
-                                                    <div class="col-lg-3">
-                                                        <input type="text" id="delegacionObra" class="form-control" placeholder="Delegación/Municipio">
-                                                    </div>
-                                                </div>
-                                                <br/>
-                                                <div class="form-row">
-                                                    <div class="col-lg-2">
-                                                        <input type="text" id="cpObra" class="form-control" placeholder="Código Postal">
-                                                    </div>
-                                                    <div class="col-lg-2">
-                                                        <input type="text" id="ciudadObra" class="form-control" placeholder="Estado">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <button id="registrarObra" type="submit" class="btn btn-success btn-lg btn-block">Registrar</button>
-                                            <button id="borrarTodoObra" type="reset" class="btn btn-outline-danger btn-lg btn-block">Borrar Todo</button>                                                                
-                                        </form>  
-                                    </div>
-                                </div>
-                            </div>
-                        </div>-->
 
                         <div id="altaAtencion" class="tabcontent hidden">
                             <h1>AT'N</h1>
@@ -1438,54 +1269,73 @@
                         </div>
 
                         <div id="reporte" class="tabcontent hidden">
-                            <h1>Generador de reportes</h1><br/>
+                            <h1>Generador de reportes</h1>
+                            <p>Reporte con actividad diaria. Se puede ver aquí o imprimir en pdf.</p>
                             <div class="container-fluid">
-                                <div class="row">
-                                    <form action="#" onsubmit="return false;">
-                                        <div class="form-row align-items-center">
-                                            <div class="col-lg-3 col-sm-12">
-                                                <label for="fechaInicioReporte">Fecha inicio de reporte:</label>
-                                            </div>
-                                            <div class="col-lg-3 col-sm-12">
-                                                <input class="form-control" type="text" id="fechaInicioReporte" placeholder="" readonly="readonly">
-                                            </div>
-                                            <div class="col-lg-3 col-sm-12">
-                                                <label for="fichaFinalReporte">Fecha final del reporte:</label>
-                                            </div>
-                                            <div class="col-lg-3 col-sm-12">
-                                                <input class="form-control" type="text" id="fichaFinalReporte" placeholder="" readonly="readonly">
-                                            </div>
-                                        </div>
-                                        <br/>
-                                        <p>*Para generar reporte de un solo día coloca en "Fecha inicio de reporte" el día deseado y deja en blanco "Fecha final del reporte"</p>
-                                        <div class="form-group">
-                                            <label for="ingeDdlReporte">Colaborador:</label>
-                                            <select id ="ingeDdlReporte" class="form-control"></select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="obraDdlReporte">Obra:</label>
-                                            <select id ="obraDdlReporte" class="form-control"></select>
-                                        </div>
-                                        <div class="form-group hidden" id="procGroupReporte">
-                                            <label for="procDdlReporte">Proceso:</label>
-                                            <select id ="procDdlReporte" class="form-control"></select>
-                                        </div>
-                                        <div class="form-group hidden" id="subprocDdlReporte">
-                                            <label for="subprocDdlReporte">Subroceso:</label>
-                                            <select id ="subprocDdlReporte" class="form-control"></select>
-                                        </div>
-                                        <div class="row">
-                                            <button type="reset" name="" class="btn btn-danger">Limpiar campos</button>
-                                            <button type="button" name="" id="generarButtonReporte" class="btn btn-primary">Generar PDF</button>
-                                            <button type="button" name="" id="tablaButtonReporte" class="btn btn-info">Ver tabla en esta página</button>                                                                           
-                                        </div>     
-                                    </form>
-
-                                    <div class="row mt-3">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3">
+                                    </div>
+                                    <div class="col-lg-6">
                                         <div class="container-fluid">
-                                            <table id="dataTableReporte" class="display" style="width:100%">
-                                            </table>
+                                            <div class="row">
+                                                <form action="#" onsubmit="return false;">
+                                                    <div class="form-row align-items-center">
+                                                        <div class="col-lg-3 col-sm-12">
+                                                            <label for="fechaInicioReporte">Fecha inicio de reporte:</label>
+                                                        </div>
+                                                        <div class="col-lg-3 col-sm-12">
+                                                            <input class="form-control" type="text" id="fechaInicioReporte" placeholder="" readonly="readonly">
+                                                        </div>
+                                                        <div class="col-lg-3 col-sm-12">
+                                                            <label for="fichaFinalReporte">Fecha final del reporte:</label>
+                                                        </div>
+                                                        <div class="col-lg-3 col-sm-12">
+                                                            <input class="form-control" type="text" id="fichaFinalReporte" placeholder="" readonly="readonly">
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                    <p>*Para generar reporte de un solo día coloca en "Fecha inicio de reporte" el día deseado y deja en blanco "Fecha final del reporte"</p>
+                                                    <div class="form-group">
+                                                        <label for="ingeDdlReporte">Colaborador:</label>
+                                                        <select id ="ingeDdlReporte" class="form-control"></select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="obraDdlReporte">Obra:</label>
+                                                        <select id ="obraDdlReporte" class="form-control"></select>
+                                                    </div>
+                                                    <div class="form-group hidden" id="procGroupReporte">
+                                                        <label for="procDdlReporte">Proceso:</label>
+                                                        <select id ="procDdlReporte" class="form-control"></select>
+                                                    </div>
+                                                    <div class="form-group hidden" id="subprocDdlReporte">
+                                                        <label for="subprocDdlReporte">Subroceso:</label>
+                                                        <select id ="subprocDdlReporte" class="form-control"></select>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class= "col-lg-4">
+                                                            <button id="tablaButtonReporte" type="button" class="btn btn-outline-dark btn-block">Generar registros</button>
+                                                        </div>
+                                                        <div class= "col-lg-4">
+                                                            <button id="generarButtonReporte" type="button" class="btn btn-outline-success btn-block">Imprimir PDF</button>
+                                                        </div>
+                                                        <div class= "col-lg-4">
+                                                            <button type="reset" name="" class="btn btn-danger">Limpiar campos</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="container-fluid">
+                                        <table id="dataTableReporte" class="display" style="width:100%">
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -1572,89 +1422,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!--
-                        <div id="permisos" class="tabcontent hidden">
-                            <h1>Permisos de usuario</h1>
-                            <p>Otorga permisos de acceso a el usuario seleccionado</p>
-                            <div class="container-fluid">
-                                <form action="#" onsubmit="return false;">
-                                    <div class="form-row align-items-center">
-                                        <div class = "col-lg-3">
 
-                                        </div>
-                                        <div class = "col-lg-6">
-                                                <div class="form-group">
-                                                    <label for="DDLcolaborador">Selecciona el Colaborador</label>
-                                                    <select class="form-control" name="" id="DDLcolaborador" onChange="loadCheckboxesPermisos()"></select>
-                                                </div>
-
-                                                <div class="form-group align-items-center">
-                                                    <label class="checkbox-inline">
-                                                        <input id="checkColaborador" class ="checkbox-permisos" type="checkbox" checked  data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"> El usuario puede dar de alta a otro colaborador
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-group align-items-center">
-                                                    <label class="checkbox-inline">
-                                                        <input id="checkObra" class ="checkbox-permisos" type="checkbox" checked data-toggle="toggle" data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"> El usuario puede dar de alta una obra
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-group align-items-center">
-                                                    <label class="checkbox-inline">
-                                                        <input id="checkCliente" class ="checkbox-permisos" type="checkbox" checked data-toggle="toggle" data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"> El usuario puede dar de alta un cliente
-                                                    </label>
-                                                </div>
-                                                <div class="form-group align-items-center">
-                                                    <label class="checkbox-inline">
-                                                        <input id= "checkExcReqs" class ="checkbox-permisos" type="checkbox" checked data-toggle="toggle" data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"> El usuario puede dar de alta exclusiones y requisitos
-                                                    </label>
-                                                </div>
-                                                <div class="form-group align-items-center">
-                                                    <label class="checkbox-inline">
-                                                        <input id= "checkGenerosTipos" class ="checkbox-permisos" type="checkbox" checked data-toggle="toggle" data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"> El usuario puede dar de alta tipos y géneros de presupuestos 
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-group align-items-center">
-                                                    <label class="checkbox-inline">
-                                                        <input id = "checkReporte" class ="checkbox-permisos" type="checkbox" checked data-toggle="toggle" data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"> El usuario puede generar reportes de registros de actividad
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-group align-items-center">
-                                                    <label class="checkbox-inline">
-                                                        <input id = "checkReportePpto" class ="checkbox-permisos" type="checkbox" checked data-toggle="toggle" data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"> El usuario puede generar reportes de registros de presupuestos
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-group align-items-center">
-                                                    <label class="checkbox-inline">
-                                                        <input id= "checkPerfil" class ="checkbox-permisos" type="checkbox" checked data-toggle="toggle"data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"> El usuario tiene la funcionalidad de registrar sus horas de trabajo y salir en el dashboard
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-group align-items-center">
-                                                    <label class="checkbox-inline">
-                                                        <input id= "checkActivar" class ="checkbox-permisos" type="checkbox" checked data-toggle="toggle" data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"> El usuario tiene la funcionalidad de activar un contrato
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-group align-items-center">
-                                                    <label class="checkbox-inline">
-                                                        <input id= "checkPagos" class ="checkbox-permisos" type="checkbox" checked data-toggle="toggle" data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"> El usuario puede subir pagos
-                                                    </label>
-                                                </div>
-
-                                                <button id="guardadPermisos" type="button" class="btn btn-outline-success btn-block">Actualizar</button>
-                                        </div>
-                                        <div class = "col-lg-3">
-
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>-->
                         <div id= "atnCatalogo" class="tabcontent hidden">
                             <div class="container-fluid">
                                 <h1>Catálogo de Atenciones</h1>
@@ -1685,169 +1453,6 @@
                                     <div class="container-fluid">
                                         <table id="dataTableCatalogoObras" class="display" style="width:100%">
                                         </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!--<div id= "bibObras" class="tabcontent hidden">
-                            <div class="container-fluid">
-                                <h1>Bibliotecas HEAD - Obras</h1>
-                                <p>Aquí puedes revisar las bibliotecas y editar/eliminar información</p>
-                                
-                                <div class="row mt-3">
-                                    <div class="container-fluid">
-                                        <table id="dataTableObras" class="display" style="width:100%">
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id= "bibPresupuestos" class="tabcontent hidden dataTables_wrapper">
-                            <div class="container-fluid">
-                                <h1>Bibliotecas HEAD - Presupuestos</h1>
-                                <p>Aquí puedes revisar las bibliotecas y editar/eliminar información</p>
-                                
-                                <div class="row mt-3">
-                                    <div class="container-fluid">
-                                        <table id="dataTablePresu" class="display" style="width:100%">
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id= "bibReqsExcs" class="tabcontent hidden">
-                            <div class="container-fluid">
-                                <h1>Bibliotecas HEAD - Requisitos y Exclusiones</h1>
-                                <p>Aquí puedes revisar las bibliotecas y editar/eliminar información</p>                           
-                                <div class="row mt-3">
-                                    <h3>Requisitos</h3>
-                                    <br>
-                                    <div class="container-fluid">
-                                        <table id="dataTableReqs" class="display" style="width:100%">
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <h3>Exclusiones</h3>
-                                    <br>
-                                    <div class="container-fluid">
-                                        <table id="dataTableExclusiones" class="display" style="width:100%">
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id= "bibTiposGens" class="tabcontent hidden">
-                            <div class="container-fluid">
-                                <h1>Bibliotecas HEAD - Tipos de presupuestos y Géneros</h1>
-                                <p>Aquí puedes revisar las bibliotecas y editar/eliminar información</p>                           
-                                <div class="row mt-3">
-                                    <h3>Tipos de presupuestos</h3>
-                                    <br>
-                                    <div class="container-fluid">
-                                        <table id="dataTableTipos" class="display" style="width:100%">
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <h3>Géneros</h3>
-                                    <br>
-                                    <div class="container-fluid">
-                                        <table id="dataTableGeneros" class="display" style="width:100%">
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id= "bibColaborador" class="tabcontent hidden">
-                            <div class="container-fluid">
-                                <h1>Bibliotecas HEAD - Colaboradores</h1>
-                                <p>Aquí puedes revisar las bibliotecas y editar/eliminar información</p>
-                                
-                                <div class="row mt-3">
-                                    <div class="container-fluid">
-                                        <table id="dataTableInges" class="display" style="width:100%">
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id= "bibAtencion" class="tabcontent hidden">
-                            <div class="container-fluid">
-                                <h1>Bibliotecas HEAD - AT'N</h1>
-                                <p>Aquí puedes revisar las bibliotecas y editar/eliminar información</p>
-                                
-                                <div class="row mt-3">
-                                    <div class="container-fluid">
-                                        <table id="dataTableAtn" class="display" style="width:100%">
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>-->
-
-                        <div id="pagos" class="tabcontent hidden">
-                            <h1>Pagos ingresados por presupuesto</h1>
-                            <p>Página para ingresar pagos recibidos por presupuesto de la obra seleccionada</p>
-                            <div class="container-fluid">
-                                <div class="row align-items-center">
-                                    <div class="col-lg-3">
-
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <form action="#" onsubmit="return false;">
-                                            <div class="form-group">
-                                                <label for="obrasDdlPagos">Obra:</label>
-                                                <select id="obrasDdlPagos" class="form-control" onChange="loadDDLPresupuestosPagos()"></select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="pptoDdlPagos">Presupuesto:</label>
-                                                <select id ="pptoDdlPagos" class="form-control"></select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="montoPagos">Cantidad Pagada:</label>
-                                                <input type="text" name="montoPagos" id="montoPagos"class="form-control" placeholder="Ingresa la cantidad pagada">
-                                            </div>
-                                            <div class="form-row align-items-center">
-                                                <div class="col-lg-6 col-sm-12">
-                                                    <label for="fechaPagos">Fecha donde se realizó el pago:</label>
-                                                </div>
-                                                <div class="col-lg-6 col-sm-12">
-                                                    <input class="form-control" type="text" id="fechaPagos" placeholder="" readonly="readonly">
-                                                </div>
-                                            </div>
-                                            <br/>
-                                            <div class="form-group">
-                                                <label for="conceptoPagos">*Descripción del presupuesto:</label>
-                                                <textarea class="form-control" rows="6" id="conceptoPagos"></textarea>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" id="pagoArchivo" accept="image/*, application/pdf" lang="es">
-                                                    <label class="custom-file-label" for="pagoArchivo">Archivo prueba del pago realizado</label>
-                                                    <span id="label_pago"> Archivo no seleccionado</label>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-row">
-                                                <div class= "col-lg-6">
-                                                    <button id="guardarPago" type="button" class="btn btn-outline-success btn-block">Guardar Pago</button>
-                                                </div>
-                                                <div class= "col-lg-6">
-                                                    <button type="reset" id = "borrarPago"class="btn btn-outline-danger btn-block">Borrar Todo</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                        <br/>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        
                                     </div>
                                 </div>
                             </div>
@@ -1934,16 +1539,6 @@
         <script src="proyectos/app_reporte.js"></script>
         <script src="proyectos/app_reporte_ppto.js"></script>
         <script src="proyectos/score.js"></script>
-        <!--<script src="proyectos/app_inge.js"></script>-->
-        <!--<script src="proyectos/app_perfil.js"></script>-->
-        <!--<script src="proyectos/app_dashboard.js"></script>-->
-        <!--<script src="proyectos/app_permisos.js"></script>-->
-        <!--<script src="proyectos/app_bibliotecas.js"></script>-->
-        <!--<script src="proyectos/app_graphs.js"></script>-->
-        <!--<script src="proyectos/app_dashgrid.js"></script>-->
-        <!--<script src="proyectos/app_pagos.js"></script>-->
-        <!--<script src="proyectos/app_proy_asigna_proc.js"></script>-->
-
         
 
         <!-- PdfMaker-->
