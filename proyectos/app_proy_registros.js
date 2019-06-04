@@ -19,7 +19,7 @@ var user_global;
 
 function modoRegistros(automatico){
     if(automatico){
-        alert("Salida forzada debido a que el registro actual inició en otro día");
+        //alert("Salida forzada debido a que el registro actual inició en otro día");
     }
     firebase.database().ref(rama_bd_personal).orderByKey().equalTo(user_global).on('child_added', function(snapshot){
         if(snapshot.child("status").val() == true){

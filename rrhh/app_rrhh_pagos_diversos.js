@@ -592,7 +592,7 @@ function guardarDiversos(){
         alert("Datos actualizados");
     });
 }
-
+/*
 $('#' + id_terminar_button_diversos).click(function(){
     var year = $('#' + id_year_ddl_diversos + " option:selected").val();
     var week = $('#' + id_semana_ddl_diversos + " option:selected").val();
@@ -651,19 +651,7 @@ $('#' + id_terminar_button_diversos).click(function(){
                                                             obras_json[diver.obra]["procesos"][path[0]]["subprocesos"][diver.proceso]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] = (parseFloat(obras_json[diver.obra]["procesos"][path[0]]["subprocesos"][diver.proceso]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(diver.cantidad)*1.16).toFixed(2);
                                                         }
                                                     }
-                                                }/*
-                                                firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + diver.obra + "/trabajadores/" + trabSnap.key + "/total_diversos").once('value').then(function(snapshot){
-                                                    var valor_anterior = snapshot.val();
-                                                    if(valor_anterior == null){
-                                                        valor_anterior = 0;
-                                                    }
-                                                    var nuevo_valor = parseFloat(valor_anterior) + parseFloat(diver.cantidad);
-                                                    console.log("valor_anterior: " + valor_anterior);
-                                                    console.log("nuevo_valor: " + nuevo_valor);
-                                                    firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + diver.obra + "/trabajadores/" + trabSnap.key + "/total_diversos").set(nuevo_valor);
-                                                    var impuestos_diversos = (nuevo_valor * 0.16).toFixed(2);
-                                                    firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + diver.obra + "/trabajadores/" + trabSnap.key + "/impuestos/impuestos_diversos").set(impuestos_diversos);
-                                                });*/
+                                                }
                                             }
                                         });
                                     }
@@ -693,8 +681,8 @@ $('#' + id_terminar_button_diversos).click(function(){
             alert("Existe un registro repetido (mismo trabajador y mismo proceso/distribuible)");
         }
     })
-});
-    
+});*/
+/*
 function distribuyeEnAsistencias(obras_json,monto,trabSnap,year,week,diverso){
     var asistencias = {asistencias: 0};
     var lastDay = new Date(year,11,31);
@@ -771,21 +759,8 @@ function distribuyeEnAsistencias(obras_json,monto,trabSnap,year,week,diverso){
             }
         }
     //});
-    /*
-    firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week).once('value').then(function(snapshot){
-        for(key in totales){
-            var snap = snapshot.child(key + "/trabajadores/" + trabSnap.key + "/total_diversos");
-            var valor_anterior = snap.exists() ? snap.val() : 0;
-            console.log("val_ant: " + valor_anterior);
-            var nuevo_valor = parseFloat(valor_anterior) + parseFloat(totales[key]);
-            console.log("val_new: " + nuevo_valor)
-            firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + key + "/trabajadores/" + trabSnap.key + "/total_diversos").set(nuevo_valor);
-            var impuestos_diversos = (nuevo_valor * 0.16).toFixed(2);
-            firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + key + "/trabajadores/" + trabSnap.key + "/impuestos/impuestos_diversos").set(impuestos_diversos);
-        }
-    });*/
-}
-
+}*/
+/*
 function calculaTotalesEImpuestosDiversos(){
     var year = $('#' + id_year_ddl_diversos + " option:selected").val();
     var week = $('#' + id_semana_ddl_diversos + " option:selected").val();
@@ -805,7 +780,7 @@ function calculaTotalesEImpuestosDiversos(){
         });
     });
 }
-
+*/
 /*function sumaMOKaizen(query,cantidad){
     firebase.database().ref(rama_bd_obras_magico + "/" + query + "/kaizen/PRODUCCION/COPEO/PAG").once('value').then(function(snapshot){
         var anterior = snapshot.val();
@@ -818,7 +793,7 @@ function calculaTotalesEImpuestosDiversos(){
     });
 }*/
 
-function asistenciaSimpleDiversos(asistencias, dia){
+/*function asistenciaSimpleDiversos(asistencias, dia){
     if(dia.asistencia){
         if(asistencias["asistencias"]){
             asistencias["asistencias"] = asistencias["asistencias"] + 0.2;
@@ -858,7 +833,7 @@ function asistenciaDia(asistencias, dia){
             }
         }
     }
-}
+}*/
 
 function headersDiversos() {
   var row = tableDiversos.insertRow(0);

@@ -11,28 +11,27 @@ TO DO:
      - añadir al desplegar
  - COMPRAS
    - app_compras_credito -> definida en foto
-   - Definir cómo terminar OdeC
+*   - status odec -> rama_bd (con catalogo), en datatable de odecs y datatable para supervisor
  - PRODUCCION
    - En producción revisar qué cosas pueden ver/usar supervisores. Cargar ddls sólo con las asignadas
      - En generador de precios. (jala raro, diferente si entras o si vienes de otra pestaña)
-   - Gestionar sups solo si creden <3 o admin
-   - Pestaña con solpeds, odecs, etc por obra
+     - Gestionar sups solo si creden < 3 o admin
    - app_prod_remisiones (definir y programar)
+   - app_prod_copeo (definir y programar)
+     - Al menos subir info basica de textfield, chance agregar calculador
 *   - app_prod_entrada_estimacion
    - Desplegar Kaizen
      - avance.pag > avance.real = pag en rojo 
+     - Subprocesos colapsables por proc al hacer click en el renglon (limpieza de codigo editable, buscar catalogo de procs)
      - hacer que las columnas prec y cuant se hagan grises si el otro tiene datos
      - Desplegar Kaizen: TODO en colores por columna, sin el negro
  - PROYECTOS
+   - Generar pdf reporte regs mete inge por uid, meter nombre o nickname
+   - Corregir calculo de profit en los textfields de generador de pptos
    - Reporte de registros -> tabla con horas ppto de cada proc que salga
-   - Revisar carga de horas a kaizen/PROYECTOS/PPTO a partir de generar ppto -> en un campo aparte (independiente del $)
-   - NaN en cards horas trabajadas por proc
-   - Revisar funcionalidad de utilidad en generador de pptos (adic y pc00) y en profit kaizen
-   - Añadir documento de evidencia en pptos (adic y pc00)
-   - reporte_obras -> definir y programar
-   - App para terminar un proyecto. Se puede revertir. Lo qu ehace es copiar el ppto al pag en kaizen proy
-   - reporte_ppto -> definir y programar
+*   - Revisar carga de horas a kaizen/PROYECTOS/PPTO a partir de generar ppto (adic y pc00) -> en un campo aparte (independiente del $)
 *   - gestionar_presu -> Gestionar horas score (distribuir por wey);
+     - App para terminar un proyecto. Se puede revertir. Lo qu ehace es copiar el ppto al pag en kaizen proy
  - RRHH
 **   - App_revertir_cierre, que cierre pago_nomina, diversos, HE O asistencias, dependiendo de un ddl? añoño. Verla bien y mapear los efectos de cada app.
      - Limpiar semana 20 en trabajadores y en pagos nomina
@@ -42,14 +41,11 @@ TO DO:
      - Poner descargable a excel con formato para mandarlo a la pagadora
      - columna "obra" tiene la obra más frecuentada esa semana, si no tiene asistencias descargar como "-" o "NA"
  - GENERALES
-   - Index -> nuevo diseño de landing page
+   - Subir templates de excel con formatos necesarios para imprtar (importar proveedores, trabajadores y ppto adic)
    - Borrar todos los onAuthStateChanged y usar la variable global de app_principal
    - Profit se calculan con CUANT, no con OdeC (en todos lados)
    - Cambiar idioma_espanol en tablas de apps como datos_kaizen y asistencia y desplegar_procesos
-   - Definir y programar la columna PROYECTOS/PAG (cuando, quien y como) -> desde gestionar procs en proy. Al terminar sumo lo ppto a pag, se puede desterminar.
-   - Definir y programar la columna COPEO/COPEO (cuando, quien y como)
    - Titulos de obra en catalogo de proceso en negritas y mas grandes
-   - Borrar obsoletos comentados en htmls
    - KICK-OFF 
      - subir y editar por req (req = {id, alcance, nombre_corto, familia})
      - asignar a proc (al dar de alta el proc, con ddcb)

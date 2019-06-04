@@ -16,6 +16,8 @@ var tablePagoNomina = document.getElementById(id_table_pago_nomina);
 
 var trabajadores = [];
 
+//AQUI meter al kaizen HE y DIV al hacer click (aka toooodo) y sumar totales del trabajador (solo total global), obra y semana
+
 $('#' + id_tab_pago_nomina).click(function(){
 	$('#' + id_semana_ddl_pago_nomina).empty();
     $('#' + id_year_ddl_pago_nomina).empty();
