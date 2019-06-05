@@ -164,6 +164,10 @@
             - terminado
             - tipo: "adicional"/"continuo"/"miscelaneo"/"proyecto"
             - contrato (a menos que sea padre, excepcion con IQONO MEXICO)
+            - validacion_ppto
+               - precio_negociado
+               - documento_evidencia
+               - aprobado (bool)
             - SCORE (SOLO EN HOJA)
                - total_prog (en horas)
                - total_trabajado (en horas)
@@ -184,6 +188,7 @@
                   - (obsoleto) contrato
                   - nombre
                   - contrato_compras: igual que proc
+                  - validacion_ppto: igual que proc
                   - SCORE: igual que proc simple
                   - presupuesto: (solo en adic y pc00, pc00-misc = "")
                      - terminado

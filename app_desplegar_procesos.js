@@ -14,6 +14,7 @@ var nombre_seleccionado;
 var rama_bd_obras_magico = "obras";
 
 $('.' + class_tab_procesos).click(function(){
+    $('#' + class_table_datatable_procesos).html('');
     loadTablaProcesos();
 });
 
