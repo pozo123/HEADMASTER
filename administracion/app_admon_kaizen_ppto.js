@@ -21,12 +21,15 @@ var id_button_guardar_kaizen_ppto = "guardarButtonKaizenPpto";
 
 var tab_kaizen_ppto = "tabKaizenPpto";
 
+var form_kaizen_ppto = "formKaizenPpto";
+
 var rama_bd_personal = "personal";
 var rama_bd_obras = "obras";
 
 var kaiz_ppto = {};
 
 $('#' + tab_kaizen_ppto).click(function(){
+	$('#' + form_kaizen_ppto).trigger("reset");
 	$('#' + id_obra_ddl_kaizen_ppto).empty();
     var select = document.getElementById(id_obra_ddl_kaizen_ppto);
     var option = document.createElement('option');

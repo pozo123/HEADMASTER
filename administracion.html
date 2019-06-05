@@ -416,27 +416,26 @@
                     <li>
                         <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Obras</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu2">
-                            <li class="tab tabCatalogoProceso" id="tabCatalogoProceso"><a href="#" onclick="openTabs('tabCatalogoProceso','catalogoProceso')">Catálogo de procesos</a></li>
                             <li class="tab" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Alta Obra</a></li>
                             <li class="tab" id="tabAltaProceso"><a href="#" onclick="openTabs('tabAltaProceso','altaProceso')">Alta de procesos</a></li>
                             <li class="tab tabEditarProceso" id="tabEditarProceso"><a href="#" onclick="openTabs('tabEditarProceso','editarProceso')">Editar Procesos</a></li>
-                            <li class="tab" id="tabPresupuestoAdic"><a href="#" onclick="openTabs('tabPresupuestoAdic','presupuestoAdic')">Generar Ppto Adic</a></li>
-                            <li class="tab tab" id="tabKaizenPpto"><a href="#" onclick="openTabs('tabKaizenPpto','kaizenPpto')">Kaizen Ppto</a></li>
+                            <li class="tab" id="tabPresupuestoAdic"><a href="#" onclick="openTabs('tabPresupuestoAdic','presupuestoAdic')">Generar Presupuesto Adicional</a></li>
+                            <li class="tab tab" id="tabKaizenPpto"><a href="#" onclick="openTabs('tabKaizenPpto','kaizenPpto')">Generador de Precios - Kaizen </a></li>
                         </ul>
                     </li>
                     <li>
                         <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Colaboradores</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu3">
-                            <li class="tab" id="tabAltaColaborador"><a href="#" onclick="openTabs('tabAltaColaborador','altaColaborador')">Alta de colaborador</a></li>
-                            <li class="tab" id="tabAreas"><a href="#" onclick="openTabs('tabAreas','areas')">Areas</a></li>
+                            <li class="tab" id="tabAltaColaborador"><a href="#" onclick="openTabs('tabAltaColaborador','altaColaborador')">Alta/Editar colaborador</a></li>
+                            <li class="tab" id="tabAreas"><a href="#" onclick="openTabs('tabAreas','areas')">Asignar áreas</a></li>
                         </ul>
                     </li>
-                    <li>
+<!--                     <li>
                         <a href="#pageSubmenu4" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Centro de Costos</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu4">
                             <li class="tab" id="tabAltaCuentas"><a href="#" onclick="openTabs('tabAltaCuentas','altaCuentas')">Alta de Cuentas</a></li>
                         </ul>
-                    </li>
+                    </li> -->
                     <li>
                         <a href="#pageSubmenu5" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Clientes</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu5">
@@ -461,6 +460,7 @@
                             <li class="tab" id="tabCatalogoClientes"><a href="#" onclick="openTabs('tabCatalogoClientes','clientesCatalogo')">Clientes</a></li>
                             <li class="tab" id="tabCatalogoObras"><a href="#" onclick="openTabs('tabCatalogoObras','obrasCatalogo')">Obras</a></li>
                             <li class="tab" id="tabCatalogoPersonal"><a href="#" onclick="openTabs('tabCatalogoPersonal','personalCatalogo')">Personal</a></li>
+                            <li class="tab tabCatalogoProceso" id="tabCatalogoProceso"><a href="#" onclick="openTabs('tabCatalogoProceso','catalogoProceso')">Procesos</a></li>
                         </ul>
                     </li>
                     <li>
@@ -516,7 +516,7 @@
                         
                         <!--Obras-->   
                         <div id="altaObra" class="tabcontent hidden">
-                            <h1>Obra</h1><br/>
+                            <h1>Obra</h1>
                             <p>* Los campos son obligatorios</p>
                             <div class="container-fluid">
                                 <div class="row align-items-center">
@@ -561,34 +561,38 @@
                                             <div class="form-group">
                                                 <h4>*Dirección</h4><br/>
                                                 <div class="form-row">
-                                                    <div class="col-lg-4">
+                                                    <div class="col-lg-6">
                                                         <input type="text" id="calleObra" class="form-control" placeholder="Nombre de la calle">
                                                     </div>
-                                                    <div class="col-lg-2">
+                                                    <div class="col-lg-3">
                                                         <input type="text" id="numObra"  class="form-control" placeholder="Número">
                                                     </div>
                                                     <div class="col-lg-3">
                                                         <input type="text" id="coloniaObra" class="form-control" placeholder="Colonia">
                                                     </div>
-
-                                                    <div class="col-lg-3">
-                                                        <input type="text" id="delegacionObra" class="form-control" placeholder="Delegación/Municipio">
-                                                    </div>
                                                 </div>
                                                 <br/>
                                                 <div class="form-row">
-                                                    <div class="col-lg-2">
+                                                    <div class="col-lg-4">
+                                                        <input type="text" id="delegacionObra" class="form-control" placeholder="Delegación/Municipio">
+                                                    </div>
+                                                    <div class="col-lg-4">
                                                         <input type="text" id="cpObra" class="form-control" placeholder="Código Postal">
                                                     </div>
-                                                    <div class="col-lg-2">
+                                                    <div class="col-lg-4">
                                                         <input type="text" id="ciudadObra" class="form-control" placeholder="Estado">
                                                     </div>
                                                 </div>
                                             </div>
 
-
-                                            <button id="registrarObra" type="submit" class="btn btn-success btn-lg btn-block">Registrar</button>
-                                            <button id="borrarTodoObra" type="reset" class="btn btn-outline-danger btn-lg btn-block">Borrar Todo</button>                                                                
+                                            <div class="form-row">
+                                                <div class= "col-lg-6">
+                                                    <button id="registrarObra" type="button" class="btn btn-outline-success btn-block">Registrar Obra</button>
+                                                </div>
+                                                <div class= "col-lg-6">
+                                                    <button type="reset" id="borrarTodoObra" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                </div>
+                                            </div>                                                     
                                         </form>  
                                     </div>
                                 </div>
@@ -747,7 +751,7 @@
                                     <div class="row align-items-center">
                                         <div class="col-lg-3"></div>
                                         <div class="col-lg-6">
-                                            <form action="#" onsubmit="return false;">                                      
+                                            <form action="#" onsubmit="return false;" id = "formKaizenPpto">                                      
                                                 <div class="form-group">
                                                     <label for="obraDdlKaizenPpto">Obra:</label>
                                                     <select id="obraDdlKaizenPpto" class="form-control"></select>
@@ -880,8 +884,8 @@
                         <!-- Colaboradores-->
         
                         <div id="altaColaborador" class="tabcontent hidden">
-                                <h1>Alta de colaboradores</h1>
-                                <p>Página para dar de alta a los ingenieros del área de producción</p>
+                                <h1>Alta o edición de colaboradores</h1>
+                                <p>Escribe el correo del ingeniero si se desea editar su información</p>
                                 <div class="container-fluid">
                                     <div class="row align-items-center">
                                         <div class="col-lg-3"></div>
@@ -971,10 +975,10 @@
                                                         <button id="registrarColaboradorAdmin" type="button" class="btn btn-outline-success btn-block">Registrar</button>
                                                     </div>
                                                     <div class= "col-lg-4">
-                                                        <button id="editarButtonColAdmin" type="button" class="btn btn-outline-warning btn-block hidden">Editar</button>
+                                                        <button id="borrarButtonColAdmin" type="reset" id = "" class="btn btn-outline-danger btn-block">Borrar Todo</button>
                                                     </div>
                                                     <div class= "col-lg-4">
-                                                        <button id="borrarButtonColAdmin" type="reset" id = "" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                        <button id="editarButtonColAdmin" type="button" class="btn btn-outline-warning btn-block hidden">Editar</button>
                                                     </div>
                                                 </div>
                                             <br/>
@@ -1023,7 +1027,7 @@
                                                 </div>
 
                                                 <div class="form-row">
-                                                    <button id="importarButtonPptoAdic" type="button" class="btn btn-outline-danger btn-block">Aceptar</button>
+                                                    <button id="importarButtonPptoAdic" type="button" class="btn btn-outline-dark btn-block">Aceptar</button>
                                                 </div>
                                                 <br/>
                                                 <br/>
@@ -1036,7 +1040,7 @@
                                                 </div>
 
                                                 <div class="form-row">
-                                                    <button id="imagenButtonPptoAdic" type="button" class="btn btn-outline-danger btn-block">Aceptar</button>
+                                                    <button id="imagenButtonPptoAdic" type="button" class="btn btn-outline-dark btn-block">Aceptar</button>
                                                 </div>
                                                 <br/>
                                                 <h3>Footer</h3>
@@ -1157,93 +1161,96 @@
                                     </div>
                                 
                          </div>
-
                         <!-- Clientes -->
                         <div id="altaCliente" class="tabcontent hidden">
                             <h1>Cliente</h1>
                             <p>* Los campos son obligatorios</p>
                             <div class="container-fluid">
-                                <div class="row">
-                                    <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
                                         <form action="#" onsubmit="return false;">
-                                            <div class="form-row">
-                                                <div class="col-lg-4">
-                                                    <label for="clienteNombre">*Nombre de la empresa:</label>
-                                                    <input type="text" name="" id="clienteNombre" class="form-control" placeholder="Ingresa el nombre de la empresa">
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <label for="claveCliente">*Clave:</label>
-                                                    <input type="text" name="" id="claveCliente" class="form-control" placeholder="Clave:">
-                                                </div>
+                                            <div class="form-group">
+                                                <label for="clienteNombre">*Nombre de la empresa</label>
+                                                <input type="text" name="" id="clienteNombre"class="form-control" placeholder="Ingresa el nombre de la empresa">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="claveCliente">*Clave:</label>
+                                                <input type="text" name="" id="claveCliente"class="form-control" placeholder="Clave">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="clienteTelefono">Teléfono de la oficina:</label>
+                                                <input type="text" name="" id="clienteTelefono"class="form-control" placeholder="Ingresa el telefono de la empresa">
+                                            </div>
 
-                                                <div class="col-lg-4">
-                                                    <label for="clienteTelefono">Teléfono Oficina:</label>
-                                                    <input type="text" name="" id="clienteTelefono" class="form-control" placeholder="Ingresa el telefono de la empresa ">
-                                                </div>
-                                            </div> 
-
+                                            <br/>
                                             <hr class="style2">
                                             <div class="form-group">
                                                 <h4>Dirección</h4><br/>
                                                 <div class="form-row">
-                                                    <div class="col-lg-4">
+                                                    <div class="col-lg-9">
                                                         <input type="text" id="calleCliente" class="form-control" placeholder="Nombre de la calle">
                                                     </div>
-                                                    <div class="col-lg-2">
+                                                    <div class="col-lg-3">
                                                         <input type="text" id="numCliente"  class="form-control" placeholder="número">
                                                     </div>
-                                                    <div class="col-lg-3">
+
+                                                </div>
+                                                <br/>
+                                                <div class="form-row">
+                                                    <div class="col-lg-6">
                                                         <input type="text" id="coloniaCliente" class="form-control" placeholder="Colonia">
                                                     </div>
-
-                                                    <div class="col-lg-3">
+                                                    <div class="col-lg-6">
                                                         <input type="text" id="delegacionCliente" class="form-control" placeholder="Delegación/Municipio">
                                                     </div>
                                                 </div>
                                                 <br/>
                                                 <div class="form-row">
-                                                    <div class="col-lg-2">
+                                                    <div class="col-lg-6">
                                                         <input type="text" id="cpCliente" class="form-control" placeholder="Código Postal">
                                                     </div>
-                                                    <div class="col-lg-2">
+                                                    <div class="col-lg-6">
                                                         <input type="text" id="ciudadCliente" class="form-control" placeholder="Estado">
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <hr class="style2">
-                                            <div class="form-group">
-                                                <h4>*AT'N</h4><br/>
+                                            <h4>*AT'N</h4><br/>
+                                            <div class="form-group">     
                                                 <div class="form-group">
                                                     <label for="nombreAtencion">Nombre:</label>
                                                     <input type="text" name="" id="nombreAtencion" class="form-control" placeholder="Ingresa el nombre de la persona que vas a agregar:">
                                                 </div>
                                                 <div class="form-row">
-                                                    <div class="col-lg-4">
+                                                    <div class="col-lg-7">
                                                         <input type="text" id="areaAtencion" class="form-control" placeholder="Área/departamento">
                                                     </div>
-                                                    <div class="col-lg-2">
+                                                    <div class="col-lg-5">
                                                         <input type="text" id="celAtencion"  class="form-control" placeholder="Celular">
                                                     </div>
-                                                    <div class="col-lg-3">
+
+                                                </div>
+                                                <br/>
+                                                <div class= "form-row">
+                                                    <div class="col-lg-6">
                                                         <input type="text" id="emailAtencion" class="form-control" placeholder="Email">
                                                     </div>
 
-                                                    <div class="col-lg-3">
+                                                    <div class="col-lg-6">
                                                         <input type="text" id="extAtencion" class="form-control" placeholder="Extensión">
                                                     </div>
                                                 </div>
                                                 <br/>
                                             </div>
-                                            <div class="form-row align-items-center">
-                                                <div class="col-md-6 col-sm-12">
-                                                    <button id="addAtencion" type="button" class="btn btn-outline-danger btn-lg btn-block">Añadir AT'N</button>
+                                            <div class="form-row">
+                                                <div class= "col-lg-6">
+                                                    <button id="addAtencion" type="button" class="btn btn-outline-dark btn-block">Añadir AT'N</button>
                                                 </div>
-                                                <div class="col-md-6 col-sm-12">
-                                                        <button id="delAtencion" type="button" class="btn btn-outline-secondary btn-lg btn-block">Eliminar último</button>
+                                                <div class= "col-lg-6">
+                                                    <button id="delAtencion" type="button" class="btn btn-outline-danger btn-block">Eliminar último</button>
                                                 </div>
                                             </div>
-                            
                                             <div class="form-group pt-3">
                                                 <div class="card w-100 scrollbar scrollbar-danger">
                                                     <div class="card-header text-center">
@@ -1255,11 +1262,20 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <button id="registrarCliente" type="button" class="btn btn-success btn-lg btn-block">Registrar Cliente</button>
-                                            <button id="borrarTodoCliente" type="reset" class="btn btn-outline-danger btn-lg btn-block">Borrar Todo</button>   
+                                            .
+                                            <br/>
+                                            <div class="form-row">
+                                                <div class= "col-lg-6">
+                                                    <button id="registrarCliente" type="button" class="btn btn-outline-success btn-block">Registrar Cliente</button>
+                                                </div>
+                                                <div class= "col-lg-6">
+                                                    <button id="borrarTodoCliente" type="button" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                </div>
+                                            </div>
                                         </form>
+
                                     </div>
+                                    <div class="col-lg-3"></div>
                                 </div>
                             </div>
                         </div>
@@ -1318,49 +1334,57 @@
                             </div>
                         </div>
                         <!-- Areas-->
+
+
                         <div id="areas" class="tabcontent hidden">
                             <h1>Asignar Areas de Usuario</h1>
                             <p>Otorga acceso de areas a el usuario seleccionado</p>
+
                             <div class="container-fluid">
-                                <form action="#" onsubmit="return false;">
-                                    <div class="form-row align-items-center">
-                                        <div class = "col-lg-6">
-                                                <div class="form-group">
-                                                    <label for="colaboradorDdlAreas">Selecciona el Colaborador</label>
-                                                    <select class="form-control" name="" id="colaboradorDdlAreas"></select>
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action ="#" onsubmit="return false;">
+                                            <div class="form-group">
+                                                <label for="colaboradorDdlAreas">Selecciona el Colaborador</label>
+                                                <select class="form-control" name="" id="colaboradorDdlAreas"></select>
+                                            </div>
+                                            <div class="form-group align-items-center">
+                                                <label class="checkbox-inline">
+                                                    <input id="checkProyectosArea" type="checkbox" checked  data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"><span>Proyectos</span>
+                                                </label>
+                                            </div>
+                                            <div class="form-group align-items-center">
+                                                <label class="checkbox-inline">
+                                                    <input id="checkProduccionArea" type="checkbox" checked data-toggle="toggle" data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"><span>Producción</span>
+                                                </label>
+                                            </div>
+                                            <div class="form-group align-items-center">
+                                                <label class="checkbox-inline">
+                                                    <input id="checkComprasArea" type="checkbox" checked data-toggle="toggle" data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"><span>Compras</span>
+                                                </label>
+                                            </div>
+                                            <div class="form-group align-items-center">
+                                                <label class="checkbox-inline">
+                                                    <input id= "checkAdminArea" type="checkbox" checked data-toggle="toggle" data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"><span>Administración</span>
+                                                </label>
+                                            </div>
+                                            <div class="form-group align-items-center">
+                                                <label class="checkbox-inline">
+                                                    <input id= "checkRRHHArea" type="checkbox" checked data-toggle="toggle" data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"><span>RRHH</span>
+                                                </label>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class= "col-lg-4"></div>
+                                                <div class= "col-lg-4">
+                                                    <button id="guardarAreas" type="button" class="btn btn-outline-success btn-lg btn-block">Actualizar</button>
                                                 </div>
-
-                                                <div class="form-group align-items-center">
-                                                    <label class="checkbox-inline">
-                                                        <input id="checkProyectosArea" type="checkbox" checked  data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"><span>Proyectos</span>
-                                                    </label>
-                                                </div>
-                                                <div class="form-group align-items-center">
-                                                    <label class="checkbox-inline">
-                                                        <input id="checkProduccionArea" type="checkbox" checked data-toggle="toggle" data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"><span>Producción</span>
-                                                    </label>
-                                                </div>
-                                                <div class="form-group align-items-center">
-                                                    <label class="checkbox-inline">
-                                                        <input id="checkComprasArea" type="checkbox" checked data-toggle="toggle" data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"><span>Compras</span>
-                                                    </label>
-                                                </div>
-                                                <div class="form-group align-items-center">
-                                                    <label class="checkbox-inline">
-                                                        <input id= "checkAdminArea" type="checkbox" checked data-toggle="toggle" data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"><span>Administración</span>
-                                                    </label>
-                                                </div>
-                                                <div class="form-group align-items-center">
-                                                    <label class="checkbox-inline">
-                                                        <input id= "checkRRHHArea" type="checkbox" checked data-toggle="toggle" data-on="Habilitado" data-width="130" data-off="Deshabilitado" data-toggle="toggle" data-onstyle="success" data-offstyle="danger"><span>RRHH</span>
-                                                    </label>
-                                                </div>
-
-                                                <button id="guardarAreas" type="button" class="btn btn-outline-success btn-block">Actualizar</button>
-                                        </div>
-                                        <div class = "col-lg-3"></div>
+                                                <div class= "col-lg-4"></div>
+                                            </div>  
+                                        </form>  
                                     </div>
-                                </form>
+                                    <div class="col-lg-3"></div>
+                                </div>
                             </div>
                         </div>
                         <!-- Pagos Kaizen-->
@@ -1437,7 +1461,7 @@
                                                     <div class="col-lg-6">
                                                         <button id="guardarButtonPagoKaizen" type="button" class="btn btn-outline-success btn-lg btn-block">Guardar Pago</button>
                                                     </div>
-                                                    <div class="col-lg-4">
+                                                    <div class="col-lg-6">
                                                         <button id="" type="reset" class="btn btn-outline-danger btn-lg btn-block">Borrar Todo</button>
                                                     </div>
                                                 </div>
@@ -1451,58 +1475,78 @@
 
                         <!-- Reporte-->
                         <div id="reporte" class="tabcontent hidden">
-                            <h1>Generador de reportes</h1><br/>
+                            <h1>Generador de reportes</h1>
+                            <p>Reporte con actividad diaria. Se puede ver aquí o imprimir en pdf.</p>
                             <div class="container-fluid">
-                                <div class="row">
-                                    <form action="#" onsubmit="return false;">
-                                        <div class="form-row align-items-center">
-                                            <div class="col-lg-3 col-sm-12">
-                                                <label for="fechaInicioReporte">Fecha inicio de reporte:</label>
-                                            </div>
-                                            <div class="col-lg-3 col-sm-12">
-                                                <input class="form-control" type="text" id="fechaInicioReporte" placeholder="" readonly="readonly">
-                                            </div>
-                                            <div class="col-lg-3 col-sm-12">
-                                                <label for="fichaFinalReporte">Fecha final del reporte:</label>
-                                            </div>
-                                            <div class="col-lg-3 col-sm-12">
-                                                <input class="form-control" type="text" id="fichaFinalReporte" placeholder="" readonly="readonly">
-                                            </div>
-                                        </div>
-                                        <br/>
-                                        <p>*Para generar reporte de un solo día coloca en "Fecha inicio de reporte" el día deseado y deja en blanco "Fecha final del reporte"</p>
-                                        <div class="form-group">
-                                            <label for="ingeDdlReporte">Colaborador:</label>
-                                            <select id ="ingeDdlReporte" class="form-control"></select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="obraDdlReporte">Obra:</label>
-                                            <select id ="obraDdlReporte" class="form-control"></select>
-                                        </div>
-                                        <div class="form-group hidden" id="procGroupReporte">
-                                            <label for="procDdlReporte">Proceso:</label>
-                                            <select id ="procDdlReporte" class="form-control"></select>
-                                        </div>
-                                        <div class="form-group hidden" id="subprocDdlReporte">
-                                            <label for="subprocDdlReporte">Subroceso:</label>
-                                            <select id ="subprocDdlReporte" class="form-control"></select>
-                                        </div>
-                                        <div class="row">
-                                            <button type="reset" name="" class="btn btn-danger">Limpiar campos</button>
-                                            <button type="button" name="" id="generarButtonReporte" class="btn btn-primary">Generar PDF</button>
-                                            <button type="button" name="" id="tablaButtonReporte" class="btn btn-info">Ver tabla en esta página</button>                                                                           
-                                        </div>     
-                                    </form>
-
-                                    <div class="row mt-3">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3">
+                                    </div>
+                                    <div class="col-lg-6">
                                         <div class="container-fluid">
-                                            <table id="dataTableReporte" class="display" style="width:100%">
-                                            </table>
+                                            <div class="row">
+                                                <form action="#" onsubmit="return false;">
+                                                    <div class="form-row align-items-center">
+                                                        <div class="col-lg-3 col-sm-12">
+                                                            <label for="fechaInicioReporte">Fecha inicio de reporte:</label>
+                                                        </div>
+                                                        <div class="col-lg-3 col-sm-12">
+                                                            <input class="form-control" type="text" id="fechaInicioReporte" placeholder="" readonly="readonly">
+                                                        </div>
+                                                        <div class="col-lg-3 col-sm-12">
+                                                            <label for="fichaFinalReporte">Fecha final del reporte:</label>
+                                                        </div>
+                                                        <div class="col-lg-3 col-sm-12">
+                                                            <input class="form-control" type="text" id="fichaFinalReporte" placeholder="" readonly="readonly">
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                    <p>*Para generar reporte de un solo día coloca en "Fecha inicio de reporte" el día deseado y deja en blanco "Fecha final del reporte"</p>
+                                                    <div class="form-group">
+                                                        <label for="ingeDdlReporte">Colaborador:</label>
+                                                        <select id ="ingeDdlReporte" class="form-control"></select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="obraDdlReporte">Obra:</label>
+                                                        <select id ="obraDdlReporte" class="form-control"></select>
+                                                    </div>
+                                                    <div class="form-group hidden" id="procGroupReporte">
+                                                        <label for="procDdlReporte">Proceso:</label>
+                                                        <select id ="procDdlReporte" class="form-control"></select>
+                                                    </div>
+                                                    <div class="form-group hidden" id="subprocDdlReporte">
+                                                        <label for="subprocDdlReporte">Subroceso:</label>
+                                                        <select id ="subprocDdlReporte" class="form-control"></select>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class= "col-lg-4">
+                                                            <button id="tablaButtonReporte" type="button" class="btn btn-outline-dark btn-block">Generar registros</button>
+                                                        </div>
+                                                        <div class= "col-lg-4">
+                                                            <button id="generarButtonReporte" type="button" class="btn btn-outline-success btn-block">Imprimir PDF</button>
+                                                        </div>
+                                                        <div class= "col-lg-4">
+                                                            <button type="reset" name="" class="btn btn-danger">Limpiar campos</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="container-fluid">
+                                        <table id="dataTableReporte" class="display" style="width:100%">
+                                        </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                         <div id="reporteInvestime" class="tabcontent hidden">
                             <h1>Generador de reportes</h1><br/>
                             <div class="container-fluid">
