@@ -9,7 +9,7 @@ var rama_bd_version = "info_web/version";
 
 function msToHoursAndMinutes(ms){
   var m = ms / 60000;
-  var horas = Math.floor(m / 60);
+  var horas = ("0" + Math.floor(m / 60)).slice(-2);
   var mins = ("0" + Math.floor(m % 60)).slice(-2);
   return horas + ":" + mins;
 }

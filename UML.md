@@ -408,7 +408,7 @@
                      - diversos (SE GUARDAN HASTA EL TERMINAR, POR LOS DISTRIBUIBLES)
                         - por push: (si es distribuido se hacen entradas separadas)
                            - cantidad
-                           - proceso ("distribuible" si depende de las asistencias)
+                           - proceso 
                            - diverso (nombre de un catálogo)
                      - total_horas_extra (en $ y No incluyen impuestos)
                      - total_diversos (No incluyen impuestos)

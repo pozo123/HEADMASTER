@@ -2,7 +2,7 @@ var id_semana_ddl_asistencia = "semanaDdlAsistencia";
 var id_year_ddl_asistencia = "yearDdlAsistencia";
 var id_obra_ddl_asistencia = "obraDdlAsistencia";
 var id_guardar_button_asistencia = "guardarButtonAsistencia";
-var id_terminar_button_asistencia = "terminarButtonAsistencia";
+//var id_terminar_button_asistencia = "terminarButtonAsistencia";
 
 var id_carga_semana_anterior_button_Asistencia = "semanaAnteriorButtonAsistencia";
 

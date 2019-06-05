@@ -3,7 +3,7 @@ var id_year_ddl_horasExtra = "yearDdlHorasExtra";
 var id_obra_ddl_horasExtra = "obraDdlHorasExtra";
 
 var id_guardar_button_horasExtra = "guardarButtonHorasExtra";
-var id_terminar_button_horasExtra = "terminarButtonHorasExtra";
+//var id_terminar_button_horasExtra = "terminarButtonHorasExtra";
 
 var id_carga_semana_anterior_button_horasExtra = "semanaAnteriorButtonHorasExtra";
 
@@ -473,7 +473,7 @@ function guardarHorasExtra(){
     });
 };
 
-$('#' + id_terminar_button_horasExtra).click(function(){
+/*$('#' + id_terminar_button_horasExtra).click(function(){
     var year = $('#' + id_year_ddl_horasExtra + " option:selected").val();
     var semana = $('#' + id_semana_ddl_horasExtra + " option:selected").val();
     firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + semana).once('value').then(function(snapshot){
@@ -519,7 +519,7 @@ $('#' + id_terminar_button_horasExtra).click(function(){
             alert("Registro de horas extra de esta semana terminado");
         }
     });
-});
+});*/
 
 /*function sumaMOKaizenHE(query,cantidad){
     firebase.database().ref(rama_bd_obras_magico + "/" + query + "/kaizen/PRODUCCION/COPEO/PAG").once('value').then(function(snapshot){
