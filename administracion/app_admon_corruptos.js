@@ -220,40 +220,50 @@ $('#' + id_cerrar_button_corruptos).click(function(){
 
 $('#' + id_actualizar_button_corruptos).click(function(){
 	var horas_score = {};
+	var flag = true;
 	$('[id^=hora_salida_').each(function(){
-		var count = this.id.substring(this.id.split("_")[0].length + this.id.split("_")[1].length + 2,this.id.length);
-		var reg = regs[count];
-		if(reg.status){
-			var clock_in = reg.checkin_clock.split(":");
-			var clock_out = $('#hora_salida_' + count).val().split(":");
-			var horas = (parseInt(clock_out[0]) - parseInt(clock_in[0])) * 3600000 + (parseInt(clock_out[1]) - parseInt(clock_in[1])) * 60000;
-			console.log(rama_bd_registros + "/" + reg.year + "/" + reg.week + "/" + reg.uid);
-			console.log(horas);
-			var proc_path = reg.proceso.split("-");
-			var query;
-	        if(proc_path.length > 1){
-	            //sumaScoreKaizen(reg.obra + "/procesos/" + proc_path[0] + "/subprocesos/" + reg.proceso, cant);
-	            query = rama_bd_obras + "/" + reg.obra + "/procesos/" + proc_path[0] + "/subprocesos/" + reg.proceso;//+1 ms para compensar el -1 sumado al corromper
-	        } else {
-	            query = rama_bd_obras + "/" + reg.obra + "/procesos/" + reg.proceso;//+1 ms para compensar el -1 sumado al corromper
-	        }
-	        if(!horas_score[reg.inge]){
-	        	horas_score[reg.inge] = {};
-	        }
-	        horas_score[reg.inge][query] = horas_score[reg.inge][query] ? horas_score[reg.inge][query] + horas : horas;
-
-			firebase.database().ref(rama_bd_registros + "/" + reg.year + "/" + reg.week + "/" + reg.uid + "/horas").set(horas);
+		if($(this).val() == ""){
+			flag = false;
 		}
 	});
+	if(!flag){
+		alert("Llena todos los campos antes de actualizar");
+	} else {
+		$('[id^=hora_salida_').each(function(){
+			var count = this.id.substring(this.id.split("_")[0].length + this.id.split("_")[1].length + 2,this.id.length);
+			var reg = regs[count];
+			if(reg.status){
+				var clock_in = reg.checkin_clock.split(":");
+				var clock_out = $('#hora_salida_' + count).val().split(":");
+				var horas = (parseInt(clock_out[0]) - parseInt(clock_in[0])) * 3600000 + (parseInt(clock_out[1]) - parseInt(clock_in[1])) * 60000;
+				console.log(rama_bd_registros + "/" + reg.year + "/" + reg.week + "/" + reg.uid);
+				console.log(horas);
+				var proc_path = reg.proceso.split("-");
+				var query;
+		        if(proc_path.length > 1){
+		            //sumaScoreKaizen(reg.obra + "/procesos/" + proc_path[0] + "/subprocesos/" + reg.proceso, cant);
+		            query = rama_bd_obras + "/" + reg.obra + "/procesos/" + proc_path[0] + "/subprocesos/" + reg.proceso;//+1 ms para compensar el -1 sumado al corromper
+		        } else {
+		            query = rama_bd_obras + "/" + reg.obra + "/procesos/" + reg.proceso;//+1 ms para compensar el -1 sumado al corromper
+		        }
+		        if(!horas_score[reg.inge]){
+		        	horas_score[reg.inge] = {};
+		        }
+		        horas_score[reg.inge][query] = horas_score[reg.inge][query] ? horas_score[reg.inge][query] + horas : horas;
 
-	for(inge in horas_score){
-		for(query in horas_score[inge]){
-		    sumaEnFirebase(query + "/SCORE/total_trabajado", horas_score[inge][query]);
-		    sumaEnFirebase(query + "/SCORE/inges/" + inge + "/horas_trabajadas", horas_score[inge][query]);
+				firebase.database().ref(rama_bd_registros + "/" + reg.year + "/" + reg.week + "/" + reg.uid + "/horas").set(horas);
+			}
+		});
+
+		for(inge in horas_score){
+			for(query in horas_score[inge]){
+			    sumaEnFirebase(query + "/SCORE/total_trabajado", parseFloat(horas_score[inge][query])/3600000);
+			    sumaEnFirebase(query + "/SCORE/inges/" + inge + "/horas_trabajadas", parseFloat(horas_score[inge][query])/3600000);
+			}
 		}
-	}
 
-	alert("Horas actualizadas");
-	loadRegistrosCorruptos();
-	loadTableCorruptos();
+		alert("Horas actualizadas");
+		loadRegistrosCorruptos();
+		loadTableCorruptos();
+	}
 });

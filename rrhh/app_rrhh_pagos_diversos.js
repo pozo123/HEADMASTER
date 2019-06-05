@@ -6,7 +6,7 @@ var id_diverso_ddl_diversos = "diversoDdlDiversos";
 var id_diverso_group_diversos = "diversoGroupDiversos";//Nuevo!
 
 var id_guardar_button_diversos = "guardarButtonDiversos";
-var id_terminar_button_diversos = "terminarButtonDiversos";
+//var id_terminar_button_diversos = "terminarButtonDiversos";
 
 var id_carga_semana_anterior_button_diversos = "semanaAnteriorButtonDiversos";
 
@@ -103,7 +103,7 @@ $('#' + id_year_ddl_diversos).change(function(){
 
 $('#' + id_semana_ddl_diversos).change(function(){
     document.getElementById(id_guardar_button_diversos).disabled = false;
-    document.getElementById(id_terminar_button_diversos).disabled = false;
+    //document.getElementById(id_terminar_button_diversos).disabled = false;
     $('#' + id_carga_semana_anterior_button_diversos).addClass('hidden');
     $('#' + id_datatable_diversos).empty();
     $('#' + id_datatable_div_diversos).addClass('hidden');
@@ -118,7 +118,7 @@ $('#' + id_semana_ddl_diversos).change(function(){
         var terminada = nomina ? nomina.diversos_terminados : false;
         if(terminada){
             $('#' + id_guardar_button_diversos).addClass('hidden');
-            $('#' + id_terminar_button_diversos).addClass('hidden');
+            //$('#' + id_terminar_button_diversos).addClass('hidden');
             //console.log("hola")
             $('#' + id_diverso_group_diversos).addClass('hidden');
             $('#' + id_datatable_div_diversos).removeClass('hidden');
@@ -154,7 +154,7 @@ $('#' + id_semana_ddl_diversos).change(function(){
             });
         } else {
             $('#' + id_guardar_button_diversos).removeClass('hidden');
-            $('#' + id_terminar_button_diversos).removeClass('hidden');
+            //$('#' + id_terminar_button_diversos).removeClass('hidden');
             $('#' + id_diverso_group_diversos).removeClass('hidden');
         }
     });
