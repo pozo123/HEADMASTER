@@ -38,6 +38,7 @@ $('#' + id_generar_button_reporte_investime).click(function() {
                 {title: "Fecha"},
                 {title: "Horas"},
                 {title: "Status Obra"},
+                {title: "UID"},
             ],
             language: idioma_espanol, // Esta en app_bibliotecas
         });
@@ -90,6 +91,7 @@ function getRegsReporteAdmin(datos_reporte, data){
 	                            new Date(reg.checkin).toLocaleDateString("es-ES", optionsInvestime),
 	                            horas_string,
 	                            reg.status_obra,
+                                regSnap.key,
 	                        ]);
 		                }
 		            });

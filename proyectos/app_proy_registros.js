@@ -98,7 +98,8 @@ $('#' + id_obra_ddl_registros).change(function(){
                 if(proc.num_subprocesos == 0){
                     if(!proc.terminado && procSnap.key != "ADIC"){
                         var option2 = document.createElement('option');
-                        option2.text = procSnap.key + " (" + proc.nombre + ")";
+                        var text_proc = procSnap.key == "MISC" ? "MISC (Auxiliares de obra)" : procSnap.key + " (" + proc.nombre + ")";
+                        option2.text = text_proc;
                         option2.value = procSnap.key; 
                         select.appendChild(option2);
                     }

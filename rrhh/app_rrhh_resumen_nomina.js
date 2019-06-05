@@ -38,7 +38,7 @@ $('#' + id_tab_resumen_nomina).click(function() {
 });
 
 $('#' + id_year_ddl_resumen_nomina).change(function(){
-    $('#' + id_semana_ddl_asistencia).empty();
+    $('#' + id_week_ddl_resumen_nomina).empty();
     var select = document.getElementById(id_week_ddl_resumen_nomina);
     var year = $('#' + id_year_ddl_resumen_nomina + " option:selected").val();
     if(year < getWeek(new Date().getTime())[1]){
@@ -66,18 +66,91 @@ function loadResumenNomina(){
 	var year = $('#' + id_year_ddl_resumen_nomina + " option:selected").val();
 	var week = $('#' + id_week_ddl_resumen_nomina + " option:selected").val();
     var datos_resumen_nomina = [];
-	firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week).once('value').then(function(snapshot){
-		var semana = snapshot.val();
-
-        snapshot.forEach(function(obraSnap){
-            if(obraSnap.key != "asistencias_terminadas" && obraSnap.key != "diversos_terminados" && obraSnap.key != "horas_extra_terminadas" && obraSnap.key != "terminada"){
-                obraSnap.child("trabajadores").forEach(function(trabSnap){
-                    datos_resumen_nomina.push([
-                        obraSnap.key,
-                        trabSnap.key,
-                        //AQUI llenar
-                    ]);
-                });
+    firebase.database().ref(rama_bd_trabajadores).once('value').then(function(snapshot){
+        snapshot.forEach(function(trabSnap){
+            if(trabSnap.child("nomina/" + year + "/" + week).exists()){
+                var trab = trabSnap.val();
+                var obras_semana = {};
+                var lunes = trabSnap.child("nomina/" + year + "/" + week + "/lunes");
+                lunes = lunes.exists() ? lunes.child("obra").val() : "";
+                if(lunes != ""){
+                    if(obras_semana[lunes]){
+                        obras_semana[lunes]++;
+                    } else {
+                        obras_semana[lunes] = 1;
+                    }
+                }
+                var martes = trabSnap.child("nomina/" + year + "/" + week + "/martes");
+                martes = martes.exists() ? martes.child("obra").val() : "";
+                if(martes != ""){
+                    if(obras_semana[martes]){
+                        obras_semana[martes]++;
+                    } else {
+                        obras_semana[martes] = 1;
+                    }
+                }
+                var miercoles = trabSnap.child("nomina/" + year + "/" + week + "/miercoles");
+                miercoles = miercoles.exists() ? miercoles.child("obra").val() : "";
+                if(miercoles != ""){
+                    if(obras_semana[miercoles]){
+                        obras_semana[miercoles]++;
+                    } else {
+                        obras_semana[miercoles] = 1;
+                    }
+                }
+                var jueves = trabSnap.child("nomina/" + year + "/" + week + "/jueves");
+                jueves = jueves.exists() ? jueves.child("obra").val() : "";
+                if(jueves != ""){
+                    if(obras_semana[jueves]){
+                        obras_semana[jueves]++;
+                    } else {
+                        obras_semana[jueves] = 1;
+                    }
+                }
+                var viernes = trabSnap.child("nomina/" + year + "/" + week + "/viernes");
+                viernes = viernes.exists() ? viernes.child("obra").val() : "";
+                if(viernes != ""){
+                    if(obras_semana[viernes]){
+                        obras_semana[viernes]++;
+                    } else {
+                        obras_semana[viernes] = 1;
+                    }
+                }
+                var max = -1;
+                var obra_asignada = "";
+                console.log(obras_semana);
+                for(key in obras_semana){
+                    if(obras_semana[key] > max){
+                        obra_asignada = key;
+                        max = obras_semana[key];
+                    }
+                }
+                var asis = 0;
+                asis = trabSnap.child("nomina/" + year + "/" + week + "/jueves/asistencia").val() ? asis + 0.2 : asis;
+                asis = trabSnap.child("nomina/" + year + "/" + week + "/viernes/asistencia").val() ? asis + 0.2 : asis;
+                asis = trabSnap.child("nomina/" + year + "/" + week + "/lunes/asistencia").val() ? asis + 0.2 : asis;
+                asis = trabSnap.child("nomina/" + year + "/" + week + "/martes/asistencia").val() ? asis + 0.2 : asis;
+                asis = trabSnap.child("nomina/" + year + "/" + week + "/miercoles/asistencia").val() ? asis + 0.2 : asis;
+                datos_resumen_nomina.push([
+                    trabSnap.key,
+                    trab.nombre,
+                    obra_asignada,
+                    trab.jefe,
+                    trab.jefe == "HEAD" ? "Admon" : "Destajo",
+                    trab.especialidad,
+                    trab.puesto,
+                    trabSnap.child("nomina/" + year + "/" + week + "/jueves/asistencia").val() ? 0.2 : 0,
+                    trabSnap.child("nomina/" + year + "/" + week + "/viernes/asistencia").val() ? 0.2 : 0,
+                    trabSnap.child("nomina/" + year + "/" + week + "/lunes/asistencia").val() ? 0.2 : 0,
+                    trabSnap.child("nomina/" + year + "/" + week + "/martes/asistencia").val() ? 0.2 : 0,
+                    trabSnap.child("nomina/" + year + "/" + week + "/miercoles/asistencia").val() ? 0.2 : 0,
+                    trab.sueldo_base,
+                    parseFloat(trab.sueldo_base) * asis,
+                    parseFloat(trabSnap.child("nomina/" + year + "/" + week + "/total_horas_extra").val())*(24/parseFloat(trab.sueldo_base)) == "" ? "-" : parseFloat(trabSnap.child("nomina/" + year + "/" + week + "/total_horas_extra").val())*(24/parseFloat(trab.sueldo_base)),
+                    trabSnap.child("nomina/" + year + "/" + week + "/total_horas_extra").val() == null ? "-" : trabSnap.child("nomina/" + year + "/" + week + "/total_horas_extra").val(),
+                    trabSnap.child("nomina/" + year + "/" + week + "/total_diversos").val() == null ? "-" : trabSnap.child("nomina/" + year + "/" + week + "/total_diversos").val(),
+                    trabSnap.child("nomina/" + year + "/" + week + "/total").val() == null ? "-" : trabSnap.child("nomina/" + year + "/" + week + "/total").val(),
+                ]);
             }       
         });             
 
@@ -99,18 +172,21 @@ function loadResumenNomina(){
                 {title: "Lunes"},
                 {title: "Martes"},
                 {title: "Miercoles"},
+                {title: "Sueldo Base"},
                 {title: "Pago base"},
                 {title: "HE"},
                 {title: "HE ($)"},
-                {title: "Sueldo Base"},
-                {title: "Destajos"},//Uno por uno?
+                {title: "Diversos"},//Uno por uno?
                 {title: "Total"},
-                //AQUI llenar
             ],
             language: idioma_espanol, // Esta en app_bibliotecas
         });
+    });
+	firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week).once('value').then(function(snapshot){
+		var semana = snapshot.val();
 
-		if(!semana.terminada){
+
+		if(!snapshot.child("terminada").val() || semana == undefined){
 			if(semana.asistencias_terminadas){
 				$('#' + id_terminar_asistencias_button_resumen_nomina).addClass('hidden');
 				$('#' + id_revertir_asistencias_button_resumen_nomina).removeClass('hidden');
@@ -179,47 +255,6 @@ $('#' + id_terminar_horas_extra_button_resumen_nomina).click(function(){
     firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/horas_extra_terminadas").set(tru);
     alert("Registro de horas extra de esta semana terminado");
     loadResumenNomina();
-    //Todo esto para cuando se hace el pago nomina
-    /*firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week).once('value').then(function(snapshot){
-        var semana = snapshot.val();
-        if(!semana.horas_extra_terminadas){
-            //guardarHorasExtra();
-            firebase.database().ref(rama_bd_obras_magico).once('value').then(function(obrasSnapshot){//AQUI solo para kaizen ? borrar : dejar;
-                var obras_json = obrasSnapshot.val();//AQUI solo para kaizen ? borrar : dejar;
-                //Repito para volver a cargar las horas guardadas... creo
-                firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week).once('value').then(function(snapshot){    
-                    snapshot.forEach(function(obraSnap){
-                        if(obraSnap.key != "total" && obraSnap.key != "terminada" && obraSnap.key != "asistencias_terminadas" && obraSnap.key != "horas_extra_terminadas" && obraSnap.key != "diversos_terminados"){
-                            obraSnap.child("trabajadores").forEach(function(trabSnap){
-                                trabSnap.child("horas_extra").forEach(function(heSnap){
-                                    var horas_extra = heSnap.val();
-                                    var proc = horas_extra.proceso;
-                                    var cantidad = horas_extra.horas;
-                                    //console.log("cantidad :" + cantidad)
-                                    var obra = obraSnap.key;
-                                    if(obra != "Atencion a Clientes" && obra != "Vacaciones"){
-                                        obras_json[obra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] = (parseFloat(obras_json[obra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(cantidad)*1.16).toFixed(2);
-                                        //sumaMOKaizenHE(obra,cantidad);
-                                        if(proc != obra){
-                                            var path = proc.split("-");
-                                            if(path.length > 1){
-                                                obras_json[obra]["procesos"][path[0]]["subprocesos"][proc]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] = (parseFloat(obras_json[obra]["procesos"][path[0]]["subprocesos"][proc]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(cantidad)*1.16).toFixed(2);
-                                                //sumaMOKaizenHE(obra + "/procesos/" + path[0] + "/subprocesos/" + proc,cantidad);
-                                            }
-                                            obras_json[obra]["procesos"][path[0]]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] = (parseFloat(obras_json[obra]["procesos"][path[0]]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(cantidad)*1.16).toFixed(2);
-                                            //sumaMOKaizenHE(obra + "/procesos/" + path[0],cantidad);
-                                        }
-                                    }
-                                });
-                            });
-                        }
-                    });
-                    //console.log(obras_json);
-                    firebase.database().ref(rama_bd_obras_magico).update(obras_json);
-                });
-            });
-        }
-    });*/
 });
 
 $('#' + id_revertir_horas_extra_button_resumen_nomina).click(function(){
@@ -311,7 +346,7 @@ function asignarObras(year, week){
                     }
                     i++;
                 }
-                if(!flag){
+                if(!flag && daySnap.val().obra != "NA"){
                     obra_asignada[count] = daySnap.val().obra;
                     count++;
                 }

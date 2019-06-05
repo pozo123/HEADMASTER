@@ -16,7 +16,7 @@ var tablePagoNomina = document.getElementById(id_table_pago_nomina);
 
 var trabajadores = [];
 
-//AQUI meter al kaizen HE y DIV al hacer click (aka toooodo) y sumar totales del trabajador (solo total global), obra y semana
+//AQUI meter al kaizen HE y DIV al hacer click (aka toooodo) y sumar totales del trabajador (solo total global, quitar asis y he o lo que haya), obra y semana
 
 $('#' + id_tab_pago_nomina).click(function(){
 	$('#' + id_semana_ddl_pago_nomina).empty();
@@ -218,6 +218,10 @@ function headersPagoNomina() {
 }
 
 $('#' + id_terminar_button_pago_nomina).click(function(){
+	//AQUI Todo esto para cuando se hace el pago nomina
+	//Sumar todo a kaizen
+
+    
 	var year = $('#' + id_year_ddl_pago_nomina + " option:selected").val();
 	var week = $('#' + id_semana_ddl_pago_nomina + " option:selected").text();
 	firebase.database().ref(rama_bd_trabajadores).once('value').then(function(snapshot){
@@ -236,10 +240,11 @@ $('#' + id_terminar_button_pago_nomina).click(function(){
 				}
 			});
 			//console.log(obras_json);
-			firebase.database().ref(rama_bd_obras_magico).update(obras_json);
+			sumaHEyDivKaizen(obras_json, week, year);
+			//Meto el update en sumaHE para evitar la asincronia
+			//firebase.database().ref(rama_bd_obras_magico).update(obras_json);
 		});
 	});
-	
 	sumaTotalesPN(week,year);
    	if(week == 1 && new Date(year,0,1).getDay() != 4){
    		sumaTotalesPN(getWeek(new Date(year-1,11,31).getTime())[0],year-1);
@@ -248,7 +253,55 @@ $('#' + id_terminar_button_pago_nomina).click(function(){
 	var tru = true;
 	firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/terminada").set(tru);
 	alert("Operación exitosa");
+	document.getElementById(id_terminar_button_pago_nomina).disabled = true;
 });
+
+function sumaHEyDivKaizen(obras_json, week, year){
+	//firebase.database().ref(rama_bd_obras_magico).once('value').then(function(obrasSnapshot){//AQUI solo para kaizen ? borrar : dejar;
+        //var obras_json = obrasSnapshot.val();//AQUI solo para kaizen ? borrar : dejar;
+        firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week).once('value').then(function(snapshot){    
+            snapshot.forEach(function(obraSnap){
+                if(obraSnap.key != "total" && obraSnap.key != "terminada" && obraSnap.key != "asistencias_terminadas" && obraSnap.key != "horas_extra_terminadas" && obraSnap.key != "diversos_terminados"){
+                    obraSnap.child("trabajadores").forEach(function(trabSnap){
+                        trabSnap.child("horas_extra").forEach(function(heSnap){
+                            var horas_extra = heSnap.val();
+                            var proc = horas_extra.proceso;
+                            var cantidad = horas_extra.horas;
+                            var obra = obraSnap.key;
+                            if(obra != "Atencion a Clientes" && obra != "Vacaciones"){
+                                obras_json[obra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] = (parseFloat(obras_json[obra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(cantidad)*1.16).toFixed(2);
+                                if(proc != obra){
+                                    var path = proc.split("-");
+                                    if(path.length > 1){
+                                        obras_json[obra]["procesos"][path[0]]["subprocesos"][proc]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] = (parseFloat(obras_json[obra]["procesos"][path[0]]["subprocesos"][proc]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(cantidad)*1.16).toFixed(2);
+                                    }
+                                    obras_json[obra]["procesos"][path[0]]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] = (parseFloat(obras_json[obra]["procesos"][path[0]]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(cantidad)*1.16).toFixed(2);
+                                }
+                            }
+                        });
+                        trabSnap.child("diversos").forEach(function(divSnap){
+                            var diverso = divSnap.val();
+                            var proc = diverso.proceso;
+                            var cantidad = diverso.cantidad;
+                            var obra = obraSnap.key;
+                            if(obra != "Atencion a Clientes" && obra != "Vacaciones"){
+                                obras_json[obra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] = (parseFloat(obras_json[obra]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(cantidad)*1.16).toFixed(2);
+                                if(proc != obra){
+                                    var path = proc.split("-");
+                                    if(path.length > 1){
+                                        obras_json[obra]["procesos"][path[0]]["subprocesos"][proc]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] = (parseFloat(obras_json[obra]["procesos"][path[0]]["subprocesos"][proc]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(cantidad)*1.16).toFixed(2);
+                                    }
+                                    obras_json[obra]["procesos"][path[0]]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"] = (parseFloat(obras_json[obra]["procesos"][path[0]]["kaizen"]["PRODUCCION"]["COPEO"]["PAG"]) + parseFloat(cantidad)*1.16).toFixed(2);
+                                }
+                            }
+                        });
+                    });
+                }
+            });
+            firebase.database().ref(rama_bd_obras_magico).update(obras_json);
+        });
+    //});
+}
 
 function sumaTotalesPN(week, year){
 	firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week).once('value').then(function(snapshot){

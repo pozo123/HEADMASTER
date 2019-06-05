@@ -669,15 +669,15 @@
                                         <form action="#" onsubmit="return false;">
 
                                             <div class="form-row">
-                                                <div class= "col-lg-4">
+                                                <div class= "col-lg-6">
                                                     <button id="guardarButtonAsistencia" type="button" class="btn btn-outline-success btn-block">Guardar</button>
                                                 </div>
-                                                <div class= "col-lg-4">
+                                                <div class= "col-lg-6">
                                                     <button id="semanaAnteriorButtonAsistencia" type="button" class="btn btn-outline-warning btn-block hidden">Cargar Semana Previa</button>
                                                 </div>
-                                                <div class= "col-lg-4">
+                                                <!--<div class= "col-lg-4">
                                                     <button id="terminarButtonAsistencia" type="button" class="btn btn-outline-danger btn-block">Cerrar Semana</button>
-                                                </div>
+                                                </div>-->
                                             </div>
                                             <div class="form-group">
                                                 <label for="yearDdlAsistencia">Año:</label>
@@ -736,9 +736,9 @@
                                             <div class="row">
                                                 <button id="semanaAnteriorButtonHorasExtra" type="button" class="btn btn-outline-warning btn-block hidden">Cargar Semana Anterior</button>
                                             </div>
-                                            <div class="row">
+                                            <!--<div class="row">
                                                 <button id="terminarButtonHorasExtra" type="button" class="btn btn-outline-danger btn-block">Cerrar Semana</button>
-                                            </div>
+                                            </div>-->
                                         </form>
                                         <br/>
                                     </div>
@@ -781,9 +781,9 @@
                                                 <div class="row">
                                                     <button id="semanaAnteriorButtonDiversos" type="button" class="btn btn-outline-warning btn-block hidden">Cargar Semana Anterior</button>
                                                 </div>
-                                                <div class="row">
+                                                <!--<div class="row">
                                                     <button id="terminarButtonDiversos" type="button" class="btn btn-outline-danger btn-block">Cerrar Semana</button>
-                                                </div>
+                                                </div>-->
                                             </form>
                                             <br/>
                                         </div>
@@ -806,14 +806,6 @@
                                     <div class="col-lg-3"></div>
                                     <div class="col-lg-6">
                                         <form action="#" onsubmit="return false;">
-                                            <div class="form-group">
-                                                <label for="yearResumenNomina">Año:</label>
-                                                <select id="yearResumenNomina" class="form-control"></select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="semanaResumenNomina">Semana:</label>
-                                                <select id="semanaResumenNomina" class="form-control"></select>
-                                            </div>
                                             <div class="row">
                                                 <div class="col-lg-4">
                                                     <button id="terminarAsistenciasResumenNomina" type="button" class="hidden btn btn-info btn-block">Terminar Asistencia</button>
@@ -836,9 +828,23 @@
                                                     <button id="revertirDiversosResumenNomina" type="button" class="hidden btn btn-outline-success btn-block">Revertir Diversos</button>
                                                 </div>
                                             </div>
+                                            <div class="form-group">
+                                                <label for="yearResumenNomina">Año:</label>
+                                                <select id="yearResumenNomina" class="form-control"></select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="semanaResumenNomina">Semana:</label>
+                                                <select id="semanaResumenNomina" class="form-control"></select>
+                                            </div>
                                         </form>
                                         <br/>
                                     </div>       
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="container-fluid">
+                                        <table id="dataTableResumenNomina" class="display" style="width:100%">
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>

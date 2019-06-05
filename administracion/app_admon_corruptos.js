@@ -240,7 +240,7 @@ $('#' + id_actualizar_button_corruptos).click(function(){
 	        if(!horas_score[reg.inge]){
 	        	horas_score[reg.inge] = {};
 	        }
-	        horas_score[reg.inge][query] = horas_score[reg.inge][query] ? horas_score[reg.inge][query] + horas*3600000 : horas*3600000;
+	        horas_score[reg.inge][query] = horas_score[reg.inge][query] ? horas_score[reg.inge][query] + horas : horas;
 
 			firebase.database().ref(rama_bd_registros + "/" + reg.year + "/" + reg.week + "/" + reg.uid + "/horas").set(horas);
 		}
