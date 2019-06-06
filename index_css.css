@@ -84,7 +84,7 @@ html {
   input[type=button], input[type=submit], input[type=reset]  {
     background-color: #f5ec6b;
     border: none;
-    color: white;
+    color: black;
     padding: 15px 80px;
     text-align: center;
     text-decoration: none;
