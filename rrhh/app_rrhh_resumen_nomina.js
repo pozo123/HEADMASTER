@@ -66,100 +66,140 @@ function loadResumenNomina(){
 	var year = $('#' + id_year_ddl_resumen_nomina + " option:selected").val();
 	var week = $('#' + id_week_ddl_resumen_nomina + " option:selected").val();
     var datos_resumen_nomina = [];
-    firebase.database().ref(rama_bd_trabajadores).once('value').then(function(snapshot){
-        snapshot.forEach(function(trabSnap){
-            if(trabSnap.child("nomina/" + year + "/" + week).exists()){
+    var diversos_array = [];
+    firebase.database().ref(rama_bd_diversos).once('value').then(function(diversosSnap){
+        diversosSnap.forEach(function(divSnap){
+            diversos_array.push(divSnap.key);
+        });
+        firebase.database().ref(rama_bd_trabajadores).once('value').then(function(snapshot){
+            snapshot.forEach(function(trabSnap){
                 var trab = trabSnap.val();
-                var obras_semana = {};
-                var lunes = trabSnap.child("nomina/" + year + "/" + week + "/lunes");
-                lunes = lunes.exists() ? lunes.child("obra").val() : "";
-                if(lunes != ""){
-                    if(obras_semana[lunes]){
-                        obras_semana[lunes]++;
-                    } else {
-                        obras_semana[lunes] = 1;
+                if(trabSnap.child("nomina/" + year + "/" + week).exists()){
+                    var divs = {};
+                    for(i=0;i<diversos_array.length;i++){
+                        divs[diversos_array[i]] = 0;
                     }
-                }
-                var martes = trabSnap.child("nomina/" + year + "/" + week + "/martes");
-                martes = martes.exists() ? martes.child("obra").val() : "";
-                if(martes != ""){
-                    if(obras_semana[martes]){
-                        obras_semana[martes]++;
-                    } else {
-                        obras_semana[martes] = 1;
+                    trabSnap.child("nomina/" + year + "/" + week + "/diversos").forEach(function(divSnap){
+                        var diverso = divSnap.val();
+                        console.log(diverso);
+                        divs[diverso.diverso] += parseFloat(diverso.cantidad);
+                    });
+                    var obras_semana = {};
+                    var lunes = trabSnap.child("nomina/" + year + "/" + week + "/lunes");
+                    lunes = lunes.exists() ? lunes.child("obra").val() : "";
+                    if(lunes != ""){
+                        if(obras_semana[lunes]){
+                            obras_semana[lunes]++;
+                        } else {
+                            obras_semana[lunes] = 1;
+                        }
                     }
-                }
-                var miercoles = trabSnap.child("nomina/" + year + "/" + week + "/miercoles");
-                miercoles = miercoles.exists() ? miercoles.child("obra").val() : "";
-                if(miercoles != ""){
-                    if(obras_semana[miercoles]){
-                        obras_semana[miercoles]++;
-                    } else {
-                        obras_semana[miercoles] = 1;
+                    var martes = trabSnap.child("nomina/" + year + "/" + week + "/martes");
+                    martes = martes.exists() ? martes.child("obra").val() : "";
+                    if(martes != ""){
+                        if(obras_semana[martes]){
+                            obras_semana[martes]++;
+                        } else {
+                            obras_semana[martes] = 1;
+                        }
                     }
-                }
-                var jueves = trabSnap.child("nomina/" + year + "/" + week + "/jueves");
-                jueves = jueves.exists() ? jueves.child("obra").val() : "";
-                if(jueves != ""){
-                    if(obras_semana[jueves]){
-                        obras_semana[jueves]++;
-                    } else {
-                        obras_semana[jueves] = 1;
+                    var miercoles = trabSnap.child("nomina/" + year + "/" + week + "/miercoles");
+                    miercoles = miercoles.exists() ? miercoles.child("obra").val() : "";
+                    if(miercoles != ""){
+                        if(obras_semana[miercoles]){
+                            obras_semana[miercoles]++;
+                        } else {
+                            obras_semana[miercoles] = 1;
+                        }
                     }
-                }
-                var viernes = trabSnap.child("nomina/" + year + "/" + week + "/viernes");
-                viernes = viernes.exists() ? viernes.child("obra").val() : "";
-                if(viernes != ""){
-                    if(obras_semana[viernes]){
-                        obras_semana[viernes]++;
-                    } else {
-                        obras_semana[viernes] = 1;
+                    var jueves = trabSnap.child("nomina/" + year + "/" + week + "/jueves");
+                    jueves = jueves.exists() ? jueves.child("obra").val() : "";
+                    if(jueves != ""){
+                        if(obras_semana[jueves]){
+                            obras_semana[jueves]++;
+                        } else {
+                            obras_semana[jueves] = 1;
+                        }
                     }
-                }
-                var max = -1;
-                var obra_asignada = "";
-                console.log(obras_semana);
-                for(key in obras_semana){
-                    if(obras_semana[key] > max){
-                        obra_asignada = key;
-                        max = obras_semana[key];
+                    var viernes = trabSnap.child("nomina/" + year + "/" + week + "/viernes");
+                    viernes = viernes.exists() ? viernes.child("obra").val() : "";
+                    if(viernes != ""){
+                        if(obras_semana[viernes]){
+                            obras_semana[viernes]++;
+                        } else {
+                            obras_semana[viernes] = 1;
+                        }
                     }
-                }
-                var asis = 0;
-                asis = trabSnap.child("nomina/" + year + "/" + week + "/jueves/asistencia").val() ? asis + 0.2 : asis;
-                asis = trabSnap.child("nomina/" + year + "/" + week + "/viernes/asistencia").val() ? asis + 0.2 : asis;
-                asis = trabSnap.child("nomina/" + year + "/" + week + "/lunes/asistencia").val() ? asis + 0.2 : asis;
-                asis = trabSnap.child("nomina/" + year + "/" + week + "/martes/asistencia").val() ? asis + 0.2 : asis;
-                asis = trabSnap.child("nomina/" + year + "/" + week + "/miercoles/asistencia").val() ? asis + 0.2 : asis;
-                datos_resumen_nomina.push([
-                    trabSnap.key,
-                    trab.nombre,
-                    obra_asignada,
-                    trab.jefe,
-                    trab.jefe == "HEAD" ? "Admon" : "Destajo",
-                    trab.especialidad,
-                    trab.puesto,
-                    trabSnap.child("nomina/" + year + "/" + week + "/jueves/asistencia").val() ? 0.2 : 0,
-                    trabSnap.child("nomina/" + year + "/" + week + "/viernes/asistencia").val() ? 0.2 : 0,
-                    trabSnap.child("nomina/" + year + "/" + week + "/lunes/asistencia").val() ? 0.2 : 0,
-                    trabSnap.child("nomina/" + year + "/" + week + "/martes/asistencia").val() ? 0.2 : 0,
-                    trabSnap.child("nomina/" + year + "/" + week + "/miercoles/asistencia").val() ? 0.2 : 0,
-                    trab.sueldo_base,
-                    parseFloat(trab.sueldo_base) * asis,
-                    parseFloat(trabSnap.child("nomina/" + year + "/" + week + "/total_horas_extra").val())*(24/parseFloat(trab.sueldo_base)) == "" ? "-" : parseFloat(trabSnap.child("nomina/" + year + "/" + week + "/total_horas_extra").val())*(24/parseFloat(trab.sueldo_base)),
-                    trabSnap.child("nomina/" + year + "/" + week + "/total_horas_extra").val() == null ? "-" : trabSnap.child("nomina/" + year + "/" + week + "/total_horas_extra").val(),
-                    trabSnap.child("nomina/" + year + "/" + week + "/total_diversos").val() == null ? "-" : trabSnap.child("nomina/" + year + "/" + week + "/total_diversos").val(),
-                    trabSnap.child("nomina/" + year + "/" + week + "/total").val() == null ? "-" : trabSnap.child("nomina/" + year + "/" + week + "/total").val(),
-                ]);
-            }       
-        });             
-
-        tabla_resumen_nomina = $('#'+ id_datatable_resumen_nomina).DataTable({
-            destroy: true,
-            data: datos_resumen_nomina,
-            dom: 'Bfrtip',
-            buttons: ['excel'],
-            columns: [
+                    var max = -1;
+                    var obra_asignada = "";
+                    //console.log(obras_semana);
+                    for(key in obras_semana){
+                        if(obras_semana[key] > max){
+                            obra_asignada = key;
+                            max = obras_semana[key];
+                        }
+                    }
+                    var asis = 0;
+                    asis = trabSnap.child("nomina/" + year + "/" + week + "/jueves/asistencia").val() ? asis + 0.2 : asis;
+                    asis = trabSnap.child("nomina/" + year + "/" + week + "/viernes/asistencia").val() ? asis + 0.2 : asis;
+                    asis = trabSnap.child("nomina/" + year + "/" + week + "/lunes/asistencia").val() ? asis + 0.2 : asis;
+                    asis = trabSnap.child("nomina/" + year + "/" + week + "/martes/asistencia").val() ? asis + 0.2 : asis;
+                    asis = trabSnap.child("nomina/" + year + "/" + week + "/miercoles/asistencia").val() ? asis + 0.2 : asis;
+                    var pago_base = parseFloat(trab.sueldo_base) * asis;
+                    var pago_he = trabSnap.child("nomina/" + year + "/" + week + "/total_horas_extra").val() == null ? 0 : trabSnap.child("nomina/" + year + "/" + week + "/total_horas_extra").val();
+                    var pago_div = trabSnap.child("nomina/" + year + "/" + week + "/total_diversos").val() == null ? 0 : trabSnap.child("nomina/" + year + "/" + week + "/total_diversos").val();
+                    var pago_total = parseFloat(pago_base) + parseFloat(pago_he) + parseFloat(pago_div);
+                    var entrada = [
+                        trabSnap.key,
+                        trab.nombre,
+                        obra_asignada,
+                        trab.jefe,
+                        trab.jefe == "HEAD" ? "Admon" : "Destajo",
+                        trab.especialidad,
+                        trab.puesto,
+                        trabSnap.child("nomina/" + year + "/" + week + "/jueves/asistencia").val() ? 0.2 : 0,
+                        trabSnap.child("nomina/" + year + "/" + week + "/viernes/asistencia").val() ? 0.2 : 0,
+                        trabSnap.child("nomina/" + year + "/" + week + "/lunes/asistencia").val() ? 0.2 : 0,
+                        trabSnap.child("nomina/" + year + "/" + week + "/martes/asistencia").val() ? 0.2 : 0,
+                        trabSnap.child("nomina/" + year + "/" + week + "/miercoles/asistencia").val() ? 0.2 : 0,
+                        trab.sueldo_base,
+                        pago_base,
+                        isNaN(parseFloat(trabSnap.child("nomina/" + year + "/" + week + "/total_horas_extra").val())*(24/parseFloat(trab.sueldo_base))) ? "-" : parseFloat(trabSnap.child("nomina/" + year + "/" + week + "/total_horas_extra").val())*(24/parseFloat(trab.sueldo_base)),
+                        pago_he,
+                    ];
+                    for(i=0;i<diversos_array.length;i++){
+                        entrada.push(divs[diversos_array[i]]);
+                    }
+                    entrada.push(pago_total);
+                    datos_resumen_nomina.push(entrada);
+                } else {
+                    //AQUI carga los activos que no tengtan esa semana con 0s o ago asi
+                    var entrada_chafa =[
+                        trabSnap.key,
+                        trab.nombre,
+                        "-",
+                        trab.jefe,
+                        trab.jefe == "HEAD" ? "Admon" : "Destajo",
+                        trab.especialidad,
+                        trab.puesto,
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        trab.sueldo_base,
+                        "-",
+                        "-",
+                        "-",
+                    ];
+                    for(i=0;i<diversos_array.length;i++){
+                        entrada_chafa.push("-");
+                    }
+                    entrada_chafa.push("-");
+                    datos_resumen_nomina.push(entrada_chafa)
+                }   
+            });             
+            var cols = [
                 {title: "ID"},
                 {title: "Nombre"},
                 {title: "Obra Asignada"},
@@ -176,10 +216,19 @@ function loadResumenNomina(){
                 {title: "Pago base"},
                 {title: "HE"},
                 {title: "HE ($)"},
-                {title: "Diversos"},//Uno por uno?
-                {title: "Total"},
-            ],
-            language: idioma_espanol, // Esta en app_bibliotecas
+            ];
+            for(i=0;i<diversos_array.length;i++){
+                cols.push({title: diversos_array[i]});
+            }
+            cols.push({title: "Total"});
+            tabla_resumen_nomina = $('#'+ id_datatable_resumen_nomina).DataTable({
+                destroy: true,
+                data: datos_resumen_nomina,
+                dom: 'Bfrtip',
+                buttons: ['excel'],
+                columns: cols,
+                language: idioma_espanol, // Esta en app_bibliotecas
+            });
         });
     });
 	firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week).once('value').then(function(snapshot){

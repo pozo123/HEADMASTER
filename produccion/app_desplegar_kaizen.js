@@ -186,7 +186,7 @@ function cargaKaizen(){
 					$('#' + clave_elem + "_PRODUCCION_COPEO_PREC").removeClass('grisDesplegarKaizen');
 				}
 			}
-			if(id_elem == clave_elem + "_PROYECTOS_PPTO" || id_elem == clave_elem + "_PRODUCCION_SUMINISTROS_CUANT" || id_elem == clave_elem + "_PRODUCCION_SUMINISTROS_OdeC" || id_elem == clave_elem + "_PRODUCCION_COPEO_PREC" || id_elem == clave_elem + "_PRODUCCION_COPEO_COPEO" || id_elem == clave_elem + "_ADMINISTRACION_ESTIMACIONES_PPTO" || id_elem == clave_elem + "_ADMINISTRACION_ANTICIPOS_PPTO"){
+			if(id_elem == clave_elem + "_PROYECTOS_PPTO" || id_elem == clave_elem + "_PRODUCCION_SUMINISTROS_CUANT" || id_elem == clave_elem + "_PRODUCCION_COPEO_COPEO" || id_elem == clave_elem + "_ADMINISTRACION_ESTIMACIONES_PPTO" || id_elem == clave_elem + "_ADMINISTRACION_ANTICIPOS_PPTO"){
 				console.log("1");
 				if(sub){
 					calculaProfit("prog", pointer_kaiz_padre, clave_proc);
@@ -451,18 +451,8 @@ function calculaProfit(tipo, pointer_kaiz, clave_elem/*, cambio*/){
 		var proy = parseFloat(pointer_kaiz["PROYECTOS"]["PPTO"]);
 		var cop;
 		var sum;
-		if(pointer_kaiz["PRODUCCION"]["SUMINISTROS"]["OdeC"] != 0){
-			sum = parseFloat(pointer_kaiz["PRODUCCION"]["SUMINISTROS"]["OdeC"]);
-		}
-		else{
-			sum = parseFloat(pointer_kaiz["PRODUCCION"]["SUMINISTROS"]["CUANT"]);
-		}
-		if(pointer_kaiz["PRODUCCION"]["COPEO"]["COPEO"] != 0){
-			cop = parseFloat(pointer_kaiz["PRODUCCION"]["COPEO"]["COPEO"]);
-		}
-		else{
-			cop = parseFloat(pointer_kaiz["PRODUCCION"]["COPEO"]["PREC"]);
-		}
+		sum = parseFloat(pointer_kaiz["PRODUCCION"]["SUMINISTROS"]["CUANT"]);
+		cop = parseFloat(pointer_kaiz["PRODUCCION"]["COPEO"]["COPEO"]);
 		var costos = proy + cop + sum;
 		var venta_anticipo = parseFloat(pointer_kaiz["ADMINISTRACION"]["ANTICIPOS"]["PPTO"]);
 		var venta_estimaciones = parseFloat(pointer_kaiz["ADMINISTRACION"]["ESTIMACIONES"]["PPTO"]);

@@ -6,6 +6,24 @@ var rama_bd_personal = "personal";
 var rama_bd_mensajes = "mensajes";
 var rama_bd_version = "info_web/version";
 
+function enableTabWithEnter(){
+  $('input').on("keypress", function(e) {
+    /* ENTER PRESSED*/
+    if (e.keyCode == 13) {
+        /* FOCUS ELEMENT */
+        var inputs = $(this).parents("form").eq(0).find(":input");
+        var idx = inputs.index(this);
+        console.log(inputs);
+        if (idx == inputs.length - 1) {
+            inputs[0].select()
+        } else {
+            inputs[idx + 1].focus(); //  handles submit buttons
+            inputs[idx + 1].select();
+        }
+        return false;
+    }
+  });
+}
 
 function msToHoursAndMinutes(ms){
   var m = ms / 60000;
@@ -162,8 +180,8 @@ function calculaProfitKaiz(pointer){
   var admin_ant_pag = parseFloat(kaiz_local["ADMINISTRACION"]["ANTICIPOS"]["PAG"]);
   var admin_ant_ppto = parseFloat(kaiz_local["ADMINISTRACION"]["ANTICIPOS"]["PPTO"]);
 
-  var costo_cop = prod_cop_copeo > 0 ? prod_cop_copeo : prod_cop_prec;
-  var costo_sum = prod_sum_odec > 0 ? prod_sum_odec : prod_sum_cuant;
+  var costo_cop = prod_cop_copeo;
+  var costo_sum = prod_sum_cuant;
   kaiz_local["PROFIT"]["PROG"]["BRUTO"] = (admin_est_ppto + admin_ant_ppto) * (1 - porcentaje_indirectos) - costo_cop - costo_sum - proy_ppto;
   kaiz_local["PROFIT"]["PROG"]["NETO"] = ((admin_est_ppto + admin_ant_ppto) * (1 - porcentaje_indirectos) - costo_cop - costo_sum - proy_ppto) * 0.6;
 

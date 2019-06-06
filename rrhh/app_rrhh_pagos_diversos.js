@@ -191,7 +191,7 @@ function cargaEntradasDiversos(year,semana){
         snapshot.forEach(function(trabSnap){
             trabSnap.child('nomina/' + year + "/" + semana + "/diversos").forEach(function(diverSnap){
                 var diver = diverSnap.val();
-                if(diver.diverso == $('#' + id_diverso_ddl_diversos + " option:selected").val()){
+                if(diver.diverso == $('#' + id_diverso_ddl_diversos + " option:selected").val() && diver.cantidad != 0){
                     vacio = false;
                     cargaRenglonDiversos(trabSnap.val(),false,diver.cantidad,diver.distribuible,diver.obra,diver.proceso);
                 }

@@ -69,9 +69,10 @@ var excelSeleccionado = "";
 var fileName = "";
 
 var fotoSeleccionada;
-var imagen_anexo;
+var imagen_anexo = [];
 
 var ppto_especial = false;
+var horas_ppto = 0;
 var pv_directo = "";
 var pv_indirecto = "";
 
@@ -81,10 +82,12 @@ $('#' + id_file_ppto_adic).on("change",(function(event) {
     $('#' + id_filename_ppto_adic).text(fileName);
     document.getElementById(id_importar_button_ppto_adic).disabled = false;
     $('#' + id_importar_button_ppto_adic).removeClass('btn-outline-success');
+    $('#' + id_importar_button_ppto_adic).removeClass('btn-outline-dark');
     $('#' + id_importar_button_ppto_adic).addClass('btn-outline-danger');
 }));
 
 $('#tabPresupuestoAdic').click(function() {
+    imagen_anexo = [];
     $("#" + id_existente_check_ppto_adic).prop('checked', false);
     $('#' + id_proc_ddl_ppto_adic).empty();    
     $('#' + id_obra_ddl_ppto_adic).empty();
@@ -147,8 +150,9 @@ $('#' + id_imagen_file_ppto_adic).on("change", function(event){
     fotoSeleccionada = event.target.files[0];
     $('#' + id_imagen_name_ppto_adic).text(fotoSeleccionada.name);
     document.getElementById(id_imagen_button_ppto_adic).disabled = false;
-    $('#' + id_importar_button_ppto_adic).removeClass('btn-outline-success');
-    $('#' + id_importar_button_ppto_adic).addClass('btn-outline-danger');
+    $('#' + id_imagen_button_ppto_adic).removeClass('btn-outline-dark');
+    $('#' + id_imagen_button_ppto_adic).removeClass('btn-outline-success');
+    $('#' + id_imagen_button_ppto_adic).addClass('btn-outline-danger');
 });
 
 $('#' + id_imagen_button_ppto_adic).click(function() {
@@ -157,11 +161,11 @@ $('#' + id_imagen_button_ppto_adic).click(function() {
     reader.readAsDataURL(fotoSeleccionada);
     
     reader.onloadend = function () {
-        imagen_anexo = reader.result;
+        imagen_anexo.push(reader.result);
         alert("Imagen cargada")
-        document.getElementById(id_imagen_button_ppto_adic).disabled = true;
-        $('#' + id_importar_button_ppto_adic).addClass('btn-outline-success');
-        $('#' + id_importar_button_ppto_adic).removeClass('btn-outline-danger');
+        //document.getElementById(id_imagen_button_ppto_adic).disabled = true;
+        $('#' + id_imagen_button_ppto_adic).addClass('btn-outline-success');
+        $('#' + id_imagen_button_ppto_adic).removeClass('btn-outline-danger');
     }
 });
 
@@ -270,6 +274,7 @@ $('#' + id_importar_button_ppto_adic).on("click",function() {
                 document.getElementById(id_importar_button_ppto_adic).disabled = true;
                 $('#' + id_importar_button_ppto_adic).addClass('btn-outline-success');
                 $('#' + id_importar_button_ppto_adic).removeClass('btn-outline-danger');
+                $('#' + id_importar_button_ppto_adic).removeClass('btn-outline-dark');
             }
         }
     };
@@ -303,9 +308,9 @@ $("#" + id_existente_check_ppto_adic).change(function(){
 function loadProfitsPptoAdic(){
     var costos = parseFloat($('#' + id_proyectos_ppto_adic).val() == "" ? 0 : $('#' + id_proyectos_ppto_adic).val()) + parseFloat($('#' + id_copeo_ppto_adic).val() == "" ? 0 : $('#' + id_copeo_ppto_adic).val()) + parseFloat($('#' + id_suministros_ppto_adic).val() == "" ? 0 : $('#' + id_suministros_ppto_adic).val());
     var precio = parseFloat($('#' + id_precio_venta_ppto_adic).val() == "" ? 0 : $('#' + id_precio_venta_ppto_adic).val())*1.16;
-
-    $('#' + id_profit_cantidad_ppto_adic).val(precio*(1-porcentaje_indirectos)-costos);
-    $('#' + id_profit_porcentaje_ppto_adic).val(100*parseFloat($('#' + id_profit_cantidad_ppto_adic).val())/(porcentaje_indirectos*precio + costos));
+    var u = precio*(1-porcentaje_indirectos)-costos;
+    $('#' + id_profit_cantidad_ppto_adic).val(u);
+    $('#' + id_profit_porcentaje_ppto_adic).val(100*u/costos);
     highLight(id_profit_porcentaje_ppto_adic);
     highLight(id_profit_cantidad_ppto_adic);
 }
@@ -319,15 +324,17 @@ $("#" + id_suministros_ppto_adic).change(function(){
 });
 
 $("#" + id_proyectos_ppto_adic).focus(function(){
-    if(!isNaN(parseFloat($("#" + id_proyectos_ppto_adic).val()))){
-        $("#" + id_proyectos_ppto_adic).val(parseFloat($("#" + id_proyectos_ppto_adic).val()) / parseFloat($("#" + id_hora_score_ppto_adic).val()))
-    }
+    $("#" + id_proyectos_ppto_adic).val(horas_ppto);
 });
 
 $("#" + id_proyectos_ppto_adic).focusout(function(){
-    if($("#" + id_proyectos_ppto_adic).val() != ""){
-        $("#" + id_proyectos_ppto_adic).val(parseFloat($("#" + id_proyectos_ppto_adic).val()) * parseFloat($("#" + id_hora_score_ppto_adic).val()));
-    }
+    horas_ppto =  $("#" + id_proyectos_ppto_adic).val() == "" ? 0 :  parseFloat($("#" + id_proyectos_ppto_adic).val());
+    $("#" + id_proyectos_ppto_adic).val(horas_ppto * parseFloat($("#" + id_hora_score_ppto_adic).val()));
+    loadProfitsPptoAdic();
+});
+
+$("#" + id_hora_score_ppto_adic).change(function(){
+    $("#" + id_proyectos_ppto_adic).val(horas_ppto * parseFloat($("#" + id_hora_score_ppto_adic).val()));
     loadProfitsPptoAdic();
 });
 
@@ -337,16 +344,20 @@ $("#" + id_precio_venta_ppto_adic).change(function(){
 
 $("#" + id_profit_porcentaje_ppto_adic).change(function(){
     var costos = parseFloat($('#' + id_proyectos_ppto_adic).val()) + parseFloat($('#' + id_copeo_ppto_adic).val()) + parseFloat($('#' + id_suministros_ppto_adic).val());
-    $('#' + id_precio_venta_ppto_adic).val((costos * (1 + parseFloat($("#" + id_profit_porcentaje_ppto_adic).val())/100))/(1 - porcentaje_indirectos * (1 + parseFloat($("#" + id_profit_porcentaje_ppto_adic).val())/100)));
-    $('#' + id_profit_cantidad_ppto_adic).val(parseFloat($('#' + id_precio_venta_ppto_adic).val())*(1 - porcentaje_indirectos) - costos);
+    var ut_p = parseFloat($("#" + id_profit_porcentaje_ppto_adic).val())/100;
+    var pv = (costos * (1 + ut_p))/(1 - porcentaje_indirectos);
+    $('#' + id_precio_venta_ppto_adic).val(pv/1.16);
+    $('#' + id_profit_cantidad_ppto_adic).val(pv*(1 - porcentaje_indirectos) - costos);
     highLight(id_precio_venta_ppto_adic);
     highLight(id_profit_cantidad_ppto_adic);
 });
 
 $("#" + id_profit_cantidad_ppto_adic).change(function(){
+    var u = parseFloat(eval($("#" + id_profit_cantidad_ppto_adic).val()));
     var costos = parseFloat($('#' + id_proyectos_ppto_adic).val()) + parseFloat($('#' + id_copeo_ppto_adic).val()) + parseFloat($('#' + id_suministros_ppto_adic).val());
-    $('#' + id_precio_venta_ppto_adic).val((parseFloat($("#" + id_profit_cantidad_ppto_adic).val()) + costos)/(1-porcentaje_indirectos)/1.16);
-    $('#' + id_profit_porcentaje_ppto_adic).val(100*parseFloat($("#" + id_profit_cantidad_ppto_adic).val())/(parseFloat($('#' + id_precio_venta_ppto_adic).val()*1.16) - parseFloat($("#" + id_profit_cantidad_ppto_adic).val())));
+    var pv = (u + costos)/(1-porcentaje_indirectos);
+    $('#' + id_precio_venta_ppto_adic).val(pv/1.16);
+    $('#' + id_profit_porcentaje_ppto_adic).val(100*u/(costos));
     highLight(id_precio_venta_ppto_adic);
     highLight(id_profit_porcentaje_ppto_adic);
 });
@@ -443,8 +454,8 @@ $('#' + id_registrar_button_ppto_adic).click(function () {
                     nombre: $('#' + id_nombre_ppto_adic).val(),
                     OdeC: "",
                     SCORE: {
-                        total_prog: "",
-                        total_trabajado: "",
+                        total_prog: horas_ppto,
+                        total_trabajado: 0,
                         programado: false,
                         inges: "",
                     }, 
@@ -484,8 +495,8 @@ function generaPptoAdic(genera){
     //loadAnexoPptoAdic();
     var clave_presu;
     var existente = document.getElementById(id_existente_check_ppto_adic).checked;
+    var codigo_obra = obra_global.clave;
     if(!existente){
-        var codigo_obra = obra_global.clave;
         var num_proc = parseInt(obra_global.procesos.ADIC.num_subprocesos) + 1;
         clave_presu = codigo_obra + "/ADIC-" + ("00" + num_proc).slice(-3);
     } else {
@@ -598,7 +609,7 @@ function generaPptoAdic(genera){
         "Moneda Nacional" + "\n";
     }
     var bod_head = [
-        [
+        /*[
             {  
                 colSpan: 4,
                 border: [false, false, false, false],
@@ -617,7 +628,7 @@ function generaPptoAdic(genera){
                 fontSize: 10,
             },
             '',
-        ],
+        ],*/
         [
             {
                 border: [false, false, false, false],
@@ -734,7 +745,7 @@ function generaPptoAdic(genera){
                 text:  atn_str, 
                 bold: true,
                 margin: [0,1],
-                fontSize: 12,
+                fontSize: 11,
                 alignment: 'left',
             },
         ],
@@ -743,7 +754,7 @@ function generaPptoAdic(genera){
                 colSpan:6,
                 border: [false, false, false, false],
                 text: ['A continuación enviamos a su amable consideración el presupuesto ',
-                 {text: $('#' + id_titulo_ppto_adic).val().toUpperCase(), bold: true},
+                 {text: $('#' + id_titulo_ppto_adic).val().toUpperCase(), bold: true, fontSize: 9},
                  " a efectuarse en el edificio ubicado en la dirección arriba indicada."],
                 margin: [0,5],
                 fontSize: 10,
@@ -1109,24 +1120,359 @@ function generaPptoAdic(genera){
         ],
     ];
 
+    var cont =  [
+        //Header
+        { 
+            table:{
+                widths: ['*', 120, '*', '*','*',120],
+                body: bod_head,
+            },
+        },
+        //Exc
+        {
+            table:{
+                widths: ['*', 120, '*', '*','*',120],
+                body: bod_exc,
+            },
+            unbreakable:true,
+        },
+        //Alcance
+        { 
+            table:{
+                widths: ['auto', 'auto', '*', 'auto','auto','auto'],
+                body: bod,
+            },
+        },
+        //Totales
+        {
+            table:{
+                widths: ['*', 120, '*', '*','*',120],
+                body:bod_tot,
+                unbreakable: true,
+            },
+        },
+        //Letra
+        {
+            table:{
+                widths: ['*', 120, '*', '*','*',120],
+                body:[
+                    [
+                        {  
+                            colSpan: 6,
+                            border: [false, false, false, true],
+                            margin: [0,2],
+                            text: "",
+                        },
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                    ],
+                    [
+                        { 
+                            border: [true, true, true, true],
+                            text: 'IMPORTE CON IVA',
+                            margin: [0,2],
+                            fillColor: '#dddddd',
+                            alignment: 'center',
+                            fontSize: 8,
+                        },
+                        {  
+                            colSpan:5,
+                            border: [true, true, true, true],
+                            text: numeroALetras((precio_total*1.16).toFixed(2)),
+                            bold: true,
+                            margin: [0,1],
+                            fillColor: '#dddddd',
+                            alignment: 'center',
+                            fontSize: 12,
+                        },
+                        '',
+                        '',
+                        '',
+                        '',
+                    ],
+                ]
+            },
+            unbreakable: true,
+        },
+        //Reqs
+        {
+            table:{
+                widths: ['*', 120, '*', '*','*',120],
+                body: bod_req,
+            },
+            unbreakable: true,
+        },
+
+        //Condiciones Comerciales
+        {
+            table:{
+                widths: ['*', 120, '*', '*','*',120],
+                body:[
+                    [
+                        {  
+                            colSpan:2,
+                            border: [false, false, false, false],
+                            text: '',
+                            margin: [0,5],
+                            alignment: 'center',
+                            fontSize: 8,
+                        },
+                        '',
+                        {  
+                            colSpan:4,
+                            border: [false, false, false, false],
+                            text: 'Condiciones Comerciales: ',
+                            bold:true,
+                            margin: [0,10],
+                            alignment: 'left',
+                            fontSize: 10,
+                        },
+                        '','','',
+
+                    ],
+
+                    [
+                        {  
+                            colSpan:6,
+                            border: [false, false, false, false],
+                            text: anticipo_str,
+                            margin: [0,3],
+                            alignment: 'center',
+                            fontSize: 8,
+                        },
+                        '','','','','',
+
+                    ],
+
+                    [
+                        {  
+                            colSpan:6,
+                            border: [false, false, false, false],
+                            text: 'Precios incluyen IVA' + '\n' + 'Precios expresados en moneda nacional.',
+                            margin: [0,5],
+                            bold:true,
+                            alignment: 'left',
+                            fontSize: 8,
+                            color :"#6FAFB4"
+                        },
+                        '','','','','',
+                    ],
+
+                    [
+                        {  
+                            colSpan:6,
+                            border: [false, false, false, false],
+                            text: 'TIEMPO DE ENTREGA',
+                            bold: true,
+                            margin: [0,5],
+                            alignment: 'left',
+                            fontSize: 8,
+                        },
+                        '','','','','',
+                    ],
+                    [
+                        {  
+                            colSpan:6,
+                            border: [false, false, false, false],
+                            text: 'El tiempo requerido para la elaboración de los anteriores trabajos es como se indica más adelante, a partir de la fecha de recepción del anticipo y del 100% de los requerimientos solicitados.',
+                            margin: [0,3],
+                            alignment: 'left',
+                            fontSize: 8,
+                        },
+                        '','','','','',
+                    ],
+                    [
+                        {  
+                            colSpan:6,
+                            border: [false, false, false, false],
+                            text: tiempoEntrega + "\n" + "\n" +"\n",
+                            margin: [0,5],
+                            alignment: 'left',
+                            fontSize: 8,
+                        },
+                        '','','','','',
+                    ],
+                    
+                    [
+                        {  
+                            colSpan:3,
+                            rowSpan:2,
+                            border: [false, false, false, false],
+                            text: 'Cliente',
+                            margin: [0,40],
+                            alignment: 'center',
+                            fontSize: 10,
+                            bold: true,
+                        },
+                        '','',
+                        {  
+                            colSpan:3,
+                            rowSpan:2,
+                            border: [false, false, false, false],
+                            text: 'Contratista',
+                            margin: [0,40],
+                            alignment: 'center',
+                            fontSize: 10,
+                            bold: true,
+                        },
+                        '','',
+
+                    ],
+                    ['','','','','',''],
+                    [
+                        {  
+                            colSpan:3,
+                            border: [false, false, false, false],
+                            text: '______________________________________',
+                            margin: [0,6],
+                            alignment: 'center',
+                            fontSize: 8,
+                        },
+                        '','',
+                        {  
+                            colSpan:3,
+                            border: [false, false, false, false],
+                            text: '______________________________________',
+                            margin: [0,6],
+                            alignment: 'center',
+                            fontSize: 8,
+                        },
+                        '','',
+
+                    ],
+                    [
+                        {  
+                            colSpan:3,
+                            border: [false, false, false, false],
+                            text: atn_str,
+                            margin: [0,3],
+                            alignment: 'center',
+                            fontSize: 10,
+                        },
+                        '','',
+                        {  
+                            colSpan:3,
+                            border: [false, false, false, false],
+                            text: 'Arq. Miguel E. Bravo Dufau' +"\n" +"\n" +"\n" +"\n",
+                            margin: [0,3],
+                            alignment: 'center',
+                            fontSize: 10,
+                        },
+                        '','',
+                    ],
+                    [
+                        {  
+                            colSpan:6,
+                            border: [false, false, false, false],
+                            text: 'Únicamente se podrá facturar IVA EXENTO si cumple con lo siguiente:\n'
+                                + 'Con base al Decreto publicado en el D.O.F el pasado 26 de marzo de 2015 por el que se otorgan medidas de apoyo a la vivienda y otras medidas fiscales, sobre la contratación parcial para la construcción de Desarrollos Inmobiliarias de “casa habitación” exentos de IVA, cumpliendo con lo siguiente:\n'
+                                + '\t- El nombre del propietario sea el que aparece en la Licencia de Construcción y a ese mismo nombre le debemos Facturar.\n'
+                                + '\t- El prestador del servicio debe proporcionar la mano de obra y materiales\n'
+                                + '\t- El cliente debe realizar ante el SAT anualmente el formato 61\n'
+                                + '\t- Expedir comprobantes fiscales que amparen únicamente los servicios parciales de construcción de inmuebles destinados a casa habitación, que cumplan con los requisitos siguientes:\n'
+                                + '\t\ta.    El domicilio del inmueble en el que se proporcionen los servicios parciales de construcción.\n'
+                                + '\t\tb.    El número de permiso, licencia o autorización de construcción correspondiente que le haya proporcionado el prestador de los servicios parciales de construcción, el cual deberá coincidir con el señalado en la manifestación a que se refiere la fracción siguiente de este artículo.' + '\n' + '',
+                            margin: [0,3],
+                            alignment: 'left',
+                            fontSize: 8,
+                        },
+                        '','','','','',
+                    ],
+
+                    [
+                        {  
+                            colSpan:3,
+                            border: [false, false, false, false],
+                            text: tituloB,
+                            bold: true,
+                            margin: [0,3],
+                            alignment: 'center',
+                            fontSize: 8,
+                        },
+                        '','',
+                        {  
+                            colSpan:3,
+                            border: [false, false, false, false],
+                            text: tituloF,
+                            bold: true,
+                            margin: [0,3],
+                            alignment: 'center',
+                            fontSize: 8,
+                        },'','',
+
+                    ],
+
+                    [
+                        {  
+                            colSpan:1,
+                            border: [false, false, false, false],
+                            text: terminosBancarios,
+                            margin: [0,2],
+                            alignment: 'left',
+                            fontSize: 7,
+                        },
+                        {  
+                            colSpan:2,
+                            border: [false, false, false, false],
+                            text: bancarios,
+                            margin: [0,2],
+                            alignment: 'left',
+                            fontSize: 7,
+                        },
+                        '',
+                        {  
+                            colSpan:1,
+                            border: [false, false, false, false],
+                            text: terminosFiscales,
+                            margin: [0,2],
+                            alignment: 'left',
+                            fontSize: 7,
+                        },
+                        {  
+                            colSpan:2,
+                            border: [false, false, false, false],
+                            text: fiscales,
+                            margin: [0,2],
+                            alignment: 'left',
+                            fontSize: 7,
+                        },
+                        '',
+
+                    ],                                    
+                ]
+            },
+            unbreakable:true,
+        },
+        //Anexo imagen
+        img_an,
+    ];
+
     var img_an;
-    if($('#' + id_imagen_name_ppto_adic).text() == "Archivo no seleccionado"){
+    if(imagen_anexo.length == 0){
         img_an = '';
     } else {
-        img_an = {
-            image: imagen_anexo,
-            alignment: 'left',
-            width: 532.00,
-            height: 650.00
-        };
+        for(i=0;i<imagen_anexo.length;i++){
+            img_an = {
+                image: imagen_anexo[i],
+                alignment: 'left',
+                width: 532.00,
+                height: 650.00
+            };
+            console.log(i);
+            cont.push(img_an);
+        }
     }
+
     var pdfPresupuesto = {
         pageSize: 'LETTER',
     
         // [left, top, right, bottom] or [horizontal, vertical] or just a number for equal margins
         pageMargins: [ 40, 102, 40, 40],
         footer: function(currentPage,pageCount) {
-            return { fontSize:8,alignment: 'right', text:'Av. Constituyentes 561 Int. 101a, Col. América, Miguel Hidalgo, Ciudad de México, C.P. 11820, Tel. 6273 7900.       Página ' + currentPage.toString() + " de " + pageCount};
+            return { fontSize:8,alignment: 'center', text:'Av. Constituyentes 561 Int. 101a, Col. América, Miguel Hidalgo, Ciudad de México, C.P. 11820, Tel. 6273 7900.       Página ' + currentPage.toString() + " de " + pageCount};
         },
         header:function(currentPage, pageCount) {
             return{
@@ -1141,335 +1487,7 @@ function generaPptoAdic(genera){
                 margin: [40, 20],
             };
         },
-        content: [
-            //Header
-            { 
-                table:{
-                    widths: ['*', 120, '*', '*','*',120],
-                    body: bod_head,
-                },
-            },
-            //Exc
-            {
-                table:{
-                    widths: ['*', 120, '*', '*','*',120],
-                    body: bod_exc,
-                },
-                unbreakable:true,
-            },
-            //Alcance
-            { 
-                table:{
-                    widths: ['auto', 'auto', '*', 'auto','auto','auto'],
-                    body: bod,
-                },
-            },
-            //Totales
-            {
-                table:{
-                    widths: ['*', 120, '*', '*','*',120],
-                    body:bod_tot,
-                    unbreakable: true,
-                },
-            },
-            //Letra
-            {
-                table:{
-                    widths: ['*', 120, '*', '*','*',120],
-                    body:[
-                        [
-                            {  
-                                colSpan: 6,
-                                border: [false, false, false, true],
-                                margin: [0,2],
-                                text: "",
-                            },
-                            '',
-                            '',
-                            '',
-                            '',
-                            '',
-                        ],
-                        [
-                            { 
-                                border: [true, true, true, true],
-                                text: 'IMPORTE CON IVA',
-                                margin: [0,2],
-                                fillColor: '#dddddd',
-                                alignment: 'center',
-                                fontSize: 8,
-                            },
-                            {  
-                                colSpan:5,
-                                border: [true, true, true, true],
-                                text: numeroALetras((precio_total*1.16).toFixed(2)),
-                                bold: true,
-                                margin: [0,1],
-                                fillColor: '#dddddd',
-                                alignment: 'center',
-                                fontSize: 12,
-                            },
-                            '',
-                            '',
-                            '',
-                            '',
-                        ],
-                    ]
-                },
-                unbreakable: true,
-            },
-            //Reqs
-            {
-                table:{
-                    widths: ['*', 120, '*', '*','*',120],
-                    body: bod_req,
-                },
-                unbreakable: true,
-            },
-
-            //Condiciones Comerciales
-            {
-                table:{
-                    widths: ['*', 120, '*', '*','*',120],
-                    body:[
-                        [
-                            {  
-                                colSpan:2,
-                                border: [false, false, false, false],
-                                text: '',
-                                margin: [0,5],
-                                alignment: 'center',
-                                fontSize: 8,
-                            },
-                            '',
-                            {  
-                                colSpan:4,
-                                border: [false, false, false, false],
-                                text: 'Condiciones Comerciales: ',
-                                bold:true,
-                                margin: [0,10],
-                                alignment: 'left',
-                                fontSize: 10,
-                            },
-                            '','','',
-
-                        ],
-
-                        [
-                            {  
-                                colSpan:6,
-                                border: [false, false, false, false],
-                                text: anticipo_str,
-                                margin: [0,3],
-                                alignment: 'center',
-                                fontSize: 8,
-                            },
-                            '','','','','',
-
-                        ],
-
-                        [
-                            {  
-                                colSpan:6,
-                                border: [false, false, false, false],
-                                text: 'Precios incluyen IVA' + '\n' + 'Precios expresados en moneda nacional.',
-                                margin: [0,5],
-                                bold:true,
-                                alignment: 'left',
-                                fontSize: 8,
-                                color :"#6FAFB4"
-                            },
-                            '','','','','',
-                        ],
-
-                        [
-                            {  
-                                colSpan:6,
-                                border: [false, false, false, false],
-                                text: 'TIEMPO DE ENTREGA',
-                                bold: true,
-                                margin: [0,5],
-                                alignment: 'left',
-                                fontSize: 8,
-                            },
-                            '','','','','',
-                        ],
-                        [
-                            {  
-                                colSpan:6,
-                                border: [false, false, false, false],
-                                text: 'El tiempo requerido para la elaboración de los anteriores trabajos es como se indica más adelante, a partir de la fecha de recepción del anticipo y del 100% de los requerimientos solicitados.',
-                                margin: [0,3],
-                                alignment: 'left',
-                                fontSize: 8,
-                            },
-                            '','','','','',
-                        ],
-                        [
-                            {  
-                                colSpan:6,
-                                border: [false, false, false, false],
-                                text: tiempoEntrega + "\n" + "\n" +"\n",
-                                margin: [0,5],
-                                alignment: 'left',
-                                fontSize: 8,
-                            },
-                            '','','','','',
-                        ],
-                        
-                        [
-                            {  
-                                colSpan:3,
-                                rowSpan:2,
-                                border: [false, false, false, false],
-                                text: 'Cliente',
-                                margin: [0,40],
-                                alignment: 'center',
-                                fontSize: 10,
-                                bold: true,
-                            },
-                            '','',
-                            {  
-                                colSpan:3,
-                                rowSpan:2,
-                                border: [false, false, false, false],
-                                text: 'Contratista',
-                                margin: [0,40],
-                                alignment: 'center',
-                                fontSize: 10,
-                                bold: true,
-                            },
-                            '','',
-
-                        ],
-                        ['','','','','',''],
-                        [
-                            {  
-                                colSpan:3,
-                                border: [false, false, false, false],
-                                text: '______________________________________',
-                                margin: [0,6],
-                                alignment: 'center',
-                                fontSize: 8,
-                            },
-                            '','',
-                            {  
-                                colSpan:3,
-                                border: [false, false, false, false],
-                                text: '______________________________________',
-                                margin: [0,6],
-                                alignment: 'center',
-                                fontSize: 8,
-                            },
-                            '','',
-
-                        ],
-                        [
-                            {  
-                                colSpan:3,
-                                border: [false, false, false, false],
-                                text: atn_str,
-                                margin: [0,3],
-                                alignment: 'center',
-                                fontSize: 10,
-                            },
-                            '','',
-                            {  
-                                colSpan:3,
-                                border: [false, false, false, false],
-                                text: 'Arq. Miguel E. Bravo Dufau' +"\n" +"\n" +"\n" +"\n",
-                                margin: [0,3],
-                                alignment: 'center',
-                                fontSize: 10,
-                            },
-                            '','',
-                        ],
-                        [
-                            {  
-                                colSpan:6,
-                                border: [false, false, false, false],
-                                text: 'Únicamente se podrá facturar IVA EXENTO si cumple con lo siguiente:\n'
-                                    + 'Con base al Decreto publicado en el D.O.F el pasado 26 de marzo de 2015 por el que se otorgan medidas de apoyo a la vivienda y otras medidas fiscales, sobre la contratación parcial para la construcción de Desarrollos Inmobiliarias de “casa habitación” exentos de IVA, cumpliendo con lo siguiente:\n'
-                                    + '\t- El nombre del propietario sea el que aparece en la Licencia de Construcción y a ese mismo nombre le debemos Facturar.\n'
-                                    + '\t- El prestador del servicio debe proporcionar la mano de obra y materiales\n'
-                                    + '\t- El cliente debe realizar ante el SAT anualmente el formato 61\n'
-                                    + '\t- Expedir comprobantes fiscales que amparen únicamente los servicios parciales de construcción de inmuebles destinados a casa habitación, que cumplan con los requisitos siguientes:\n'
-                                    + '\t\ta.    El domicilio del inmueble en el que se proporcionen los servicios parciales de construcción.\n'
-                                    + '\t\tb.    El número de permiso, licencia o autorización de construcción correspondiente que le haya proporcionado el prestador de los servicios parciales de construcción, el cual deberá coincidir con el señalado en la manifestación a que se refiere la fracción siguiente de este artículo.' + '\n' + '',
-                                margin: [0,3],
-                                alignment: 'left',
-                                fontSize: 8,
-                            },
-                            '','','','','',
-                        ],
-
-                        [
-                            {  
-                                colSpan:3,
-                                border: [false, false, false, false],
-                                text: tituloB,
-                                bold: true,
-                                margin: [0,3],
-                                alignment: 'center',
-                                fontSize: 8,
-                            },
-                            '','',
-                            {  
-                                colSpan:3,
-                                border: [false, false, false, false],
-                                text: tituloF,
-                                bold: true,
-                                margin: [0,3],
-                                alignment: 'center',
-                                fontSize: 8,
-                            },'','',
-
-                        ],
-
-                        [
-                            {  
-                                colSpan:1,
-                                border: [false, false, false, false],
-                                text: terminosBancarios,
-                                margin: [0,2],
-                                alignment: 'left',
-                                fontSize: 7,
-                            },
-                            {  
-                                colSpan:2,
-                                border: [false, false, false, false],
-                                text: bancarios,
-                                margin: [0,2],
-                                alignment: 'left',
-                                fontSize: 7,
-                            },
-                            '',
-                            {  
-                                colSpan:1,
-                                border: [false, false, false, false],
-                                text: terminosFiscales,
-                                margin: [0,2],
-                                alignment: 'left',
-                                fontSize: 7,
-                            },
-                            {  
-                                colSpan:2,
-                                border: [false, false, false, false],
-                                text: fiscales,
-                                margin: [0,2],
-                                alignment: 'left',
-                                fontSize: 7,
-                            },
-                            '',
-
-                        ],                                    
-                    ]
-                },
-                unbreakable:true,
-            },
-            //Anexo imagen
-            img_an,
-        ],       
+        content: cont, 
     };
     return [pdfPresupuesto, clave_presu, precio_total*1.16];
 }

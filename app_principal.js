@@ -28,7 +28,62 @@ $(document).ready(function() {
 });
 
 $('#botonMagico').click(function(){
-    //replaceStringsInKeysAndValues("Bajío 115 ", "CASA ROMA");
+    /*var sem = "23";
+    firebase.database().ref("rrhh/trabajadores").once('value').then(function(snapshot){
+        var updates = snapshot.val();
+        snapshot.forEach(function(trabSnap){
+            if(trabSnap.child("nomina/2019/" + sem + "/diversos").exists()){
+                updates[trabSnap.key]["nomina"]["2019"][sem]["diversos"] = null;
+            }
+            if(trabSnap.child("nomina/2019/" + sem + "/total_diversos").exists()){
+                updates[trabSnap.key]["nomina"]["2019"][sem]["total_diversos"] = null;
+            }
+            if(trabSnap.child("nomina/2019/" + sem + "/impuestos/impuestos_diversos").exists()){
+                updates[trabSnap.key]["nomina"]["2019"][sem]["impuestos"]["impuestos_diversos"] = null;
+            }
+            if(trabSnap.child("nomina/2019/" + sem + "/impuestos/impuestos_asistencia").exists()){
+                updates[trabSnap.key]["nomina"]["2019"][sem]["impuestos"]["impuestos_asistencia"] = null;
+            }
+            if(trabSnap.child("nomina/2019/" + sem + "/total_asistencia").exists()){
+                updates[trabSnap.key]["nomina"]["2019"][sem]["total_asistencia"] = null;
+            }
+            if(trabSnap.child("nomina/2019/" + sem + "/total").exists()){
+                updates[trabSnap.key]["nomina"]["2019"][sem]["total"] = null;
+            }
+        });
+        console.log(updates);
+        firebase.database().ref("rrhh/trabajadores").update(updates);
+    });
+                
+    firebase.database().ref("rrhh/pagos_nomina/2019/" + sem).once('value').then(function(snapshot){
+        var updates = snapshot.val();
+        snapshot.forEach(function(obraSnap){
+            if(obraSnap.key != "terminada" && obraSnap.key != "asistencias_terminadas" && obraSnap.key != "horas_extra_terminadas" && obraSnap.key != "diversos_terminados" && obraSnap.key != "total"){
+                obraSnap.child("trabajadores").forEach(function(trabSnap){
+                    if(trabSnap.child("diversos").exists()){
+                        updates[obraSnap.key][trabSnap.key]["diversos"] = null;
+                    }
+                    if(trabSnap.child("diversos").exists()){
+                        updates[obraSnap.key][trabSnap.key]["total_diversos"] = null;
+                    }
+                    if(trabSnap.child("impuestos/impuestos_diversos").exists()){
+                        updates[obraSnap.key][trabSnap.key]["impuestos_diversos"] = null;
+                    }
+                    if(trabSnap.child("impuestos/impuestos_asistencia").exists()){
+                        updates[obraSnap.key][trabSnap.key]["impuestos_asistencia"] = null;
+                    }
+                    if(trabSnap.child("total_asistencia").exists()){
+                        updates[obraSnap.key][trabSnap.key]["total_asistencia"] = null;
+                    }
+                    if(trabSnap.child("total").exists()){
+                        updates[obraSnap.key][trabSnap.key]["total"] = null;
+                    }
+                });
+            }
+        });
+        console.log(updates);
+        firebase.database().ref("rrhh/pagos_nomina/2019/" + sem).update(updates);
+    });*/
 });
 
 firebase.auth().onAuthStateChanged(user => {
