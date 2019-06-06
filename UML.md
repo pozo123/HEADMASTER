@@ -481,4 +481,4 @@ STORAGE:
       - REAL = admin.est.est / admin.est.ppto
 
   - Para calcular el PROFIT PROG
-      - (admin.est.ppto + admin.ants.ppto)*0.8 - prod.copeo.(copeo||prec) - prod.sum.(cuant||OdeC) - proy.ppto
+      - (admin.est.ppto + admin.ants.ppto)*0.8 - prod.copeo.(copeo) - prod.sum.(cuant) - proy.ppto

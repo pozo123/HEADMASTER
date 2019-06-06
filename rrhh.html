@@ -112,8 +112,8 @@
                                         <input type="text" name="" id="sueldoBaseEditarTrabajadores" class="form-control" placeholder="Sueldo base">
                                     </div>
                                     <div class="form-group">
-                                        <label for="jefeEditarTrabajadores">Jefe</label>
-                                        <input type="text" name="" id="jefeEditarTrabajadores" class="form-control" placeholder="Jefe">
+                                        <label for="jefeDdlEditarTrabajadores">Jefe</label>
+                                        <select id="jefeDdlEditarTrabajadores" class="form-control"></select>
                                     </div>
                                     <div class="form-group">
                                         <label for="especialidadDdlEditarTrabajadores">Especialidad</label>
@@ -878,11 +878,13 @@
                                     <div class="container-fluid">
                                         <table id="dataTablePagoNomina" class="display" style="width:100%"></table>
                                     </div>
-                                    <div class="container-table100">
-                                        <div class="table100 ver2 m-b-110">
-                                            <table id="tablePagoNomina" class="display"></table>
-                                        </div>
-                                    </div>       
+                                    <form action="#" onsubmit="return false">
+                                        <div class="container-table100">
+                                            <div class="table100 ver2 m-b-110">
+                                                <table id="tablePagoNomina" class="display"></table>
+                                            </div>
+                                        </div>    
+                                    </form>  
                                 </div>
                             </div>
                     </div>
@@ -1032,7 +1034,6 @@
 <script src="rrhh/app_rrhh_trabajadores.js"></script>
 <!-- Aquí hay que cambiar este scriot-->
 <script src="produccion/app_distribucion_supervisores.js"></script>
-
 
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
 

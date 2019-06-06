@@ -12,31 +12,31 @@ var id_profit_porcentaje_utilidad = "profitPorcentajeUtilidad";
 
 var id_button_load_utilidad = "loadButtonUtilidad";
 
+var form_utilidad = "formUtilidad";
+
 var rama_bd_personal = "personal";
 var rama_bd_obras_magico = "obras";
 
 $('#tabUtilidad').click(function(){
-	$('#' + id_obra_ddl_utilidad).empty();
+	$('#' + form_utilidad).trigger('reset');
+	$('#' + id_proceso_ddl_utilidad).empty();
     var select = document.getElementById(id_obra_ddl_utilidad);
     var option = document.createElement('option');
     option.style = "display:none";
     option.text = option.value = "";
     select.appendChild(option);
 
-	var user = firebase.auth().currentUser.uid;
 	var aut = false;
-	firebase.database().ref(rama_bd_personal + "/" + user).once('value').then(function(snapshot){
-		if(snapshot.child("areas/administracion").val() || parseInt(snapshot.child("credenciales").val()) < 3){
-			aut = true;
-		}
-	});
+	if(areas_usuario_global.administracion || creden_usuario_global < 3){
+		aut = true;
+	}
 
     firebase.database().ref(rama_bd_obras_magico).orderByChild('nombre').on('child_added',function(snapshot){
         var obra = snapshot.val();
         if(!obra.terminada){
         	if(!aut){
         		snapshot.child("supervisor").forEach(function(childSnap){
-        			if(childSnap.key == user && childSnap.child("activo").val()){
+        			if(childSnap.key == uid_usuario_global && childSnap.child("activo").val()){
         				aut = true;
         			}
         		});
@@ -72,12 +72,8 @@ function loadValuesObra(){
     firebase.database().ref(rama_bd_obras_magico).orderByKey().equalTo($('#' + id_obra_ddl_utilidad + " option:selected").val()).once('value').then(function(snapshot){
     	snapshot.forEach(function(obra_snap){
     		var obra = obra_snap.val();
-    		var costos_suministros = obra.kaizen.PRODUCCION.SUMINISTROS.OdeC;
-    		if(costos_suministros == 0)
-    			costos_suministros = obra.kaizen.PRODUCCION.SUMINISTROS.CUANT;
+    		var costos_suministros = obra.kaizen.PRODUCCION.SUMINISTROS.CUANT;
     		var costos_copeo = obra.kaizen.PRODUCCION.COPEO.COPEO;
-    		if(costos_copeo == 0)
-    			costos_copeo = obra.kaizen.PRODUCCION.COPEO.PREC;
     		var costos_proyectos = obra.kaizen.PROYECTOS.PPTO;
     		var costos = costos_proyectos + costos_copeo + costos_suministros;
     		$('#' + id_suministros_utilidad).val(costos_suministros);
@@ -101,12 +97,8 @@ function loadValuesProceso(){
 	    firebase.database().ref(rama_bd_obras_magico).orderByKey().equalTo($('#' + id_obra_ddl_utilidad + " option:selected").val()).once('value').then(function(snapshot){
 	    	snapshot.forEach(function(obra_snap){
 	    		var obra = obra_snap.val();
-	    		var costos_suministros = obra.kaizen.PRODUCCION.SUMINISTROS.OdeC;
-	    		if(costos_suministros == 0)
-	    			costos_suministros = obra.kaizen.PRODUCCION.SUMINISTROS.CUANT;
+	    		var costos_suministros = obra.kaizen.PRODUCCION.SUMINISTROS.CUANT;
 	    		var costos_copeo = obra.kaizen.PRODUCCION.COPEO.COPEO;
-	    		if(costos_copeo == 0)
-	    			costos_copeo = obra.kaizen.PRODUCCION.COPEO.PREC;
 	    		var costos_proyectos = obra.kaizen.PROYECTOS.PPTO;
 	    		var costos = costos_proyectos + costos_copeo + costos_suministros;
 	    		$('#' + id_suministros_utilidad).val(costos_suministros);
@@ -124,12 +116,8 @@ function loadValuesProceso(){
 		firebase.database().ref(rama_bd_obras_magico + "/" + $('#' + id_obra_ddl_utilidad + " option:selected").val() + "/procesos/" + $('#' + id_proceso_ddl_utilidad + " option:selected").val()).once('value').then(function(snapshot){
 	    	snapshot.forEach(function(proc_snap){
 	    		var proc = proc_snap.val();
-	    		var costos_suministros = proc.kaizen.PRODUCCION.SUMINISTROS.OdeC;
-	    		if(costos_suministros == 0)
-	    			costos_suministros = proc.kaizen.PRODUCCION.SUMINISTROS.CUANT;
+	    		var costos_suministros = proc.kaizen.PRODUCCION.SUMINISTROS.CUANT;
 	    		var costos_copeo = proc.kaizen.PRODUCCION.COPEO.COPEO;
-	    		if(costos_copeo == 0)
-	    			costos_copeo = proc.kaizen.PRODUCCION.COPEO.PREC;
 	    		var costos_proyectos = proc.kaizen.PROYECTOS.PPTO;
 	    		var costos = costos_proyectos + costos_copeo + costos_suministros;
 	    		$('#' + id_suministros_utilidad).val(costos_suministros);

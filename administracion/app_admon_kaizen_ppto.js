@@ -119,12 +119,8 @@ function loadValuesKaizenPpto(query){
 	resetKaizPpto();
     firebase.database().ref(query).once('value').then(function(kaizSnap){
 		var kaiz = kaizSnap.val();
-		var costos_suministros = kaizSnap.child("kaizen/PRODUCCION/SUMINISTROS/OdeC").val();
-		if(costos_suministros == 0)
-			costos_suministros = kaiz.kaizen.PRODUCCION.SUMINISTROS.CUANT;
+		var costos_suministros = kaizSnap.child("kaizen/PRODUCCION/SUMINISTROS/CUANT").val();
 		var costos_copeo = kaiz.kaizen.PRODUCCION.COPEO.COPEO;
-		if(costos_copeo == 0)
-			costos_copeo = kaiz.kaizen.PRODUCCION.COPEO.PREC;
 		var costos_proyectos = kaiz.kaizen.PROYECTOS.PPTO;
 		var costos = costos_proyectos + costos_copeo + costos_suministros;
 		$('#' + id_suministros_kaizen_ppto).val(formatMoney(costos_suministros));

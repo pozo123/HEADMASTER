@@ -29,6 +29,7 @@ var id_bancarios_check_ppto_proy = "bancariosCheckPptoProy";
 var id_fiscales_check_ppto_proy = "fiscalesCheckPptoProy";
 
 //Funcionalidad (kaizen)
+var id_hora_score_ppto_proy = "horaScorePptoProy";
 var id_proyectos_ppto_proy = "proyectosPptoProy";
 var id_suministros_ppto_proy = "suministrosPptoProy";
 var id_copeo_ppto_proy = "copeoPptoProy";
@@ -59,6 +60,7 @@ var alcance = [];
 
 var obra_global;
 var obra_global_snap;
+var horas_ppto = 0;
 
 var porcentaje_anticipo;
 
@@ -67,6 +69,7 @@ $('#tabPresupuesto').click(function() {
     $('#' + id_proc_ddl_ppto_proy).empty();    
     $('#' + id_obra_ddl_ppto_proy).empty();
     $('#' + id_categoria_ddl_ppto_proy).empty();
+    $("#" + id_hora_score_ppto_proy).val(1300);
 
     document.getElementById(id_anticipo1_rb_ppto_proy).checked = true;
 
@@ -239,9 +242,9 @@ $('#' + id_proc_ddl_ppto_proy).change(function(){
 function loadProfitsPptoProy(){
     var costos = parseFloat($('#' + id_proyectos_ppto_proy).val() == "" ? 0 : $('#' + id_proyectos_ppto_proy).val()) + parseFloat($('#' + id_copeo_ppto_proy).val() == "" ? 0 : $('#' + id_copeo_ppto_proy).val()) + parseFloat($('#' + id_suministros_ppto_proy).val() == "" ? 0 : $('#' + id_suministros_ppto_proy).val());
     var precio = parseFloat($('#' + id_precio_venta_ppto_proy).val() == "" ? 0 : $('#' + id_precio_venta_ppto_proy).val())*1.16;
-
-    $('#' + id_profit_cantidad_ppto_proy).val(precio*(1-porcentaje_indirectos)-costos);
-    $('#' + id_profit_porcentaje_ppto_proy).val(100*parseFloat($('#' + id_profit_cantidad_ppto_proy).val())/(porcentaje_indirectos*precio + costos));
+    var u = precio*(1-porcentaje_indirectos)-costos;
+    $('#' + id_profit_cantidad_ppto_proy).val(u);
+    $('#' + id_profit_porcentaje_ppto_proy).val(100*u/(costos));
     highLight(id_profit_porcentaje_ppto_proy);
     highLight(id_profit_cantidad_ppto_proy);
 }
@@ -258,22 +261,42 @@ $("#" + id_proyectos_ppto_proy).change(function(){
     loadProfitsPptoProy();
 });
 
+//aqui
+$("#" + id_proyectos_ppto_proy).focus(function(){
+    $("#" + id_proyectos_ppto_proy).val(horas_ppto);
+});
+
+$("#" + id_proyectos_ppto_proy).focusout(function(){
+    horas_ppto =  $("#" + id_proyectos_ppto_proy).val() == "" ? 0 :  parseFloat($("#" + id_proyectos_ppto_proy).val());
+    $("#" + id_proyectos_ppto_proy).val(horas_ppto * parseFloat($("#" + id_hora_score_ppto_proy).val()));
+    loadProfitsPptoProy();
+});
+
+$("#" + id_hora_score_ppto_proy).change(function(){
+    $("#" + id_proyectos_ppto_proy).val(horas_ppto * parseFloat($("#" + id_hora_score_ppto_proy).val()));
+    loadProfitsPptoProy();
+});
+
 $("#" + id_precio_venta_ppto_proy).change(function(){
     loadProfitsPptoProy();
 });
 
 $("#" + id_profit_porcentaje_ppto_proy).change(function(){
     var costos = parseFloat($('#' + id_proyectos_ppto_proy).val()) + parseFloat($('#' + id_copeo_ppto_proy).val()) + parseFloat($('#' + id_suministros_ppto_proy).val());
-    $('#' + id_precio_venta_ppto_proy).val((costos * (1 + parseFloat($("#" + id_profit_porcentaje_ppto_proy).val())/100))/(1 - porcentaje_indirectos * (1 + parseFloat($("#" + id_profit_porcentaje_ppto_proy).val())/100)));
-    $('#' + id_profit_cantidad_ppto_proy).val(parseFloat($('#' + id_precio_venta_ppto_proy).val())*(1 - porcentaje_indirectos) - costos);
+    var ut_p = parseFloat($("#" + id_profit_porcentaje_ppto_proy).val())/100;
+    var pv = (costos * (1 + ut_p))/(1 - porcentaje_indirectos);
+    $('#' + id_precio_venta_ppto_proy).val(pv/1.16);
+    $('#' + id_profit_cantidad_ppto_proy).val(pv*(1 - porcentaje_indirectos) - costos);
     highLight(id_precio_venta_ppto_proy);
     highLight(id_profit_cantidad_ppto_proy);
 });
 
 $("#" + id_profit_cantidad_ppto_proy).change(function(){
     var costos = parseFloat($('#' + id_proyectos_ppto_proy).val()) + parseFloat($('#' + id_copeo_ppto_proy).val()) + parseFloat($('#' + id_suministros_ppto_proy).val());
-    $('#' + id_precio_venta_ppto_proy).val((parseFloat($("#" + id_profit_cantidad_ppto_proy).val()) + costos)/(1-porcentaje_indirectos)/1.16);
-    $('#' + id_profit_porcentaje_ppto_proy).val(100*parseFloat($("#" + id_profit_cantidad_ppto_proy).val())/(parseFloat($('#' + id_precio_venta_ppto_proy).val()*1.16) - parseFloat($("#" + id_profit_cantidad_ppto_proy).val())));
+    var u = parseFloat(eval($("#" + id_profit_cantidad_ppto_proy).val()));
+    var pv = (u + costos)/(1-porcentaje_indirectos);
+    $('#' + id_precio_venta_ppto_proy).val(pv/1.16);
+    $('#' + id_profit_porcentaje_ppto_proy).val(100*u/costos);
     highLight(id_precio_venta_ppto_proy);
     highLight(id_profit_porcentaje_ppto_proy);
 });
@@ -371,7 +394,7 @@ $('#' + id_registrar_button_ppto_proy).click(function () {
                     nombre: $('#' + id_nombre_ppto_proy).val(),
                     OdeC: "",
                     SCORE: {
-                        total_prog: 0,
+                        total_prog: horas_ppto,
                         total_trabajado: 0,
                         programado: false,
                         inges: "",

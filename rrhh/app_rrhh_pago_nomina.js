@@ -76,10 +76,11 @@ function loadSemanasPagoNomina(year){
 }
 
 $('#' + id_semana_ddl_pago_nomina).change(function(){
+
 	trabajadores = [];
     var year = $('#' + id_year_ddl_pago_nomina + " option:selected").val();
 	var semana = $('#' + id_semana_ddl_pago_nomina + " option:selected").text();
-	console.log(semana);
+	//console.log(semana);
 	//firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + semana).once('value').then(function(snapshot){
 		//var terminada = snapshot.val().terminada;
 		var terminada = $('#' + id_semana_ddl_pago_nomina + " option:selected").val();
@@ -132,7 +133,7 @@ $('#' + id_semana_ddl_pago_nomina).change(function(){
 						if(obraSnap.key != "total" && obraSnap.key != "terminada" && obraSnap.key != "asistencias_terminadas" && obraSnap.key != "horas_extra_terminadas" && obraSnap.key != "diversos_terminados"){
 							obraSnap.child("trabajadores").forEach(function(trabSnap){
 								//Si no existe ya, crealo.
-								console.log(trabSnap.val());
+								//console.log(trabSnap.val());
 								if(trabSnap.child("dias/jueves/asistencia").val() || trabSnap.child("dias/viernes/asistencia").val() ||
 								trabSnap.child("dias/lunes/asistencia").val() || trabSnap.child("dias/martes/asistencia").val() ||
 								trabSnap.child("dias/miercoles/asistencia").val() || trabSnap.child("horas_extra").numChildren() > 0 || 
@@ -145,6 +146,7 @@ $('#' + id_semana_ddl_pago_nomina).change(function(){
 						}
 					});
 					sortTablePagoNomina();
+					enableTabWithEnter();
 					document.getElementById(id_num_ren_pago_nomina).innerHTML = "Mostrando " + trabajadores.filter(Boolean).length + " entradas";
 				});
 			});
@@ -364,7 +366,7 @@ function distribuyeEnAsistenciasPagoNomina(obras_json,total,week,year,snapshot,s
 	firebase.database().ref(rama_bd_trabajadores + "/" + id_trabajador + "/nomina/" + year + "/" + week + "/impuestos/impuestos_asistencia").set(impuestos_asistencia);
 	firebase.database().ref(rama_bd_trabajadores + "/" + id_trabajador + "/nomina/" + year + "/" + week + "/total").set(total);
 	
-	console.log(asistencias);
+	//console.log(asistencias);
 	for(key in asistencias){
 		var keyObra = key;
 
