@@ -85,6 +85,7 @@ $('#' + id_semana_ddl_pago_nomina).change(function(){
 		//var terminada = snapshot.val().terminada;
 		var terminada = $('#' + id_semana_ddl_pago_nomina + " option:selected").val();
 		if(terminada == 'true'){
+			document.getElementById(id_terminar_button_pago_nomina).disabled = true;
 			//DataTable
 			var datos_pagoNomina = [];
 			firebase.database().ref(rama_bd_trabajadores).once('value').then(function(snapshot){
@@ -124,6 +125,7 @@ $('#' + id_semana_ddl_pago_nomina).change(function(){
 			});
 		} else {
 			//Cargar tabla
+			document.getElementById(id_terminar_button_pago_nomina).disabled = false;
 			headersPagoNomina();
 			var year = $('#' + id_year_ddl_pago_nomina + " option:selected").val();
 			var week = $('#' + id_semana_ddl_pago_nomina + " option:selected").text();
@@ -255,6 +257,7 @@ $('#' + id_terminar_button_pago_nomina).click(function(){
 	var tru = true;
 	firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/terminada").set(tru);
 	alert("Operación exitosa");
+	document.getElementById(id_semana_ddl_pago_nomina).selectedIndex = 0;
 	document.getElementById(id_terminar_button_pago_nomina).disabled = true;
 });
 
