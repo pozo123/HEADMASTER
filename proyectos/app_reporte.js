@@ -58,9 +58,9 @@ $('#tabReporte').click(function() {
     firebase.database().ref(rama_bd_personal).once('value').then(function(snapshot){
         snapshot.forEach(function(childSnap){
             if(childSnap.child("areas/proyectos").val()){
-                inges[childSnap.key] = childSnap.child("nickname").val();
+                inges[childSnap.key] = childSnap.child("nombre").val();
                 var option3 = document.createElement('option');
-                option3.text = childSnap.child("nickname").val(); 
+                option3.text = childSnap.child("nombre").val(); 
                 option3.value = childSnap.key;
                 select.appendChild(option3);
             }
@@ -307,7 +307,7 @@ $('#' + id_imprime_button_reporte).click(function () {
                         ]
                     },
                     {text: 'Reporte de registros', style: 'header',alignment: 'center'},
-                    'El siguiente reporta muestra los registros de trabajo del ingeniero "' + $('#' + id_inge_ddl_reporte + " option:selected").val() + '" en la obra  "' + $('#' + id_obra_ddl_reporte + " option:selected").val() + '" en el periodo ' + new Date(fecha_i).toLocaleDateString() + " - " + new Date(fecha_f).toLocaleDateString(),
+                    'El siguiente reporta muestra los registros de trabajo del ingeniero "' + $('#' + id_inge_ddl_reporte + " option:selected").text() + '" en la obra  "' + $('#' + id_obra_ddl_reporte + " option:selected").val() + '" en el periodo ' + new Date(fecha_i).toLocaleDateString() + " - " + new Date(fecha_f).toLocaleDateString(),
                     " ",
                     " ",
                     //{text: 'Periodo:', alignment: 'center'},

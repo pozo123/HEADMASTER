@@ -120,7 +120,6 @@ firebase.auth().onAuthStateChanged(user => {
                     area_bool = true;
                 }
             }
-            console.log(area_bool)
             if(!area_bool){
                 alert("es con refresh?")
                 window.location.reload("index.html");
@@ -189,7 +188,6 @@ firebase.auth().onAuthStateChanged(user => {
         $('body').removeClass("hidden");
 
     } else {
-        alert("Inicia sesión para entrar a comunidad");
         window.location.reload("index.html");
         window.location.assign("index.html");
     }
@@ -299,6 +297,5 @@ $("#cerrarSesion").click((function () {
     }).catch(function(error) {
         // An error happened.
     });
-    
-    location.reload();
+    alert("Inicia sesión para entrar a comunidad");
 }));

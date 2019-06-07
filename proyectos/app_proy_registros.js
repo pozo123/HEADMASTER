@@ -32,39 +32,33 @@ function modoRegistros(automatico){
 }
 
 $(document).ready(function() {
-    firebase.auth().onAuthStateChanged(user => {
-        if(user) {
-            user_global = user.uid;
-            firebase.database().ref(rama_bd_personal + "/" + user_global).once('value').then(function(snapshot){
-                esp = snapshot.child("esp").val();
-                if(snapshot.child("areas/proyectos").val() && !snapshot.child("areas/administracion").val()){
-                    firebase.database().ref(rama_bd_personal + "/" + user_global).on("child_changed", function(){modoRegistros(true)});
-                    modoRegistros(false);
-                    //setInterval(modoRegistros, 60000);
+    user_global = uid_usuario_global;
+    firebase.database().ref(rama_bd_personal + "/" + user_global).once('value').then(function(snapshot){
+        esp = snapshot.child("esp").val();
+        if(snapshot.child("areas/proyectos").val() && !snapshot.child("areas/administracion").val()){
+            firebase.database().ref(rama_bd_personal + "/" + user_global).on("child_changed", function(){modoRegistros(true)});
+            modoRegistros(false);
+            //setInterval(modoRegistros, 60000);
 
-                    var select = document.getElementById(id_obra_ddl_registros);
-                    var option = document.createElement('option');
-                    option.style = "display:none";
-                    option.text = option.value = "";
-                    select.appendChild(option);
-                    var option2 = document.createElement('option');
-                    option2.text = option2.value = "Otros";
-                    select.appendChild(option2);
+            var select = document.getElementById(id_obra_ddl_registros);
+            var option = document.createElement('option');
+            option.style = "display:none";
+            option.text = option.value = "";
+            select.appendChild(option);
+            var option2 = document.createElement('option');
+            option2.text = option2.value = "Otros";
+            select.appendChild(option2);
 
-                    firebase.database().ref(rama_bd_obras).orderByChild('nombre').on('child_added',function(snapshot){
-                        var obra = snapshot.val();
-                        var tipo = (obra.num_procesos == 0 && obra.procesos.ADIC.num_subprocesos == 0) ? "simple" : "padre";
-                        if(!obra.terminada){   
-                            var option3 = document.createElement('option');
-                            option3.text = obra.nombre;
-                            option3.value = tipo; 
-                            select.appendChild(option3);
-                        }
-                    });
+            firebase.database().ref(rama_bd_obras).orderByChild('nombre').on('child_added',function(snapshot){
+                var obra = snapshot.val();
+                var tipo = (obra.num_procesos == 0 && obra.procesos.ADIC.num_subprocesos == 0) ? "simple" : "padre";
+                if(!obra.terminada){   
+                    var option3 = document.createElement('option');
+                    option3.text = obra.nombre;
+                    option3.value = tipo; 
+                    select.appendChild(option3);
                 }
             });
-        } else {
-            alert("No existe el usuario");
         }
     }); 
 });

@@ -16,27 +16,23 @@ var display_obras = [];
 var supervisores = [];
 
 $(document).ready(function(){
-	firebase.auth().onAuthStateChanged(function(user){
-		if(user){
-			username = user.uid;
-			firebase.database().ref(rama_bd_personal + "/" + username).once('value').then(function(snapshot){
-				var pers = snapshot.val();
-				if(snapshot.child("areas/administracion") == true || pers.credenciales < 3){
-					aut = "gerente";
-					drawKG();
-				} else {
-					firebase.database().ref(rama_bd_obras_magico).once('value').then(function(snapshot){
-						snapshot.forEach(function(childSnap){
-							childSnap.child("supervisor").forEach(function(supSnap){
-								if(supSnap.key == username && supSnap.child("activo").val()){
-									display_obras[display_obras.length] = obra.nombre;
-								}
-							});
-						});
-						aut = "supervisor";
-						drawKG();
+	username = uid_usuario_global;
+	firebase.database().ref(rama_bd_personal + "/" + username).once('value').then(function(snapshot){
+		var pers = snapshot.val();
+		if(snapshot.child("areas/administracion") == true || pers.credenciales < 3){
+			aut = "gerente";
+			drawKG();
+		} else {
+			firebase.database().ref(rama_bd_obras_magico).once('value').then(function(snapshot){
+				snapshot.forEach(function(childSnap){
+					childSnap.child("supervisor").forEach(function(supSnap){
+						if(supSnap.key == username && supSnap.child("activo").val()){
+							display_obras[display_obras.length] = obra.nombre;
+						}
 					});
-				}
+				});
+				aut = "supervisor";
+				drawKG();
 			});
 		}
 	});

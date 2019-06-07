@@ -177,7 +177,7 @@
                             <!--<li class="tab tabEditarProceso" id="tabEditarProceso"><a href="#" onclick="openTabs('tabEditarProceso','editarProceso')">Editar Procesos</a></li>-->
                             <li class="tab tabCatalogoProceso" id="tabCatalogoProceso"><a href="#" onclick="openTabs('tabCatalogoProceso','catalogoProceso')">Catálogo de procesos</a></li>
                             <li class="tab tabUtilidad" id="tabUtilidad"><a href="#" onclick="openTabs('tabUtilidad','utilidad')">Generador de Precios</a></li>
-                            <li class="tab" id="tabCopeo"><a href="#" onclick="openTabs('tabCoepo','copeo')">Copeo</a></li>
+                            <li class="tab" id="tabCopeo"><a href="#" onclick="openTabs('tabCopeo','copeo')">Copeo</a></li>
                         </ul>
                     </li>
                     <li>
@@ -436,161 +436,115 @@
                             <div class="container-fluid">
                                 <h1>COPEO</h1>
                                 <p>Calculador de Costo de Mano de Obra </p>
-                                
-                                <!-- AQUI app copeo
-                                    <div id="kaizenPpto" class="tabcontent hidden">
-                                <h1>Generador de Precios</h1>
-                                <p>Página auxiliar que te ayuda a calcular precios de venta de procesos u obras</p>
-                                <div class="container-fluid">
-                                    <div class="row align-items-center">
-                                        <div class="col-lg-3"></div>
-                                        <div class="col-lg-6">
-                                            <form action="#" onsubmit="return false;" id = "formKaizenPpto">                                      
-                                                <div class="form-group">
-                                                    <label for="obraDdlKaizenPpto">Obra:</label>
-                                                    <select id="obraDdlKaizenPpto" class="form-control"></select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="procDdlKaizenPpto">Proceso:</label>
-                                                    <select id="procDdlKaizenPpto" class="form-control"></select>
-                                                </div>
-                                                <hr class="style2">
-                                                <div class="form-row align-items-center">
-                                                    <div class="col-lg-4">
-                                                        <label for="proyectosKaizenPpto">Costo de Proyecto:</label>
-                                                        <input type="text" id="proyectosKaizenPpto" class="form-control" placeholder="Cantidad en horas">
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <label for="suministrosKaizenPpto">Costo de suministros:</label>
-                                                        <input type="text" id="suministrosKaizenPpto" class="form-control" placeholder="Costo de suministros">
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <label for="copeoKaizenPpto">Costo de copeo:</label>
-                                                        <input type="text" id="copeoKaizenPpto" class="form-control" placeholder="Costo de copeo">
-                                                    </div>
-                                                </div>
-                                                <br/>
-                                                <div class="form-row align-items-center">
-                                                    <div class="col-lg-4">
-                                                        <label for="profitCantidadKaizenPpto">Profit ($):</label>
-                                                        <input type="text" id="profitCantidadKaizenPpto" class="form-control" placeholder="Profit($)">
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <label for="profitPorcentajeKaizenPpto">Profit (%):</label>
-                                                        <input type="text" id="profitPorcentajeKaizenPpto" class="form-control" placeholder="Profit (%)">
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <label for="precioVentaKaizenPpto">Precio de venta:</label>
-                                                        <input type="text" id="precioVentaKaizenPpto" class="form-control" placeholder="Precio de venta">
-                                                    </div>
-                                                </div>
-                                                <br/>
-                                                <div class="form-row align-items-center">
-                                                    <div class="col-lg-12">
-                                                        <label id = "labelProfitNetoKaizenPpto">Profit Neto:</label>
-                                                    </div>
-                                                </div>
-                                                <br/>
-                                                <div class="form-row">
-                                                    <div class= "col-lg-6">
-                                                        <button type="button" id = "guardarButtonKaizenPpto"class="btn btn-info btn-block">Guardar</button>
-                                                    </div>
-                                                    <div class= "col-lg-6">
-                                                        <button type="button" id = "loadButtonKaizenPpto"class="btn btn-outline-danger btn-block">Resetear Todo</button>
-                                                    </div>
-                                                </div>
-                                                <hr class="style2">
-                                                <div class="form-row align-items-center">
-                                                    <div class="col-lg-6">
-                                                        <label for="anticipoKaizenPpto">Porcentaje Anticipo</label>
-                                                        <input type="text" id="anticipoKaizenPpto" value="50" class="form-control" placeholder="Anticipos">
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <label for="estimacionesKaizenPpto">Porcentaje Estimaciones</label>
-                                                        <input type="text" id="estimacionesKaizenPpto" value = "50" class="form-control" placeholder="Estimaciones">
-                                                    </div>
-                                                </div>
-                                                <br/>
-                                                <div class="form-row align-items-center">
-                                                    <div class="col-lg-6">
-                                                        <label for="costoHoraScoreKaizenPpto">Precio de Hora SCORE ($):</label>
-                                                        <input type="text" id="costoHoraScoreKaizenPpto" value="1300" class="form-control" placeholder="Costo por hora">
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <label for="indirectosKaizenPpto">Porcentaje Indirectos:</label>
-                                                        <input type="text" id="indirectosKaizenPpto" value = "20" class="form-control" placeholder="Porcentaje de indirectos">
-                                                    </div>
-                                                </div>
-                                            </form>
-                                            <br/>
-                                        </div>
-                                        <div class="col-lg-3"></div>
-                                    </div>
-                                </div>
-                        </div>  
-                                -->
-                            </div>
-                        </div>
-                        <!--<div id="editarProceso" class="tabcontent hidden">
-                            <h1>Edición de Procesos</h1>
-                            <p>Página para editar información de procesos existentes</p>
-                            <div class="container-fluid">
-                                <div class="row align-items-center">
+                                <h1 id="numEntradaCopeo"></h1>
+                                <div class="row">
                                     <div class="col-lg-3"></div>
                                     <div class="col-lg-6">
-                                        <form action="#" onsubmit="return false;">                   
-                                            
+                                        <form action="#" onsubmit="return false;" id ="formCopeo"> 
                                             <div class="form-group">
-                                                <label for="obraDdlEditarProceso">Obra:</label>
-                                                <select id="obraDdlEditarProceso" class="form-control" onChange=""></select>
+                                                <label for="obraDdlCopeo">Obra:</label>
+                                                <select id="obraDdlCopeo" class="form-control"></select>
                                             </div>
                                             <div class="form-group">
-                                                <label for="procesoDdlEditarProceso">Proceso:</label>
-                                                <select id ="procesoDdlEditarProceso" class="form-control"></select>
+                                                <label for="procDdlCopeo">Proceso:</label>
+                                                <select id="procDdlCopeo" class="form-control"></select>
                                             </div>
-                                            <div class="form-group hidden" id = "groupSubEditarProceso">
-                                                <label for="subprocesoDdlEditarProceso">Subproceso:</label>
-                                                <select id ="subprocesoDdlEditarProceso" class="form-control"></select>
+                                            <br/>
+                                            <div class="form-row">
+                                                <div class="col-4">
+                                                    <label for="impuestoCopeo">% de impuesto HEAD</label>
+                                                </div>
+                                                <div class="col-4">
+                                                    <input type="text" id="impuestoCopeo" class="form-control" value="34" placeholder="Impuesto HEAD">
+                                                </div>
+                                                <div class="col-4 align-items-center">
+                                                    <button id="buttonImpuestoCopeo" type="button" class="btn btn-warning btn-block">Aceptar Impuesto</button>
+                                                </div>
                                             </div>
-                                            <div class="form-group hidden" id="groupDatosEditarProceso">
-                                                <label for="nombreEditarProceso">Nombre:</label>
-                                                <input type="text" name="" id="nombreEditarProceso" class="form-control" placeholder="Nombre">
-                                                <label for="alcanceEditarProceso">Alcance:</label>
-                                                <textarea id="alcanceEditarProceso" class="form-control" rows = 10></textarea>
-                                            </div>
-                                                <div class="form-row align-items-center">
-                                                    <div class="col-lg-6 col-sm-12">
-                                                        <label for="fechaInicioEditarProceso">Fecha programada de inicio de Proceso:</label>
+                                            <br/>
+                                            <hr class="style2">
+                                            <small><p><b>Mult.</b> Hace referencia al multiplicador deseado. Ej. número de departamentos.</p></small>
+                                            <br/>
+                                            <div class="form-row">
+                                                <div class="col-4">
+                                                    <div class="form-group row">
+                                                        <label for="ayuCopeo" class="col-sm-2 col-form-label">AY</label>
+                                                        <div class="col-sm-10">
+                                                            <input type="text" class="form-control calcCopeoClass" id="ayuCopeo" placeholder="Núm de AY">
+                                                        </div>
                                                     </div>
-                                                    <div class="col-lg-6 col-sm-12">
-                                                        <input class="form-control" type="text" id="fechaInicioEditarProceso" placeholder="" readonly="readonly">
+                                                    <div class="form-group row">
+                                                        <label for="mofCopeo" class="col-sm-2 col-form-label">MO</label>
+                                                        <div class="col-sm-10">
+                                                            <input type="text" class="form-control calcCopeoClass" id="mofCopeo" placeholder="Núm de MO">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="ofiCopeo" class="col-sm-2 col-form-label">OF</label>
+                                                        <div class="col-sm-10">
+                                                            <input type="text" class="form-control calcCopeoClass" id="ofiCopeo" placeholder="Núm de OF">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="encCopeo" class="col-sm-2 col-form-label">ENC</label>
+                                                        <div class="col-sm-10">
+                                                            <input type="text" class="form-control calcCopeoClass" id="encCopeo" placeholder="Núm de ENC">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="supCopeo" class="col-sm-2 col-form-label">SUP</label>
+                                                        <div class="col-sm-10">
+                                                            <input type="text" class="form-control calcCopeoClass" id="supCopeo" placeholder="Núm de SUP">
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <br/>
-                                                <div class="form-row align-items-center">
-                                                    <div class="col-lg-6 col-sm-12">
-                                                        <label for="fechaFinalEditarProceso">Fecha programada de terminación de Proceso:</label>
+                                                <div class="col-8">
+                                                    <div class="form-group row">
+                                                        <label for="diasCopeo" class="col-sm-2 col-form-label">días</label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control calcCopeoClass" id="diasCopeo" placeholder="días">
+                                                        </div>
+    
+                                                        <label for="multCopeo" class="col-sm-2 col-form-label">Mult</label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control calcCopeoClass" id="multCopeo" placeholder="unidades">
+                                                        </div>
                                                     </div>
-                                                    <div class="col-lg-6 col-sm-12">
-                                                        <input class="form-control" type="text" id="fechaFinalEditarProceso" placeholder="" readonly="readonly">
+
+                                                    <div class="form-group row">
+                                                        <label for="nombreCopeo" class="col-sm-3 col-form-label">Nombre</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" class="form-control calcCopeoClass" id="nombreCopeo" placeholder="Nombre">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class = "col-sm-12">
+                                                            <textarea class="form-control multCopeo" id="alcanceCopeo" rows="5" placeholder= "Alcance de esta entrada."></textarea>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <br/>
-                                                <div class="form-row">
-                                                    <div class= "col-lg-6">
-                                                        <button id="buttonEditarProceso" type="button" class="btn btn-outline-success btn-block">Aceptar</button>
-                                                    </div>
-                                                    <div class= "col-lg-6">
-                                                        <button type="reset" id = ""class="btn btn-outline-danger btn-block">Borrar Todo</button>
-                                                    </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class= "col-lg-6">
+                                                    <button id="buttonAceptarCopeo" type="button" class="btn btn-outline-success btn-block">Aceptar</button>
                                                 </div>
+                                                <div class= "col-lg-6">
+                                                    <button id="buttonResetCopeo" type="reset"  class="btn btn-outline-danger btn-block">Borrar</button>
+                                                </div>
+                                            </div>
                                         </form>
                                         <br/>
-                                        </div>
-                                        <div class="col-lg-3"></div>
+                                        <hr class="style2">
+                                    </div>
+                                    <div class="col-lg-3"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="container-fluid">
+                                        <table id="dataTableCopeo" class="display" style="width:100%"></table>
                                     </div>
                                 </div>
-                        </div>-->
+                            </div>
+                        </div>
                         <div id="utilidad" class="tabcontent hidden">
                                 <h1>Generador de Precios</h1>
                                 <p>Página auxiliar que te ayuda a calcular precios de venta de procesos u obras</p>

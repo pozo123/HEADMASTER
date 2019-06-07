@@ -19,46 +19,43 @@ $(document).ready(function(){
     option.style = "display:none";
     option.text = option.value = "";
     select.appendChild(option);
-    $('#' + id_precio_score_desplegar_kaizen).val(1300);
-	firebase.auth().onAuthStateChanged(function(user){
-		if(user){
-			username = user.uid;
-			firebase.database().ref(rama_bd_personal + "/" + username).once('value').then(function(snapshot){
-				var pers = snapshot.val();
-				if(snapshot.child("areas/administracion").val() == true || pers.credenciales < 3){
-					firebase.database().ref(rama_bd_obras_magico).once('value').then(function(snapshot){
-						snapshot.forEach(function(obraSnap){
-							var obra = obraSnap.val();
-							if(!obra.terminada){
+	$('#' + id_precio_score_desplegar_kaizen).val(1300);
+	
+	username = uid_usuario_global;
+	firebase.database().ref(rama_bd_personal + "/" + username).once('value').then(function(snapshot){
+		var pers = snapshot.val();
+			if(snapshot.child("areas/administracion").val() == true || pers.credenciales < 3){
+				firebase.database().ref(rama_bd_obras_magico).once('value').then(function(snapshot){
+					snapshot.forEach(function(obraSnap){
+						var obra = obraSnap.val();
+						if(!obra.terminada){
+							var option2 = document.createElement('option');
+							option2.text = option2.value = obra.nombre; 
+							select.appendChild(option2);
+						}
+					});
+				});
+			} else {
+			var single = 0;
+			firebase.database().ref(rama_bd_obras_magico).once('value').then(function(snapshot){
+				snapshot.forEach(function(childSnap){
+					if(!childSnap.child("terminada").val()){
+						childSnap.child("supervior").forEach(function(supSnap){
+							if(supSnap.key == username && supSnap.child("acivo").val() == true){
+								single++;
 								var option2 = document.createElement('option');
-								option2.text = option2.value = obra.nombre; 
+								option2.text = option2.value = childSnap.child("nombre").val(); 
 								select.appendChild(option2);
 							}
 						});
-					});
+					}
+				});
+				if(single == 1){
+					document.getElementById(id_obras_ddl_desplegar_kaizen).selectedIndex = 1;
+					$('#' + id_obras_ddl_desplegar_kaizen).addClass("hidden");
+					cargaKaizen();
 				} else {
-					var single = 0;
-					firebase.database().ref(rama_bd_obras_magico).once('value').then(function(snapshot){
-						snapshot.forEach(function(childSnap){
-							if(!childSnap.child("terminada").val()){
-								childSnap.child("supervior").forEach(function(supSnap){
-									if(supSnap.key == username && supSnap.child("acivo").val() == true){
-										single++;
-										var option2 = document.createElement('option');
-										option2.text = option2.value = childSnap.child("nombre").val(); 
-										select.appendChild(option2);
-									}
-								});
-							}
-						});
-						if(single == 1){
-							document.getElementById(id_obras_ddl_desplegar_kaizen).selectedIndex = 1;
-							$('#' + id_obras_ddl_desplegar_kaizen).addClass("hidden");
-							cargaKaizen();
-						} else {
-							$('#' + id_obras_ddl_desplegar_kaizen).removeClass("hidden");
-						}
-					});
+					$('#' + id_obras_ddl_desplegar_kaizen).removeClass("hidden");
 				}
 			});
 		}
