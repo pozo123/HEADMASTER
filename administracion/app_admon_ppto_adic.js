@@ -587,7 +587,7 @@ function generaPptoAdic(genera){
         "RFC:";
 
         fiscales = "Head Administraciones, S.A. de C.V." + "\n" + "\n"+
-        "C.P. Luis Cortez" + "\n" +
+        "C.P. Luis Cortes" + "\n" +
         "62737900" + "\n" +
         "luis@headingenieria.mx" + "\n" +
         "Av. Constituyentes 561 Int. 101a, Col. América, Miguel Hidalgo, Ciudad de México, C.P. 11820" + "\n" +
@@ -630,13 +630,14 @@ function generaPptoAdic(genera){
             '',
         ],*/
         [
-            {
+            /*{
                 border: [false, false, false, false],
                 text: "Obra:",
                 alignment: 'center',
                 margin: [0,5],
                 fontSize: 8,
-            },
+            }*/,
+            '',
             {
                 colSpan:3,
                 border: [false, false, false, false],
@@ -660,21 +661,22 @@ function generaPptoAdic(genera){
             '',
         ],
         [
-            {
+            /*{
                 rowSpan:4,
                 border: [false, false, false, false],
                 text: "Dirección:",
                 alignment: 'center',
                 margin: [0,5],
                 fontSize: 8,
-            },
+            },*/
+            '',
             {
                 rowSpan:4,
                 colSpan:3,
                 border: [false, false, false, false],
-                text: "Calle: " +  obra_global.direccion.calle + ", No. " + obra_global.direccion.numero + "\n" +
-                "COL. " + obra_global.direccion.colonia + "\n" + obra_global.direccion.delegacion + ", \n" + 
-                obra_global.direccion.ciudad,
+                text: obra_global.direccion.calle + ", No. " + obra_global.direccion.numero + "\n" +
+                "col. " + obra_global.direccion.colonia + "\n" + obra_global.direccion.delegacion + ", \n" + 
+                obra_global.direccion.ciudad + ", " + obra_global.direccion.cp,
                 margin: [0,5],
                 fontSize:8,
             },

@@ -17,6 +17,7 @@ TO DO:
    - En producción revisar qué cosas pueden ver/usar supervisores. Cargar ddls sólo con las asignadas
      - Gestionar sups solo si creden < 3 o admin
    - app_prod_remisiones (definir y programar)
+   - app_editar_sueldos_base (para los rangos)
 *   - app_prod_copeo (definir y programar)
 *   - app_prod_entrada_estimacion
    - Desplegar Kaizen
@@ -32,7 +33,6 @@ TO DO:
  - GENERALES
    - 7iWWod9RyOh5tPBo8r1Qlrygk142 y c7y9OvOccgMhPr4kB1fPLIbFL153 (uno es luis) tienen ms en baja california/SCORE/horas_trabajadas
    - Subir templates de excel con formatos necesarios para imprtar (importar proveedores, trabajadores y ppto adic)
-   - Borrar todos los onAuthStateChanged y usar la variable global de app_principal
    - Cambiar idioma_espanol en tablas de apps como datos_kaizen y asistencia y desplegar_procesos
    - Titulos de obra en catalogo de proceso en negritas y mas grandes
    - KICK-OFF 

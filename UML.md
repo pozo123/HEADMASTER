@@ -163,11 +163,30 @@
             - num_subprocesos
             - terminado
             - tipo: "adicional"/"continuo"/"miscelaneo"/"proyecto"
-            - contrato (a menos que sea padre, excepcion con IQONO MEXICO)
             - validacion_ppto
                - precio_negociado
                - documento_evidencia
                - aprobado (bool)
+            - copeo (SOLO EN HOJA)
+               - total (con impuestos)
+               - subtotal (suma de totales de entradas, sin impuestos)
+               - impuestos (en porcentaje)
+               - num_entradas
+               - entradas
+                  - entrada (por consec)
+                     - nombre
+                     - alcance
+                     - pad
+                     - total (sin impuestos)
+                     - cuadrilla:
+                        - ofi
+                        - mof
+                        - ayu
+                        - enc
+                        - sup
+                     - multiplicadores:
+                        - dias
+                        - unidades
             - SCORE (SOLO EN HOJA)
                - total_prog (en horas)
                - total_trabajado (en horas)
@@ -190,13 +209,14 @@
                   - contrato_compras: igual que proc
                   - validacion_ppto: igual que proc
                   - SCORE: igual que proc simple
+                  - copeo: igual que proc simple
                   - presupuesto: (solo en adic y pc00, pc00-misc = "")
                      - terminado
                      - nombre
                      - archivos:
                         - por index (0,1,2)
                            - pdf
-                           - pda (pad? ya no se :/)
+                           - pad
             - contrato_compras (en hoja menos en IQONO MEXICO, ahi en proc)
                - clave
                - solpeds
@@ -254,6 +274,12 @@
              - enviado
              - leido
 - produccion
+   - costos_cuadrilla:
+      - ofi
+      - mof
+      - ayu
+      - enc
+      - sup
    - destajistas: 
       - AFECTAN: app_destajistas
       - SUSCRIBEN:

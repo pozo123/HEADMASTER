@@ -194,13 +194,9 @@ function sumaEnFirebase(query, cant){
   //console.log(cantidad); 
     firebase.database().ref(query).once('value').then(function(snapshot){
         if(snapshot.exists()){
-            var anterior = parseFloat(snapshot.val());
-            if(isNaN(anterior)){
-                console.log("Valor anterior es NaN");
-            } else {
-                var nuevo = anterior + cantidad;
-                firebase.database().ref(query).set(nuevo);
-            }
+            var anterior = isNaN(parseFloat(snapshot.val()) ? 0 : parseFloat(snapshot.val());
+            var nuevo = anterior + cantidad;
+            firebase.database().ref(query).set(nuevo);
         } else {
             //console.log("El snapshot de " + query + " no existe");
             if(isNaN(parseFloat(cantidad))){
@@ -288,11 +284,11 @@ function replaceStringInKey(oldString,newString,updates,snapshot,originalSnap){
 }*/
 
 function pistaDeAuditoria(){
-  var pda = {
+  var pad = {
     uid: firebase.auth().currentUser.uid,
     timestamp: new Date().getTime(),
   };
-  return pda;
+  return pad;
 }
 
 //Recibe los COSTOS totales de una obra y regresa el precio de venta para obtener cierto VALOR deseado
