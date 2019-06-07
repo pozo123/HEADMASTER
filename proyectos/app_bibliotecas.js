@@ -154,22 +154,18 @@ var boton_eliminar_class;
  }
  */
  $(document).ready(function(){
-	firebase.auth().onAuthStateChanged(user => {
-		if(user) {
-			var username = user.uid;
-			firebase.database().ref(rama_bd_inges).orderByKey().equalTo(username).once('child_added').then(function(snapshot){
-				var ing = snapshot.val();
-				if(ing.credenciales === 0 || ing.credenciales === 1 || ing.credenciales === 2){
-					boton_editar_class = "class='editar btn btn-primary'";
-					boton_eliminar_class = "class='editar btn btn-danger'";
-				}
-				else{
-					boton_editar_class = "class='editar btn btn-primary hidden'";
-					boton_eliminar_class = "class='editar btn btn-danger hidden'";
-				}
-			});
+	var username = uid_usuario_global;
+	firebase.database().ref(rama_bd_inges).orderByKey().equalTo(username).once('child_added').then(function(snapshot){
+		var ing = snapshot.val();
+		if(ing.credenciales === 0 || ing.credenciales === 1 || ing.credenciales === 2){
+			boton_editar_class = "class='editar btn btn-primary'";
+			boton_eliminar_class = "class='editar btn btn-danger'";
 		}
-	})
+		else{
+			boton_editar_class = "class='editar btn btn-primary hidden'";
+			boton_eliminar_class = "class='editar btn btn-danger hidden'";
+		}
+	});
 });
 /* 
 $(document).ready(function() {

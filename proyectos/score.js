@@ -68,7 +68,6 @@ firebase.auth().onAuthStateChanged(user => {
             }
         });
     } else {
-        alert("Inicia sesión para entrar a comunidad");
         window.location.reload("index.html");
         window.location.assign("index.html");
     }
