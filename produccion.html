@@ -436,11 +436,10 @@
                             <div class="container-fluid">
                                 <h1>COPEO</h1>
                                 <p>Calculador de Costo de Mano de Obra </p>
-                                <h1 id="numEntradaCopeo"></h1>
                                 <div class="row">
                                     <div class="col-lg-3"></div>
                                     <div class="col-lg-6">
-                                        <form action="#" onsubmit="return false;" id ="formCopeo"> 
+                                        <form action="#" onsubmit="return false;" id="formDdlsCopeo"> 
                                             <div class="form-group">
                                                 <label for="obraDdlCopeo">Obra:</label>
                                                 <select id="obraDdlCopeo" class="form-control"></select>
@@ -462,7 +461,10 @@
                                                 </div>
                                             </div>
                                             <br/>
+                                        </form>
+                                        <form action="#" onsubmit="return false;" id ="formCopeo"> 
                                             <hr class="style2">
+                                            <h1 id="numEntradaCopeo"></h1>
                                             <small><p><b>Mult.</b> Hace referencia al multiplicador deseado. Ej. número de departamentos.</p></small>
                                             <br/>
                                             <div class="form-row">
@@ -519,7 +521,7 @@
                                                     </div>
                                                     <div class="form-group row">
                                                         <div class = "col-sm-12">
-                                                            <textarea class="form-control multCopeo" id="alcanceCopeo" rows="5" placeholder= "Alcance de esta entrada."></textarea>
+                                                            <textarea class="form-control calcCopeoClass" id="alcanceCopeo" rows="5" placeholder= "Alcance de esta entrada."></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -808,6 +810,7 @@
 <!-- <script src="produccion/app_datos_kaizen.js"></script> -->
 <script src="produccion/app_desplegar_kaizen.js"></script>
 <script src="produccion/app_gestionar_supervisores.js"></script>
+<script src="produccion/app_prod_copeo.js"></script>
 <!-- Gantt-->
 
 <script src="jsGantt/jsgantt.js"></script>

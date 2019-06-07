@@ -159,6 +159,7 @@
             - fecha_inicio
             - fecha_final
             - kaizen: *
+            - porcentaje_indirectos (en hoja)
             - nombre
             - num_subprocesos
             - terminado

@@ -6,20 +6,21 @@ HTMLs:
 
 TO DO:
  - ADMON
-   - Generar adic sin pdf
+*   - importar adicionaes desde excel
+   - calcu kaizen textfield de impuestos
    - Centro de costos.
      - alta cuenta
      - añadir al desplegar
  - COMPRAS
    - app_compras_credito -> definida en foto
-*   - status odec -> rama_bd (con catalogo), en datatable de odecs y datatable para supervisor
+**   - status odec -> rama_bd (con catalogo), en datatable de odecs y datatable para supervisor
  - PRODUCCION
    - En producción revisar qué cosas pueden ver/usar supervisores. Cargar ddls sólo con las asignadas
      - Gestionar sups solo si creden < 3 o admin
-   - app_prod_remisiones (definir y programar)
+*   - app_prod_remisiones (definir y programar)
+   - Kaizen desplegar -> actualiza totales y profit pero no se ve hasta que se recarga
    - app_editar_sueldos_base (para los rangos)
-*   - app_prod_copeo (definir y programar)
-*   - app_prod_entrada_estimacion
+**   - app_prod_entrada_estimacion
    - Desplegar Kaizen
      - avance.pag > avance.real = pag en rojo 
      - Subprocesos colapsables por proc al hacer click en el renglon (limpieza de codigo editable, buscar catalogo de procs)
@@ -31,6 +32,10 @@ TO DO:
      - Si terminado no se puede editar
  - RRHH
  - GENERALES
+**   - indirecto
+     - Guardar % indirecto en hoja al usar calculadora kaizen.
+     - En desplegar kaizen añadir columna indirectos, multiplica %ind con precio venta
+     - En todos lados que use la variable porcentaje_indirectos de app_funciones cambiarlo por query de la hoja
    - 7iWWod9RyOh5tPBo8r1Qlrygk142 y c7y9OvOccgMhPr4kB1fPLIbFL153 (uno es luis) tienen ms en baja california/SCORE/horas_trabajadas
    - Subir templates de excel con formatos necesarios para imprtar (importar proveedores, trabajadores y ppto adic)
    - Cambiar idioma_espanol en tablas de apps como datos_kaizen y asistencia y desplegar_procesos

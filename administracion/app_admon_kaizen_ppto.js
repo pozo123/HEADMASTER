@@ -5,6 +5,7 @@ var id_costo_score_kaizen_ppto = "costoHoraScoreKaizenPpto";
 var id_porcentaje_indirecto_kaizen_ppto = "indirectosKaizenPpto";
 var id_anticipo_kaizen_ppto = "anticipoKaizenPpto";
 var id_estimaciones_kaizen_ppto = "estimacionesKaizenPpto";
+var id_impuestos_kaizen_ppto = "impuestosKaizenPpto";
 
 var id_proyectos_kaizen_ppto = "proyectosKaizenPpto";
 var id_suministros_kaizen_ppto = "suministrosKaizenPpto";
@@ -120,7 +121,8 @@ function loadValuesKaizenPpto(query){
     firebase.database().ref(query).once('value').then(function(kaizSnap){
 		var kaiz = kaizSnap.val();
 		var costos_suministros = kaizSnap.child("kaizen/PRODUCCION/SUMINISTROS/CUANT").val();
-		var costos_copeo = kaiz.kaizen.PRODUCCION.COPEO.COPEO;
+		var costos_copeo = kaizSnap.child("copeo/subtotal").exists() ? kaizSnap.child("copeo/subtotal").val() : 0;
+		costos_copeo = costos_copeo * (1 + parseFloat($('#' + id_impuestos_kaizen_ppto).val()));
 		var costos_proyectos = kaiz.kaizen.PROYECTOS.PPTO;
 		var costos = costos_proyectos + costos_copeo + costos_suministros;
 		$('#' + id_suministros_kaizen_ppto).val(formatMoney(costos_suministros));
@@ -148,6 +150,13 @@ function loadValuesKaizenPpto(query){
 		loadProfitsKaizenPpto();
     });
 };
+
+$('#' + id_impuestos_kaizen_ppto).change(function(){
+	var costos_copeo = kaizSnap.child("copeo/subtotal").exists() ? kaizSnap.child("copeo/subtotal").val() : 0;
+	costos_copeo = costos_copeo * (1 + parseFloat($('#' + id_impuestos_kaizen_ppto).val()));
+	$('#' + id_copeo_kaizen_ppto).val(formatMoney(costos_copeo));
+	loadProfitsKaizenPpto();
+});
 
 $("#" + id_porcentaje_indirecto_kaizen_ppto).focusout(function(){
 	if($("#" + id_porcentaje_indirecto_kaizen_ppto).val() < 0 || $("#" + id_porcentaje_indirecto_kaizen_ppto).val() > 100){
@@ -235,18 +244,6 @@ $("#" + id_suministros_kaizen_ppto).focus(function(){
 
 $("#" + id_suministros_kaizen_ppto).focusout(function(){
 	$("#" + id_suministros_kaizen_ppto).val(formatMoney(eval($("#" + id_suministros_kaizen_ppto).val())));
-});
-
-$("#" + id_copeo_kaizen_ppto).focus(function(){
-	if($("#" + id_copeo_kaizen_ppto).val() == ""){
-		$("#" + id_copeo_kaizen_ppto).val(0);
-	} else {
-		$("#" + id_copeo_kaizen_ppto).val(deformatMoney($("#" + id_copeo_kaizen_ppto).val()) == 0 ? "" : deformatMoney($("#" + id_copeo_kaizen_ppto).val()));
-	}
-});
-
-$("#" + id_copeo_kaizen_ppto).focusout(function(){
-	$("#" + id_copeo_kaizen_ppto).val(formatMoney(eval($("#" + id_copeo_kaizen_ppto).val())));
 });
 
 $("#" + id_proyectos_kaizen_ppto).focus(function(){

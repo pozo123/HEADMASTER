@@ -13,7 +13,7 @@ var obra_clave;
 var duracion_obra;
 var valorViejo;
 
-$(document).ready(function(){
+$('#tabKaizen').click(function(){
 	var select = document.getElementById(id_obras_ddl_desplegar_kaizen);
     var option = document.createElement('option');
     option.style = "display:none";
@@ -22,6 +22,7 @@ $(document).ready(function(){
 	$('#' + id_precio_score_desplegar_kaizen).val(1300);
 	
 	username = uid_usuario_global;
+	console.log(username);
 	firebase.database().ref(rama_bd_personal + "/" + username).once('value').then(function(snapshot){
 		var pers = snapshot.val();
 			if(snapshot.child("areas/administracion").val() == true || pers.credenciales < 3){

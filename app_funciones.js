@@ -194,7 +194,7 @@ function sumaEnFirebase(query, cant){
   //console.log(cantidad); 
     firebase.database().ref(query).once('value').then(function(snapshot){
         if(snapshot.exists()){
-            var anterior = isNaN(parseFloat(snapshot.val()) ? 0 : parseFloat(snapshot.val());
+            var anterior = isNaN(parseFloat(snapshot.val())) ? 0 : parseFloat(snapshot.val());
             var nuevo = anterior + cantidad;
             firebase.database().ref(query).set(nuevo);
         } else {

@@ -1,4 +1,5 @@
 var id_form_copeo = "formCopeo";
+var id_form_ddl_copeo = "formDdlsCopeo";
 var id_obra_ddl_copeo = "obraDdlCopeo";
 var id_proc_ddl_copeo = "procDdlCopeo";
 var id_impuestos_copeo = "impuestoCopeo";
@@ -31,19 +32,22 @@ var sueldos = {
 	enc: "",
 	sup: "",
 }
+var existente = false;
+var tot_anterior = 0;
 
 $('#' + id_tab_copeo).click(function(){
 	$('#' + id_form_copeo).trigger('reset');
+	$('#' + id_form_ddl_copeo).trigger('reset');
 	$('#' + id_impuestos_button_copeo).attr('disabled',false);
 	$('.' + id_class_entrada_copeo).attr('disabled', true);
 
 	firebase.database().ref(rama_bd_cuadrillas).once('value').then(function(snapshot){
 		var costos = snapshot.val();
-		suedos["ofi"] = isNaN(parseFloat(costos.ofi)) ? 0 : parseFloat(costos.ofi);
-		suedos["mof"] = isNaN(parseFloat(costos.mof)) ? 0 : parseFloat(costos.mof);
-		suedos["ayu"] = isNaN(parseFloat(costos.ayu)) ? 0 : parseFloat(costos.ayu);
-		suedos["enc"] = isNaN(parseFloat(costos.enc)) ? 0 : parseFloat(costos.enc);
-		suedos["sup"] = isNaN(parseFloat(costos.sup)) ? 0 : parseFloat(costos.sup);
+		sueldos["ofi"] = isNaN(parseFloat(costos.ofi)) ? 0 : parseFloat(costos.ofi);
+		sueldos["mof"] = isNaN(parseFloat(costos.mof)) ? 0 : parseFloat(costos.mof);
+		sueldos["ayu"] = isNaN(parseFloat(costos.ayu)) ? 0 : parseFloat(costos.ayu);
+		sueldos["enc"] = isNaN(parseFloat(costos.enc)) ? 0 : parseFloat(costos.enc);
+		sueldos["sup"] = isNaN(parseFloat(costos.sup)) ? 0 : parseFloat(costos.sup);
 	});
 
 	var select = document.getElementById(id_obra_ddl_copeo);
@@ -64,6 +68,7 @@ $('#' + id_tab_copeo).click(function(){
 });
 
 $('#' + id_obra_ddl_copeo).change(function(){
+	$('#' + id_proc_ddl_copeo).empty();
 	firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_copeo + " option:selected").val()).once('value').then(function(snapshot){
 	    var obra = snapshot.val();
 
@@ -98,20 +103,27 @@ $('#' + id_obra_ddl_copeo).change(function(){
 });
 
 $('#' + id_proc_ddl_copeo).change(function(){
+	var proc = $('#' + id_proc_ddl_copeo + " option:selected").val();
 	var query = proc.split("-").length > 1 ? proc.split("-")[0] + "/subprocesos/" + proc : proc;
 	firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_copeo + " option:selected").val() + "/procesos/" + query).once('value').then(function(snapshot){
 		if(snapshot.child("copeo/impuestos").exists()){
+			$('#' + id_impuestos_copeo).attr('disabled',true);
+			$('#' + id_impuestos_button_copeo).attr('disabled',true);
 			$('#' + id_impuestos_copeo).val(snapshot.child("copeo/impuestos").val());
 			loadDataTableCopeo();
 			loadEntradaCopeo();
 		} else {
+			console.log("no hay");
+			$('#' + id_impuestos_button_copeo).attr('disabled',false);
+			$('#' + id_impuestos_copeo).attr('disabled',false);
+			$('.' + id_class_entrada_copeo).attr('disabled', true);
 			$('#' + id_datatable_copeo).html('');//aqui checar si jala
-			$('#' + id_class_entrada_copeo).attr('disabled', true);
 		}
 	});
 });
 
-$('#' + id_reset_button_copeo).change(function(){
+$('#' + id_reset_button_copeo).click(function(){
+	var proc = $('#' + id_proc_ddl_copeo + " option:selected").val();
 	var query = proc.split("-").length > 1 ? proc.split("-")[0] + "/subprocesos/" + proc : proc;
 	firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_copeo + " option:selected").val() + "/procesos/" + query).once('value').then(function(snapshot){
 		if(snapshot.child("copeo/impuestos").exists()){
@@ -134,23 +146,29 @@ $('#' + id_impuestos_button_copeo).click(function(){
 });
 
 function loadEntradaCopeo(){
+	existente = false;
+	tot_anterior = 0;
+	var proc = $('#' + id_proc_ddl_copeo + " option:selected").val();
 	var query = proc.split("-").length > 1 ? proc.split("-")[0] + "/subprocesos/" + proc : proc;
 	$('.' + id_class_entrada_copeo).val('');
 	$('.' + id_class_entrada_copeo).attr('disabled', false);
 	firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_copeo + " option:selected").val() + "/procesos/" + query).once('value').then(function(snapshot){
 		var consec = snapshot.child("copeo/num_entradas");
 		consec = consec.exists() ? consec.val() : 0;
+		consec++;
+		console.log(consec);
 		$('#' + id_entrada_label_copeo).html("Entrada " + consec);
 	});
 };
 
 $('#' + id_entrada_button_copeo).click(function(){
 	var consec = $('#' + id_entrada_label_copeo).html().split(" ")[1];
-	var costo_cuad = sueldos["ofi"] * parseFloat($('#' + id_ofi_copeo).val()) +
-		sueldos["mof"] * parseFloat($('#' + id_mof_copeo).val()) +
-		sueldos["ayu"] * parseFloat($('#' + id_ayu_copeo).val()) +
-		sueldos["enc"] * parseFloat($('#' + id_enc_copeo).val()) +
-		sueldos["sup"] * parseFloat($('#' + id_sup_copeo).val());
+	var cant_ofi = isNaN(parseFloat($('#' + id_ofi_copeo).val())) ? 0 : parseFloat($('#' + id_ofi_copeo).val());
+	var cant_mof = isNaN(parseFloat($('#' + id_mof_copeo).val())) ? 0 : parseFloat($('#' + id_mof_copeo).val());
+	var cant_ayu = isNaN(parseFloat($('#' + id_ayu_copeo).val())) ? 0 : parseFloat($('#' + id_ayu_copeo).val());
+	var cant_enc = isNaN(parseFloat($('#' + id_enc_copeo).val())) ? 0 : parseFloat($('#' + id_enc_copeo).val());
+	var cant_sup = isNaN(parseFloat($('#' + id_sup_copeo).val())) ? 0 : parseFloat($('#' + id_sup_copeo).val());
+	var costo_cuad = sueldos["ofi"] * cant_ofi + sueldos["mof"] * cant_mof + sueldos["ayu"] * cant_ayu + sueldos["enc"] * cant_enc + sueldos["sup"] * cant_sup;
 	var tot = costo_cuad * parseFloat($('#' + id_dias_copeo).val()) * parseFloat($('#' + id_unidades_copeo).val());
 
 	var entrada = {
@@ -159,11 +177,11 @@ $('#' + id_entrada_button_copeo).click(function(){
         pad: pistaDeAuditoria(),
         total: tot,
         cuadrilla: {
-           ofi: $('#' + id_ofi_copeo).val(),
-           mof: $('#' + id_mof_copeo).val(),
-           ayu: $('#' + id_ayu_copeo).val(),
-           enc: $('#' + id_enc_copeo).val(),
-           sup: $('#' + id_sup_copeo).val(),
+           ofi: cant_ofi,
+           mof: cant_mof,
+           ayu: cant_ayu,
+           enc: cant_enc,
+           sup: cant_sup,
        },
         multiplicadores: {
            dias: $('#' + id_dias_copeo).val(),
@@ -172,22 +190,97 @@ $('#' + id_entrada_button_copeo).click(function(){
 	};
 
 	var imp = parseFloat($('#' + id_impuestos_copeo).val());
-	var total = tot * imp /100;
+	tot = existente ? tot - tot_anterior : tot;
+	var total = tot * (1 + imp / 100);
+	//total = existente ? total - tot_anterior * (1 + imp/100) : total;
 	var proc = $('#' + id_proc_ddl_copeo + " option:selected").val();
 	var query = proc.split("-").length > 1 ? proc.split("-")[0] + "/subprocesos/" + proc : proc;
-
 	sumaEnFirebase(rama_bd_obras + "/" + $('#' + id_obra_ddl_copeo + " option:selected").val() + "/procesos/" + query + "/copeo/total", total);
 	sumaEnFirebase(rama_bd_obras + "/" + $('#' + id_obra_ddl_copeo + " option:selected").val() + "/procesos/" + query + "/copeo/subtotal", tot);
 	firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_copeo + " option:selected").val() + "/procesos/" + query + "/copeo/impuestos").set(imp);
-	firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_copeo + " option:selected").val() + "/procesos/" + query + "/copeo/num_entradas").set(consec);
+	if(!existente){
+		firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_copeo + " option:selected").val() + "/procesos/" + query + "/copeo/num_entradas").set(consec);
+	}
 	firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_copeo + " option:selected").val() + "/procesos/" + query + "/copeo/entradas/" + consec).set(entrada);
 	//Agregar variable global existente. Resetearla como false en donde sea necesario, true cuando haces click en el editar del datatable
-	/*if(!existente){
+	if(!existente){
 		trickleDownKaizen($('#' + id_obra_ddl_copeo + " option:selected").val(), proc, "PRODUCCION/COPEO/PREC", total, true);
 	}
-	trickleDownKaizen($('#' + id_obra_ddl_copeo + " option:selected").val(), proc, "PRODUCCION/COPEO/COPEO", total, true);*/
+	trickleDownKaizen($('#' + id_obra_ddl_copeo + " option:selected").val(), proc, "PRODUCCION/COPEO/COPEO", total, true);
+	alert("Entrada registrada");
+	loadDataTableCopeo();
+	loadEntradaCopeo();
 });
 
 function loadDataTableCopeo(){
+	var datos_copeo = [];
+	var proc = $('#' + id_proc_ddl_copeo + " option:selected").val();
+	var query = proc.split("-").length > 1 ? proc.split("-")[0] + "/subprocesos/" + proc : proc;
+    firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_copeo + " option:selected").val() + "/procesos/" + query).once('value').then(function(snapshot){
+    	snapshot.child("copeo/entradas").forEach(function(childSnap){
+    		var entrada = childSnap.val();
+            datos_copeo.push([
+            	childSnap.key,
+            	entrada.nombre,
+            	entrada.alcance,
+            	entrada.cuadrilla.ofi,
+            	entrada.cuadrilla.mof,
+            	entrada.cuadrilla.ayu,
+            	entrada.cuadrilla.enc,
+            	entrada.cuadrilla.sup,
+            	entrada.multiplicadores.dias,
+            	entrada.multiplicadores.unidades,
+            	entrada.total,
+            	"<button type='button' class='editar btn btn-info' onclick='loadExistenteCopeo()'><i class='fas fa-edit'></i></button>",
+            ]);
+    	});
 
+        tabla_copeo = $('#'+ id_datatable_copeo).DataTable({
+            destroy: true,
+            data: datos_copeo,
+            dom: 'Bfrtip',
+            buttons: ['excel'],
+            columns: [
+                {title: "Entrada"},
+                {title: "Nombre"},
+                {title: "Alcance"},
+                {title: "#Of"},
+                {title: "#MO"},
+                {title: "#AYU"},
+                {title: "#ENC"},
+                {title: "#SUP"},
+                {title: "Días"},
+                {title: "Mult"},
+                {title: "Total"},
+                {title: "Editar"},
+            ],
+            "columnDefs": [ 
+            	{ "visible": false, "targets": [2] },
+        	],
+            language: idioma_espanol, // Esta en app_bibliotecas
+        });
+        loadExistenteCopeo("#" + id_datatable_copeo + " tbody", tabla_copeo);
+    });
+}
+
+function loadExistenteCopeo(tbody, table){
+	$(tbody).on("click", "button.editar",function(){
+        var data = table.row($(this).parents("tr")).data();
+        if(data){
+			console.log(data[1]);
+			console.log(data);
+			existente = true;
+			tot_anterior = data[10];
+			$('#' + id_entrada_label_copeo).html("Entrada " + data[0]);
+			$('#' + id_nombre_copeo).val(data[1]);
+			$('#' + id_alcance_copeo).val(data[2]);
+			$('#' + id_ofi_copeo).val(data[3]);
+			$('#' + id_mof_copeo).val(data[4]);
+			$('#' + id_ayu_copeo).val(data[5]);
+			$('#' + id_enc_copeo).val(data[6]);
+			$('#' + id_sup_copeo).val(data[7]);
+			$('#' + id_dias_copeo).val(data[8]);
+			$('#' + id_unidades_copeo).val(data[9]);
+		}
+	});
 }
