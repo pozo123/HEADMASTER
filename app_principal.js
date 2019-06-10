@@ -28,6 +28,50 @@ $(document).ready(function() {
 });
 
 $('#botonMagico').click(function(){
+    /*var rama_bd_pagos_nomina = "rrhh/pagos_nomina";
+    var year = "2019";
+    var week = "22";
+    firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week).once('value').then(function(snapshot){
+        var total_week = 0;
+        snapshot.forEach(function(childSnap){
+            if(childSnap.key != "terminada" && childSnap.key != "total" && childSnap.key != "diversos_terminados" && childSnap.key != "horas_extra_terminadas" && childSnap.key != "asistencias_terminadas"){
+                var total_obra = 0;
+                childSnap.child("trabajadores").forEach(function(trabSnap){
+                    var trab = trabSnap.val();
+                    console.log("trab: " + trabSnap.key);
+                    var tot_HE = isNaN(parseFloat(trab.total_horas_extra)) ? 0 : parseFloat(trab.total_horas_extra);
+                    console.log("tot_HE: " + tot_HE);
+                    var tot_as = isNaN(parseFloat(trab.total_asistencia)) ? 0 :  parseFloat(trab.total_asistencia);
+                    console.log("tot_as: " + tot_as);
+                    var tot_div = isNaN(parseFloat(trab.total_diversos)) ? 0 : parseFloat(trab.total_diversos);
+                    console.log("tot_div: " + tot_div);
+                    var imp_as = trab.impuestos == undefined ? 0 : (isNaN(parseFloat(trab.impuestos.impuestos_asistencia)) ? 0 : parseFloat(trab.impuestos.impuestos_asistencia));
+                    console.log("imp_as: " + imp_as);
+                    var imp_div = trab.impuestos == undefined ? 0 : (isNaN(parseFloat(trab.impuestos.impuestos_diversos)) ? 0 : parseFloat(trab.impuestos.impuestos_diversos));
+                    console.log("imp_div: " + imp_div);
+                    var imp_HE = trab.impuestos == undefined ? 0 : (isNaN(parseFloat(trab.impuestos.impuestos_horas_extra)) ? 0 : parseFloat(trab.impuestos.impuestos_horas_extra));
+                    console.log("imp_HE: " + imp_HE);
+
+                    var total_trab = tot_HE + tot_as + tot_div + imp_as + imp_div + imp_HE;
+                    console.log("total_trab: " + total_trab);
+                    total_obra = total_obra + total_trab;
+                    firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + childSnap.key + "/trabajadores/" + trabSnap.key + "/total").set(total_trab);
+                    console.log(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + childSnap.key + "/trabajadores/" + trabSnap.key + "/total");
+                    console.log(total_trab);
+
+                });
+                firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + childSnap.key + "/total").set(total_obra);
+                console.log(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + childSnap.key + "/total");
+                console.log(total_obra);
+
+                total_week = total_week + total_obra;
+            }
+        });
+        firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/total").set(total_week);
+        console.log(rama_bd_pagos_nomina + "/" + year + "/" + week + "/total");
+        console.log(total_week);
+    });*/
+
     /*var sem = "23";
     firebase.database().ref("rrhh/trabajadores").once('value').then(function(snapshot){
         var updates = snapshot.val();

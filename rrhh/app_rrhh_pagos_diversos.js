@@ -340,7 +340,7 @@ function generateDdls(cell_obra, cell_proc, nuevo, obra_in, proc_in){
         var proc_input;
         if(!nuevo){
             for(var i = 0; i<obra_ddl.length;i++){
-                if(obra_ddl[i].text == obra_in){
+                if(obra_ddl[i].value == obra_in){
                     obra_ddl.selectedIndex = i;
                 }
             }

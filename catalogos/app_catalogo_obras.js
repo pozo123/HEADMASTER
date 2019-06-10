@@ -28,7 +28,8 @@ function loadCatalogoObra(){
             console.log("2");
             var obra = obraSnap.val();
             var term = obra.terminada ? "Terminada" : "Activa";
-            datos_obras.push([obra.nombre, obra.clave, obra.cliente, obra.direccion.calle + ", No. " + obra.direccion.numero + " Col. " + obra.direccion.colonia + ", " + obra.direccion.delegacion + ", " + obra.direccion.ciudad + " CP " + obra.direccion.cp, term]);
+            var direccion = obra.direccion == undefined ? {calle: "", direccion: "", colonia: "", delegacion: "", ciudad: "", cp: ""} : obra.direccion;
+            datos_obras.push([obra.nombre, obra.clave, obra.cliente, direccion.calle + ", No. " + direccion.numero + " Col. " + direccion.colonia + ", " + direccion.delegacion + ", " + direccion.ciudad + " CP " + direccion.cp, term]);
         console.log(obraSnap.key)
         });
         var columnas = areas_usuario_global.administracion ? [

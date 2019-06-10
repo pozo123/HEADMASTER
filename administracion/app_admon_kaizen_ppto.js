@@ -122,7 +122,7 @@ function loadValuesKaizenPpto(query){
 		var kaiz = kaizSnap.val();
 		var costos_suministros = kaizSnap.child("kaizen/PRODUCCION/SUMINISTROS/CUANT").val();
 		var costos_copeo = kaizSnap.child("copeo/subtotal").exists() ? kaizSnap.child("copeo/subtotal").val() : 0;
-		costos_copeo = costos_copeo * (1 + parseFloat($('#' + id_impuestos_kaizen_ppto).val()));
+		costos_copeo = costos_copeo * (1 + parseFloat($('#' + id_impuestos_kaizen_ppto).val())/100);
 		var costos_proyectos = kaiz.kaizen.PROYECTOS.PPTO;
 		var costos = costos_proyectos + costos_copeo + costos_suministros;
 		$('#' + id_suministros_kaizen_ppto).val(formatMoney(costos_suministros));
@@ -295,6 +295,8 @@ $('#' + id_button_guardar_kaizen_ppto).click(function(){
 		}
 		var horas_score = deformatMoney($('#' + id_proyectos_kaizen_ppto).val()) / parseFloat($('#' + id_costo_score_kaizen_ppto).val());
 		var tru = true;
+		var ind = $('#' + id_porcentaje_indirecto_kaizen_ppto).val();
+		firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_kaizen_ppto + " option:selected").val() + "/" + query + "/porcentaje_indirectos").set(ind);
 		firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_kaizen_ppto + " option:selected").val() + "/" + query + "/SCORE/total_prog").set(horas_score);
 		firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_kaizen_ppto + " option:selected").val() + "/" + query + "/SCORE/programado").set(tru);
 		var difs = {

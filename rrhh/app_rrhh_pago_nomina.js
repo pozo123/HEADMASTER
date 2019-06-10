@@ -244,12 +244,12 @@ $('#' + id_terminar_button_pago_nomina).click(function(){
 				}
 			});
 			//console.log(obras_json);
-			sumaHEyDivKaizen(obras_json, week, year);
+			setTimeout(function(){sumaHEyDivKaizen(obras_json, week, year);}, 3000);
 			//Meto el update en sumaHE para evitar la asincronia
 			//firebase.database().ref(rama_bd_obras_magico).update(obras_json);
 		});
 	});
-	sumaTotalesPN(week,year);
+	setTimeout(function(){sumaTotalesPN(week,year);},3000);
    	if(week == 1 && new Date(year,0,1).getDay() != 4){
    		sumaTotalesPN(getWeek(new Date(year-1,11,31).getTime())[0],year-1);
    	}
@@ -316,14 +316,22 @@ function sumaTotalesPN(week, year){
 				var total_obra = 0;
 				childSnap.child("trabajadores").forEach(function(trabSnap){
 					var trab = trabSnap.val();
+					//console.log("trab: " + trab);
 					var tot_HE = isNaN(parseFloat(trab.total_horas_extra)) ? 0 : parseFloat(trab.total_horas_extra);
+					//console.log("tot_HE: " + tot_HE);
 					var tot_as = isNaN(parseFloat(trab.total_asistencia)) ? 0 :  parseFloat(trab.total_asistencia);
+					//console.log("tot_as: " + tot_as);
 					var tot_div = isNaN(parseFloat(trab.total_diversos)) ? 0 : parseFloat(trab.total_diversos);
+					//console.log("tot_div: " + tot_div);
 					var imp_as = trab.impuestos == undefined ? 0 : (isNaN(parseFloat(trab.impuestos.impuestos_asistencia)) ? 0 : parseFloat(trab.impuestos.impuestos_asistencia));
+					//console.log("imp_as: " + imp_as);
 					var imp_div = trab.impuestos == undefined ? 0 : (isNaN(parseFloat(trab.impuestos.impuestos_diversos)) ? 0 : parseFloat(trab.impuestos.impuestos_diversos));
+					//console.log("imp_div: " + imp_div);
 					var imp_HE = trab.impuestos == undefined ? 0 : (isNaN(parseFloat(trab.impuestos.impuestos_horas_extra)) ? 0 : parseFloat(trab.impuestos.impuestos_horas_extra));
+					//console.log("imp_HE: " + imp_HE);
 
 					var total_trab = tot_HE + tot_as + tot_div + imp_as + imp_div + imp_HE;
+					//console.log("total_trab: " + total_trab);
 					total_obra = total_obra + total_trab;
 					firebase.database().ref(rama_bd_pagos_nomina + "/" + year + "/" + week + "/" + childSnap.key + "/trabajadores/" + trabSnap.key + "/total").set(total_trab);
 				});

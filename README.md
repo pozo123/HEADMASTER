@@ -7,7 +7,10 @@ HTMLs:
 TO DO:
  - ADMON
 *   - importar adicionaes desde excel
+   - datatable en pagos de emmanuel
    - calcu kaizen textfield de impuestos
+   - Edicion inve$stime
+   - reload tabla en app_admon_gestionar pptos
    - Centro de costos.
      - alta cuenta
      - añadir al desplegar
@@ -30,12 +33,15 @@ TO DO:
 *   - gestionar_presu -> Gestionar horas score (distribuir por wey);
      - App para terminar un proyecto. Se puede revertir. Lo qu ehace es copiar el ppto al pag en kaizen proy
      - Si terminado no se puede editar
+     - quitar proc misc de score
  - RRHH
  - GENERALES
 **   - indirecto
-     - Guardar % indirecto en hoja al usar calculadora kaizen.
-     - En desplegar kaizen añadir columna indirectos, multiplica %ind con precio venta
-     - En todos lados que use la variable porcentaje_indirectos de app_funciones cambiarlo por query de la hoja
+     //- Guardar % indirecto en hoja al usar calculadora kaizen.
+     - En desplegar kaizen añadir columna indirectos, multiplica %ind con precio venta 
+        - En hoja jalar %ind.exists() ? .2 : %ind
+        - en padre (proc u obra) es suma de hijos
+     - En todos lados (presupuesto, utilidad, ppto adic, funciones) que use la variable porcentaje_indirectos de app_funciones cambiarlo por query de la hoja
    - 7iWWod9RyOh5tPBo8r1Qlrygk142 y c7y9OvOccgMhPr4kB1fPLIbFL153 (uno es luis) tienen ms en baja california/SCORE/horas_trabajadas
    - Subir templates de excel con formatos necesarios para imprtar (importar proveedores, trabajadores y ppto adic)
    - Cambiar idioma_espanol en tablas de apps como datos_kaizen y asistencia y desplegar_procesos
