@@ -22,7 +22,6 @@ $('#tabKaizen').click(function(){
 	$('#' + id_precio_score_desplegar_kaizen).val(1300);
 	
 	username = uid_usuario_global;
-	console.log(username);
 	firebase.database().ref(rama_bd_personal + "/" + username).once('value').then(function(snapshot){
 		var pers = snapshot.val();
 			if(snapshot.child("areas/administracion").val() == true || pers.credenciales < 3){
@@ -89,20 +88,17 @@ function cargaKaizen(){
 	$('#' + id_datatable_desplegar_kaizen).on("cell:onEditEnter", function (element) {  
 		var id_elem = element.element.id;
 		valorViejo = element.element.innerHTML;
-		console.log(valorViejo)
 		document.getElementById(id_elem).innerHTML = deformatMoney(valorViejo);
 		if(id_elem.substring(id_elem.length - 14,id_elem.length) == "_PROYECTOS_PAG" || id_elem.substring(id_elem.length - 15,id_elem.length) == "_PROYECTOS_PPTO"){
 			document.getElementById(id_elem).innerHTML = (deformatMoney(valorViejo)/parseFloat($('#' + id_precio_score_desplegar_kaizen).val()));
 		}
 	});
 	$('#' + id_datatable_desplegar_kaizen).on("cell:edited", function (element, oldValue, newValue) {  
-		console.log("3");
 		if(isNaN(parseFloat(element.newValue))){
 			console.log(element.oldValue);
 			document.getElementById(element.element.id).innerHTML = formatMoney(element.oldValue);
 			alert("El valor ingresado debe ser un numero");
 		} else { 
-			console.log("1");
 			var nV = element.newValue;
 			var oV = deformatMoney(element.oldValue);
 			var id_elem = element.element.id;

@@ -21,6 +21,7 @@ function modoRegistros(automatico){
     if(automatico){
         //alert("Salida forzada debido a que el registro actual inició en otro día");
     }
+    console.log(user_global);
     firebase.database().ref(rama_bd_personal).orderByKey().equalTo(user_global).on('child_added', function(snapshot){
         if(snapshot.child("status").val() == true){
             modoActivoRegistros();
@@ -31,10 +32,12 @@ function modoRegistros(automatico){
     });
 }
 
-$(document).ready(function() {
-    user_global = uid_usuario_global;
+firebase.auth().onAuthStateChanged(user => {
+    if(user) {
+    user_global = user.uid;
     firebase.database().ref(rama_bd_personal + "/" + user_global).once('value').then(function(snapshot){
         esp = snapshot.child("esp").val();
+        console.log(1);
         if(snapshot.child("areas/proyectos").val() && !snapshot.child("areas/administracion").val()){
             firebase.database().ref(rama_bd_personal + "/" + user_global).on("child_changed", function(){modoRegistros(true)});
             modoRegistros(false);
@@ -61,6 +64,7 @@ $(document).ready(function() {
             });
         }
     }); 
+    }
 });
 
 function modoActivoRegistros(){

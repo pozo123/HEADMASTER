@@ -167,6 +167,14 @@
                 <ul class="list-unstyled components">
 
                     <li>
+                        <a href="#pageSubmenu5" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Dashboard</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu5">
+                            <li class="tab" id="tabDashboardInd"><a href="#" onclick="openTabs('tabDashboardInd','dashboardInd')">Individual</a></li>
+                            <li class="tab" id=""><a href="#" onclick="openTabs('','')">Global</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
                         <li class="tab" id="tabKaizen"><a href="#" onclick="openTabs('tabKaizen','kaizen')">Kaizen</a></li>
                     </li>                  
                     <li>
@@ -175,8 +183,8 @@
                             <!--<li class="tab" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Alta de obra</a></li>-->
                             <!--<li class="tab" id="tabAltaProceso"><a href="#" onclick="openTabs('tabAltaProceso','altaProceso')">Alta de procesos</a></li>-->
                             <!--<li class="tab tabEditarProceso" id="tabEditarProceso"><a href="#" onclick="openTabs('tabEditarProceso','editarProceso')">Editar Procesos</a></li>-->
-                            <li class="tab tabCatalogoProceso" id="tabCatalogoProceso"><a href="#" onclick="openTabs('tabCatalogoProceso','catalogoProceso')">Catálogo de procesos</a></li>
-                            <li class="tab tabUtilidad" id="tabUtilidad"><a href="#" onclick="openTabs('tabUtilidad','utilidad')">Generador de Precios</a></li>
+                            <li class="tab" id="tabCatalogoProceso"><a href="#" onclick="openTabs('tabCatalogoProceso','catalogoProceso')">Catálogo de procesos</a></li>
+                            <li class="tab" id="tabUtilidad"><a href="#" onclick="openTabs('tabUtilidad','utilidad')">Generador de Precios</a></li>
                             <li class="tab" id="tabCopeo"><a href="#" onclick="openTabs('tabCopeo','copeo')">Copeo</a></li>
                         </ul>
                     </li>
@@ -220,8 +228,31 @@
                 <div class="row">
                     <div class="container-fluid">
 
+                        <!-- Dashboard individual-->
+
+                        <div id="dashboardInd" class = "tabcontent">
+                            <div class = "container-fluid">
+                                <h1>Dashboard Producción</h1>
+                                <p>Información de utilidad de tus obras</p>
+
+                                <div class = "row">
+                                    <div class= "col-lg-4">
+                                        <select id="obrasDdlDashboardInd" class="form-control"></select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        prueba1
+                                    </div>
+                                    <div class="col-md-6">
+                                        prueba2
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Kaizen-->
-                        <div id="kaizen" class="tabcontent kaizen">
+                        <div id="kaizen" class="tabcontent kaizen hidden">
                             <div class="container-fluid">
                                 <h3>Kaizen</h3>
 
@@ -811,9 +842,7 @@
 <script src="produccion/app_desplegar_kaizen.js"></script>
 <script src="produccion/app_gestionar_supervisores.js"></script>
 <script src="produccion/app_prod_copeo.js"></script>
-<!-- Gantt-->
-
-<script src="jsGantt/jsgantt.js"></script>
+<script src="produccion/app_prod_dash_individual.js"></script>
 
 <!-- PdfMaker-->
 
