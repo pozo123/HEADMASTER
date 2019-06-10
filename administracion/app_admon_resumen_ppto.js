@@ -187,7 +187,7 @@ function showPdfGenerado(link){
     document.body.appendChild(downloadLink);
 
     // fire a click event on the anchor
-    //downloadLink.click();
+    downloadLink.click();
     
     // cleanup: remove element and revoke object URL
     document.body.removeChild(downloadLink);
@@ -272,7 +272,7 @@ $('#' + id_guardar_button_resumen_pptos).click(function(){
     if( fileSelected == "" || $("#" + id_monto_aprobado_resumen_pptos).val() == "" || $('#' + id_obra_ddl_resumen_pptos + " option:selected").val() == "" || $('#' + id_proc_ddl_resumen_pptos + " option:selected").val() == ""){
         alert("Lena todos los cambios necesarios"); 
     } else {
-        var query_storage = rama_storage_presupuestos + $('#' + id_obra_ddl_resumen_pptos + " option:selected").val() + "/presupuestos/" + $('#' + id_proc_ddl_resumen_pptos + " option:selected").val() + "/" + fileSelected.name;
+        var query_storage = rama_storage_presupuestos + "/" + $('#' + id_obra_ddl_resumen_pptos + " option:selected").val() + "/presupuestos/" + $('#' + id_proc_ddl_resumen_pptos + " option:selected").val() + "/" + fileSelected.name;
         var storageRef = firebase.storage().ref(query_storage);
         var uploadTask = storageRef.put(fileSelected);
         uploadTask.on('state_changed', function(snapshot){
@@ -292,6 +292,7 @@ $('#' + id_guardar_button_resumen_pptos).click(function(){
             uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
                 realizarAprobacion(downloadURL);
             });
+            actualizarTable();
         });
     }
 });
