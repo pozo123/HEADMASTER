@@ -2,6 +2,7 @@ var id_semana_ddl_pago_nomina = "semanaDdlPagoNomina";
 var id_year_ddl_pago_nomina = "yearDdlPagoNomina";
 var id_num_ren_pago_nomina = "numRenPagoNomina";
 var id_terminar_button_pago_nomina = "terminarButtonPagoNomina";
+var id_calcula_total_button_pago_nomina = "calculaTotalButtonPagoNomina";
 
 var id_datatable_pago_nomina = "dataTablePagoNomina";
 var id_table_pago_nomina = "tablePagoNomina";
@@ -221,10 +222,17 @@ function headersPagoNomina() {
   cell3.innerHTML = "CANTIDAD PAGADA";
 }
 
-$('#' + id_terminar_button_pago_nomina).click(function(){
-	//AQUI Todo esto para cuando se hace el pago nomina
-	//Sumar todo a kaizen
+$('#' + id_calcula_total_button_pago_nomina).click(function(){
+	var suma = 0;
+	$('[id^=cant_pagada_]').each(function(){
+		var split = this.id.split("_");
+		var id_trabajador = split[split.length - 1];
+		suma += parseFloat($("#cant_pagada_" + id_trabajador).val());
+	});
+	alert("El total acumulado hasta este punto es de: " + suma);
+});
 
+$('#' + id_terminar_button_pago_nomina).click(function(){
     
 	var year = $('#' + id_year_ddl_pago_nomina + " option:selected").val();
 	var week = $('#' + id_semana_ddl_pago_nomina + " option:selected").text();

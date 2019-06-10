@@ -636,10 +636,9 @@ function generaPptoAdic(genera){
                 alignment: 'center',
                 margin: [0,5],
                 fontSize: 8,
-            }*/,
-            '',
+            },*/
             {
-                colSpan:3,
+                colSpan:4,
                 border: [false, false, false, false],
                 text: obra_nombre,
                 bold: true,
@@ -647,6 +646,7 @@ function generaPptoAdic(genera){
                 margin: [0,5],
                 fontSize:10,
             },
+            '',
             '',
             '',
             {   
@@ -669,10 +669,9 @@ function generaPptoAdic(genera){
                 margin: [0,5],
                 fontSize: 8,
             },*/
-            '',
             {
                 rowSpan:4,
-                colSpan:3,
+                colSpan:4,
                 border: [false, false, false, false],
                 text: obra_global.direccion.calle + ", No. " + obra_global.direccion.numero + "\n" +
                 "col. " + obra_global.direccion.colonia + "\n" + obra_global.direccion.delegacion + ", \n" + 
@@ -680,6 +679,7 @@ function generaPptoAdic(genera){
                 margin: [0,5],
                 fontSize:8,
             },
+            '',
             '',
             '',
             {  

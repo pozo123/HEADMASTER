@@ -30,7 +30,7 @@ $('#' + tab_solped).click(function(){
 });
 
 function resetTabSolped(){
-	$('#' + id_obra_ddl_solped).empty();
+	//$('#' + id_obra_ddl_solped).empty();
     $('#' + id_contrato_ddl_solped).empty();
     $('#' + id_subp_ddl_solped).empty();
     $('#' + id_foto_label_solped).text("Archivo no seleccionado");
@@ -238,7 +238,7 @@ $('#' + id_actualizar_button_solped).click(function(){
 				firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_solped + " option:selected").val() + "/procesos/" + query + "/contrato_compras/solpeds/" + $('#' + id_clave_solped).val()).update(solp);
 				alert("Alta exitosa \n(solped en espera de autorización)");
 				$('#' + id_reset_button_solped).click();
-				resetTabSolped();
+				resetTabSolped();//AQUI creo que es lo que truena
 			}
 		} else {
 		    var storageRef = firebase.storage().ref(rama_storage_obras + "/contratos/" + $('#' + id_contrato_ddl_solped + " option:selected").text() + "/" + $('#' + id_clave_solped).val() + "/" + fotoSeleccionada.name);
@@ -275,7 +275,7 @@ $('#' + id_actualizar_button_solped).click(function(){
 		            
 		            alert("Actualización exitosa");
 		            $('#' + id_reset_button_solped).click();
-		            resetTabSolped();
+		            resetTabSolped();//AQUI creo que es lo que truena
 		            /*setTimeout(() => {
 		                location.reload();
 		            }, 3000);*/
