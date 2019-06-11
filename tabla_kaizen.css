@@ -190,6 +190,10 @@
   .header_admin {
     background-color: #9F8BE0 !important;
   }
+
+  .header_indirectos {
+    background-color: rgb(241, 169, 87) !important;
+  }
   
   .tableKaizen.ver2 .row100:hover td {
     background-color: #edf88b !important;
@@ -301,6 +305,16 @@
     background-color: #606160 !important;
     color: #fff !important;
     opacity: 0.9;
+  }
+
+  .subproc_row .indirectos {
+    background-color: rgb(240, 182, 116) !important;
+    color: #484848 !important;
+    opacity: 0.9;
+  }
+
+  .evenSubp .indirectos {
+    opacity: 0.7;
   }
   
   

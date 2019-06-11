@@ -278,8 +278,8 @@ function addProfitNeto(obra, table){
 	row.className = "row_data rowTotal";
 	row.id = "row_profit_neto_" + obra.clave;
 	var neto = document.createElement('td');
-	neto.innerHTML = "PROFIT NETO";
-	neto.colSpan = 8;
+	neto.innerHTML = "PROFIT NETO PRESUPUESTADO";
+	neto.colSpan = 9;
 	row.appendChild(neto);
 	var profit_neto = document.createElement('td');
 	profit_neto.id = obra_clave + "_PROFIT_PROG_NETO";
@@ -411,6 +411,14 @@ function createRow(proc,table,tipo){
 	admin_anticipos_pag.innerHTML = formatMoney(proc.kaizen.ADMINISTRACION.ANTICIPOS.PAG);
 	admin_anticipos_pag.className = "celda admin right";
 	row.appendChild(admin_anticipos_pag);
+
+    // AQUI
+	var admin_anticipos_pag = document.createElement('td');
+	admin_anticipos_pag.id = cl + "_INDIRECTOS";
+	admin_anticipos_pag.innerHTML = formatMoney("AQUI");
+	admin_anticipos_pag.className = "celda indirectos right";
+	row.appendChild(admin_anticipos_pag);
+	// ------------------------------
 	var profit_prog = document.createElement('td');
 	profit_prog.id = cl + "_PROFIT_PROG_BRUTO";
 	profit_prog.innerHTML = formatMoney(proc.kaizen.PROFIT.PROG.BRUTO);
