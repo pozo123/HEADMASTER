@@ -230,8 +230,10 @@ function loadDataTableCopeo(){
             	entrada.cuadrilla.sup,
             	entrada.multiplicadores.dias,
             	entrada.multiplicadores.unidades,
-            	entrada.total,
+            	formatMoney(entrada.total),
+            	formatMoney(parseFloat(entrada.total) * (1 + parseFloat(snapshot.child("copeo/impuestos").val())/100)),
             	"<button type='button' class='editar btn btn-info' onclick='loadExistenteCopeo()'><i class='fas fa-edit'></i></button>",
+            	"<button type='button' class='btn btn-warning' onclick='alert(\"" + entrada.alcance + "\")'><i class='fas fa-info-circle'></i></button>",
             ]);
     	});
 
@@ -251,8 +253,10 @@ function loadDataTableCopeo(){
                 {title: "#SUP"},
                 {title: "Días"},
                 {title: "Mult"},
+                {title: "Subtotal"},
                 {title: "Total"},
                 {title: "Editar"},
+                {title: "Info"},
             ],
             "columnDefs": [ 
             	{ "visible": false, "targets": [2] },

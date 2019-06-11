@@ -22,6 +22,7 @@ TO DO:
      - Gestionar sups solo si creden < 3 o admin
 *   - app_prod_remisiones (definir y programar)
    - Kaizen desplegar -> actualiza totales y profit pero no se ve hasta que se recarga
+   *- Corregir sueldos de cuadrilla
    - app_editar_sueldos_base (para los rangos)
 **   - app_prod_entrada_estimacion
    - Desplegar Kaizen

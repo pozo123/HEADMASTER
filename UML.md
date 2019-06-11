@@ -207,6 +207,7 @@
                   - terminado
                   - (obsoleto) contrato
                   - nombre
+                  - porcentaje_indirectos
                   - contrato_compras: igual que proc
                   - validacion_ppto: igual que proc
                   - SCORE: igual que proc simple
