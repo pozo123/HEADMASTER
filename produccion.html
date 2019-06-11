@@ -176,13 +176,17 @@
 
                     <li>
                         <li class="tab" id="tabKaizen"><a href="#" onclick="openTabs('tabKaizen','kaizen')">Kaizen</a></li>
-                    </li>                  
+                    </li>  
+                    <li>
+                        <a href="#pageSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Copeo</a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu1">
+                            <li class="tab" id="tabCopeo"><a href="#" onclick="openTabs('tabCopeo','copeo')">Copeo</a></li>
+                            <li class="tab" id="tabCuadrillas"><a href="#" onclick="openTabs('tabCuadrillas','cuadrillas')">Cuadrillas</a></li>
+                        </ul>
+                    </li>                
                     <li>
                         <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Obras</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu2">
-                            <!--<li class="tab" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Alta de obra</a></li>-->
-                            <!--<li class="tab" id="tabAltaProceso"><a href="#" onclick="openTabs('tabAltaProceso','altaProceso')">Alta de procesos</a></li>-->
-                            <!--<li class="tab tabEditarProceso" id="tabEditarProceso"><a href="#" onclick="openTabs('tabEditarProceso','editarProceso')">Editar Procesos</a></li>-->
                             <li class="tab" id="tabCatalogoProceso"><a href="#" onclick="openTabs('tabCatalogoProceso','catalogoProceso')">Catálogo de procesos</a></li>
                             <li class="tab" id="tabUtilidad"><a href="#" onclick="openTabs('tabUtilidad','utilidad')">Generador de Precios</a></li>
                             <li class="tab" id="tabCopeo"><a href="#" onclick="openTabs('tabCopeo','copeo')">Copeo</a></li>
@@ -632,6 +636,54 @@
                                     </div>
                                 </div>
                         </div>  
+
+                        <!-- cuadrillas-->
+
+                        <div id="cuadrillas" class="tabcontent hidden">
+                            <h1>Actualiza los sueldos por puesto.</h1>
+                            <p>Ingresa los sueldos por puesto, son sueldos sin impuestos.</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" id="" onsubmit="return false;">                                      
+
+                                            <div class="form-group">
+                                                <label for="ayuCuadrilla">Ayudante</label>
+                                                <input type="text" id="ayuCuadrilla" class="form-control" placeholder="Ayudante">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="mofCuadrilla">Medio Oficial</label>
+                                                <input type="text" id="mofCuadrilla" class="form-control" placeholder="Medio Oficial">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="ofiCuadrilla">Oficial</label>
+                                                <input type="text" id="ofiCuadrilla" class="form-control" placeholder="Oficial">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="encCuadrilla">Encargado</label>
+                                                <input type="text" id="encCuadrilla" class="form-control" placeholder="Encargado">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="supCuadrilla">Supervisor</label>
+                                                <input type="text" id="supCuadrilla" class="form-control" placeholder="Supervisor)">
+                                            </div>
+
+                                            <div class="form-row">
+                                                <div class= "col-lg-6">
+                                                    <button type="button" id = "actualizarCuadrilla"class="btn btn-outline-success btn-block">Actualizar</button>
+                                                </div>
+                                                <div class= "col-lg-6">
+                                                    <button type="reset" id = "loadButtonUtilidad"class="btn btn-outline-danger btn-block">Resetear Todo</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class="col-lg-3"></div>
+                                </div>
+                            </div>
+                        </div>  
                                     
                         <!-- Colaboradores-->
                         <!--<div id="altaColaborador" class="tabcontent hidden">
@@ -843,6 +895,7 @@
 <script src="produccion/app_gestionar_supervisores.js"></script>
 <script src="produccion/app_prod_copeo.js"></script>
 <script src="produccion/app_prod_dash_individual.js"></script>
+<script src="produccion/app_prod_cuadrilla.js"></script>
 
 <!-- PdfMaker-->
 

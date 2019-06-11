@@ -11,6 +11,7 @@ var rama_bd_costos_cuadrilla = "produccion/costos_cuadrilla";
 var tab_cuadrilla = "tabCuadrillas";
 
 $('#' + tab_cuadrilla).click(function(){
+	console.log("1");
 	firebase.database().ref(rama_bd_costos_cuadrilla).once('value').then(function(snapshot){
 		var costos = snapshot.val();
 		$('#' + id_ofi_cuadrilla).val(costos.ofi);
@@ -22,12 +23,14 @@ $('#' + tab_cuadrilla).click(function(){
 });
 
 $('#' + id_actualizar_button_cuadrilla).click(function(){
+	console.log("1");
 	var costos = {
-		ofi = isNaN(parseFloat($('#' + id_ofi_cuadrilla).val())) ? 0 : parseFloat($('#' + id_ofi_cuadrilla).val()),
-		mof = isNaN(parseFloat($('#' + id_mof_cuadrilla).val())) ? 0 : parseFloat($('#' + id_mof_cuadrilla).val()),
-		ayu = isNaN(parseFloat($('#' + id_ayu_cuadrilla).val())) ? 0 : parseFloat($('#' + id_ayu_cuadrilla).val()),
-		enc = isNaN(parseFloat($('#' + id_enc_cuadrilla).val())) ? 0 : parseFloat($('#' + id_enc_cuadrilla).val()),
-		sup = isNaN(parseFloat($('#' + id_sup_cuadrilla).val())) ? 0 : parseFloat($('#' + id_sup_cuadrilla).val()),
+		ofi: isNaN(parseFloat($('#' + id_ofi_cuadrilla).val())) ? 0 : parseFloat($('#' + id_ofi_cuadrilla).val()),
+		mof: isNaN(parseFloat($('#' + id_mof_cuadrilla).val())) ? 0 : parseFloat($('#' + id_mof_cuadrilla).val()),
+		ayu: isNaN(parseFloat($('#' + id_ayu_cuadrilla).val())) ? 0 : parseFloat($('#' + id_ayu_cuadrilla).val()),
+		enc: isNaN(parseFloat($('#' + id_enc_cuadrilla).val())) ? 0 : parseFloat($('#' + id_enc_cuadrilla).val()),
+		sup: isNaN(parseFloat($('#' + id_sup_cuadrilla).val())) ? 0 : parseFloat($('#' + id_sup_cuadrilla).val()),
 	};
 	firebase.database().ref(rama_bd_costos_cuadrilla).set(costos);
+	alert("Actualización exitosa!")
 });

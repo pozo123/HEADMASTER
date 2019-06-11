@@ -15,8 +15,7 @@ $('#' + tab_kaizen_ppto).click(function(){
     firebase.database().ref(rama_bd_obras).once('value').then(function(snapshot){
         snapshot.forEach(function(childSnap){
         	var obra = childSnap.val();
-        	var aut_local = false;
-        	if(!obra.terminada){
+        	if(areas_usuario_global.administracion || creden_usuario_globalfalse < 3){
 	        	if(aut || aut_local){
 			        var option2 = document.createElement('OPTION');
 			        option2.text = obra.nombre;
