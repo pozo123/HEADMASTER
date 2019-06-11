@@ -627,6 +627,7 @@
                             <li class="tab tabCatalogoProceso" id="tabCatalogoProceso"><a href="#" onclick="openTabs('tabCatalogoProceso','catalogoProceso')">Catálogo de procesos</a></li>
                         </ul>
                     </li>
+                    <li class="tab" id="tabGestionarScore"><a href="#" onclick="openTabs('tabGestionarScore','gestionarScore')">Gestionar Score</a></li>
                     <li>
                         <a href="#pageSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Presupuestos</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu1">
@@ -1272,6 +1273,47 @@
                                 </div>
                             </div>
                         </div>
+                                    <!-- Gestionar Horas Score y terminar proceso-->
+
+
+                        <div id="gestionarScore" class="tabcontent hidden">
+                            <h1>Gestionar procesos Score</h1>
+                            <p>Pestaña para terminar procesos Score y gestionar horas de cada proyectista por proceso/subproceso.</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form id="formGestionarScore" action="#" onsubmit="return false;">
+                                                <div class="form-group">
+                                                    <label for="obraDdlGestionarScore">Obra</label>
+                                                    <select id="obraDdlGestionarScore" class="form-control" ></select>
+                                                </div>
+                                            <div class="form-group">
+                                                <label for="procesoDdlGestionarScore">Proceso</label>
+                                                <select id="procesoDdlGestionarScore" class="form-control"></select>
+                                            </div>
+            
+                                            <div class="form-row">
+                                                <div class = "col">
+                                                    <button id="terminarButtonGestionarScore" type="button" class="btn btn-outline-danger btn-block">Terminar</button>
+                                                </div>
+                                            </div>
+                                            <!--<div class="row">
+                                                <button id="terminarButtonHorasExtra" type="button" class="btn btn-outline-danger btn-block">Cerrar Semana</button>
+                                            </div>-->
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class="col-lg-3"></div>
+                                    
+                                    <div class="container-table100">
+                                        <div class="table100 ver2 m-b-110">
+                                            <table id="tableGestionarScore" class="display"></table>
+                                        </div>
+                                    </div>       
+                                </div>
+                            </div>
+                        </div>
 
                         <div id="reporte" class="tabcontent hidden">
                             <h1>Generador de reportes</h1>
@@ -1466,6 +1508,8 @@
                     </div>
                 </div>
             </div>
+
+
             <!-- Modales --> 
 
         </div>
@@ -1544,6 +1588,7 @@
         <script src="proyectos/app_reporte.js"></script>
         <script src="proyectos/app_reporte_ppto.js"></script>
         <script src="proyectos/score.js"></script>
+        <script src= "proyectos/app_proy_gestionar_score.js"></script>
         
 
         <!-- PdfMaker-->
