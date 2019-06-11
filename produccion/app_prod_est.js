@@ -5,12 +5,17 @@ var id_file_label_est = "fotoLabelEst";
 var id_actualizar_button_est = "acutalizarEst";
 
 var rama_bd_obras = "obras";
+var rama_storage_obras = "obras";
 
 var tab_est = "tabEstimacion";
 
 var tableEst = document.getElementById(id_table_est);
+var fileSelectedEst;
 
 $('#' + tab_est).click(function(){
+	$('#' + id_file_label_est).text("Archivo no seleccionado");
+	fileSelectedEst = "";
+
 	var select = document.getElementById(id_obras_ddl_est);
     var option = document.createElement('option');
     option.style = "display:none";
@@ -94,6 +99,11 @@ function headersEst() {
   cell8.innerHTML = "TOTAL (%)";
 }
 
+$('#' + id_file_est).on("change", function(event){
+    fileSelectedEst = event.target.files[0];
+    $('#' + id_file_label_est).text(fileSelectedEst.name);
+});
+
 function cargaRenglonEst(hojaSnap){
 	var est = hojaSnap.child("kaizen/ADMINISTRACION/ESTIMACIONES/EST").val();
 	est = isNaN(parseFloat(est)) ? 0 : parseFloat(est);
@@ -156,7 +166,45 @@ function cargaRenglonEst(hojaSnap){
 }
 
 $('#' + id_actualizar_button_est).click(function(){
-	firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obras_ddl_est + " option:selected").val()).once('value').then(function(snapshot){
+	if(fileSelectedEst == "" || $('#' + id_obras_ddl_est + " option:selected").val() == "" || $('#' + id_file_label_est).text() == "Archivo no seleccionado"){
+		alert("Llena todos los campos necesarios");
+	} else {
+		var storageRef = firebase.storage().ref(rama_storage_obras + "/" + $('#' + id_obras_ddl_est + " option:selected").val() + "/" + fileSelectedEst.name);
+	    var uploadTask = storageRef.put(fileSelectedEst);
+	    uploadTask.on('state_changed', function(snapshot){
+	        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+	        console.log('Upload is ' + progress + '% done');
+	        switch (snapshot.state) {
+	            case firebase.storage.TaskState.PAUSED: // or 'paused'
+	            console.log('Upload is paused');
+	            break;
+	            case firebase.storage.TaskState.RUNNING: // or 'running'
+	            console.log('Upload is running');
+	            break;
+	        }
+	    }, function(error) {
+	        // Handle unsuccessful uploads
+	    }, function() {
+	        // Handle successful uploads on complete
+	        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+	        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+				firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obras_ddl_est + " option:selected").val()).once('value').then(function(snapshot){
+					var obra_json = snapshot.val();
+					$('[id^=est_cant_]').each(function(){
+						var split = this.id.split("_");
+						var proc = split[split.length - 1];
+						var cant = realParse($('#' + this.id).val());
+						var path = proc.split("-");
+						obra_json["procesos"][path[0]]["kaizen"]["ADMINISTRACION"]["ESTIMACIONES"]["EST"] = parseFloat(obra_json["procesos"][path[0]]["kaizen"]["ADMINISTRACION"]["ESTIMACIONES"]["EST"]) + cant;
+						obra_json["kaizen"]["ADMINISTRACION"]["ESTIMACIONES"]["EST"] = parseFloat(obra_json["kaizen"]["ADMINISTRACION"]["ESTIMACIONES"]["EST"]) + cant;
+						if(path.length > 1){
+							obra_json["procesos"][path[0]]["subprocesos"][proc]["kaizen"]["ADMINISTRACION"]["ESTIMACIONES"]["EST"] = parseFloat(obra_json["procesos"][path[0]]["subprocesos"][proc]["kaizen"]["ADMINISTRACION"]["ESTIMACIONES"]["EST"]) + cant;
+						}
+					});
+					firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obras_ddl_est + " option:selected").val()).update(obra_json);
+				});
+	        });
+	    });
 
-	});
+	}
 });

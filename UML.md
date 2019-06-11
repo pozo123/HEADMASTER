@@ -453,6 +453,11 @@ STORAGE:
    - persona (por uid)
       - imagen de perfil
 - obras
+   - estimaciones
+      - imagenes
+   - presupuestos
+      - presupuesto (clave)
+         - imagenes
    - contratos
       - contrato (por clave)
          - solped (por clave)

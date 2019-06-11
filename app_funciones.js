@@ -6,6 +6,11 @@ var rama_bd_personal = "personal";
 var rama_bd_mensajes = "mensajes";
 var rama_bd_version = "info_web/version";
 
+function realParse(cant){
+  var real = isNaN(parseFloat(cant)) ? 0 : parseFloat(cant);
+  return real;
+}
+
 function enableTabWithEnter(){
   $('input').on("keypress", function(e) {
     /* ENTER PRESSED*/
