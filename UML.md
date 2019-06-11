@@ -152,6 +152,12 @@
          - supervisor (por id)
             - nombre
             - activo: bool
+      - estimaciones
+         - est (por push)
+            - cantidad
+            - fecha
+            - pad
+            - url
       - procesos:
          - proceso (por clave):
             - alcance

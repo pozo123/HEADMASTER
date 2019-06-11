@@ -2,6 +2,7 @@ var id_obras_ddl_est = "obrasDdlEst";
 var id_table_est = "tableEst";
 var id_file_est = "fotoEst";
 var id_file_label_est = "fotoLabelEst";
+var id_fecha_est = "fechaEst";
 var id_actualizar_button_est = "acutalizarEst";
 
 var rama_bd_obras = "obras";
@@ -16,6 +17,9 @@ $('#' + tab_est).click(function(){
 	$('#' + id_file_label_est).text("Archivo no seleccionado");
 	fileSelectedEst = "";
 
+	jQuery('#' + id_fecha_est).datetimepicker(
+        {timepicker:false, weeks:true,format:'m.d.Y'}
+    );
 	var select = document.getElementById(id_obras_ddl_est);
     var option = document.createElement('option');
     option.style = "display:none";
@@ -166,7 +170,7 @@ function cargaRenglonEst(hojaSnap){
 }
 
 $('#' + id_actualizar_button_est).click(function(){
-	if(fileSelectedEst == "" || $('#' + id_obras_ddl_est + " option:selected").val() == "" || $('#' + id_file_label_est).text() == "Archivo no seleccionado"){
+	if($('#' + id_fecha_est).val() == "" || fileSelectedEst == "" || $('#' + id_obras_ddl_est + " option:selected").val() == "" || $('#' + id_file_label_est).text() == "Archivo no seleccionado"){
 		alert("Llena todos los campos necesarios");
 	} else {
 		var storageRef = firebase.storage().ref(rama_storage_obras + "/" + $('#' + id_obras_ddl_est + " option:selected").val() + "/" + fileSelectedEst.name);
@@ -190,10 +194,12 @@ $('#' + id_actualizar_button_est).click(function(){
 	        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
 				firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obras_ddl_est + " option:selected").val()).once('value').then(function(snapshot){
 					var obra_json = snapshot.val();
+					var total = 0;
 					$('[id^=est_cant_]').each(function(){
 						var split = this.id.split("_");
 						var proc = split[split.length - 1];
 						var cant = realParse($('#' + this.id).val());
+						total += cant;
 						var path = proc.split("-");
 						obra_json["procesos"][path[0]]["kaizen"]["ADMINISTRACION"]["ESTIMACIONES"]["EST"] = parseFloat(obra_json["procesos"][path[0]]["kaizen"]["ADMINISTRACION"]["ESTIMACIONES"]["EST"]) + cant;
 						obra_json["kaizen"]["ADMINISTRACION"]["ESTIMACIONES"]["EST"] = parseFloat(obra_json["kaizen"]["ADMINISTRACION"]["ESTIMACIONES"]["EST"]) + cant;
@@ -202,6 +208,14 @@ $('#' + id_actualizar_button_est).click(function(){
 						}
 					});
 					firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obras_ddl_est + " option:selected").val()).update(obra_json);
+					alert("Operación exitosa");
+					var estimacion = {
+						fecha: new Date($('#' + id_fecha_est).val()).getTime(),
+						pad: pistaDeAuditoria(),
+						cantidad: total,
+						url: downloadURL,
+					}
+					firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obras_ddl_est + " option:selected").val() + "/estimaciones").push(estimacion);
 				});
 	        });
 	    });

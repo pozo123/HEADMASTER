@@ -300,7 +300,7 @@ function pistaDeAuditoria(){
 //Si el criterio es "porcentaje" (utilidad con respecto al precio de venta) debe ser entre 0 y 1 (30% = 0.3)
 //Si el criterio es "cantidad" se ingresa el monto exacto que se quiere de utilidad
 //Si el criterio es "precioVenta" el valor es el precio al que se va a vender, y se regresa el valor del profit (en %)
-function calculaUtilidad(costos, criterio, valor){
+/*function calculaUtilidad(costos, criterio, valor){
   var precioVenta;
   if(criterio == "porcentaje"){
     precioVenta = costos/((1-porcentaje_indirectos)-valor);
@@ -316,7 +316,7 @@ function calculaUtilidad(costos, criterio, valor){
     return profitPorcentaje;
     //return profitCantidad;
   }
-}
+}*/
 
 function descargaRespaldo(){
   var d = new Date();
