@@ -22,7 +22,6 @@ TO DO:
      - Gestionar sups solo si creden < 3 o admin
 *   - app_prod_remisiones (definir y programar)
    - Kaizen desplegar -> actualiza totales y profit pero no se ve hasta que se recarga
-   - app_editar_sueldos_base (para los rangos)
 **   - app_prod_entrada_estimacion
    - Desplegar Kaizen
      - avance.pag > avance.real = pag en rojo 
@@ -30,10 +29,8 @@ TO DO:
      - hacer que las columnas prec y cuant se hagan grises si el otro tiene datos
      - Desplegar Kaizen: TODO en colores por columna, sin el negro
  - PROYECTOS
-*   - gestionar_presu -> Gestionar horas score (distribuir por wey);
-     - App para terminar un proyecto. Se puede revertir. Lo qu ehace es copiar el ppto al pag en kaizen proy
+   - gestionar_presu -> Gestionar horas score (distribuir por wey);
      - Si terminado no se puede editar
-     - quitar proc misc de score
  - RRHH
  - GENERALES
 **   - indirecto

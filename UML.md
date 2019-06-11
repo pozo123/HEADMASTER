@@ -192,6 +192,7 @@
                - total_prog (en horas)
                - total_trabajado (en horas)
                - programado:bool (horas definidas, una vez)
+               - terminado
                - inges
                   - inge (por uid)
                      - horas_trabajadas (en horas) 

@@ -92,25 +92,27 @@ $('#' + id_obra_ddl_registros).change(function(){
         firebase.database().ref(rama_bd_obras + "/" + obra_nombre).once('value').then(function(snapshot){
             var obra = snapshot.val();
             snapshot.child("procesos").forEach(function(procSnap){
-                var proc = procSnap.val();
-                if(proc.num_subprocesos == 0){
-                    if(!proc.terminado && procSnap.key != "ADIC"){
-                        var option2 = document.createElement('option');
-                        var text_proc = procSnap.key == "MISC" ? "MISC (Auxiliares de obra)" : procSnap.key + " (" + proc.nombre + ")";
-                        option2.text = text_proc;
-                        option2.value = procSnap.key; 
-                        select.appendChild(option2);
-                    }
-                } else {
-                    procSnap.child("subprocesos").forEach(function(subpSnap){
-                        var subp = subpSnap.val();
-                        if(!subp.terminado){
+                if(procSnap.key != "MISC"){
+                    var proc = procSnap.val();
+                    if(proc.num_subprocesos == 0){
+                        if(!proc.terminado && procSnap.key != "ADIC"){
                             var option2 = document.createElement('option');
-                            option2.text = subpSnap.key + " (" + subp.nombre + ")";
-                            option2.value = subpSnap.key; 
+                            var text_proc = procSnap.key == "MISC" ? "MISC (Auxiliares de obra)" : procSnap.key + " (" + proc.nombre + ")";
+                            option2.text = text_proc;
+                            option2.value = procSnap.key; 
                             select.appendChild(option2);
                         }
-                    });
+                    } else {
+                        procSnap.child("subprocesos").forEach(function(subpSnap){
+                            var subp = subpSnap.val();
+                            if(!subp.terminado){
+                                var option2 = document.createElement('option');
+                                option2.text = subpSnap.key + " (" + subp.nombre + ")";
+                                option2.value = subpSnap.key; 
+                                select.appendChild(option2);
+                            }
+                        });
+                    }
                 }
             });
         });

@@ -1,5 +1,8 @@
 var id_obras_ddl_est = "obrasDdlEst";
 var id_table_est = "tableEst";
+var id_file_est = "fotoEst";
+var id_file_label_est = "fotoLabelEst";
+var id_actualizar_button_est = "acutalizarEst";
 
 var rama_bd_obras = "obras";
 
@@ -87,7 +90,7 @@ function headersEst() {
   cell4.innerHTML = "ACUMULADO ($)";
   cell5.innerHTML = "ACUMULADO (%)";
   cell6.innerHTML = "EST ($)";
-  cell7.innerHTML = "EST ($)";
+  cell7.innerHTML = "EST (%)";
   cell8.innerHTML = "TOTAL (%)";
 }
 
@@ -122,8 +125,8 @@ function cargaRenglonEst(hojaSnap){
     cell_id.appendChild(id_label);
     cell_nombre.appendChild(nombre_label);
     cell_ppto.appendChild(ppto_label);
-    cell_id.appendChild(id_label);
-    cell_nombre.appendChild(acu_porc_label);
+    cell_acu_cant.appendChild(acu_cant_label);
+    cell_acu_porc.appendChild(acu_porc_label);
     cell_total.appendChild(total_label);
 
     var est_cant = document.createElement('input');
@@ -131,18 +134,29 @@ function cargaRenglonEst(hojaSnap){
     est_cant.id = "est_cant_" + hojaSnap.key;
     est_cant.placeholder = "Cantidad estimada";
 
-    var cell_est_porc = document.createElement('input');
-    cell_est_porc.type = "text";
-    cell_est_porc.id = "est_porc_" + hojaSnap.key;
-    cell_est_porc.placeholder = "Porcentaje estimado";
-    
+    var est_porc = document.createElement('input');
+    est_porc.type = "text";
+    est_porc.id = "est_porc_" + hojaSnap.key;
+    est_porc.placeholder = "Porcentaje estimado";
+
+    cell_est_cant.appendChild(est_cant);
+    cell_est_porc.appendChild(est_porc);
+
     $('#' + est_cant.id).change(function(){
     	var nueva_est = isNaN(parseFloat($('#' + est_cant.id).val())) ? 0 : parseFloat($('#' + est_cant.id).val());
-    	$('#' + cell_est_porc.id).val((100 * nueva_est / ppto).toFixed(2) + "%");
+    	$('#' + est_porc.id).val((100 * nueva_est / ppto).toFixed(2) + "%");
     	total_label.innerHTML = (100 * (nueva_est + est) / ppto).toFixed(2) + "%";
     });
 
-    cell_est_cant.appendChild(est_cant);
-    cell_cell_est_porc.appendChild(cell_est_porc);
-    
+    $('#' + est_porc.id).change(function(){
+    	var nuevo_porc = isNaN(parseFloat($('#' + est_porc.id).val())) ? 0 : parseFloat($('#' + est_porc.id).val());
+    	$('#' + est_cant.id).val((ppto * nuevo_porc / 100).toFixed(2));
+    	total_label.innerHTML = ((100 * est / ppto) + nuevo_porc).toFixed(2) + "%";
+    });
 }
+
+$('#' + id_actualizar_button_est).click(function(){
+	firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obras_ddl_est + " option:selected").val()).once('value').then(function(snapshot){
+
+	});
+});
