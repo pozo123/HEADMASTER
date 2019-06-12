@@ -27,6 +27,7 @@ TO DO:
      - hacer que las columnas prec se hagan grises si el otro tiene datos
      - Desplegar Kaizen: TODO en colores por columna, sin el negro
  - PROYECTOS
+   - en dashcards al hacer mouseover desplegar un resumen de la obra entera en un modal/popup
    - gestionar_presu -> Gestionar horas score programadas
  - RRHH
  - GENERALES
@@ -68,8 +69,17 @@ TO DO:
     - app_catalogo_personal
     - app_catalogo_proveedores
  - Compras
+    - 99 + 129 + 
+    - app_compras_asigna_contrato
+    - app_compras_contrato
  *
-    - 
+    - app_compras_importar_proveedores
+    - app_compras_odec
+    - app_compras_pag_kaizen
+    - app_compras_pagos
+    - app_compras_proveedor
+    - app_compras_solped
+    - compras
 
  Obsoletos: 
  - app_utilidad

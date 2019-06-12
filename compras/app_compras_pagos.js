@@ -63,16 +63,14 @@ $('#' + id_tab_pag_compras).click(function(){
     option4.style = "display:none";
     option4.text = option.value = "";
     select2.appendChild(option4);
-
-    firebase.database().ref(rama_bd_obras).orderByChild('nombre').on('child_added',function(snapshot){
-        var obra = snapshot.val();
-        if(!obra.terminada){
-	        var option3 = document.createElement('OPTION');
-	        option3.text = obra.nombre;
-	        option3.value = obra.nombre;
+	for(key in nombre_obras){
+    	if(!nombre_obras[key].terminada){
+	        var option2 = document.createElement('OPTION');
+	        option3.text = key;
+	        option3.value = key;
 	        select2.appendChild(option3);
 	    }
-    });
+    };
 });
 
 $("#" + id_obra_ddl_pag_compras).change(function(){

@@ -21,54 +21,53 @@ $('#' + tab_asigna_contrato).click(function(){
     option.text = option.value = "";
     select.appendChild(option);
 
-    firebase.database().ref(rama_bd_obras_magico).orderByChild('nombre').on('child_added',function(snapshot){
-        var obra = snapshot.val();
-        var option2 = document.createElement('OPTION');
-        option2.text = obra.nombre;
-        option2.value = obra.nombre;
-        select.appendChild(option2);
-    });
+    for(key in nombre_obras){
+    	if(!nombre_obras[key].terminada){
+	        var option2 = document.createElement('OPTION');
+	        option2.text = key;
+	        option2.value = key;
+	        select.appendChild(option2);
+	    }
+    };
 });
 
 $("#" + id_obra_ddl_asigna_contrato).change(function(){
 	$('#' + id_proc_ddl_asigna_contrato).empty();
+	var obra = nombre_obras[$('#' + id_obra_ddl_asigna_contrato + " option:selected").val()];
 
-    firebase.database().ref(rama_bd_obras_magico + "/" + $('#' + id_obra_ddl_asigna_contrato + " option:selected").val()).once('value').then(function(snapshot){
-	    var obra = snapshot.val();
-	    if(!obra.terminada){
-		    if(obra.num_procesos == 0){
-		    	$('#' + id_group_proc_asigna_contrato).addClass('hidden');
-		    	caso = "obra";
-		    } else {
-				caso = "proc";
-		    	$('#' + id_group_proc_asigna_contrato).removeClass('hidden');
+    if(!obra.terminada){
+	    if(obra.num_procesos == 0){
+	    	$('#' + id_group_proc_asigna_contrato).addClass('hidden');
+	    	caso = "obra";
+	    } else {
+			caso = "proc";
+	    	$('#' + id_group_proc_asigna_contrato).removeClass('hidden');
 
-			    var select = document.getElementById(id_proc_ddl_asigna_contrato);
-			    var option = document.createElement('option');
-			    option.style = "display:none";
-			    option.text = option.value = "";
-			    select.appendChild(option);
+		    var select = document.getElementById(id_proc_ddl_asigna_contrato);
+		    var option = document.createElement('option');
+		    option.style = "display:none";
+		    option.text = option.value = "";
+		    select.appendChild(option);
 
-			    snapshot.child('procesos').forEach(function(childSnap){
-					var proc = childSnap.val();
-			    	if(proc.num_subprocesos == 0 || obra.nombre == "IQONO MEXICO"){
-				    	var option2 = document.createElement('OPTION');
-				        option2.text = proc.clave + " (" + proc.nombre + ")";
-				        option2.value = proc.clave;
+		    for(procKey in obra.procesos){
+				var proc = obra.procesos[procKey];
+		    	if(proc.num_subprocesos == 0 || $('#' + id_obra_ddl_asigna_contrato + " option:selected").val() == "IQONO MEXICO"){
+			    	var option2 = document.createElement('OPTION');
+			        option2.text = procKey + " (" + proc.nombre + ")";
+			        option2.value = procKey;
+			        select.appendChild(option2);
+		    	} else {
+		    		for(subpKey in proc.subprocesos){
+		    			var subp = proc.subprocesos[subpKey];
+		    			var option2 = document.createElement('OPTION');
+				        option2.text = subpKey + " (" + subp.nombre + ")";
+				        option2.value = subpKey;
 				        select.appendChild(option2);
-			    	} else {
-			    		childSnap.child('subprocesos').forEach(function(subpSnap){
-			    			var subp = subpSnap.val();
-			    			var option2 = document.createElement('OPTION');
-					        option2.text = subp.clave + " (" + subp.nombre + ")";
-					        option2.value = subp.clave;
-					        select.appendChild(option2);
-			    		});
-			    	}
-			    });
-		    }
-		}
-    });
+		    		};
+		    	}
+		    };
+	    }
+	}
 });
 
 $("#" + id_proc_ddl_asigna_contrato).change(function(){

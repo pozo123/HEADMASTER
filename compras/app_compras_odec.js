@@ -42,15 +42,14 @@ $('#' + tab_odec).click(function(){
     option.text = option.value = "";
     select.appendChild(option);
 
-    firebase.database().ref(rama_bd_obras).orderByChild('nombre').on('child_added',function(snapshot){
-        var obra = snapshot.val();
-        if(!obra.terminada){
+    for(key in nombre_obras){
+    	if(!nombre_obras[key].terminada){
 	        var option2 = document.createElement('OPTION');
-	        option2.text = obra.nombre;
-	        option2.value = obra.nombre;
+	        option2.text = key;
+	        option2.value = key;
 	        select.appendChild(option2);
 	    }
-    });
+    };
 
     loadDataTableOdeC();
 });
@@ -374,4 +373,3 @@ $('#' + id_pdf_file_odec).on("change", function(event){
     pdfSeleccionado = event.target.files[0];
     $('#' + id_pdf_label_odec).text(pdfSeleccionado.name);
 });
-

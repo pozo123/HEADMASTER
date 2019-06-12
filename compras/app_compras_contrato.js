@@ -18,15 +18,15 @@ $('#' + id_tab_contrato).click(function(){
     option.text = option.value = "";
     select.appendChild(option);
 
-    firebase.database().ref(rama_bd_obras).orderByChild('nombre').on('child_added',function(snapshot){
-        var obra = snapshot.val();
+    for(key in nombre_obras){
+        obra = nombre_obras[key];
         if(!obra.terminada){   
             var option2 = document.createElement('option');
-            option2.text = obra.nombre;
-            option2.value = obra.nombre; 
+            option2.text = key;
+            option2.value = key; 
             select.appendChild(option2);
         }
-    });
+    }
     loadTablaContrato();
 });
 

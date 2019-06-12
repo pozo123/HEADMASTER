@@ -27,7 +27,7 @@ $('#' + tab_gestionar_score).click(function(){
     firebase.database().ref(rama_bd_obras).once('value').then(function(snapshot){
         snapshot.forEach(function(childSnap){
         	var obra = childSnap.val();
-        	if(areas_usuario_global.administracion || creden_usuario_globalfalse < 3){
+        	if(areas_usuario_global.administracion || creden_usuario_global < 3){
 				var option2 = document.createElement('OPTION');
 				option2.text = obra.nombre;
 				option2.value = obra.nombre;

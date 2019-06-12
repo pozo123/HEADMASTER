@@ -29,15 +29,14 @@ $('#' + tab_pag_suministros_kaizen).click(function(){
     option.text = option.value = "";
     select.appendChild(option);
 
-    firebase.database().ref(rama_bd_obras_magico).orderByChild('nombre').on('child_added',function(snapshot){
-        var obra = snapshot.val();
-        if(!obra.terminada){
+    for(key in nombre_obras){
+    	if(!nombre_obras[key].terminada){
 	        var option2 = document.createElement('OPTION');
-	        option2.text = obra.nombre;
-	        option2.value = obra.nombre;
+	        option2.text = key;
+	        option2.value = key;
 	        select.appendChild(option2);
 	    }
-    });
+    };
 });
 
 $("#" + id_obra_ddl_pag_suministros_kaizen).change(function(){
