@@ -107,10 +107,12 @@ function calculaKaizen(obra,tipo,proceso,subproceso){
       if(tipo == "global"){
         snapshot.child("procesos").forEach(function(procSnap){
           if(procSnap.child("num_subprocesos").val() == 0){
-            calculaProfitKaiz(json_obra["procesos"][procSnap.key]);
+            var ind = procSnap.child("porcentaje_indirectos").exists() ? realParse(procSnap.child("porcentaje_indirectos").val()) / 100 : porcentaje_indirectos / 100;
+            calculaProfitKaiz(json_obra["procesos"][procSnap.key], ind);
           } else {
             procSnap.child("subprocesos").forEach(function(subpSnap){
-              calculaProfitKaiz(json_obra["procesos"][procSnap.key]["subprocesos"][subpSnap.key]);
+              var ind = subpSnap.child("porcentaje_indirectos").exists() ? realParse(subpSnap.child("porcentaje_indirectos").val()) / 100 : porcentaje_indirectos / 100;
+              calculaProfitKaiz(json_obra["procesos"][procSnap.key]["subprocesos"][subpSnap.key], ind);
             });
             sumaValoresKaiz(json_obra["procesos"][procSnap.key],"proceso");
           }
@@ -119,10 +121,12 @@ function calculaKaizen(obra,tipo,proceso,subproceso){
       } else {
         if(proceso != undefined){
           if(json_obra["procesos"][proceso]["num_subprocesos"] == 0){
-            calculaProfitKaiz(json_obra["procesos"][proceso]);
+            var ind = snapshot.child("procesos/" + proceso + "/porcentaje_indirectos").exists() ? realParse(procSnap.child("procesos/" + proceso + "/porcentaje_indirectos").val()) / 100 : porcentaje_indirectos / 100;
+            calculaProfitKaiz(json_obra["procesos"][proceso], ind);
           } else {
             if(subproceso != undefined){
-              calculaProfitKaiz(json_obra["procesos"][proceso]["subprocesos"][subproceso]);
+              var ind =snapshot.child("procesos/" + proceso + "/subprocesos/" + subproceso + "/porcentaje_indirectos").exists() ? realParse(procSnap.child("procesos/" + proceso + "/subprocesos/" + subproceso + "/porcentaje_indirectos").val()) / 100 : porcentaje_indirectos / 100;;// AQUI;
+              calculaProfitKaiz(json_obra["procesos"][proceso]["subprocesos"][subproceso], ind);
             }
             sumaValoresKaiz(json_obra["procesos"][proceso],"proceso");
           }
@@ -167,7 +171,7 @@ function sumaValoresKaiz(pointer,tipo){
   pointer["kaizen"] = suma_kaiz;
 }
 //Recibe snapshot del objeto que tenga un kaizen (proc o subproc). Obra no porque ese se calcula sumando, por lo de prec/copeo y cuant/odec
-function calculaProfitKaiz(pointer){
+function calculaProfitKaiz(pointer, ind){
   //console.log("calculando profit de ");
   //console.log(pointer.clave);
   var kaiz_local = pointer["kaizen"];
@@ -187,11 +191,11 @@ function calculaProfitKaiz(pointer){
 
   var costo_cop = prod_cop_copeo;
   var costo_sum = prod_sum_cuant;
-  kaiz_local["PROFIT"]["PROG"]["BRUTO"] = (admin_est_ppto + admin_ant_ppto) * (1 - porcentaje_indirectos) - costo_cop - costo_sum - proy_ppto;
-  kaiz_local["PROFIT"]["PROG"]["NETO"] = ((admin_est_ppto + admin_ant_ppto) * (1 - porcentaje_indirectos) - costo_cop - costo_sum - proy_ppto) * 0.6;
+  kaiz_local["PROFIT"]["PROG"]["BRUTO"] = (admin_est_ppto + admin_ant_ppto) * (1 - ind) - costo_cop - costo_sum - proy_ppto;
+  kaiz_local["PROFIT"]["PROG"]["NETO"] = ((admin_est_ppto + admin_ant_ppto) * (1 - ind) - costo_cop - costo_sum - proy_ppto) * 0.6;
 
-  kaiz_local["PROFIT"]["REAL"]["BRUTO"] = (admin_ant_pag + admin_est_pag) * (1 - porcentaje_indirectos) - prod_cop_pag - prod_sum_pag - proy_pag;
-  kaiz_local["PROFIT"]["REAL"]["NETO"] = ((admin_ant_pag + admin_est_pag) * (1 - porcentaje_indirectos) - prod_cop_pag - prod_sum_pag - proy_pag) * 0.6;
+  kaiz_local["PROFIT"]["REAL"]["BRUTO"] = (admin_ant_pag + admin_est_pag) * (1 - ind) - prod_cop_pag - prod_sum_pag - proy_pag;
+  kaiz_local["PROFIT"]["REAL"]["NETO"] = ((admin_ant_pag + admin_est_pag) * (1 - ind) - prod_cop_pag - prod_sum_pag - proy_pag) * 0.6;
 }
 
 function sumaEnFirebase(query, cant){
@@ -433,7 +437,7 @@ function highLight(id){
     setTimeout(function(){  document.getElementById(id).style.background = "white";}, 1000);
 }
 
-const porcentaje_indirectos = 0.2;
+const porcentaje_indirectos = 20;
 
 const kaiz = {
     PROYECTOS: {

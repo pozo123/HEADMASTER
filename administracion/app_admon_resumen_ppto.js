@@ -36,36 +36,30 @@ $('#' + tab_resumen_pptos).click(function(){
     select.appendChild(option);
 
     var obra_bool = false;
-
-    firebase.database().ref(rama_bd_obras_magico).orderByChild('nombre').on('child_added',function(snapshot){
+    for(key in nombre_obras){
+        var obra = nombre_obras[key];
         $('#' + id_loader_resumen_pptos).removeClass("hidden");
         obra_bool = false;
-        var obra = snapshot.val();
         if(!obra.terminada){
-            snapshot.child('procesos').forEach(function(childSnap){
-                var proc = childSnap.val();
-                if(proc.clave == "ADIC" || proc.clave == "PC00"){
-                    childSnap.child('subprocesos').forEach(function(subpSnap){
-                        var ppto = subpSnap.val();
-                        if(ppto.clave && ppto.clave != "PC00-MISC"){
+            for(keyProc in obra["procesos"]){
+                var proc = obra["procesos"][keyProc];
+                if(keyProc == "ADIC" || keyProc == "PC00"){
+                    for(keySubp in keyProc["subprocesos"]){
+                        if(keySubp != "PC00-MISC"){
                             obra_bool = true;
                         }
-                    });
+                    };
                 }
-            });
+            };
             if(obra_bool){
                 var option2 = document.createElement('OPTION');
-                option2.text = obra.nombre;
-                option2.value = obra.nombre;
+                option2.text = key;
+                option2.value = key;
                 select.appendChild(option2);
             }
     	}
-    });
-
+    };
     actualizarTable();
-
-    // Código para llenar la tabla
-
 });
 
 function actualizarTable(){
@@ -206,31 +200,23 @@ function showPdfAprobado(link){
 $("#" + id_obra_ddl_resumen_pptos).change(function(){
 
     $('#' + id_proc_ddl_resumen_pptos).empty();
-    
-    firebase.database().ref(rama_bd_obras_magico + "/" + $('#' + id_obra_ddl_resumen_pptos + " option:selected").val()).once('value').then(function(snapshot){
-        var select = document.getElementById(id_proc_ddl_resumen_pptos);
-        var option = document.createElement('option');
-        option.style = "display:none";
-        option.text = option.value = "";
-        select.appendChild(option);
-
-        snapshot.child('procesos').forEach(function(childSnap){
-            var proc = childSnap.val();
-            if(proc.clave == "ADIC" || proc.clave == "PC00"){
-                childSnap.child('subprocesos').forEach(function(subpSnap){
-                    var subp = subpSnap.val();
-                    if(subp.clave){
-                        if(subp.clave != "PC00-MISC"){
-                            var option2 = document.createElement('OPTION');
-                            option2.text = subp.clave + " (" + subp.nombre + ")";
-                            option2.value = subp.clave;
-                            select.appendChild(option2);
-                        }
-                    }
-                });
+    var select = document.getElementById(id_proc_ddl_resumen_pptos);
+    var option = document.createElement('option');
+    option.style = "display:none";
+    option.text = option.value = "";
+    select.appendChild(option);
+    for(key in nombre_obras[$('#' + id_obra_ddl_resumen_pptos + " option:selected").val()]["procesos"]){
+        if(key == "ADIC" || key == "PC00"){
+            for(keySubp in nombre_obras[$('#' + id_obra_ddl_resumen_pptos + " option:selected").val()]["procesos"][key]["subprocesos"]){
+                if(keySubp != "PC00-MISC"){
+                    var option2 = document.createElement('OPTION');
+                    option2.text = keySubp + " (" + nombre_obras[$('#' + id_obra_ddl_resumen_pptos + " option:selected").val()]["procesos"][key]["subprocesos"].nombre + ")";
+                    option2.value = keySubp;
+                    select.appendChild(option2);
+                }
             }
-        });
-    });
+        }
+    }
 });
 
 // funciones para el monto aprobado

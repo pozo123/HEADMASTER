@@ -33,16 +33,14 @@ $('#' + id_tab_corruptos).click(function(){
 	    option.text = option.value = "";
 	    select.appendChild(option);
 
-	    firebase.database().ref(rama_bd_personal).once('value').then(function(snapshot){
-	        snapshot.forEach(function(persSnap){
-	        	if(persSnap.child("areas/proyectos").val() && !persSnap.child("areas/administracion").val() && persSnap.child("activo").val()){
-			        var option2 = document.createElement('OPTION');
-			        option2.text = persSnap.child("nickname").val();
-			        option2.value = persSnap.key;
-			        select.appendChild(option2);
-	        	}
-	        });
-	    });
+    	for(key in json_personal){
+    		if(json_personal[key].areas.proyectos && !json_personal[key].areas.administracion && json_personal[key].activo){
+		        var option2 = document.createElement('OPTION');
+		        option2.text = persSnap.child("nickname").val();
+		        option2.value = persSnap.key;
+		        select.appendChild(option2);
+    		}
+    	}
 	} else {
 		$('#' + id_inge_group_corruptos).addClass('hidden');
 		loadRegistrosCorruptos(uid_usuario_global);
@@ -51,39 +49,37 @@ $('#' + id_tab_corruptos).click(function(){
 
 function loadTableCorruptos(){
     var datos_corruptos = [];
-    firebase.database().ref(rama_bd_personal).once('value').then(function(persSnap){
-	    firebase.database().ref(rama_bd_registros).once('value').then(function(snapshot){
-			snapshot.forEach(function(yearSnap){
-				yearSnap.forEach(function(weekSnap){
-					weekSnap.forEach(function(regSnap){
-						var reg = regSnap.val();
-						if(reg.horas == -1 || (!reg.status && new Date().getDay() != new Date(reg.checkin).getDay()) || (reg.horas == 0 && reg.status)){
-							var fech = new Date(reg.checkin);
-							var month = fech.getMonth() + 1;
-							var day = fech.getDate();
-							var year = fech.getFullYear();
-							datos_corruptos.push([persSnap.child(reg.inge + "/nickname").val(), reg.obra, reg.proceso, month + "/" + day + "/" + year, fech.getHours() + ":" + ("0" + fech.getMinutes()).slice(-2), reg.status ? "Terminado" : "Activo"]);
-						}
-					});
+    firebase.database().ref(rama_bd_registros).once('value').then(function(snapshot){
+		snapshot.forEach(function(yearSnap){
+			yearSnap.forEach(function(weekSnap){
+				weekSnap.forEach(function(regSnap){
+					var reg = regSnap.val();
+					if(reg.horas == -1 || (!reg.status && new Date().getDay() != new Date(reg.checkin).getDay()) || (reg.horas == 0 && reg.status)){
+						var fech = new Date(reg.checkin);
+						var month = fech.getMonth() + 1;
+						var day = fech.getDate();
+						var year = fech.getFullYear();
+						datos_corruptos.push([json_personal[reg.inge].nickname, reg.obra, reg.proceso, month + "/" + day + "/" + year, fech.getHours() + ":" + ("0" + fech.getMinutes()).slice(-2), reg.status ? "Terminado" : "Activo"]);
+					}
 				});
 			});
-			var tabla_diver = $('#'+ id_datatable_corruptos).DataTable({
-	            destroy: true,
-	            data: datos_corruptos,
-	            dom: 'Bfrtip',
-	            buttons: ['excel'],
-	            columns: [
-	            	{title: "Colaborador",},
-	            	{title: "Obra",},
-	            	{title: "Proceso",},
-	            	{title: "Fecha de inicio",},
-	            	{title: "Hora de inicio",},
-	            	{title: "Status",},
-	            ],
-	            language: idioma_espanol,
-	        });
 		});
-    });
+		var tabla_diver = $('#'+ id_datatable_corruptos).DataTable({
+            destroy: true,
+            data: datos_corruptos,
+            dom: 'Bfrtip',
+            buttons: ['excel'],
+            columns: [
+            	{title: "Colaborador",},
+            	{title: "Obra",},
+            	{title: "Proceso",},
+            	{title: "Fecha de inicio",},
+            	{title: "Hora de inicio",},
+            	{title: "Status",},
+            ],
+            language: idioma_espanol,
+        });
+	});
 }
 
 $('#' + id_inge_ddl_corruptos).change(function(){

@@ -39,15 +39,14 @@ $('#tabEditarProceso').click(function(){
     option.text = option.value = "";
     select.appendChild(option);
 
-    firebase.database().ref(rama_bd_obras_magico).orderByChild('nombre').on('child_added',function(snapshot){
-        var obra = snapshot.val();
-        if(!obra.terminada){
+    for(key in nombre_obras){
+        if(!nombre_obras[key].terminada){
             var option2 = document.createElement('OPTION');
-            option2.text = obra.nombre;
-            option2.value = obra.clave;
+            option2.text = nombre_obras[key].nombre;
+            option2.value = key;
             select.appendChild(option2);
         }
-    });
+    }
 });
 
 $("#" + id_obra_ddl_editar_proceso).change(function(){

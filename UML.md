@@ -202,7 +202,6 @@
                - inges
                   - inge (por uid)
                      - horas_trabajadas (en horas) 
-                     - horas_programadas (en horas)
             - subprocesos:
                - subproceso (por clave):
                   - alcance

@@ -421,7 +421,8 @@
                             <li class="tab" id="tabAltaProceso"><a href="#" onclick="openTabs('tabAltaProceso','altaProceso')">Alta de procesos</a></li>
                             <li class="tab tabEditarProceso" id="tabEditarProceso"><a href="#" onclick="openTabs('tabEditarProceso','editarProceso')">Editar Procesos</a></li>
                             <li class="tab" id="tabPresupuestoAdic"><a href="#" onclick="openTabs('tabPresupuestoAdic','presupuestoAdic')">Generar Presupuesto Adicional</a></li>
-                            <li class="tab tab" id="tabKaizenPpto"><a href="#" onclick="openTabs('tabKaizenPpto','kaizenPpto')">Generador de Precios - Kaizen </a></li>
+                            <li class="tab" id="tabKaizenPpto"><a href="#" onclick="openTabs('tabKaizenPpto','kaizenPpto')">Generador de Precios - Kaizen </a></li>
+                            <li class="tab" id="tabImportarAdic"><a href="#" onclick="openTabs('tabImportarAdic','importarAdic')">Importar Adicionales</a></li>
                         </ul>
                     </li>
                     <li>
@@ -835,7 +836,34 @@
                                         <div class="col-lg-3"></div>
                                     </div>
                                 </div>
-                        </div>  
+                        </div>
+                        <div id="importarAdic" class="tabcontent hidden">
+                            <h1>Importar Adicionales</h1>
+                            <p>Pestaña para subir adicionales desde excel</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3"></div>
+                                    <div class="col-lg-6">
+                                        <form action="#" onsubmit="return false;">
+
+                                            <div class="form-group">
+                                                <label for="importarAdicionalesLabelFile">Selecciona archivo de Excel en el formato deseado</label>
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="importarAdicionalesFile" accept=".xlsx, .xls, .csv">
+                                                    <label class = "custom-file-label" id="importarAdicionalesLabelFile"> Archivo no seleccionado</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-row">
+                                                <button id="importarAdicionalesButton" type="button" class="btn btn-outline-success btn-block">Aceptar</button>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class="col-lg-3"></div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- Alta Cuentas-->
                         <div id="altaCuentas" class="tabcontent hidden">
                             <h1>Alta de Cuentas para el Centro de Costos</h1>
@@ -1004,6 +1032,10 @@
                                                 <div class="col-lg-4">
                                                     <label for="horaScorePptoAdic">Costo Hora SCORE:</label>
                                                     <input type="text"  id="horaScorePptoAdic" class="form-control" placeholder="" aria-describedby="helpId">
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="indirectosPptoAdic">Porcentaje de Indirectos:</label>
+                                                    <input type="text"  id="indirectosPptoAdic" class="form-control" placeholder="" aria-describedby="helpId">
                                                 </div>
                                             </div>
                                             <div class="form-row align-items-center">
@@ -1799,7 +1831,8 @@
 <script src="administracion/app_admon_reporte_diario.js"></script>
 <script src="administracion/app_admon_reporte_investime.js"></script>
 <script src="administracion/app_admon_pago_kaizen.js"></script>
-<script src= "administracion/app_admon_resumen_ppto.js"></script>
+<script src="administracion/app_admon_resumen_ppto.js"></script>
+<script src="administracion/app_admon_importar_adic.js"></script>
 <!--<script src="administracion/app_cuenta_cc.js"></script> -->
 <script src="catalogos/app_catalogo_atn.js"></script>
 <script src="catalogos/app_catalogo_categorias.js"></script>

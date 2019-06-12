@@ -8,6 +8,7 @@ var rama_bd_personal = "personal";
 
 var json_kaizen = {};
 var json_kaizen_obra = {};
+var indirectos_json = {};
 var editable = "editMe";
 var obra_clave;
 var duracion_obra;
@@ -67,6 +68,9 @@ $("#" + id_obras_ddl_desplegar_kaizen).change(function(){
 });
 
 function cargaKaizen(){
+	indirectos_json = {};
+	indirectos_json["total"] = 0;
+	indirectos_json["procesos"] = {};
 	calculaKaizen($('#' + id_obras_ddl_desplegar_kaizen + " option:selected").val(),"global");
 	$('.celda').remove();
     $(".row_data").remove();
@@ -200,6 +204,7 @@ function cargaKaizen(){
 
 	//Carga la tabla
 	firebase.database().ref(rama_bd_obras_magico + "/" + $('#' + id_obras_ddl_desplegar_kaizen + " option:selected").val()).once('value').then(function(snapshot){
+		indirectos_json["clave"] = snapshot.child("clave").val();
 		duracion_obra = parseFloat(snapshot.val().fechas.fecha_final_teorica) - parseFloat(snapshot.val().fechas.fecha_inicio_teorica);
 		json_kaizen = snapshot.val().procesos;
         json_kaizen_obra = snapshot.val().kaizen;
@@ -269,6 +274,7 @@ function cargaKaizen(){
 				y[k].className += " evenSubp";
 			}
 		}
+		trickleDownIndirectos();
 
 	});
 };
@@ -288,6 +294,13 @@ function addProfitNeto(obra, table){
 	row.appendChild(profit_neto);
 	table.appendChild(row);
 }
+
+function trickleDownIndirectos(){
+	for(key in indirectos_json["procesos"]){
+		document.getElementById(key + "_INDIRECTOS").innerHTML = formatMoney(indirectos_json["procesos"][key]);
+	}
+	document.getElementById(indirectos_json["clave"] + "_INDIRECTOS").innerHTML = formatMoney(indirectos_json["total"]);
+}
 //proc es algo que tiene kaizen
 function createRow(proc,table,tipo){
 	var editClass;
@@ -296,6 +309,7 @@ function createRow(proc,table,tipo){
 	var row = document.createElement('tr');
 	row.className = "row_data row100";
 	row.id = "row_" + cl;	
+	var ind;
 	if(tipo == "obra" || tipo == "obraSimple"){
 		var titulo = document.createElement('td');
 		titulo.innerHTML = "TOTAL";
@@ -314,6 +328,10 @@ function createRow(proc,table,tipo){
 		proc_nombre.className = "nombre right"
 		row.appendChild(proc_nombre);
 		if(tipo == "procSimple"){
+			var porc_ind = proc.porcentaje_indirectos == undefined ? porcentaje_indirectos : proc.porcentaje_indirectos;
+			console.log(porc_ind);
+			ind = (realParse(proc.kaizen.ADMINISTRACION.ESTIMACIONES.PPTO + realParse(proc.kaizen.ADMINISTRACION.ANTICIPOS.PPTO)) * realParse(porc_ind)/100);
+			indirectos_json["total"] += ind;
             profitProgClass = " profit_prog";
 			editClass = editable;
 			row.className = "row_data row100 proceso"
@@ -322,6 +340,15 @@ function createRow(proc,table,tipo){
 			profitProgClass = " profit_prog";
 			row.className = "row_data row100 proceso"
 		} else if(tipo == "subproc"){
+			var porc_ind = proc.porcentaje_indirectos == undefined ? porcentaje_indirectos : proc.porcentaje_indirectos;
+			console.log(porc_ind);
+			ind = (realParse(proc.kaizen.ADMINISTRACION.ESTIMACIONES.PPTO + realParse(proc.kaizen.ADMINISTRACION.ANTICIPOS.PPTO)) * realParse(porc_ind)/100);
+			indirectos_json["total"] += ind;
+			if(!indirectos_json["procesos"][cl.split("-")[0]]){
+				indirectos_json["procesos"][cl.split("-")[0]] = ind;
+			} else {
+				indirectos_json["procesos"][cl.split("-")[0]] += ind;
+			}
 			cl = "sub_" + cl;
 			editClass = editable;
 			row.className = "row_data subproc_row hidden";
@@ -412,10 +439,14 @@ function createRow(proc,table,tipo){
 	admin_anticipos_pag.className = "celda admin right";
 	row.appendChild(admin_anticipos_pag);
 
-    // AQUI
+	
 	var admin_anticipos_pag = document.createElement('td');
 	admin_anticipos_pag.id = cl + "_INDIRECTOS";
-	admin_anticipos_pag.innerHTML = formatMoney("AQUI");
+	if(tipo == "subproc" || tipo == "procSimple"){
+		admin_anticipos_pag.innerHTML = formatMoney(ind);
+	} else {
+		admin_anticipos_pag.innerHTML = "-";
+	}
 	admin_anticipos_pag.className = "celda indirectos right";
 	row.appendChild(admin_anticipos_pag);
 	// ------------------------------

@@ -1,6 +1,7 @@
 var version;
 // Necesitamos cambiar a rama personal
 var rama_bd_personal = "personal";
+var rama_bd_obras = "obras";
 var userPro = ""
 var fotoSeleccionada = ""
 var rama_storage_personal  = "personal"
@@ -12,6 +13,9 @@ var id_week_label = "weekLabel";
 var areas_usuario_global;
 var creden_usuario_global;
 var uid_usuario_global;
+
+var nombre_obras = {};
+var json_personal = {};
 
 var id_div_dropdown_areas = "dropdown_areas";
 
@@ -112,9 +116,39 @@ firebase.auth().onAuthStateChanged(user => {
     if(user) {
         uid_usuario_global = user.uid;
         userUID = user.uid;
-        firebase.database().ref(rama_bd_personal).orderByChild('uid').equalTo(user.uid).once("child_added", function (snapshot) {
-            var user_personal = snapshot.val();
+        firebase.database().ref(rama_bd_obras).once('value').then(function(snapshot){
+            snapshot.forEach(function(obraSnap){
+                var obra = obraSnap.val();
+                nombre_obras[obraSnap.key] = {
+                    procesos: {},
+                    hojas: {},
+                    num_procesos: obra.num_procesos,
+                    supervisor: obra.supervisor,
+                    terminada: obra.terminada,
+                }
+                obraSnap.child("procesos").forEach(function(procSnap){
+                    var proc = procSnap.val();
+                    nombre_obras[obraSnap.key]["procesos"][procSnap.key] = {nombre: proc.nombre, subprocesos: {}, num_subprocesos: proc.num_subprocesos};
+                    if(procSnap.child("num_subprocesos").val() == 0 && procSnap.key != "ADIC" && procSnap.key != "PC00"){
+                        nombre_obras[obraSnap.key]["hojas"][procSnap.key] = {nombre: proc.nombre};
+                    }
+                    procSnap.child("subprocesos").forEach(function(subpSnap){
+                        var subp = subpSnap.val();
+                        nombre_obras[obraSnap.key]["procesos"][procSnap.key]["subprocesos"][subpSnap.key] = {nombre: subp.nombre};
+                        nombre_obras[obraSnap.key]["hojas"][subpSnap.key] = {nombre: subp.nombre};
+                    });
+                });
+            });
+        });
+        firebase.database().ref(rama_bd_personal).once('value').then(function (snapshot) {
+            snapshot.forEach(function(persSnap){
+                var pers = persSnap.val();
+                json_personal[persSnap.key] = {nombre: pers.nombre, nickname: pers.nickname, areas: pers.areas, activo: pers.activo};
+            });
+            var user_personal = snapshot.child(user.uid).val();
+            console.log(user_personal);
             areas_usuario_global = user_personal.areas;
+            console.log(areas_usuario_global);
             creden_usuario_global = user_personal.credenciales;
             if(user.uid == "sD2NRaTu4Ug4e0gqluYaHpxNZbP2" || user.uid == "WCpLarWgMKfwGsvAdrqlqjQxy243"){
                 $("#tabRegistrosAdmon").removeClass('hidden');

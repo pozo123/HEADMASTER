@@ -7,10 +7,9 @@ HTMLs:
 TO DO:
  - ADMON
 *   - importar adicionaes desde excel
+*   - meter pdf a pptos adics con la tabla de arturo
    - datatable en pagos de emmanuel
-   - calcu kaizen textfield de impuestos
    - Edicion inve$stime
-   - reload tabla en app_admon_gestionar pptos
    - Centro de costos.
      - alta cuenta
      - añadir al desplegar
@@ -25,33 +24,55 @@ TO DO:
    - Desplegar Kaizen
      - avance.pag > avance.real = pag en rojo 
      - Subprocesos colapsables por proc al hacer click en el renglon (limpieza de codigo editable, buscar catalogo de procs)
-     - hacer que las columnas prec y cuant se hagan grises si el otro tiene datos
+     - hacer que las columnas prec se hagan grises si el otro tiene datos
      - Desplegar Kaizen: TODO en colores por columna, sin el negro
  - PROYECTOS
-   - gestionar_presu -> Gestionar horas score (distribuir por wey);
-     - Si terminado no se puede editar
+   - gestionar_presu -> Gestionar horas score programadas
  - RRHH
  - GENERALES
-**   - indirecto
-     //- Guardar % indirecto en hoja al usar calculadora kaizen.
-     - En desplegar kaizen añadir columna indirectos, multiplica %ind con precio venta 
-        - En hoja jalar %ind.exists() ? .2 : %ind
-        - en padre (proc u obra) es suma de hijos
-     - En todos lados (presupuesto, utilidad, ppto adic, funciones) que use la variable porcentaje_indirectos de app_funciones cambiarlo por query de la hoja
-   - 7iWWod9RyOh5tPBo8r1Qlrygk142 y c7y9OvOccgMhPr4kB1fPLIbFL153 (uno es luis) tienen ms en baja california/SCORE/horas_trabajadas
    - Subir templates de excel con formatos necesarios para imprtar (importar proveedores, trabajadores y ppto adic)
    - Cambiar idioma_espanol en tablas de apps como datos_kaizen y asistencia y desplegar_procesos
-   - Titulos de obra en catalogo de proceso en negritas y mas grandes
    - KICK-OFF 
      - subir y editar por req (req = {id, alcance, nombre_corto, familia})
      - asignar a proc (al dar de alta el proc, con ddcb)
      - Palomear (con pda, necesita creden, subir archivo)
      - liberar
-   - Errores:
-     - reg -LfKD9-qk6Kh_vims3jY de rojas se guardo en proyectos/obras
-     - cM3eoNLl81K1W9r de luis igual
+
+ ddl_corregidos:
+ - Admon: 3281
+    - 202 + 74 + 206 + 266 + 99 + 303 + 201 + 251 + 102 + 298 + 93 + 646 + 211 + 157 + 172
+    - app_admin_registro
+    - qpp_admon_areas
+    - app_admon_colaborador
+    - app_admon_corruptos
+    - app_admon_importar_adic
+    - app_admon_kaizen_ppto
+    - app_admon_pago_kaizen
+    - app_admon_reporte_diario
+    - app_admon_reporte_investime
+    - app_admon_resumen_ppto
+    - app_cliente
+    - app_cuenta_cc
+    - app_editar_proceso
+    - app_obra
+    - app_procesos
+ - Catalogos: 752
+    - 129 + 75 + 108 + 106 + 59 + 113 + 71 + 53 + 38
+    - app_catalogo_atn
+    - app_catalogo_categorias
+    - app_catalogo_clientes
+    - app_catalogo_destajistas
+    - app_catalogo_diversos
+    - app_catalogo_obras
+    - app_catalogo_odec
+    - app_catalogo_personal
+    - app_catalogo_proveedores
+ - Compras
+ *
+    - 
 
  Obsoletos: 
+ - app_utilidad
  - app_proy_cuant_kaizen
  - app_prod_gestionar_pptos
  - app_compras_odec_kaizen (la cambie por app_compras_odec)

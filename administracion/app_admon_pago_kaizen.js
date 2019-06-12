@@ -41,44 +41,36 @@ $('#' + tab_pago_kaizen).click(function(){
     option.text = option.value = "";
     select.appendChild(option);
 
-    firebase.database().ref(rama_bd_obras_magico).orderByChild('nombre').on('child_added',function(snapshot){
-        var obra = snapshot.val();
-        if(!obra.terminada){
+    for(key in nombre_obras){
+    	if(!nombre_obras[key].terminada){
 	        var option2 = document.createElement('OPTION');
-	        option2.text = obra.nombre;
-	        option2.value = obra.nombre;
+	        option2.text = key;
+	        option2.value = key;
 	        select.appendChild(option2);
     	}
-    });
+    }
 });
 
 $("#" + id_obra_ddl_pago_kaizen).change(function(){
     $('#' + id_proc_ddl_pago_kaizen).empty();
     $('#' + id_subp_ddl_pago_kaizen).empty();
     $('#' + id_group_subp_pago_kaizen).addClass('hidden');
-    firebase.database().ref(rama_bd_obras_magico + "/" + $('#' + id_obra_ddl_pago_kaizen + " option:selected").val()).once('value').then(function(snapshot){
-	    var obra = snapshot.val();
-	    if(obra.num_procesos == 0){
-	    	$('#' + id_group_proc_pago_kaizen).addClass('hidden');
-	    	caso = "obra";
-	    } else {
-	    	$('#' + id_group_proc_pago_kaizen).removeClass('hidden');
-
-		    var select = document.getElementById(id_proc_ddl_pago_kaizen);
-		    var option = document.createElement('option');
-		    option.style = "display:none";
-		    option.text = option.value = "";
-		    select.appendChild(option);
-
-		    snapshot.child('procesos').forEach(function(childSnap){
-		    	var proc = childSnap.val();
-		    	var option2 = document.createElement('OPTION');
-		        option2.text = proc.clave + " (" + proc.nombre + ")";
-		        option2.value = proc.clave;
-		        select.appendChild(option2);
-		    });
+    if(nombre_obras[$('#' + id_obra_ddl_pago_kaizen + " option:selected").val()].num_procesos == 0){
+    	caso = "obra";
+    } else {
+    	$('#' + id_group_proc_pago_kaizen).removeClass('hidden');
+    	var select = document.getElementById(id_proc_ddl_pago_kaizen);
+	    var option = document.createElement('option');
+	    option.style = "display:none";
+	    option.text = option.value = "";
+	    select.appendChild(option);
+	    for(key in nombre_obras[$('#' + id_obra_ddl_pago_kaizen + " option:selected").val()]["procesos"]){
+	    	var option2 = document.createElement('OPTION');
+	        option2.text = key + " (" + nombre_obras[$('#' + id_obra_ddl_pago_kaizen + " option:selected").val()]["procesos"][key].nombre + ")";
+	        option2.value = key;
+	        select.appendChild(option2);
 	    }
-    });
+	}
 });
 
 $('#' + id_file_pago_kaizen).on("change", function(event){
@@ -88,30 +80,26 @@ $('#' + id_file_pago_kaizen).on("change", function(event){
 
 $("#" + id_proc_ddl_pago_kaizen).change(function(){
     $('#' + id_subp_ddl_pago_kaizen).empty();
-    firebase.database().ref(rama_bd_obras_magico + "/" + $('#' + id_obra_ddl_pago_kaizen + " option:selected").val() + "/procesos/" + $('#' + id_proc_ddl_pago_kaizen + " option:selected").val()).once('value').then(function(snapshot){
-	    var proc = snapshot.val();
-	    if(proc.num_subprocesos == 0){
-	    	$('#' + id_group_subp_pago_kaizen).addClass('hidden');
-	    	caso = "proc";
-	    } else {
-	    	$('#' + id_group_subp_pago_kaizen).removeClass('hidden');
-	    	caso = "subp";
+    if(nombre_obras[$('#' + id_obra_ddl_pago_kaizen + " option:selected").val()]["procesos"][$('#' + id_proc_ddl_pago_kaizen + " option:selected").val()].num_subprocesos == 0){
+    	$('#' + id_group_subp_pago_kaizen).addClass('hidden');
+	    caso = "proc";
+    } else {
+    	$('#' + id_group_subp_pago_kaizen).removeClass('hidden');
+    	caso = "subp";
 
-		    var select = document.getElementById(id_subp_ddl_pago_kaizen);
-		    var option = document.createElement('option');
-		    option.style = "display:none";
-		    option.text = option.value = "";
-		    select.appendChild(option);
+	    var select = document.getElementById(id_subp_ddl_pago_kaizen);
+	    var option = document.createElement('option');
+	    option.style = "display:none";
+	    option.text = option.value = "";
+	    select.appendChild(option);
 
-		    snapshot.child('subprocesos').forEach(function(childSnap){
-		    	var subproc = childSnap.val();
-		    	var option2 = document.createElement('OPTION');
-		        option2.text = subproc.clave + " (" + subproc.nombre + ")";
-		        option2.value = subproc.clave;
-		        select.appendChild(option2);
-		    });
-	    }
-    });
+	    for(key in nombre_obras[$('#' + id_obra_ddl_pago_kaizen + " option:selected").val()]["procesos"][$('#' + id_proc_ddl_pago_kaizen + " option:selected").val()]["subprocesos"]){
+	    	var option2 = document.createElement('OPTION');
+	        option2.text = key + " (" + nombre_obras[$('#' + id_obra_ddl_pago_kaizen + " option:selected").val()]["procesos"][$('#' + id_proc_ddl_pago_kaizen + " option:selected").val()]["subprocesos"][key].nombre + ")";
+	        option2.value = key;
+	        select.appendChild(option2);
+	    };
+    }
 });
 
 $('#' + id_guardar_button_pago_kaizen).click(function(){

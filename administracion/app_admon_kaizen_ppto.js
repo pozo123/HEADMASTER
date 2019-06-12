@@ -40,28 +40,26 @@ $('#' + tab_kaizen_ppto).click(function(){
     select.appendChild(option);
 
 	var aut = (areas_usuario_global.administracion || creden_usuario_globalfalse < 3);
-
-    firebase.database().ref(rama_bd_obras).once('value').then(function(snapshot){
-        snapshot.forEach(function(childSnap){
-        	var obra = childSnap.val();
-        	var aut_local = false;
-        	if(!obra.terminada){
-	        	if(!aut){
-	        		childSnap.child("supervisor").forEach(function(supSnap){
-	        			if(supSnap.key == uid_usuario_global && supSnap.child("activo").val()){
-	        				aut_local = true;
-	        			}
-	        		});
-	        	}
-	        	if(aut || aut_local){
-			        var option2 = document.createElement('OPTION');
-			        option2.text = obra.nombre;
-			        option2.value = obra.nombre;
-			        select.appendChild(option2);
-			    }
+    for(key in nombre_obras){
+    	console.log(nombre_obras[key]);
+    	var obra = nombre_obras[key];
+    	var aut_local = false;
+    	if(!obra.terminada){
+        	if(!aut){
+        		for(sup in obra.supervisor){
+        			if(sup == uid_usuario_global && obra.supervisor[sup].activo){
+        				aut_local = true;
+        			}
+        		}
         	}
-        });
-    });
+        	if(aut || aut_local){
+		        var option2 = document.createElement('OPTION');
+		        option2.text = key;
+		        option2.value = key;
+		        select.appendChild(option2);
+		    }
+    	}
+    }
 });
 
 function resetKaizPpto(){
@@ -80,25 +78,12 @@ $("#" + id_obra_ddl_kaizen_ppto).change(function(){
     var option = document.createElement('option');
     option.text = option.value = "Global";
     select.appendChild(option);
-
-    firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_kaizen_ppto + " option:selected").val() +"/procesos").once('value').then(function(snapshot){
-        snapshot.forEach(function(procSnap){
-        	if(procSnap.key != "PC00" && procSnap.key != "ADIC" && procSnap.child("num_subprocesos").val() == 0){
-		        var option2 = document.createElement('OPTION');
-		        option2.text = procSnap.key + " (" + procSnap.child("nombre").val() + ")";
-		        option2.value = procSnap.key;
-		        select.appendChild(option2);
-        	} else {
-        		procSnap.child("subprocesos").forEach(function(subpSnap){
-			        var option2 = document.createElement('OPTION');
-			        option2.text = subpSnap.key + " (" + subpSnap.child("nombre").val() + ")";
-			        option2.value = subpSnap.key;
-			        select.appendChild(option2);
-        		});
-        	}
-        });
-		refreshKaizenPpto();
-    });
+    for(key in nombre_obras[$('#' + id_obra_ddl_kaizen_ppto + " option:selected").val()]["hojas"]){
+    	var option2 = document.createElement('OPTION');
+        option2.text = key + " (" + nombre_obras[$('#' + id_obra_ddl_kaizen_ppto + " option:selected").val()]["hojas"][key].nombre + ")";
+        option2.value = key;
+        select.appendChild(option2);
+    }
 });
 
 $("#" + id_proceso_ddl_kaizen_ppto).change(function(){

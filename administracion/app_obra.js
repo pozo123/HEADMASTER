@@ -48,16 +48,15 @@ $('#tabAltaObra').click(function(){
     option3.text = option3.value = "";
     select2.appendChild(option3);
 
-    firebase.database().ref(rama_bd_personal).orderByChild('nombre').on('child_added',function(snapshot){
-        var sup = snapshot.val();
-        if(snapshot.child("areas/produccion").val()){
+    //aqui
+    for(key in json_personal){
+        if(json_personal[key].areas.produccion){
             var option4 = document.createElement('OPTION');
-            option4.text = sup.nombre;
-            option4.value = snapshot.key;
+            option4.text = json_personal[key].nombre;
+            option4.value = key;
             select2.appendChild(option4);
         }
-    });
-   
+    }   
 });
 
 $('#' + id_registrar_button_obra).click(function () {

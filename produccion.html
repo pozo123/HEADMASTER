@@ -188,7 +188,6 @@
                         <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Obras</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu2">
                             <li class="tab" id="tabCatalogoProceso"><a href="#" onclick="openTabs('tabCatalogoProceso','catalogoProceso')">Catálogo de procesos</a></li>
-                            <li class="tab" id="tabUtilidad"><a href="#" onclick="openTabs('tabUtilidad','utilidad')">Generador de Precios</a></li>
                             <li class="tab" id="tabCopeo"><a href="#" onclick="openTabs('tabCopeo','copeo')">Copeo</a></li>
                             <li class="tab" id="tabEstimacion"><a href="#" onclick="openTabs('tabEstimacion','estimacion')">Estimaciones</a></li>
                         </ul>
@@ -480,60 +479,6 @@
                                 </div> 
                             </div>
                         </div>
-                        <div id="utilidad" class="tabcontent hidden">
-                                <h1>Generador de Precios</h1>
-                                <p>Página auxiliar que te ayuda a calcular precios de venta de procesos u obras</p>
-                                <div class="container-fluid">
-                                    <div class="row align-items-center">
-                                        <div class="col-lg-3"></div>
-                                        <div class="col-lg-6">
-                                            <form action="#" id="formUtilidad" onsubmit="return false;">                                      
-                                                <div class="form-group">
-                                                    <label for="obraDdlUtilidad">Obra:</label>
-                                                    <select id="obraDdlUtilidad" class="form-control"></select>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="procesoDdlUtilidad">Proceso:</label>
-                                                    <select id="procesoDdlUtilidad" class="form-control"></select>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="proyectosUtilidad">Costo de proyecto ($):</label>
-                                                    <input type="text" id="proyectosUtilidad" class="form-control" placeholder="Costo del proyecto">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="suministrosUtilidad">Costo de suministros ($):</label>
-                                                    <input type="text" id="suministrosUtilidad" class="form-control" placeholder="Costo de suministros">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="copeoUtilidad">Costo de copeo ($):</label>
-                                                    <input type="text" id="copeoUtilidad" class="form-control" placeholder="Costo de copeo">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="precioVentaUtilidad">Precio de venta ($):</label>
-                                                    <input type="text" id="precioVentaUtilidad" class="form-control" placeholder="Precio de venta">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="profitCantidadUtilidad">Profit ($):</label>
-                                                    <input type="text" id="profitCantidadUtilidad" class="form-control" placeholder="Profit($)">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="profitPorcentajeUtilidad">Profit (%):</label>
-                                                    <input type="text" id="profitPorcentajeUtilidad" class="form-control" placeholder="Profit (%)">
-                                                </div>
-                                                <div class="form-row">
-                                                    <div class= "col-lg-6">
-                                                        <button type="button" id = "loadButtonUtilidad"class="btn btn-outline-danger btn-block">Resetear Todo</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                            <br/>
-                                        </div>
-                                        <div class="col-lg-3"></div>
-                                    </div>
-                                </div>
-                        </div>  
 
                         <!-- cuadrillas-->
 
@@ -782,13 +727,6 @@
 <script src="catalogos/app_catalogo_obras.js"></script>
 <script src="numeroLetras.js"></script>
 <script src="produccion/produccion.js"></script>
-<!--<script src="produccion/app_colaboradores_produccion.js"></script>-->
-<!--<script src="produccion/app_obra_prod.js"></script>-->
-<!--<script src="produccion/app_procesos.js"></script>-->
-<!--<script src="produccion/app_kaizen_global.js"></script>-->
-<!--<script src="produccion/app_editar_proceso.js"></script>-->
-<script src="produccion/app_utilidad.js"></script>
-<!-- <script src="produccion/app_datos_kaizen.js"></script> -->
 <script src="produccion/app_desplegar_kaizen.js"></script>
 <script src="produccion/app_gestionar_supervisores.js"></script>
 <script src="produccion/app_prod_copeo.js"></script>

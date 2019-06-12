@@ -30,6 +30,7 @@ var id_fiscales_check_ppto_proy = "fiscalesCheckPptoProy";
 
 //Funcionalidad (kaizen)
 var id_hora_score_ppto_proy = "horaScorePptoProy";
+var id_indirectos_ppto_proy = "indirectosPptoProy";
 var id_proyectos_ppto_proy = "proyectosPptoProy";
 var id_suministros_ppto_proy = "suministrosPptoProy";
 var id_copeo_ppto_proy = "copeoPptoProy";
@@ -70,6 +71,7 @@ $('#tabPresupuesto').click(function() {
     $('#' + id_obra_ddl_ppto_proy).empty();
     $('#' + id_categoria_ddl_ppto_proy).empty();
     $("#" + id_hora_score_ppto_proy).val(1300);
+    $("#" + id_indirectos_ppto_proy).val(20);
 
     document.getElementById(id_anticipo1_rb_ppto_proy).checked = true;
 
@@ -242,12 +244,17 @@ $('#' + id_proc_ddl_ppto_proy).change(function(){
 function loadProfitsPptoProy(){
     var costos = parseFloat($('#' + id_proyectos_ppto_proy).val() == "" ? 0 : $('#' + id_proyectos_ppto_proy).val()) + parseFloat($('#' + id_copeo_ppto_proy).val() == "" ? 0 : $('#' + id_copeo_ppto_proy).val()) + parseFloat($('#' + id_suministros_ppto_proy).val() == "" ? 0 : $('#' + id_suministros_ppto_proy).val());
     var precio = parseFloat($('#' + id_precio_venta_ppto_proy).val() == "" ? 0 : $('#' + id_precio_venta_ppto_proy).val())*1.16;
+    var porcentaje_indirectos = realParse($('#' + id_indirectos_ppto_proy).val()) / 100;
     var u = precio*(1-porcentaje_indirectos)-costos;
     $('#' + id_profit_cantidad_ppto_proy).val(u);
     $('#' + id_profit_porcentaje_ppto_proy).val(100*u/(costos));
     highLight(id_profit_porcentaje_ppto_proy);
     highLight(id_profit_cantidad_ppto_proy);
 }
+
+$("#" + id_indirectos_ppto_proy).change(function(){
+    loadProfitsPptoProy();
+});
 
 $("#" + id_copeo_ppto_proy).change(function(){
     loadProfitsPptoProy();
@@ -284,6 +291,7 @@ $("#" + id_precio_venta_ppto_proy).change(function(){
 $("#" + id_profit_porcentaje_ppto_proy).change(function(){
     var costos = parseFloat($('#' + id_proyectos_ppto_proy).val()) + parseFloat($('#' + id_copeo_ppto_proy).val()) + parseFloat($('#' + id_suministros_ppto_proy).val());
     var ut_p = parseFloat($("#" + id_profit_porcentaje_ppto_proy).val())/100;
+    var porcentaje_indirectos = realParse($('#' + id_indirectos_ppto_proy).val()) / 100;
     var pv = (costos * (1 + ut_p))/(1 - porcentaje_indirectos);
     $('#' + id_precio_venta_ppto_proy).val(pv/1.16);
     $('#' + id_profit_cantidad_ppto_proy).val(pv*(1 - porcentaje_indirectos) - costos);
@@ -294,6 +302,7 @@ $("#" + id_profit_porcentaje_ppto_proy).change(function(){
 $("#" + id_profit_cantidad_ppto_proy).change(function(){
     var costos = parseFloat($('#' + id_proyectos_ppto_proy).val()) + parseFloat($('#' + id_copeo_ppto_proy).val()) + parseFloat($('#' + id_suministros_ppto_proy).val());
     var u = parseFloat(eval($("#" + id_profit_cantidad_ppto_proy).val()));
+    var porcentaje_indirectos = realParse($('#' + id_indirectos_ppto_proy).val()) / 100;
     var pv = (u + costos)/(1-porcentaje_indirectos);
     $('#' + id_precio_venta_ppto_proy).val(pv/1.16);
     $('#' + id_profit_porcentaje_ppto_proy).val(100*u/costos);
@@ -331,6 +340,7 @@ $('#' + id_registrar_button_ppto_proy).click(function () {
                 pda: pistaDeAuditoria(),
             }
             var precio_venta = parseFloat(ppto[2]);
+            var porcentaje_indirectos = realParse($('#' + id_indirectos_ppto_proy).val()) / 100;
             var proy_kaiz = parseFloat($('#' + id_proyectos_ppto_proy).val());
             var mate_kaiz = parseFloat($('#' + id_suministros_ppto_proy).val());
             var mdeo_kaiz = parseFloat($('#' + id_copeo_ppto_proy).val());
@@ -390,6 +400,7 @@ $('#' + id_registrar_button_ppto_proy).click(function () {
                     fecha_final: "",
                     kaizen: kaiz_nuevo,
                     terminado: false,
+                    porcentaje_indirectos: realParse($('#' + id_indirectos_ppto_proy).val()),
                     contrato: "",
                     nombre: $('#' + id_nombre_ppto_proy).val(),
                     OdeC: "",

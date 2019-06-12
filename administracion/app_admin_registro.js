@@ -91,17 +91,15 @@ $("#" + id_familia_ddl_registroAdmin).change(function(){
 	var fam = $('#' + id_familia_ddl_registroAdmin + " option:selected").val();
     if(fam == "Especificos"){
     	$('#' + id_group_status_obra_registroAdmin).removeClass('hidden');
-    	firebase.database().ref(rama_bd_obras_magico).once('value').then(function(snapshot){
-    		snapshot.forEach(function(childSnap){
-    			var subfam = childSnap.key;
+    		for(key in nombre_obras){
+    			var subfam = key;
 	            var option2 = document.createElement('option');
 	            option2.text = option2.value = subfam; 
 	            select.appendChild(option2);
-    		});
+    		};
             var option3 = document.createElement('option');
             option3.text = option3.value = "Otros"; 
             select.appendChild(option3);
-    	});
     } else {
     	$('#' + id_group_status_obra_registroAdmin).addClass('hidden');
     	familias.child(fam).forEach(function(childSnap){//Si no jala hacerlo con snapshot

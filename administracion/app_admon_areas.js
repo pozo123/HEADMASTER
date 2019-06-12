@@ -14,13 +14,11 @@ $('#tabAreas').click(function(){
     option.style = "display:none";
     option.text = option.value = "";
     select.appendChild(option);
-
-    firebase.database().ref(rama_bd_personal).orderByChild('nombre').on('child_added',function(snapshot){
-        var persona = snapshot.val();
+    for(key in json_personal){
         var option2 = document.createElement('option');
-        option2.text = option2.value = persona.nombre; 
+        option2.text = option2.value = json_personal[key].nombre; 
         select.appendChild(option2);
-    });   
+    }
 });
 
 $("#" + id_colaborador_ddl_areas).change(function(){
@@ -66,10 +64,11 @@ $('#' + id_guardar_button_areas).click(function () {
         administracion: $('#' + id_admin_checkbox_area).prop('checked'),
         rrhh: $('#' + id_rrhh_checkbox_area).prop('checked'),
     }
-https://console.firebase.google.com/u/1/project/ingenieriahead/database/ingenieriahead/data/personal/WCpLarWgMKfwGsvAdrqlqjQxy243/nickname
-    firebase.database().ref(rama_bd_personal).orderByChild("nombre").equalTo($('#' + id_colaborador_ddl_areas + " option:selected").val()).once("child_added").then(function(snapshot){
-        firebase.database().ref(rama_bd_personal + "/" + snapshot.val().uid + "/areas").set(areas);
-    });
+    for(key in json_personal){
+        if(json_personal[key].nombre == $('#' + id_colaborador_ddl_areas + " option:selected").val()){
+            firebase.database().ref(rama_bd_personal + "/" + key + "/areas").set(areas);
+        }
+    }
 
     alert("¡Areas actualizados!")
 });
