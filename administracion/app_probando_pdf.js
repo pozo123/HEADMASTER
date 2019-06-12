@@ -29,45 +29,48 @@ function pruebaPdf(){
 		
 	}
 
-	const pdfDocGenerator = pdfMake.createPdf(dd)
+	/*const pdfDocGenerator = pdfMake.createPdf(dd)
     pdfDocGenerator.open();
     pdfDocGenerator.download('hola.pdf');
-    console.log(pdfDocGenerator);
+    pdfDocGenerator.getBuffer(function(buffer){
+    	blob = new Blob([buffer]);
+    	console.log(blob);
     //console.log(pdfDocGenerator.getStream());
 
-    var storageRef = firebase.storage().ref("pruebas/getStream");
-    //var uploadTask = storageRef.put(pdfDocGenerator.getStream());
-    
-    /*uploadTask.on('state_changed', function(snapshot){
-        // Observe state change events such as progress, pause, and resume
-        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Upload is ' + progress + '% done');
-        switch (snapshot.state) {
-            case firebase.storage.TaskState.PAUSED: // or 'paused'
-            console.log('Upload is paused');
-            break;
-            case firebase.storage.TaskState.RUNNING: // or 'running'
-            console.log('Upload is running');
-            break;
-        }
-    }, function(error) {
-        // Handle unsuccessful uploads
-    }, function() {
-        // Handle successful uploads on complete
-        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-            console.log('File available at', downloadURL);
-            var updates = {}
-            var data = {
-                url: downloadURL,
-            }
-            updates["/" + rama_bd_personal + "/" + userUID + "/foto"] = data;
-            firebase.database().ref().update(updates);
-            
-            setTimeout(() => {
-                location.reload();
-            }, 3000);
-        });
-    });*/
+	    var storageRef = firebase.storage().ref("pruebas/getStream");
+	    var uploadTask = storageRef.put(blob);
+	    
+	    uploadTask.on('state_changed', function(snapshot){
+	        // Observe state change events such as progress, pause, and resume
+	        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+	        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+	        console.log('Upload is ' + progress + '% done');
+	        switch (snapshot.state) {
+	            case firebase.storage.TaskState.PAUSED: // or 'paused'
+	            console.log('Upload is paused');
+	            break;
+	            case firebase.storage.TaskState.RUNNING: // or 'running'
+	            console.log('Upload is running');
+	            break;
+	        }
+	    }, function(error) {
+	        // Handle unsuccessful uploads
+	    }, function() {
+	        // Handle successful uploads on complete
+	        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+	        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+	            console.log('File available at', downloadURL);
+	            var updates = {}
+	            var data = {
+	                url: downloadURL,
+	            }
+	            updates["/" + rama_bd_personal + "/" + userUID + "/foto"] = data;
+	            //firebase.database().ref().update(updates);
+	            
+	            setTimeout(() => {
+	                location.reload();
+	            }, 3000);
+	        });
+	    });
+	});*/
 }

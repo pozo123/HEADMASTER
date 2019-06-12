@@ -272,6 +272,7 @@
     - email: string
     - activo
     - foto
+       - url
     - buzon:
        - mensaje (por uid, solo los no leidos)
           - destinatario (uid)
