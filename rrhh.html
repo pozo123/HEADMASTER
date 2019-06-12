@@ -347,7 +347,6 @@
                         <a href="#pageSubmenu6" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pagos</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu6">
                             <li class="tab" id="tabPagoNomina"><a href="#" onclick="openTabs('tabPagoNomina','pagoNomina')">Pagos semanales por parte de la Pagadora</a></li>
-                            <li class="tab" id="tabDistSuper"><a href="#" onclick="openTabs('tabDistSuper','distSuper')">Pagos semanales de supervisores</a></li>
                         </ul>
                     </li>
                     <li>
@@ -891,46 +890,6 @@
                                 </div>
                             </div>
                     </div>
-
-                    <div id="distSuper" class="tabcontent hidden">
-                        <h1>Pagos a Supervisores</h1>
-                        <p>Pestaña para ingresar los pagos por parte de la pagadora a los supervisores HEAD</p>
-                        <div class="container-fluid">
-                            <div class="row align-items-center">
-                                <div class="col-lg-3"></div>
-                                <div class="col-lg-6">
-                                    <form action="#" onsubmit="return false;">
-                                        <div class="form-group">
-                                            <label for="yearDdlDistSuper">Año:</label>
-                                            <select id="yearDdlDistSuper" class="form-control"></select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="weekDdlDistSuper">Semana:</label>
-                                            <select id="weekDdlDistSuper" class="form-control"></select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="supervisoresDdlDistSuper">Supervisor:</label>
-                                            <select id="supervisoresDdlDistSuper" class="form-control"></select>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="cantidadPagadoraDistSuper">Cantidad pagada:</label>
-                                            <input type="text" name="" id="cantidadPagadoraDistSuper" class="form-control" placeholder="Cantidad pagada">
-                                        </div>
-                                        <div class="form-group">
-                                            <div id="divObrasDistSuper"></div>
-                                        </div>   
-                                        <div class="row">
-                                            <button id="buttonDistSuper" type="button" class="btn btn-outline-success btn-block">Distribuir</button>
-                                        </div>
-                                    </form>
-                                    <br/>
-                                </div>
-                                <div class="col-lg-3"></div>
-
-                            </div>
-                        </div>
-                    </div>
                     <div id= "destCatalogo" class="tabcontent hidden">
                         <div class="container-fluid">
                             <h1>Catálogo de Destajistas</h1>
@@ -1036,7 +995,6 @@
 <script src="rrhh/app_rrhh_resumen_nomina.js"></script>
 <script src="rrhh/app_rrhh_trabajadores.js"></script>
 <!-- Aquí hay que cambiar este scriot-->
-<script src="produccion/app_distribucion_supervisores.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
 

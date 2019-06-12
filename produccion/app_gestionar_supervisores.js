@@ -32,15 +32,14 @@ $('#tabGestionarSup').click(function(){
     option3.text = option3.value = "";
     select2.appendChild(option3);
 
-    firebase.database().ref(rama_bd_obras_magico).orderByChild('nombre').on('child_added',function(snapshot){
-        var obra = snapshot.val();
-        if(!obra.terminada){
+    for(key in nombre_obras){
+        if(!nombre_obras[key].terminada){
             var option4 = document.createElement('OPTION');
-            option4.text = obra.nombre;
-            option4.value = obra.nombre;
+            option4.text = key;
+            option4.value = key;
             select2.appendChild(option4);
         }
-    });   
+    }  
 });
 
 $('#' + id_obras_ddl_supervisores).change(function(){
@@ -53,36 +52,34 @@ function loadSupsGestSup(){
     //$('#' + id_supervisores_ddl_supervisores).empty();
     $('#' + id_div_obra_supervisores).html('');
     var nombre_obra = $('#' + id_obras_ddl_supervisores + " option:selected").val();
-    firebase.database().ref(rama_bd_obras_magico + "/" + nombre_obra).once('value').then(function(snapshot){
-        var obra = snapshot.val();
-        snapshot.child("supervisor").forEach(function(childSnap){
-            if(childSnap.child("activo").val()){
-                var row = document.createElement('div');
-                row.className = "form-group row";
-                var col1 = document.createElement('div');
-                col1.className = "col-lg-6";
-                var col2 = document.createElement('div');
-                col2.className = "col-lg-6";
-                var label = document.createElement('label');
-                label.innerHTML = childSnap.val().nombre;
-                var button = document.createElement('button');
-                button.id = childSnap.key;
-                button.innerHTML = "Eliminar";
-                button.className = "btn btn-outline-danger btn-block";
-                button.onclick =function(){
-                    var fal = false;
-                    firebase.database().ref(rama_bd_obras_magico + "/" + obra.nombre + "/supervisor/" + this.id + "/activo").set(fal);
-                    alert("Eliminado");
-                    loadSupsGestSup();
-                };
-                col1.appendChild(label);
-                col2.appendChild(button);
-                row.appendChild(col1);
-                row.appendChild(col2);
-                div.appendChild(row);
-            }
-        });
-    });
+    for(supKey in nombre_obras[nombre_obra]["supervisor"]){
+        var sup = nombre_obras[nombre_obra]["supervisor"][supKey];
+        if(sup.activo){
+            var row = document.createElement('div');
+            row.className = "form-group row";
+            var col1 = document.createElement('div');
+            col1.className = "col-lg-6";
+            var col2 = document.createElement('div');
+            col2.className = "col-lg-6";
+            var label = document.createElement('label');
+            label.innerHTML = sup.nombre;
+            var button = document.createElement('button');
+            button.id = supKey;
+            button.innerHTML = "Eliminar";
+            button.className = "btn btn-outline-danger btn-block";
+            button.onclick =function(){
+                var fal = false;
+                firebase.database().ref(rama_bd_obras_magico + "/" + obra.nombre + "/supervisor/" + this.id + "/activo").set(fal);
+                alert("Eliminado");
+                loadSupsGestSup();
+            };
+            col1.appendChild(label);
+            col2.appendChild(button);
+            row.appendChild(col1);
+            row.appendChild(col2);
+            div.appendChild(row);
+        }
+    }
 
     var select = document.getElementById(id_supervisores_ddl_supervisores);//document.createElement('select');
     var option = document.createElement('option');
@@ -90,15 +87,15 @@ function loadSupsGestSup(){
     option.text = option.value = "";
     select.appendChild(option);
 
-    firebase.database().ref(rama_bd_personal).orderByChild('nombre').on('child_added',function(snapshot){
-        var sup = snapshot.val();
-        if(snapshot.child("areas/produccion").val() && sup.activo){
+    for(key in json_personal){
+        var sup = json_personal[key];
+        if(sup.areas.produccion && sup.activo){
             var option2 = document.createElement('OPTION');
             option2.text = sup.nombre;
-            option2.value = sup.uid;
+            option2.value = key;
             select.appendChild(option2);
         }
-    });
+    }
     //var divButton = document.createElement('div');
     //divButton.className = "form-row";
     var row1 = document.createElement('div');

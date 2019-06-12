@@ -22,19 +22,16 @@ $('#' + tab_gestionar_score).click(function(){
     option.style = "display:none";
     option.text = option.value = "";
     select.appendChild(option);
-
-
-    firebase.database().ref(rama_bd_obras).once('value').then(function(snapshot){
-        snapshot.forEach(function(childSnap){
-        	var obra = childSnap.val();
-        	if(areas_usuario_global.administracion || creden_usuario_global < 3){
-				var option2 = document.createElement('OPTION');
-				option2.text = obra.nombre;
-				option2.value = obra.nombre;
-				select.appendChild(option2);
-        	}
-        });
-    });
+    if(areas_usuario_global.administracion || creden_usuario_global < 3){
+		for(key in nombre_obras){
+	        if(!nombre_obras[key].terminada){
+	            var option2 = document.createElement('OPTION');
+	            option2.text = key;
+	            option2.value = key;
+	            select.appendChild(option2);
+	        }
+	    }
+	}
 });
 
 $("#" + id_obra_ddl_gestionar_ppto).change(function(){
@@ -46,25 +43,14 @@ $("#" + id_obra_ddl_gestionar_ppto).change(function(){
 	option.style = "display:none"
     select.appendChild(option);
 
-    firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_gestionar_ppto + " option:selected").val() + "/procesos").once('value').then(function(snapshot){
-        snapshot.forEach(function(procSnap){
-			if(procSnap.key != "MISC"){
-				if(procSnap.key != "PC00" && procSnap.key != "ADIC" && procSnap.child("num_subprocesos").val() == 0){
-					var option2 = document.createElement('OPTION');
-					option2.text = procSnap.key + " (" + procSnap.child("nombre").val() + ")";
-					option2.value = procSnap.key;
-					select.appendChild(option2);
-				} else {
-					procSnap.child("subprocesos").forEach(function(subpSnap){
-						var option2 = document.createElement('OPTION');
-						option2.text = subpSnap.key + " (" + subpSnap.child("nombre").val() + ")";
-						option2.value = subpSnap.key;
-						select.appendChild(option2);
-					});
-				}
-			}
-        });
-    });
+	for(key in nombre_obras[$('#' + id_obra_ddl_gestionar_ppto + " option:selected").val()]["hojas"]){
+		if(key != "MISC"){
+	    	var option2 = document.createElement('OPTION');
+	        option2.text = key + " (" + nombre_obras[$('#' + id_obra_ddl_gestionar_ppto + " option:selected").val()]["hojas"][key].nombre + ")";
+	        option2.value = key;
+	        select.appendChild(option2);
+	    }
+    }
 });
 
 $('#' + id_proceso_ddl_gestionar_score).change(function(){
@@ -97,8 +83,6 @@ $('#' + id_button_terminado_terminar_score).click(function(){
 	if(!terminado_gestionar_score){
 		trickleDownKaizen($('#' + id_obra_ddl_gestionar_ppto + " option:selected").val() , $('#' + id_proceso_ddl_gestionar_score + " option:selected").val(), "PROYECTOS/PAG", ppto_prog_kaizen_gestionar_score, true)
 		terminado_gestionar_score = true;
-		
-		
 	} else {
 		trickleDownKaizen($('#' + id_obra_ddl_gestionar_ppto + " option:selected").val() , $('#' + id_proceso_ddl_gestionar_score + " option:selected").val(), "PROYECTOS/PAG", -1 * ppto_pag_kaizen_gestionar_score, true)
 		terminado_gestionar_score = false;

@@ -221,10 +221,7 @@
                   - presupuesto: (solo en adic y pc00, pc00-misc = "")
                      - terminado
                      - nombre
-                     - archivos:
-                        - por index (0,1,2)
-                           - pdf
-                           - pad
+                     - AQUI redefinir
             - contrato_compras (en hoja menos en IQONO MEXICO, ahi en proc)
                - clave
                - solpeds

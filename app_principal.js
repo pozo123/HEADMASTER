@@ -32,7 +32,6 @@ $(document).ready(function() {
 });
 
 $('#botonMagico').click(function(){
-    pruebaPdf();
     /*firebase.database().ref("obras").once('value').then(function(snapshot){
         var obras_json = snapshot.val();
         snapshot.forEach(function(obraSnap){

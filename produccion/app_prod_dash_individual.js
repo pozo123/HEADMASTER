@@ -12,43 +12,36 @@ firebase.auth().onAuthStateChanged(user => {
         option.text = option.value = "";
         select.appendChild(option);
         console.log(rama_bd_personal + "/" + user_uid)
-        firebase.database().ref(rama_bd_personal + "/" + user_uid).once('value').then(function(snapshot){
-            var pers = snapshot.val();
-                if(snapshot.child("areas/administracion").val() == true || pers.credenciales < 3){
-                    firebase.database().ref(rama_bd_obras_magico).once('value').then(function(snapshot){
-                        snapshot.forEach(function(obraSnap){
-                            var obra = obraSnap.val();
-                            if(!obra.terminada){
-                                var option2 = document.createElement('option');
-                                option2.text = option2.value = obra.nombre; 
-                                select.appendChild(option2);
-                            }
-                        });
-                    });
-                } else {
-                var single = 0;
-                firebase.database().ref(rama_bd_obras_magico).once('value').then(function(snapshot){
-                    snapshot.forEach(function(childSnap){
-                        if(!childSnap.child("terminada").val()){
-                            childSnap.child("supervior").forEach(function(supSnap){
-                                if(supSnap.key == user_uid && supSnap.child("acivo").val() == true){
-                                    single++;
-                                    var option2 = document.createElement('option');
-                                    option2.text = option2.value = childSnap.child("nombre").val(); 
-                                    select.appendChild(option2);
-                                }
-                            });
+
+        var aut = (areas_usuario_global.administracion || creden_usuario_global < 3);
+        var single = 0;
+        for(key in nombre_obras){
+            console.log(nombre_obras[key]);
+            var obra = nombre_obras[key];
+            var aut_local = false;
+            if(!obra.terminada){
+                if(!aut){
+                    for(sup in obra.supervisor){
+                        if(sup == uid_usuario_global && obra.supervisor[sup].activo){
+                            aut_local = true;
+                            single++;
                         }
-                    });
-                    if(single == 1){
-                        document.getElementById(id_obras_ddl_dashboard_individual).selectedIndex = 1;
-                        $('#' + id_obras_ddl_dashboard_individual).addClass("hidden");
-                    } else {
-                        $('#' + id_obras_ddl_dashboard_individual).removeClass("hidden");
                     }
-                });
+                }
+                if(aut || aut_local){
+                    var option2 = document.createElement('OPTION');
+                    option2.text = key;
+                    option2.value = key;
+                    select.appendChild(option2);
+                }
             }
-        });
+        }
+        if(single == 1){
+            document.getElementById(id_obras_ddl_dashboard_individual).selectedIndex = 1;
+            $('#' + id_obras_ddl_dashboard_individual).addClass("hidden");
+        } else {
+            $('#' + id_obras_ddl_dashboard_individual).removeClass("hidden");
+        }
 
         // ----------------------------------------------------------------------------
         

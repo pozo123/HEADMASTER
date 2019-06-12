@@ -54,25 +54,22 @@ $('#tabReporte').click(function() {
     var option5 = document.createElement('option');
     option5.text = option5.value = "Otros";
     select2.appendChild(option5);
-
-    firebase.database().ref(rama_bd_personal).once('value').then(function(snapshot){
-        snapshot.forEach(function(childSnap){
-            if(childSnap.child("areas/proyectos").val()){
-                inges[childSnap.key] = childSnap.child("nombre").val();
-                var option3 = document.createElement('option');
-                option3.text = childSnap.child("nombre").val(); 
-                option3.value = childSnap.key;
-                select.appendChild(option3);
-            }
-        })
-    });
-
-    firebase.database().ref(rama_bd_obras).orderByChild('nombre').on('child_added',function(snapshot){
-        var obra = snapshot.val();
-        var option4 = document.createElement('option');
-        option4.text = option4.value = obra.nombre; 
+    for(key in json_personal){
+        var pers = json_personal[key];
+        inges[childSnap.key] = pers.nombre;
+        if(pers.areas.proyectos && pers.activo){
+            var option3 = document.createElement('OPTION');
+            option3.text = pers.nombre;
+            option3.value = key;
+            select.appendChild(option3);
+        }
+    };
+    for(key in nombre_obras){
+        var option4 = document.createElement('OPTION');
+        option4.text = key;
+        option4.value = key;
         select2.appendChild(option4);
-    });
+    }
 });
 
 $('#' + id_obra_ddl_reporte).change(function(){
@@ -90,16 +87,12 @@ $('#' + id_obra_ddl_reporte).change(function(){
         select.appendChild(option);
 
         $('#' + id_proc_group_reporte).removeClass("hidden");
-
-        firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_reporte + " option:selected").val()).once('value').then(function(snapshot){
-            snapshot.child("procesos").forEach(function(childSnap){
-                var proc = childSnap.val();
-                var option3 = document.createElement('option');
-                option3.text = proc.clave + " (" + proc.nombre + ")";
-                option3.value = proc.clave; 
-                select.appendChild(option3);
-            });    
-        });
+        for(key in nombre_obras[$('#' + id_obra_ddl_reporte + " option:selected").val()]["procesos"]){
+            var option3 = document.createElement('OPTION');
+            option3.text = key + " (" + nombre_obras[$('#' + id_obra_ddl_reporte + " option:selected").val()]["procesos"][key].nombre + ")";
+            option3.value = key;
+            select.appendChild(option3);
+        }
     }
 });
 
@@ -112,21 +105,14 @@ $('#' + id_proc_ddl_reporte).change(function(){
         var option = document.createElement('option');
         option.text = option.value = "Todos";
         select.appendChild(option);
-
-
-        firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_reporte + " option:selected").val() + "/procesos/" + $('#' + id_proc_ddl_reporte + " option:selected").val()).once('value').then(function(snapshot){
-            var proc = snapshot.val();
-            if(proc.num_subprocesos > 0){
-                $('#' + id_subproc_group_reporte).removeClass("hidden");
-                snapshot.child("subprocesos").forEach(function(subpSnap){
-                    var subp = subpSnap.val();
-                    var option4 = document.createElement('option');
-                    option4.text = subp.clave + " (" + subp.nombre + ")";
-                    option4.value = subp.clave;
-                    select.appendChild(option4);
-                });
+        if(nombre_obras[$('#' + id_obra_ddl_reporte + " option:selected").val()]["procesos"][$('#' + id_proc_ddl_reporte + " option:selected").val()]["subprocesos"]){
+            for(key in nombre_obras[$('#' + id_obra_ddl_reporte + " option:selected").val()]["procesos"][$('#' + id_proc_ddl_reporte + " option:selected").val()]["subprocesos"]){
+                var option = document.createElement('OPTION');
+                option.text = key + " (" + nombre_obras[$('#' + id_obra_ddl_reporte + " option:selected").val()]["procesos"][$('#' + id_proc_ddl_reporte + " option:selected").val()]["subprocesos"][key].nombre + ")";
+                option.value = key;
+                select.appendChild(option);
             }
-        });
+        }
     }
 });
 

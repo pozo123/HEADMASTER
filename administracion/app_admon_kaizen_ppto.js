@@ -39,7 +39,7 @@ $('#' + tab_kaizen_ppto).click(function(){
     option.text = option.value = "";
     select.appendChild(option);
 
-	var aut = (areas_usuario_global.administracion || creden_usuario_globalfalse < 3);
+	var aut = (areas_usuario_global.administracion || creden_usuario_global < 3);
     for(key in nombre_obras){
     	console.log(nombre_obras[key]);
     	var obra = nombre_obras[key];

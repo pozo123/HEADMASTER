@@ -272,26 +272,6 @@ function replaceStringInKey(oldString,newString,updates,snapshot,originalSnap){
 
 }
 
-
-//Recibe el nombre de la hora y regresa un json SCORE:{clave_proceso: horas_trabajadas}
-/*function loadScoreKaizen(obra){
-  var procesos = {};
-  firebase.database().ref(rama_bd_obras_magico + "/" + obra).once('value').then(function(snapshot){
-    snapshot.child("procesos").forEach(function(proc_snap){
-      var proc = proc_snap.val();
-      procesos[proc.clave] = {PROYECTOS:{PPTO:0}};
-      firebase.database().ref(rama_bd_obras + "/" + obra + "/presupuestos/").orderByChild("proceso").equalTo(proc.clave).once('value').then(function(snapshot){
-        snapshot.forEach(function(ppto_snap){
-          var ppto = ppto_snap.val();
-          procesos[proc.clave]["PROYECTOS"]["PPTO"] = procesos[proc.clave]["PROYECTOS"]["PPTO"] + ppto.horas_trabajadas;
-        });
-      });
-    });
-    console.log(procesos);
-    //firebase.database().ref(rama_bd_obras_magico + "/" + obra + "/procesos").update(procesos);
-  });
-}*/
-
 function pistaDeAuditoria(){
   var pad = {
     uid: firebase.auth().currentUser.uid,

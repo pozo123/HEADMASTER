@@ -34,36 +34,35 @@ function modoRegistros(automatico){
 
 firebase.auth().onAuthStateChanged(user => {
     if(user) {
-    user_global = user.uid;
-    firebase.database().ref(rama_bd_personal + "/" + user_global).once('value').then(function(snapshot){
-        esp = snapshot.child("esp").val();
-        console.log(1);
-        if(snapshot.child("areas/proyectos").val() && !snapshot.child("areas/administracion").val()){
-            firebase.database().ref(rama_bd_personal + "/" + user_global).on("child_changed", function(){modoRegistros(true)});
-            modoRegistros(false);
-            //setInterval(modoRegistros, 60000);
+        user_global = user.uid;
+        firebase.database().ref(rama_bd_personal + "/" + user_global).once('value').then(function(snapshot){
+            esp = snapshot.child("esp").val();
+            if(snapshot.child("areas/proyectos").val() && !snapshot.child("areas/administracion").val()){
+                firebase.database().ref(rama_bd_personal + "/" + user_global).on("child_changed", function(){modoRegistros(true)});
+                modoRegistros(false);
+                //setInterval(modoRegistros, 60000);
 
-            var select = document.getElementById(id_obra_ddl_registros);
-            var option = document.createElement('option');
-            option.style = "display:none";
-            option.text = option.value = "";
-            select.appendChild(option);
-            var option2 = document.createElement('option');
-            option2.text = option2.value = "Otros";
-            select.appendChild(option2);
+                var select = document.getElementById(id_obra_ddl_registros);
+                var option = document.createElement('option');
+                option.style = "display:none";
+                option.text = option.value = "";
+                select.appendChild(option);
+                var option2 = document.createElement('option');
+                option2.text = option2.value = "Otros";
+                select.appendChild(option2);
 
-            firebase.database().ref(rama_bd_obras).orderByChild('nombre').on('child_added',function(snapshot){
-                var obra = snapshot.val();
-                var tipo = (obra.num_procesos == 0 && obra.procesos.ADIC.num_subprocesos == 0) ? "simple" : "padre";
-                if(!obra.terminada){   
-                    var option3 = document.createElement('option');
-                    option3.text = obra.nombre;
-                    option3.value = tipo; 
-                    select.appendChild(option3);
-                }
-            });
-        }
-    }); 
+                firebase.database().ref(rama_bd_obras).orderByChild('nombre').on('child_added',function(snapshot){
+                    var obra = snapshot.val();
+                    var tipo = (obra.num_procesos == 0 && obra.procesos.ADIC.num_subprocesos == 0) ? "simple" : "padre";
+                    if(!obra.terminada){   
+                        var option3 = document.createElement('option');
+                        option3.text = obra.nombre;
+                        option3.value = tipo; 
+                        select.appendChild(option3);
+                    }
+                });
+            }
+        }); 
     }
 });
 
@@ -89,33 +88,12 @@ $('#' + id_obra_ddl_registros).change(function(){
         option.text = option.value = "";
         select.appendChild(option);
 
-        firebase.database().ref(rama_bd_obras + "/" + obra_nombre).once('value').then(function(snapshot){
-            var obra = snapshot.val();
-            snapshot.child("procesos").forEach(function(procSnap){
-                if(procSnap.key != "MISC"){
-                    var proc = procSnap.val();
-                    if(proc.num_subprocesos == 0){
-                        if(!proc.terminado && procSnap.key != "ADIC"){
-                            var option2 = document.createElement('option');
-                            var text_proc = procSnap.key == "MISC" ? "MISC (Auxiliares de obra)" : procSnap.key + " (" + proc.nombre + ")";
-                            option2.text = text_proc;
-                            option2.value = procSnap.key; 
-                            select.appendChild(option2);
-                        }
-                    } else {
-                        procSnap.child("subprocesos").forEach(function(subpSnap){
-                            var subp = subpSnap.val();
-                            if(!subp.terminado){
-                                var option2 = document.createElement('option');
-                                option2.text = subpSnap.key + " (" + subp.nombre + ")";
-                                option2.value = subpSnap.key; 
-                                select.appendChild(option2);
-                            }
-                        });
-                    }
-                }
-            });
-        });
+        for(key in nombre_obras[$('#' + id_obra_ddl_registros + " option:selected").val()]["hojas"]){
+            var option2 = document.createElement('OPTION');
+            option2.text = key + " (" + nombre_obras[$('#' + id_obra_ddl_registros + " option:selected").val()]["hojas"][key].nombre + ")";
+            option2.value = key;
+            select.appendChild(option2);
+        }
     }
 });
 

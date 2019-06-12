@@ -15,7 +15,7 @@ var aut;
 var display_obras = [];
 var supervisores = [];
 
-$(document).ready(function(){
+/*$(document).ready(function(){
 	username = uid_usuario_global;
 	firebase.database().ref(rama_bd_personal + "/" + username).once('value').then(function(snapshot){
 		var pers = snapshot.val();
@@ -43,7 +43,7 @@ $(document).ready(function(){
 			}
 		});
 	});
-});
+});*/
 
 function editValue(list, task, event, cell, column) {
   console.log(this);

@@ -31,6 +31,7 @@ TO DO:
    - gestionar_presu -> Gestionar horas score programadas
  - RRHH
  - GENERALES
+ **- pptos en presupuesto, imprimir_presupuesto, admon_resumen_ppto y admon_ppto_adic
    - Subir templates de excel con formatos necesarios para imprtar (importar proveedores, trabajadores y ppto adic)
    - Cambiar idioma_espanol en tablas de apps como datos_kaizen y asistencia y desplegar_procesos
    - KICK-OFF 
@@ -43,6 +44,7 @@ TO DO:
  - Admon: 3281
     - 202 + 74 + 206 + 266 + 99 + 303 + 201 + 251 + 102 + 298 + 93 + 646 + 211 + 157 + 172
     - app_admin_registro
+    - app_admon_resumen_ppto
     - qpp_admon_areas
     - app_admon_colaborador
     - app_admon_corruptos
@@ -51,7 +53,6 @@ TO DO:
     - app_admon_pago_kaizen
     - app_admon_reporte_diario
     - app_admon_reporte_investime
-    - app_admon_resumen_ppto
     - app_cliente
     - app_cuenta_cc
     - app_editar_proceso
@@ -68,11 +69,10 @@ TO DO:
     - app_catalogo_odec
     - app_catalogo_personal
     - app_catalogo_proveedores
- - Compras
-    - 99 + 129 + 
+ - Compras 1606
+    - 100 + 129 + 69 + 375 + 238 + 318 + 85 + 292
     - app_compras_asigna_contrato
     - app_compras_contrato
- *
     - app_compras_importar_proveedores
     - app_compras_odec
     - app_compras_pag_kaizen
@@ -80,8 +80,53 @@ TO DO:
     - app_compras_proveedor
     - app_compras_solped
     - compras
+ - Produccion 1645
+    - 567 + 33 + 187 + 280 + 271 + 36 + 52 + 219
+    - app_desplegar_kaizen
+    - app_destajista
+    - app_gestionar_supervisores
+    - app_kaizen_global
+    - app_prod_copeo
+    - app_prod_cuadrilla
+    - app_prod_dash_individual   
+    - app_prod_est 
+ - Proyectos 4841
+    - 660 + 62 + 1165 + 123 + 43 + 26 + 427 + + 38 + 167 + 111 + 215 + 372 + 401 + 957 + 74
+    - app_actualizar_regs
+    - app_atn
+    - app_bibliotecas
+    - app_cierre_maestro
+    - app_exc_reqs
+    - app_generos_tipos
+    - app_gestionar_presu
+    - app_proy_actualizar_esp
+    - app_proy_cuant_kaizen
+    - app_proy_gestionar_score
+    - app_proy_registros
+    - app_reporte
+    - app_reporte_obras
+    - app_reporte_ppto
+    - score
+
+ - Faltan:
+    - RRHH
+    - app_proy_scoreboard
+
+    - app_presupuesto
+    - admon_ppto_Adic
+    - app_imprimir_presupuesto
 
  Obsoletos: 
+ (fantasmas)
+ - app_bibliotecas
+ - app_gestionar_presu
+ - app_reporte_obra
+ - app_reporte_ppto
+ - app_kaizen_global
+ - app_cierre_maestro
+ - app_proy_cuant_kaizen
+ (muertos)
+ - app_distribucion_supervisores
  - app_utilidad
  - app_proy_cuant_kaizen
  - app_prod_gestionar_pptos
