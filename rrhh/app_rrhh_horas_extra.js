@@ -317,6 +317,7 @@ function cargaRenglonHorasExtra(trabajador,procesos,nuevo,fecha_in,horas_in,proc
     horas.type = "text";
     horas.id = "horas_" + entradas;
     horas.placeholder = "Horas trabajadas";
+    horas.disabled = !nuevo;
     cell_horas.appendChild(horas);
 
     //console.log(entradas);

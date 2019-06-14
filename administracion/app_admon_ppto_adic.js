@@ -173,6 +173,7 @@ $('#' + id_imagen_button_ppto_adic).click(function() {
         //document.getElementById(id_imagen_button_ppto_adic).disabled = true;
         $('#' + id_imagen_button_ppto_adic).addClass('btn-outline-success');
         $('#' + id_imagen_button_ppto_adic).removeClass('btn-outline-danger');
+        console.log(imagen_anexo);
     }
 });
 
@@ -277,6 +278,7 @@ $("#" + id_existente_check_ppto_adic).change(function(){
         }
     } else {
         //document.getElementById(id_imagen_button_ppto_adic).disabled = false;
+        fecha_actual = new Date();
         $("#" + id_atn_ddl_check_ppto_adic).dropdownCheckbox("reset", myDataAtn);
         $("#" + id_reqs_ddl_check_ppto_adic).dropdownCheckbox("reset", myDataReq);
         $("#" + id_excs_ddl_check_ppto_adic).dropdownCheckbox("reset", myDataExc);
@@ -323,12 +325,14 @@ $("#" + id_proc_ddl_ppto_adic).change(function(){
     var kaiz_ant = obra_global_snap.child("procesos/ADIC/subprocesos/" + $('#' + id_proc_ddl_ppto_adic + " option:selected").val() + "/kaizen");
     var total_proy = realParse(kaiz_ant.child("PROYECTOS/PPTO").val());
     $('#' + id_hora_score_ppto_adic).val(total_proy / horas_ppto);
-    $('#' + id_indirectos_ppto_adic).val(realParse(obra_global_snap.child("procesos/ADIC/subprocesos/" + $('#' + id_proc_ddl_ppto_adic + " option:selected").val() + "/porcentaje_indirectos")));
+    $('#' + id_indirectos_ppto_adic).val(realParse(obra_global_snap.child("procesos/ADIC/subprocesos/" + $('#' + id_proc_ddl_ppto_adic + " option:selected").val() + "/porcentaje_indirectos").val()));
     $('#' + id_proyectos_ppto_adic).val(total_proy);
-    $('#' + id_suministros_ppto_adic).val(kaiz_ant.child("PRODUCCION/SUMINISTROS/PREC").val())
-    $('#' + id_copeo_ppto_adic).val(kaiz_ant.child("PRODUCCION/COPEO/"))
+    $('#' + id_suministros_ppto_adic).val(kaiz_ant.child("PRODUCCION/SUMINISTROS/CUANT").val());
+    $('#' + id_copeo_ppto_adic).val(kaiz_ant.child("PRODUCCION/COPEO/COPEO").val());
+    $('#' + id_precio_venta_ppto_adic).val(realParse(kaiz_ant.child("ADMINISTRACION/ESTIMACIONES/PPTO").val()) + realParse(kaiz_ant.child("ADMINISTRACION/ANTICIPOS/PPTO").val()));
+    loadProfitsPptoAdic();
 
-    fecha_actual = ppto.fecha_ppto;
+    fecha_actual = new Date(ppto.fecha_ppto);
     var calc = calculaAlcance(ppto.json_excel);
     alcance = calc[0];
     pv_directo = calc[1];
@@ -338,11 +342,8 @@ $("#" + id_proc_ddl_ppto_adic).change(function(){
     $('#' + id_importar_button_ppto_adic).addClass('btn-outline-success');
     $('#' + id_importar_button_ppto_adic).removeClass('btn-outline-danger');
     $('#' + id_importar_button_ppto_adic).removeClass('btn-outline-dark');
-
-    var hola = ppto_especial;
-
     $('#' + id_titulo_ppto_adic).val(ppto.titulo_ppto);
-    $('#' + id_nombre_ppto_adic).val(ppto.nombre_ppto);
+    $('#' + id_nombre_ppto_adic).val(ppto.nombre);
     $('#' + id_tiempoEntrega_ppto_adic).val(ppto.tiempoEntrega); 
     if(realParse(ppto.anticipo) == 0){
         document.getElementById(id_anticipo1_rb_ppto_adic).checked = true;
@@ -419,7 +420,8 @@ $("#" + id_suministros_ppto_adic).change(function(){
 });
 
 $("#" + id_proyectos_ppto_adic).focus(function(){
-c});
+    $('#' + id_proyectos_ppto_adic).val(horas_ppto);
+});
 
 $("#" + id_proyectos_ppto_adic).focusout(function(){
     horas_ppto =  $("#" + id_proyectos_ppto_adic).val() == "" ? 0 :  parseFloat($("#" + id_proyectos_ppto_adic).val());
@@ -557,9 +559,8 @@ $('#' + id_registrar_button_ppto_adic).click(function () {
                 exc_lista[i] = exc_array[i].label;
             }
             var imgs_db = {};
-            if(imagen_anexo.length == 0 || document.getElementById(id_existente_check_ppto_adic).checked){
+            if(imagen_anexo.length == 0){//} || document.getElementById(id_existente_check_ppto_adic).checked){
                 imgs_db = '';
-                if(j == parseInt(imagen_anexo.length)){
                 var subproc = {
                     alcance: alcance_string,
                     categoria: "",
@@ -586,7 +587,6 @@ $('#' + id_registrar_button_ppto_adic).click(function () {
                         imagenes: imgs_db,
                         fecha_ppto: new Date().getTime(),
                         titulo_ppto: $('#' + id_titulo_ppto_adic).val(),
-                        nombre_ppto: $('#' + id_nombre_ppto_adic).val().toUpperCase(),
                         tiempoEntrega: $('#' + id_tiempoEntrega_ppto_adic).val(),
                         json_excel: json_excel,
                         anticipo: ant,
@@ -620,7 +620,6 @@ $('#' + id_registrar_button_ppto_adic).click(function () {
                 sumaEnFirebase(query_obra + "/ADMINISTRACION/ANTICIPOS/PPTO", anti_kaiz_dif);
                 sumaEnFirebase(query_obra + "/PROFIT/PROG/BRUTO", brut_kaiz_dif);
                 sumaEnFirebase(query_obra + "/PROFIT/PROG/NETO", neto_kaiz_dif);
-            }
             } else {
                 for(i=0;i<imagen_anexo.length;i++){
                     var j = 0;
@@ -681,7 +680,6 @@ $('#' + id_registrar_button_ppto_adic).click(function () {
                                         imagenes: imgs_db,
                                         fecha_ppto: new Date().getTime(),
                                         titulo_ppto: $('#' + id_titulo_ppto_adic).val(),
-                                        nombre_ppto: $('#' + id_nombre_ppto_adic).val().toUpperCase(),
                                         tiempoEntrega: $('#' + id_tiempoEntrega_ppto_adic).val(),
                                         json_excel: json_excel,
                                         anticipo: ant,
@@ -716,7 +714,6 @@ $('#' + id_registrar_button_ppto_adic).click(function () {
                             }
                         });
                     });
-
                 }
             }
         });
@@ -725,6 +722,7 @@ $('#' + id_registrar_button_ppto_adic).click(function () {
 
 //Alcance es el array, json la info con la que se popula. las otras tres es donde se guardan los datos
 function calculaAlcance(json){
+    json_excel = json;
     var alcance = [];
     var pv_indirecto;
     var pv_directo;
@@ -818,6 +816,7 @@ function generaParamPptoAdic(vista_previa){
 //anticipo [0-100]
 //reqs_lista, atn_lista y exc_lista: JSON. Key = i (int) val = string
 function generaPptoAdic(vista_previa, obra_ppto, fisc_bool, banc_bool, imagen_anexo, fecha_ppto, pv_indirecto, pv_directo, subtotal, ppto_especial, titulo_ppto, nombre_ppto, tiempoEntrega, alcance, clave_presu, anticipo, exc_lista, reqs_lista, atn_lista){
+    console.log(imagen_anexo);
     var obra_nombre = obra_ppto.nombre;
     var dire = obra_ppto.direccion;
     var clien = obra_ppto.cliente;

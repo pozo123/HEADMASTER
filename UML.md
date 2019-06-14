@@ -218,14 +218,7 @@
                   - validacion_ppto: igual que proc
                   - SCORE: igual que proc simple
                   - copeo: igual que proc simple
-                  - presupuesto: (pc00, pc00-misc = "")
-                     - terminado
-                        - nombre
-                        - archivos:
-                           - por index (0,1,2)
-                              - pdf
-                              - pad
-                  - presupuesto: (adic)
+                  - presupuesto: (adic o pc00. pc00-misc = "")
                      - terminado
                      - nombre
                      - fisc_bool
@@ -235,9 +228,10 @@
                            - url
                      - fecha_ppto (timestamp)
                      - titulo_ppto
-                     - nombre_ppto
+                     - nombre
                      - tiempoEntrega
-                     - json_excel (se usa para alcance)
+                     - json_excel (SI ADIC)
+                     - json_alcance (SI PC00)
                      - anticipo
                      - exc_lista
                      - reqs_lista

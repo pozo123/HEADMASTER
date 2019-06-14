@@ -7,7 +7,6 @@ HTMLs:
 TO DO:
  - ADMON
 *   - importar adicionaes desde excel
-*   - meter pdf a pptos adics con la tabla de arturo
    - manejar las imagenes en el editar_ppto_adic
    - datatable en pagos de emmanuel
    - Edicion inve$stime

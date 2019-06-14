@@ -1025,9 +1025,21 @@
                                      <div class="col-lg-6">
                                          <form action="#" onsubmit="return false;">
                                             <br/>
+                                            <div class="form-group">
+                                                <label for="obraDdlPptoAdic">Obra:</label>
+                                                <select class="form-control" id="obraDdlPptoAdic"></select>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="existenteCheckPptoAdic">
+                                                <label class="custom-control-label" for="existenteCheckPptoAdic">Editar proceso existente</label>
+                                            </div>
+                                            <div class="form-group hidden" id="procGroupPptoAdic">
+                                                <label for="procDdlPptoAdic">Proceso:</label>
+                                                <select class="form-control" id="procDdlPptoAdic"></select>
+                                            </div>
+                                            <br/>
                                             <h3>Kaizen ADIC</h3>
                                             <hr class="style2">
-                                            
                                             <div class="form-row align-items-center">
                                                 <div class="col-lg-4">
                                                     <label for="horaScorePptoAdic">Costo Hora SCORE:</label>
@@ -1071,14 +1083,6 @@
                                                 </div>
                                             </div>
                                             <br/>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="existenteCheckPptoAdic">
-                                                <label class="custom-control-label" for="existenteCheckPptoAdic">Editar proceso existente</label>
-                                            </div>
-                                            <div class="form-group hidden" id="procGroupPptoAdic">
-                                                <label for="procDdlPptoAdic">Proceso:</label>
-                                                <select class="form-control" id="procDdlPptoAdic"></select>
-                                            </div>
 
                                             <br/>
                                                 <h3>Header</h3>
@@ -1091,10 +1095,6 @@
                                                 <div class="form-group">
                                                     <label for="tituloPptoAdic">Titulo:</label>
                                                     <input type="text" id="tituloPptoAdic"class="form-control" placeholder="Titulo del presupuesto">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="obraDdlPptoAdic">Obra:</label>
-                                                    <select class="form-control" id="obraDdlPptoAdic"></select>
                                                 </div>
                                                 <div class="form-group">
                                                     <!--<label for="atnDdlCbPptoProy">AT'N:</label>-->

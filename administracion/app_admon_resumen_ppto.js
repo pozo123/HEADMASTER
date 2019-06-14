@@ -19,9 +19,10 @@ var rama_storage_presupuestos = "presupuestos";
 
 var fileSelected = "";
 var precio_aprobado;
+var pptos = [];
 
 $('#' + tab_resumen_pptos).click(function(){
-
+    pptos = [];
 	$('#' + id_obra_ddl_resumen_pptos).empty();
     $('#' + id_proc_ddl_resumen_pptos).empty();
 
@@ -63,6 +64,7 @@ $('#' + tab_resumen_pptos).click(function(){
 });
 
 function actualizarTable(){
+    pptos = [];
     var datos = [];
     firebase.database().ref(rama_bd_obras).once('value').then(function(snapshot){
 
@@ -103,7 +105,8 @@ function actualizarTable(){
                                     iter++;
                                 });
                                 url = subpSnap.child("presupuesto/archivos/" + iter + "/pdf").val();
-                                url = "<button type='button' class='editar btn btn-warning' onclick='showPdfGenerado(\"" + url + "\")'><i class='fas fa-eye'></i></button>";
+                                url = "<button type='button' class='editar btn btn-warning' onclick='showPdfGenerado(pptos[" + pptos.length + "])'><i class='fas fa-eye'></i></button>";
+                                pptos[pptos.length] = [subpSnap.child("presupuesto").val(), obraSnap.val(), obraSnap.child("cliente").val(), + subpSnap.key];
                             }
 
                             anticipo_prog = parseFloat(subpSnap.child("kaizen/ADMINISTRACION/ANTICIPOS/PPTO").val()).toFixed(2);
@@ -166,26 +169,25 @@ function actualizarTable(){
     });
 }
 
-function showPdfGenerado(link){
-    var downloadLink = document.createElement('a');
-    downloadLink.target   = '_blank';
-    downloadLink.download = 'presupuesto_descargado.pdf';
+function showPdfGenerado(array){
+    console.log(array);
+    var ppto = array[0];
+    var obra_ppto = array[1];
+    var cliente = array[2];
+    var clave_presu = array[3];
+    var ppto_especial;
+    firebase.database().ref(rama_bd_clientes + "/" + cliente).once('value').then(function(clienSnap){
+        ppto_especial = clienSnap.child("ppto_especial").exists() ? clienSnap.child("ppto_especial").val() : false;
+    });
+    var calculos = calculaAlcance(ppto.json_excel);
 
-    var URL = window.URL || window.webkitURL;
-    var downloadUrl = link;
-
-    // set object URL as the anchor's href
-    downloadLink.href = downloadUrl;
-
-    // append the anchor to document body
-    document.body.appendChild(downloadLink);
-
-    // fire a click event on the anchor
-    downloadLink.click();
+    var imagen_anexo = '';//AQUI cargar fotos del storage 
+    //imagen_anexo es ARRAY de json= {url: data_as_url, file: foto}, file puede estar vacio
     
-    // cleanup: remove element and revoke object URL
-    document.body.removeChild(downloadLink);
-    URL.revokeObjectURL(downloadUrl);
+    var ppto = generaPptoAdic(false, obra_ppto, ppto.fisc_bool, ppto.banc_bool, imagen_anexo, new Date(ppto.fecha_ppto), calculos[2],calculos[1], calculos[3], ppto_especial, ppto.titulo_ppto, ppto.nombre, ppto.tiempoEntrega, calculos[0], clave_presu, ppto.anticipo, ppto.exc_lista, ppto.reqs_lista, ppto.atn_lista);
+    var pdfPresupuesto = ppto[0];
+    const pdfDocGenerator = pdfMake.createPdf(pdfPresupuesto);
+    pdfDocGenerator.open();
 }
 
 function showPdfAprobado(link){

@@ -125,7 +125,7 @@ function calculaKaizen(obra,tipo,proceso,subproceso){
             calculaProfitKaiz(json_obra["procesos"][proceso], ind);
           } else {
             if(subproceso != undefined){
-              var ind =snapshot.child("procesos/" + proceso + "/subprocesos/" + subproceso + "/porcentaje_indirectos").exists() ? realParse(procSnap.child("procesos/" + proceso + "/subprocesos/" + subproceso + "/porcentaje_indirectos").val()) / 100 : porcentaje_indirectos / 100;;// AQUI;
+              var ind = snapshot.child("procesos/" + proceso + "/subprocesos/" + subproceso + "/porcentaje_indirectos").exists() ? realParse(snapshot.child("procesos/" + proceso + "/subprocesos/" + subproceso + "/porcentaje_indirectos").val()) / 100 : porcentaje_indirectos / 100;// AQUI;
               calculaProfitKaiz(json_obra["procesos"][proceso]["subprocesos"][subproceso], ind);
             }
             sumaValoresKaiz(json_obra["procesos"][proceso],"proceso");
