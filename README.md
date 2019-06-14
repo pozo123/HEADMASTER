@@ -6,7 +6,7 @@ HTMLs:
 
 TO DO:
  - ADMON
-*   - importar adicionaes desde excel
+   - importar adicionaes desde excel
    - manejar las imagenes en el editar_ppto_adic
    - datatable en pagos de emmanuel
    - Edicion inve$stime
@@ -32,9 +32,6 @@ TO DO:
  - RRHH
    - num_traajadores_id no se actualiza al importar / dar de alta nuevo
  - GENERALES
-   - **pptos en presupuesto, imprimir_presupuesto, admon_resumen_ppto y admon_ppto_adic**
-      - ver parametros funciones generar
-      - guardarlos en la bd
    - Subir templates de excel con formatos necesarios para imprtar (importar proveedores, trabajadores y ppto adic)
    - Cambiar idioma_espanol en tablas de apps como datos_kaizen y asistencia y desplegar_procesos
    - KICK-OFF 
