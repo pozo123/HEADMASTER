@@ -21,6 +21,11 @@ var rama_bd_flujos = "administracion/flujos";
 var rama_bd_obras_magico = "obras";
 var rama_storage_obras = "obras";
 
+var rb_form_est;
+var rb_form_ant;
+var rb_tipo_rec;
+var rb_tipo_fac;
+
 var caso;
 var fileSelected;
 
@@ -103,10 +108,10 @@ $("#" + id_proc_ddl_pago_kaizen).change(function(){
 });
 
 $('#' + id_guardar_button_pago_kaizen).click(function(){
-	var rb_form_est = document.getElementById(id_formato_rb_est_pago_kaizen).checked == true;
-	var rb_form_ant = document.getElementById(id_formato_rb_ant_pago_kaizen).checked == true;
-	var rb_tipo_rec = document.getElementById(id_tipo_pago_rb_recibo_pago_kaizen).checked == true;
-	var rb_tipo_fac = document.getElementById(id_tipo_pago_rb_factura_pago_kaizen).checked == true;
+	rb_form_est = document.getElementById(id_formato_rb_est_pago_kaizen).checked == true;
+	rb_form_ant = document.getElementById(id_formato_rb_ant_pago_kaizen).checked == true;
+	rb_tipo_rec = document.getElementById(id_tipo_pago_rb_recibo_pago_kaizen).checked == true;
+	rb_tipo_fac = document.getElementById(id_tipo_pago_rb_factura_pago_kaizen).checked == true;
 	if((!rb_form_ant && !rb_form_est) || (!rb_tipo_fac && !rb_tipo_rec) || $('#' + id_monto_pago_kaizen).val() == "" || $('#' + id_fecha_pago_kaizen).val() == "" || $('#' + id_obra_ddl_pago_kaizen + " option:selected").val() == "" || (caso == "proc" && $('#' + id_proc_ddl_pago_kaizen + " option:selected").val() == "") || (caso == "subp" && $('#' + id_subp_ddl_pago_kaizen + " option:selected").val() == "")){
 		alert("Llena todos los campos necesarios");
 	} else {

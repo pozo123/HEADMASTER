@@ -302,6 +302,35 @@ $("#" + id_proc_ddl_ppto_adic).change(function(){
     document.getElementById(id_fiscales_check_ppto_adic).checked = ppto.fisc_bool;
     document.getElementById(id_bancarios_check_ppto_adic).checked = ppto.banc_bool;
     var reader = new FileReader();
+    var imagenes_prueba = [];
+
+    for(key in ppto.imagenes){
+        console.log(key)
+    }
+
+    firebase.storage().ref().child('obras/ZObra Prueba1/img_adic/ADIC-006/1').getDownloadURL().then(function(url) {
+        // `url` is the download URL for 'images/stars.jpg'
+
+        // This can be downloaded directly:
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.responseType = 'blob';
+        xhr.onload = function(e) {
+            var urlCreator = window.URL || window.webkitURL;
+            var imageUrl = urlCreator.createObjectURL(this.response);
+
+            imagenes_prueba.push({url: imageUrl});
+            console.log(imagenes_prueba[0].url);
+
+        };
+        xhr.send();
+
+        }).catch(function(error) {
+        // Handle any errors
+      });
+
+
+
     /*for(key in ppto.imagenes){
         var xhr = new XMLHttpRequest();
         xhr.open('GET', ppto["imagenes"][key].url, true);
