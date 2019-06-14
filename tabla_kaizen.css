@@ -116,7 +116,7 @@
   
   /*//////////////////////////////////////////////////////////////////
   [ Table ]*/
-  table {
+  .kaizen_table {
       width: 100%;
       background-color: #fff;
       text-align: center;

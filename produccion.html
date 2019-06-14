@@ -170,7 +170,6 @@
                         <a href="#pageSubmenu5" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Dashboard</a>
                         <ul class="collapse list-unstyled" id="pageSubmenu5">
                             <li class="tab" id="tabDashboardInd"><a href="#" onclick="openTabs('tabDashboardInd','dashboardInd')">Individual</a></li>
-                            <li class="tab" id=""><a href="#" onclick="openTabs('','')">Global</a></li>
                         </ul>
                     </li>
 
@@ -237,20 +236,38 @@
                         <div id="dashboardInd" class = "tabcontent">
                             <div class = "container-fluid">
                                 <h1>Dashboard Producción</h1>
+                                <br/>
                                 <p>Información de utilidad de tus obras</p>
-
-                                <div class = "row">
-                                    <div class= "col-lg-4">
-                                        <select id="obrasDdlDashboardInd" class="form-control"></select>
+                                <div class = "container-fluid">
+                                    <br/>      
+                                    <div class="row">
+                                        <div class= "col-lg-6 col-md-6 col-sm-12">
+                                            <select id="obrasDdlDashboardInd" class="form-control"></select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        prueba1
+                                    <br/>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div id="canvasDashcard1" style="width: 100%" height="500"></div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div id="canvasDashcard2" style="width: 100%" height="500"></div>
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        prueba2
+                                    <br/>
+                                    <div class="form-row hidden" id = "groupWeekYearDashboardInd">
+                                        <div class="col-6">
+                                            <label for="yearDdlDashboardInd">Año:</label>
+                                            <select id="yearDdlDashboardInd" class="form-control"></select>
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="semanaDdlDashboardInd">Semana:</label>
+                                            <select id="semanaDdlDashboardInd" class="form-control"></select>
+                                        </div>                                 
                                     </div>
+                                    <div class="form-row">
+                                        <table id="trabajadoresTable" style="width: 100%" height="1000"></table>
+                                    </div>                                         
                                 </div>
                             </div>
                         </div>
@@ -275,7 +292,7 @@
                                 <br/>
                                 <div class ="container-table100">
                                     <div class="tableKaizen ver2">
-                                        <table id="" class = "display">
+                                        <table id="" class = "display kaizen_table">
                                             <thead>
                                                 <tr class="row100 head">
                                                     <th class="header_obra" colspan="2" rowspan="2">OBRA</th>
@@ -528,64 +545,6 @@
                             </div>
                         </div>  
                                     
-                        <!-- Colaboradores-->
-                        <!--<div id="altaColaborador" class="tabcontent hidden">
-                                <h1>Alta de colaboradores</h1>
-                                <p>Página para dar de alta a los ingenieros del área de producción</p>
-                                <div class="container-fluid">
-                                    <div class="row align-items-center">
-                                        <div class="col-lg-3"></div>
-                                        <div class="col-lg-6">
-                                            <form action="#" onsubmit="return false;">
-                                                <div class="form-group">
-                                                    <label for="montoPagos">*Email:</label>
-                                                    <input type="text" name="colaboradorEmail" id="colaboradorEmail"class="form-control" placeholder="Email">
-                                                </div>
-                                                
-                                                <div class="form-group">
-                                                    <label for="montoPagos">*Nombre:</label>
-                                                    <input type="text" name="colaboradorNombre" id="colaboradorNombre"class="form-control" placeholder="Nombre del colaborador">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="montoPagos">*Nickname:</label>
-                                                    <input type="text" name="colaboradorNickname" id="colaboradorNickname"class="form-control" placeholder="Nickname">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="montoPagos">*Password:</label>
-                                                    <input type="password" name="" id="colaboradorPwd" class="form-control" placeholder="" aria-describedby="helpId">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="montoPagos">Teléfono:</label>
-                                                    <input type="text" name="colaboradorTelefono" id="colaboradorTelefono"class="form-control" placeholder="Ingresa la cantidad pagada">
-                                                </div>
-        
-                                                <div class="form-group">
-                                                    <label for="">Puesto:</label>
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="tipo" id="checkboxSupervisor" value="option1">
-                                                        <label class="form-check-label" for="checkboxSupervisor">Supervisor de Obra</label>
-                                                    </div>
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="tipo" id="checkboxGerente" value="option2">
-                                                        <label class="form-check-label" for="checkboxGerente">Gerente</label>
-                                                    </div>
-                                                </div>
-                                                        
-                                                <div class="form-row">
-                                                    <div class= "col-lg-6">
-                                                        <button id="registrarColaborador" type="button" class="btn btn-outline-success btn-block">Aceptar</button>
-                                                    </div>
-                                                    <div class= "col-lg-6">
-                                                        <button type="reset" id = "" class="btn btn-outline-danger btn-block">Borrar Todo</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                            <br/>
-                                        </div>
-                                        <div class="col-lg-3"></div>
-                                    </div>
-                                </div>
-                        </div>-->
                         
                         <div id="gestionarSup" class="tabcontent hidden">
                                 <h1>Gestionar supervisores</h1>
