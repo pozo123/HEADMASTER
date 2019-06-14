@@ -151,7 +151,6 @@ $('#' + id_entrada_button_copeo).click(function(){
 	var cant_sup = isNaN(parseFloat($('#' + id_sup_copeo).val())) ? 0 : parseFloat($('#' + id_sup_copeo).val());
 	var costo_cuad = sueldos["ofi"] * cant_ofi + sueldos["mof"] * cant_mof + sueldos["ayu"] * cant_ayu + sueldos["enc"] * cant_enc + sueldos["sup"] * cant_sup;
 	var tot = costo_cuad * parseFloat($('#' + id_dias_copeo).val()) * parseFloat($('#' + id_unidades_copeo).val());
-
 	var entrada = {
 		nombre: $('#' + id_nombre_copeo).val(),
         alcance: $('#' + id_alcance_copeo).val(),
@@ -171,8 +170,11 @@ $('#' + id_entrada_button_copeo).click(function(){
 	};
 
 	var imp = parseFloat($('#' + id_impuestos_copeo).val());
+	console.log(imp);
 	tot = existente ? tot - tot_anterior : tot;
+	console.log(tot);
 	var total = tot * (1 + imp / 100);
+	console.log(total)
 	//total = existente ? total - tot_anterior * (1 + imp/100) : total;
 	var proc = $('#' + id_proc_ddl_copeo + " option:selected").val();
 	var query = proc.split("-").length > 1 ? proc.split("-")[0] + "/subprocesos/" + proc : proc;
@@ -255,7 +257,7 @@ function loadExistenteCopeo(tbody, table){
 			console.log(data[1]);
 			console.log(data);
 			existente = true;
-			tot_anterior = data[10];
+			tot_anterior = realParse(deformatMoney(data[10]));
 			$('#' + id_entrada_label_copeo).html("Entrada " + data[0]);
 			$('#' + id_nombre_copeo).val(data[1]);
 			$('#' + id_alcance_copeo).val(data[2]);

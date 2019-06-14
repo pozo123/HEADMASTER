@@ -111,7 +111,6 @@ $('#' + id_semana_ddl_dashboard_individual).change(function(){
 
 
 function loadSemanasDashBoardIndividual(year){
-
     var optionBlank = document.createElement("option");
 	optionBlank.style = "display:none";
 	optionBlank.text = optionBlank.value = "";
