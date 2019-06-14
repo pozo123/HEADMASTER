@@ -62,15 +62,14 @@ $('#' + id_tab_horasExtra).click(function(){
     option3.text = option3.value = "";
     select3.appendChild(option3);
 
-    firebase.database().ref(rama_bd_obras_magico).orderByChild('nombre').on('child_added',function(snapshot){
-        var obra = snapshot.val();
-        if(!obra.terminada){
+    for(key in nombre_obras){
+        if(!nombre_obras[key].terminada){
             var option4 = document.createElement('OPTION');
-            option4.text = obra.nombre;
-            option4.value = obra.nombre;
+            option4.text = key;
+            option4.value = key;
             select3.appendChild(option4);
         }
-    });
+    }
 
     var option5 = document.createElement('OPTION');
     option5.text = option5.value = "Atencion a Clientes";
@@ -185,35 +184,34 @@ $("#" + id_obra_ddl_horasExtra).change(function(){
 });
 
 function cargaEntradasHorasExtra(year,semana){
-    firebase.database().ref(rama_bd_obras_magico).orderByChild("nombre").equalTo($('#' + id_obra_ddl_horasExtra + " option:selected").val()).once('child_added').then(function(snapshot){
-        var procesos = [];
-        terminados = [];
-        var count_proc = 0;
-        if(snapshot.child("num_procesos").val() == 0 && snapshot.child("procesos/ADIC/num_subprocesos").val() == 0){
-            procesos[0] = "MISC";
-        } else {
-            snapshot.child("procesos").forEach(function(childSnapshot){
-                var proc = childSnapshot.val();
-                if(proc.num_subprocesos == 0 && proc.clave != "ADIC"){
-                    if(childSnapshot.child("terminado").val()){
+    //AQUI
+    var obra = nombre_obras[$('#' + id_obra_ddl_horasExtra + " option:selected").val()];
+    var procesos = [];
+    terminados = [];
+    var count_proc = 0;
+    if(obra.num_procesos == 0 && obra["procesos"]["ADIC"].num_subprocesos == 0){
+        procesos[0] = "MISC";
+    } else {
+        for(key in obra["procesos"]){
+            var proc = obra["procesos"][key];
+            if(proc.num_subprocesos == 0 && key != "ADIC"){
+                if(proc.terminado){
+                    terminados[count_proc] = true;
+                }
+                procesos[count_proc] = key;
+                count_proc++;
+            } else {
+                for(subpKey in proc["subprocesos"]){
+                    if(proc["subprocesos"][subpKey].terminado){
                         terminados[count_proc] = true;
                     }
-                    procesos[count_proc] = childSnapshot.val().clave;
+                    procesos[count_proc] = subpKey;
                     count_proc++;
-                } else {
-                    childSnapshot.child("subprocesos").forEach(function(grandChildSnapshot){
-                        if(grandChildSnapshot.child("terminado").val()){
-                            terminados[count_proc] = true;
-                        }
-                        procesos[count_proc] = grandChildSnapshot.val().clave;
-                        count_proc++;
-                    });
-                }
-            });
-        }
-        loadHorasExtra(year,semana,procesos,count_proc);                    
-        //console.log(sueldos_base)
-    });
+                };
+            }
+        };
+    }
+    loadHorasExtra(year,semana,procesos,count_proc);                    
 }
 
 $('#' + id_carga_semana_anterior_button_horasExtra).click(function(){

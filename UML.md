@@ -218,10 +218,30 @@
                   - validacion_ppto: igual que proc
                   - SCORE: igual que proc simple
                   - copeo: igual que proc simple
-                  - presupuesto: (solo en adic y pc00, pc00-misc = "")
+                  - presupuesto: (pc00, pc00-misc = "")
+                     - terminado
+                        - nombre
+                        - archivos:
+                           - por index (0,1,2)
+                              - pdf
+                              - pad
+                  - presupuesto: (adic)
                      - terminado
                      - nombre
-                     - AQUI redefinir
+                     - fisc_bool
+                     - banc_bool
+                     - imagenes
+                        - index (int)
+                           - url
+                     - fecha_ppto (timestamp)
+                     - titulo_ppto
+                     - nombre_ppto
+                     - tiempoEntrega
+                     - json_excel (se usa para alcance)
+                     - anticipo
+                     - exc_lista
+                     - reqs_lista
+                     - atn_lista
             - contrato_compras (en hoja menos en IQONO MEXICO, ahi en proc)
                - clave
                - solpeds

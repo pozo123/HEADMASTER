@@ -108,16 +108,14 @@ $('#' + id_tab_trabajadores).click(function(){
 	    el.value = opt;
 	    select_edoc.appendChild(el);
 	}
-
-    firebase.database().ref(rama_bd_obras_magico).orderByChild('nombre').on('child_added',function(snapshot){
-        var obra = snapshot.val();
-        if(!obra.terminada){
-	        var option8 = document.createElement('OPTION');
-	        option8.text = obra.nombre;
-	        option8.value = obra.nombre;
-	        select_obra.appendChild(option8);
-	    }
-    });
+	for(key in nombre_obras){
+        if(!nombre_obras[key].terminada){
+            var option8 = document.createElement('OPTION');
+            option8.text = key;
+            option8.value = key;
+            select_obra.appendChild(option8);
+        }
+    }
 
     firebase.database().ref(rama_bd_destajistas).orderByChild('nombre').on('child_added',function(snapshot){
         var dest = snapshot.val();

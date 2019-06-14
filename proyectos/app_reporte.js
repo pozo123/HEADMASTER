@@ -56,7 +56,7 @@ $('#tabReporte').click(function() {
     select2.appendChild(option5);
     for(key in json_personal){
         var pers = json_personal[key];
-        inges[childSnap.key] = pers.nombre;
+        inges[key] = pers.nombre;
         if(pers.areas.proyectos && pers.activo){
             var option3 = document.createElement('OPTION');
             option3.text = pers.nombre;

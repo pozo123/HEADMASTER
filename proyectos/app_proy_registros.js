@@ -53,11 +53,11 @@ firebase.auth().onAuthStateChanged(user => {
 
                 firebase.database().ref(rama_bd_obras).orderByChild('nombre').on('child_added',function(snapshot){
                     var obra = snapshot.val();
-                    var tipo = (obra.num_procesos == 0 && obra.procesos.ADIC.num_subprocesos == 0) ? "simple" : "padre";
+                    //var tipo = (obra.num_procesos == 0 && obra.procesos.ADIC.num_subprocesos == 0) ? "simple" : "padre";
                     if(!obra.terminada){   
                         var option3 = document.createElement('option');
                         option3.text = obra.nombre;
-                        option3.value = tipo; 
+                        option3.value = obra.nombre; 
                         select.appendChild(option3);
                     }
                 });
@@ -88,6 +88,8 @@ $('#' + id_obra_ddl_registros).change(function(){
         option.text = option.value = "";
         select.appendChild(option);
 
+        console.log(nombre_obras);
+        console.log(nombre_obras[$('#' + id_obra_ddl_registros + " option:selected").val()]);
         for(key in nombre_obras[$('#' + id_obra_ddl_registros + " option:selected").val()]["hojas"]){
             var option2 = document.createElement('OPTION');
             option2.text = key + " (" + nombre_obras[$('#' + id_obra_ddl_registros + " option:selected").val()]["hojas"][key].nombre + ")";

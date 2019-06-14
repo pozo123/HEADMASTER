@@ -323,121 +323,119 @@ function generateDdls(cell_obra, cell_proc, nuevo, obra_in, proc_in){
         k = k.substring(1,2);
     }
     obra_ddl.id = "obra_" + k;
-    firebase.database().ref(rama_bd_obras_magico).once('value').then(function(snapshot){
-        snapshot.forEach(function(obraSnap){
-            var obra = obraSnap.val();
-            var option = document.createElement('OPTION');
-            if(obra.terminada){
-                option.style = "display:none";
-            }
-            option.text = option.value = obra.nombre;
-            obra_ddl.appendChild(option);
-        });
-        var option3 = document.createElement('option');
-        option3.text = option3.value = "Atencion a Clientes";
-        obra_ddl.appendChild(option3);
-        cell_obra.appendChild(obra_ddl);
-        var proc_input;
-        if(!nuevo){
-            for(var i = 0; i<obra_ddl.length;i++){
-                if(obra_ddl[i].value == obra_in){
-                    obra_ddl.selectedIndex = i;
-                }
-            }
-            if(obra_in == "Atencion a Clientes"){
-                var proc_input = document.createElement('input');
-                proc_input.type = "text";
-                proc_input.id = "proc_" + k;
-                $('#' + proc_input.id).val(proc_in);
-            } else {
-                var proc_input = document.createElement('select');
-                proc_input.id = "proc_" + k;
-                var option2 = document.createElement('option');
-                option2.style = "display:none";
-                option2.text = option2.value = "";
-                proc_input.appendChild(option2);
-                //console.log(snapshot);
-                //console.log(obra_in);
-                var obra = snapshot.child(obra_in);
-                if(obra.val().num_procesos == 0 && obra.child("procesos/ADIC/num_subprocesos").val() == 0){
-                    var option = document.createElement('OPTION');
-                    option.text = "MISC";
-                    option.value = "MISC";
-                    proc_input.appendChild(option);
-                } else {
-                    obra.child("procesos").forEach(function(procSnap){
-                        var proceso = procSnap.val();
-                        if(proceso.num_subprocesos == 0 && proceso.clave != "ADIC"){
-                            var option = document.createElement('OPTION');
-                            option.text = proceso.clave;// + " (" + proceso.nombre + ")";
-                            option.value = proceso.clave;
-                            proc_input.appendChild(option);
-                        } else {
-                            procSnap.child("subprocesos").forEach(function(subpSnap){
-                                var subproc = subpSnap.val();
-                                var option = document.createElement('OPTION');
-                                option.text = subproc.clave;// + " (" + subproc.nombre + ")";
-                                option.value = subproc.clave;
-                                proc_input.appendChild(option);
-                            });
-                        }
-                    });
-                }
-                for(var i = 0; i<proc_input.length;i++){
-                    if(proc_input[i].text == proc_in){
-                        proc_input.selectedIndex = i;
-                    }
-                }
-            }
-            cell_proc.appendChild(proc_input);
+    for(key in nombre_obras){
+        var obra = nombre_obras[key];   
+        var option = document.createElement('OPTION');
+        if(obra.terminada){
+            option.style = "display:none";
         }
-        $('#' + obra_ddl.id).change(function(){
-            //console.log("change");
-            $('#' + cell_proc.id).empty();
-            if($('#' + obra_ddl.id + " option:selected").val() == "Atencion a Clientes"){
-                var proc_input = document.createElement('input');
-                proc_input.type = "text";
-                proc_input.id = "proc_" + k;
+        option.text = option.value = key;
+        obra_ddl.appendChild(option);
+    }
+    var option3 = document.createElement('option');
+    option3.text = option3.value = "Atencion a Clientes";
+    obra_ddl.appendChild(option3);
+    cell_obra.appendChild(obra_ddl);
+    var proc_input;
+    if(!nuevo){
+        for(var i = 0; i<obra_ddl.length;i++){
+            if(obra_ddl[i].value == obra_in){
+                obra_ddl.selectedIndex = i;
+            }
+        }
+        if(obra_in == "Atencion a Clientes"){
+            var proc_input = document.createElement('input');
+            proc_input.type = "text";
+            proc_input.id = "proc_" + k;
+            $('#' + proc_input.id).val(proc_in);
+        } else {
+            var proc_input = document.createElement('select');
+            proc_input.id = "proc_" + k;
+            var option2 = document.createElement('option');
+            option2.style = "display:none";
+            option2.text = option2.value = "";
+            proc_input.appendChild(option2);
+            //console.log(snapshot);
+            //console.log(obra_in);
+            var obra = nombre_obras[obra_in];
+            if(obra.num_procesos == 0 && obra["procesos"]["ADIC"]["num_subprocesos"] == 0){
+                var option = document.createElement('OPTION');
+                option.text = "MISC";
+                option.value = "MISC";
+                proc_input.appendChild(option);
             } else {
-                var proc_input = document.createElement('select');
-                proc_input.id = "proc_" + k;
-                var option2 = document.createElement('option');
-                option2.style = "display:none";
-                option2.text = option2.value = "";
-                proc_input.appendChild(option2);
-                var obra = snapshot.child($('#' + obra_ddl.id + " option:selected").val());
-                if(obra.val().num_procesos == 0 && obra.child("procesos/ADIC/num_subprocesos").val() == 0){
-                    var option = document.createElement('OPTION');
-                    option.text = "MISC";
-                    option.value = "MISC";
-                    proc_input.appendChild(option);
-                } else {
-                    obra.child("procesos").forEach(function(procSnap){
-                        var proceso = procSnap.val();
-                        if(proceso.num_subprocesos == 0 && proceso.clave != "ADIC"){
+                for(procKey in obra["procesos"]){
+                    var proceso = obra["procesos"][procKey];
+                    if(proceso.num_subprocesos == 0 && procKey != "ADIC"){
+                        var option = document.createElement('OPTION');
+                        option.text = procKey;// + " (" + proceso.nombre + ")";
+                        option.value = procKey;
+                        proc_input.appendChild(option);
+                    } else {
+                        for(subpKey in proceso["subprocesos"]){
+                            var subproc = proceso["subprocesos"][subpKey];
                             var option = document.createElement('OPTION');
-                            if(!proceso.terminado){
-                                option.text = proceso.clave;// + " (" + proceso.nombre + ")";
-                                option.value = proceso.clave;
+                            option.text = subpKey;// + " (" + subproc.nombre + ")";
+                            option.value = subpKey;
+                            proc_input.appendChild(option);
+                        };
+                    }
+                };
+            }
+            for(var i = 0; i<proc_input.length;i++){
+                if(proc_input[i].text == proc_in){
+                    proc_input.selectedIndex = i;
+                }
+            }
+        }
+        cell_proc.appendChild(proc_input);
+    }
+    $('#' + obra_ddl.id).change(function(){
+        $('#' + cell_proc.id).empty();
+        if($('#' + obra_ddl.id + " option:selected").val() == "Atencion a Clientes"){
+            var proc_input = document.createElement('input');
+            proc_input.type = "text";
+            proc_input.id = "proc_" + k;
+        } else {
+            var proc_input = document.createElement('select');
+            proc_input.id = "proc_" + k;
+            var option2 = document.createElement('option');
+            option2.style = "display:none";
+            option2.text = option2.value = "";
+            proc_input.appendChild(option2);
+            var obra = nombre_obras[$('#' + obra_ddl.id + " option:selected").val()];
+            if(obra.num_subprocesos == 0 && obra["procesos"]["ADIC"].num_subprocesos == 0){
+                var option = document.createElement('OPTION');
+                option.text = "MISC";
+                option.value = "MISC";
+                proc_input.appendChild(option);
+            } else {
+                for(procKey in obra["procesos"]){
+                    var proceso = obra["procesos"][procKey];
+                    if(proceso.num_subprocesos == 0 && procKey != "ADIC"){
+                        var option = document.createElement('OPTION');
+                        if(!proceso.terminado){
+                            option.text = procKey;// + " (" + proceso.nombre + ")";
+                            option.value = procKey;
+                            proc_input.appendChild(option);
+                        }
+                    } else {
+                        for(subpKey in proceso["subprocesos"]){
+                            var subproc = proceso["subprocesos"][subpKey];
+                            if(!subproc.terminado){
+                                var option = document.createElement('OPTION');
+                                option.text = subpKey;// + " (" + subproc.nombre + ")";
+                                option.value = subpKey;
                                 proc_input.appendChild(option);
                             }
-                        } else {
-                            procSnap.child("subprocesos").forEach(function(subpSnap){
-                                var subproc = subpSnap.val();
-                                if(!subproc.terminado){
-                                    var option = document.createElement('OPTION');
-                                    option.text = subproc.clave;// + " (" + subproc.nombre + ")";
-                                    option.value = subproc.clave;
-                                    proc_input.appendChild(option);
-                                }
-                            });
-                        }
-                    });
-                }
+                        };
+                    }
+                };
             }
-            cell_proc.appendChild(proc_input);
-        });
+        }
+        cell_proc.appendChild(proc_input);
     });
+    //});
 }
 
 function checkProcDdl(){

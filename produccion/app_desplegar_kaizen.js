@@ -320,8 +320,7 @@ function createRow(proc,table,tipo){
 		row.appendChild(proc_nombre);
 		if(tipo == "procSimple"){
 			var porc_ind = proc.porcentaje_indirectos == undefined ? porcentaje_indirectos : proc.porcentaje_indirectos;
-			console.log(porc_ind);
-			ind = (realParse(proc.kaizen.ADMINISTRACION.ESTIMACIONES.PPTO + realParse(proc.kaizen.ADMINISTRACION.ANTICIPOS.PPTO)) * realParse(porc_ind)/100);
+			ind = (realParse(proc.kaizen.ADMINISTRACION.ESTIMACIONES.PPTO) + realParse(proc.kaizen.ADMINISTRACION.ANTICIPOS.PPTO)) * realParse(porc_ind)/100;
 			indirectos_json["total"] += ind;
             profitProgClass = " profit_prog";
 			editClass = editable;
@@ -333,7 +332,7 @@ function createRow(proc,table,tipo){
 		} else if(tipo == "subproc"){
 			var porc_ind = proc.porcentaje_indirectos == undefined ? porcentaje_indirectos : proc.porcentaje_indirectos;
 			console.log(porc_ind);
-			ind = (realParse(proc.kaizen.ADMINISTRACION.ESTIMACIONES.PPTO + realParse(proc.kaizen.ADMINISTRACION.ANTICIPOS.PPTO)) * realParse(porc_ind)/100);
+			ind = (realParse(proc.kaizen.ADMINISTRACION.ESTIMACIONES.PPTO) + realParse(proc.kaizen.ADMINISTRACION.ANTICIPOS.PPTO)) * realParse(porc_ind)/100;
 			indirectos_json["total"] += ind;
 			if(!indirectos_json["procesos"][cl.split("-")[0]]){
 				indirectos_json["procesos"][cl.split("-")[0]] = ind;
