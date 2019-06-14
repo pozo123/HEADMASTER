@@ -321,7 +321,6 @@ $('#' + id_proc_ddl_ppto_proy).change(function(){
         }
         myNewDataExc.push({id: myDataExc[i].id, label: myDataExc[i].label, isChecked: flag})
     }
-    var alcance_json;
     for(key in ppto.json_alcance){
         var node = document.createElement("LI");
         node.classList.add("list-group-item");// Create a <li> node
@@ -491,9 +490,9 @@ $('#' + id_registrar_button_ppto_proy).click(function () {
                 tiempoEntrega: $('#' + id_tiempoEntrega_ppto_proy).val(),
                 json_alcance: alcance_json,
                 anticipo: ant,
-                exc_lista:exc_lista,
-                reqs_lista:reqs_lista,
-                atn_lista:atn_lista,
+                exc_lista: exc_lista,
+                reqs_lista: reqs_lista,
+                atn_lista: atn_lista,
             }
             if(document.getElementById(id_existente_check_ppto_proy).checked && obra_global_snap.child("procesos/PC00/subprocesos/" + $('#' + id_proc_ddl_ppto_proy + " option:selected").text() + "/presupuesto").exists()){
                 var subp_clave = $('#' + id_proc_ddl_ppto_proy + " option:selected").text();
@@ -594,7 +593,9 @@ function generaParamPptoProy(genera){
     var clave_presu;
     var existente = document.getElementById(id_existente_check_ppto_proy).checked;
     var reqs_lista = $('#' + id_reqs_ddl_check_ppto_proy).dropdownCheckbox("checked");
+    console.log(reqs_lista);
     var exc_lista = $('#' + id_excs_ddl_check_ppto_proy).dropdownCheckbox("checked");
+    console.log(exc_lista);
     var atn_lista = $('#' + id_atn_ddl_check_ppto_proy).dropdownCheckbox("checked");
     if(!existente){
         var codigo_obra = obra_global.clave;
@@ -616,11 +617,11 @@ function generaParamPptoProy(genera){
         anticipo = 100;
     }
     //Globales: alcance, fecha_actual
-    var ret = generaPptoProy(genera, clave_presu, obra_global, alcance, fecha_actual, titulo_ppto, tiempoEntrega, fisc_bool, banc_bool, reqs_lista, exc_lista, atn_lista, existente, anticipo);
+    var ret = generaPptoProy(genera, clave_presu, obra_global, alcance, fecha_actual, titulo_ppto, tiempoEntrega, fisc_bool, banc_bool, reqs_lista, exc_lista, atn_lista, anticipo);
     return ret;
 }
 
-function generaPptoProy(genera, clave_presu, obra_ppto, alcance_ppto, fecha_ppto, titulo_ppto, tiempoEntrega, fisc_bool, banc_bool, reqs_lista, exc_lista, atn_lista, existente, anticipo){
+function generaPptoProy(genera, clave_presu, obra_ppto, alcance_ppto, fecha_ppto, titulo_ppto, tiempoEntrega, fisc_bool, banc_bool, reqs_lista, exc_lista, atn_lista, anticipo){
     var dir = obra_ppto.direccion;
     var clien = obra_ppto.cliente;
 
