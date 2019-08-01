@@ -29,6 +29,7 @@ var total_horas = {};
 var terminados = [];
 
 $('#' + id_tab_horasExtra).click(function(){
+    console.log("horas_extra");
     sueldos_base = [];
     $('#' + id_datatable_horasExtra).empty();
     $('#' + id_datatable_div_horasExtra).addClass('hidden');
@@ -432,7 +433,7 @@ function guardarHorasExtra(){
             }
         }
         firebase.database().ref(rama_bd_trabajadores).once('value').then(function(snapshot){
-            //console.log(total_horas_tra);
+            console.log(total_horas_tra);
             for(key in total_horas_tra){
                 var horas_previas = snapshot.child(key + "/nomina/" + year + "/" + semana + "/total_horas_extra");
                 //horas_previas = horas_previas.exists() ? horas_previas.val() : 0;
@@ -443,6 +444,7 @@ function guardarHorasExtra(){
                 }
                 var horas_nuevas = (parseFloat(horas_previas) + total_horas_tra[key]).toFixed(2);
                 //console.log("horas_nuevas_tra: " + horas_nuevas);
+                console.log(horas_nuevas);
                 firebase.database().ref(rama_bd_trabajadores + "/" + key + "/nomina/" + year + "/" + semana + "/total_horas_extra").set(horas_nuevas);
                 var impuestos_horas = (horas_nuevas * 0.16).toFixed(2);
                 firebase.database().ref(rama_bd_trabajadores + "/" + key + "/nomina/" + year + "/" + semana + "/impuestos/impuestos_horas_extra").set(impuestos_horas);

@@ -151,7 +151,7 @@ firebase.auth().onAuthStateChanged(user => {
             areas_usuario_global = user_personal.areas;
             console.log(areas_usuario_global);
             creden_usuario_global = user_personal.credenciales;
-            if(user.uid == "sD2NRaTu4Ug4e0gqluYaHpxNZbP2" || user.uid == "WCpLarWgMKfwGsvAdrqlqjQxy243"){
+            if(user.uid == "sD2NRaTu4Ug4e0gqluYaHpxNZbP2" || user.uid == "w5LvF3uFl5g0qEAKvmKCQferLQJ3"){
                 $("#tabRegistrosAdmon").removeClass('hidden');
                 $("#tabReporteInvestime").removeClass('hidden');
             } else {
@@ -238,12 +238,11 @@ firebase.auth().onAuthStateChanged(user => {
             var usuarioNombre = document.getElementById('usuarioConectado');
             usuarioNombre.innerHTML = user_personal.nickname;
 
-
-
+            $('#loader').addClass("hidden");
+            $('.loader').removeClass("hidden");
         });
 
         $('body').removeClass("hidden");
-
     } else {
         window.location.reload("index.html");
         window.location.assign("index.html");

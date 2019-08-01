@@ -33,6 +33,7 @@ var subtotal;
 $('#' + tab_kaizen_ppto).click(function(){
 	$('#' + form_kaizen_ppto).trigger("reset");
 	$('#' + id_obra_ddl_kaizen_ppto).empty();
+	
     var select = document.getElementById(id_obra_ddl_kaizen_ppto);
     var option = document.createElement('option');
     option.style = "display:none";
@@ -41,7 +42,6 @@ $('#' + tab_kaizen_ppto).click(function(){
 
 	var aut = (areas_usuario_global.administracion || creden_usuario_global < 3);
     for(key in nombre_obras){
-    	console.log(nombre_obras[key]);
     	var obra = nombre_obras[key];
     	var aut_local = false;
     	if(!obra.terminada){

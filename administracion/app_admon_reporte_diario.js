@@ -125,10 +125,7 @@ function generateReporteDiario(){
 
                 var horas_trabajadas = isNaN(parseFloat(snapshot.child(query + "/SCORE/total_trabajado").val())) ?  0 : snapshot.child(query + "/SCORE/total_trabajado").val();
 
-                console.log(horas_trabajadas);
-                console.log(obras[obra]["procesos"][proceso]);
                 var horas_trabajadas_tot = (parseFloat(horas_trabajadas) + parseFloat(obras[obra]["procesos"][proceso])).toFixed(2);
-                console.log(horas_trabajadas_tot)
 
                 procs.push([
                     {text: obra},

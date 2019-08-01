@@ -149,6 +149,7 @@ function loadResumenNomina(){
                     var pago_he = trabSnap.child("nomina/" + year + "/" + week + "/total_horas_extra").val() == null ? 0 : trabSnap.child("nomina/" + year + "/" + week + "/total_horas_extra").val();
                     var pago_div = trabSnap.child("nomina/" + year + "/" + week + "/total_diversos").val() == null ? 0 : trabSnap.child("nomina/" + year + "/" + week + "/total_diversos").val();
                     var pago_total = parseFloat(pago_base) + parseFloat(pago_he) + parseFloat(pago_div);
+                    console.log(pago_total);
                     var entrada = [
                         trabSnap.key,
                         trab.nombre,

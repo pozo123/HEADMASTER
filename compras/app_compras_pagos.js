@@ -63,12 +63,13 @@ $('#' + id_tab_pag_compras).click(function(){
     option4.style = "display:none";
     option4.text = option.value = "";
     select2.appendChild(option4);
+	console.log(nombre_obras);
 	for(key in nombre_obras){
     	if(!nombre_obras[key].terminada){
 	        var option2 = document.createElement('OPTION');
-	        option3.text = key;
-	        option3.value = key;
-	        select2.appendChild(option3);
+	        option2.text = key;
+	        option2.value = key;
+	        select2.appendChild(option2);
 	    }
     };
 });

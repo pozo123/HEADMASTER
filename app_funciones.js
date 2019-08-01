@@ -37,6 +37,11 @@ function msToHoursAndMinutes(ms){
   return horas + ":" + mins;
 }
 
+function hoursAndMinutesToMs(hm){
+  hm_split = hm.split(':');
+  return parseFloat(hm_split[0])*60*60*1000 + parseFloat(hm_split[1])*60*1000;
+}
+
 function trickleDownKaizen(obra, hoja, query_kaiz, cantidad, calc_profit){
   var split = hoja.split("-");
   if(split.length > 1){

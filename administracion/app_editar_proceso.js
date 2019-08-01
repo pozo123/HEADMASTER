@@ -20,6 +20,7 @@ var f_f_proc_anterior = 0;
 $('#tabEditarProceso').click(function(){
     $('#' + id_sub_group_editar_proceso).addClass("hidden");
     $('#' + id_datos_editar_proceso).addClass("hidden");
+
     jQuery('#' + id_fecha_inicio_editar_proceso).datetimepicker(
         {timepicker:false, weeks:true,format:'m.d.Y'}
     );
@@ -42,7 +43,7 @@ $('#tabEditarProceso').click(function(){
     for(key in nombre_obras){
         if(!nombre_obras[key].terminada){
             var option2 = document.createElement('OPTION');
-            option2.text = nombre_obras[key].nombre;
+            option2.text = key;
             option2.value = key;
             select.appendChild(option2);
         }

@@ -80,8 +80,8 @@ var myDataExc = []
 
 var ppto_especial = false;
 var horas_ppto = 0;
-var pv_directo = "";
-var pv_indirecto = "";
+var pv_directo = 0;
+var pv_indirecto = 0;
 
 $('#' + id_file_ppto_adic).on("change",(function(event) {
     excelSeleccionado = event.target.files[0];
@@ -753,9 +753,9 @@ $('#' + id_registrar_button_ppto_adic).click(function () {
 function calculaAlcance(json){
     json_excel = json;
     var alcance = [];
-    var pv_indirecto;
-    var pv_directo;
-    var subtotal;
+    var pv_indirecto = 0;
+    var pv_directo = 0;
+    var subtotal = 0;
     alcance[0] = [{text: json[2][0], alignment: 'left'},{text: json[2][1], alignment: 'left'},{text: json[2][2], colSpan:2},'',{text: json[2][3], alignment: 'left'},{text: json[2][4], alignment: 'left'}];
     var ren = [];
     var finished = false;
@@ -845,7 +845,6 @@ function generaParamPptoAdic(vista_previa){
 //anticipo [0-100]
 //reqs_lista, atn_lista y exc_lista: JSON. Key = i (int) val = string
 function generaPptoAdic(vista_previa, obra_ppto, fisc_bool, banc_bool, imagen_anexo, fecha_ppto, pv_indirecto, pv_directo, subtotal, ppto_especial, titulo_ppto, nombre_ppto, tiempoEntrega, alcance, clave_presu, anticipo, exc_lista, reqs_lista, atn_lista){
-    console.log(imagen_anexo);
     var obra_nombre = obra_ppto.nombre;
     var dire = obra_ppto.direccion;
     var clien = obra_ppto.cliente;

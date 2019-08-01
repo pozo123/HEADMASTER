@@ -22,6 +22,7 @@ var precio_aprobado;
 var pptos = [];
 
 $('#' + tab_resumen_pptos).click(function(){
+    $('#' + id_loader_resumen_pptos).removeClass("hidden");
     pptos = [];
 	$('#' + id_obra_ddl_resumen_pptos).empty();
     $('#' + id_proc_ddl_resumen_pptos).empty();
@@ -45,7 +46,7 @@ $('#' + tab_resumen_pptos).click(function(){
             for(keyProc in obra["procesos"]){
                 var proc = obra["procesos"][keyProc];
                 if(keyProc == "ADIC" || keyProc == "PC00"){
-                    for(keySubp in keyProc["subprocesos"]){
+                    for(keySubp in proc["subprocesos"]){
                         if(keySubp != "PC00-MISC"){
                             obra_bool = true;
                         }
@@ -53,6 +54,7 @@ $('#' + tab_resumen_pptos).click(function(){
                 }
             };
             if(obra_bool){
+                console.log(key)
                 var option2 = document.createElement('OPTION');
                 option2.text = key;
                 option2.value = key;
@@ -72,7 +74,6 @@ function actualizarTable(){
 
         snapshot.forEach(function(obraSnap){
             obraSnap.child('procesos').forEach(function(childSnap){
-                console.log(obraSnap.val().nombre);
                 var proc = childSnap.val();
                 if(proc.clave == "ADIC" || proc.clave == "PC00"){
                     childSnap.child('subprocesos').forEach(function(subpSnap){
@@ -212,10 +213,11 @@ $("#" + id_obra_ddl_resumen_pptos).change(function(){
             for(keySubp in nombre_obras[$('#' + id_obra_ddl_resumen_pptos + " option:selected").val()]["procesos"][key]["subprocesos"]){
                 if(keySubp != "PC00-MISC"){
                     var option2 = document.createElement('OPTION');
-                    option2.text = keySubp + " (" + nombre_obras[$('#' + id_obra_ddl_resumen_pptos + " option:selected").val()]["procesos"][key]["subprocesos"].nombre + ")";
+                    option2.text = keySubp + " (" + nombre_obras[$('#' + id_obra_ddl_resumen_pptos + " option:selected").val()]["procesos"][key]["subprocesos"][keySubp].nombre + ")";
                     option2.value = keySubp;
                     select.appendChild(option2);
                 }
+                console.log(keySubp)
             }
         }
     }

@@ -323,10 +323,11 @@ function agregarPdfOdeC(tbody, table){
         	$('#' + id_pdf_label_odec).text("Archivo no seleccionado");
 			pdfSeleccionado = "";
             $('#' + id_agregar_pdf_button_odec).click(function(){
-			    console.log("contrato: " + data[1]);
+				console.log("contrato: " + data[1]);
 			    console.log("solped: " + data[2]);
 			    console.log("odec: " + data[4]);
 			    console.log("nombre: " + pdfSeleccionado.name);
+				console.log(pdfSeleccionado)
 				var storageRef = firebase.storage().ref(rama_storage_obras + "/contratos/" + data[1] + "/" + data[2] + "/odecs/" + data[4] + "/" + pdfSeleccionado.name);
 			    var uploadTask = storageRef.put(pdfSeleccionado);
 			    uploadTask.on('state_changed', function(snapshot){
@@ -370,6 +371,7 @@ function agregarPdfOdeC(tbody, table){
 }
 
 $('#' + id_pdf_file_odec).on("change", function(event){
+	pdfSeleccionado = "";
     pdfSeleccionado = event.target.files[0];
     $('#' + id_pdf_label_odec).text(pdfSeleccionado.name);
 });

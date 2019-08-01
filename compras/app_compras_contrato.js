@@ -118,7 +118,7 @@ $('#' + id_guardar_button_contrato).click(function(){
 		var proc_split = proc.split("-");
 		var query = proc_split.length == 1 ? proc : proc_split[0] + "/subprocesos/" + proc;
 		if(query == "PC00"){
-			query == "PC00/subprocesos/PC00-MISC";
+			query = "PC00/subprocesos/PC00-MISC";
 		}
 		firebase.database().ref(rama_bd_obras + "/" + $('#' + id_obra_ddl_contrato + " option:selected").val() + "/procesos/" + query + "/contrato_compras").set(cont);
 		alert("Contrato asignado con éxito");

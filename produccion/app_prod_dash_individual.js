@@ -8,7 +8,9 @@ var group_weekYear_dashboard_individual = "groupWeekYearDashboardInd";
 var id_canvas_dash1 = "canvasDashcard1";
 var id_canvas_dash2 = "canvasDashcard2";
 
-var semana_actual = getWeek(new Date().getTime())[0];
+
+var semana_actual = 24;
+/* var semana_actual = getWeek(new Date().getTime())[0]; */
 var year_actual = getWeek(new Date().getTime())[1];
 
 var total_asistencia = [];
@@ -115,12 +117,12 @@ function loadSemanasDashBoardIndividual(year){
 	optionBlank.style = "display:none";
 	optionBlank.text = optionBlank.value = "";
 
-	var week_actual;
-	if(year == getWeek(new Date().getTime())[1]){
+	var week_actual = 24;
+/* 	if(year == getWeek(new Date().getTime())[1]){
 	    week_actual = getWeek(new Date().getTime())[0];	
 	} else {
 		week_actual = getWeek(new Date(year,11,31).getTime())[0];
-	}
+	} */
 	var select2 = document.getElementById(id_semana_ddl_dashboard_individual);
 	select2.appendChild(optionBlank);
 

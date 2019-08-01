@@ -36,8 +36,8 @@ $('#' + id_tab_corruptos).click(function(){
     	for(key in json_personal){
     		if(json_personal[key].areas.proyectos && !json_personal[key].areas.administracion && json_personal[key].activo){
 		        var option2 = document.createElement('OPTION');
-		        option2.text = persSnap.child("nickname").val();
-		        option2.value = persSnap.key;
+		        option2.text = json_personal[key].nickname;
+		        option2.value = key;
 		        select.appendChild(option2);
     		}
     	}
