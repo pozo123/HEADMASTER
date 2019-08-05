@@ -1,0 +1,145 @@
+- personal
+  - colaborador (uid):
+    - nombre: string
+    - a_paterno: string
+    - a_materno: string
+    - nickname: string
+    - email: string
+    - foto_url: string
+    - areas:   
+      - proyectos: boolean
+      - produccion: boolean
+      - compras: boolean
+      - administracion: boolean
+      - rrhh: boolean
+    - credenciales: (0 sisadmin, 1 director, 2 lider de area, 3 colaboradores simples)
+    - especialidad: (si tienes area proyectos, "ie" (Instalación eléctrica), "ihs"(Instalación hidrosanitaria), "NA" si no tienes área proyectos)
+    - habilitado: boolean (acceso al sistema)
+    - estatus (si tienes area proy, true si trabajando) *
+
+- clientes
+   - cliente (id_firebase)
+      - clave_cliente: string
+      - nombre: string
+      - telefono: string
+      - direccion
+         - estado: string
+         - ciudad: string
+         - colonia: string
+         - cp: int
+         - calle: string
+         - numero_exterior: string
+         - numero_interior: string
+      - atencion
+         - contacto (key numerado empezado por 0)
+            - prefijo: string
+            - nombre: string
+            - a_paterno: string
+            - a_materno: string
+            - area: string
+            - celular: string
+            - email: string
+            - extension: string
+
+- info_web
+   - version
+
+- categorias
+   - categoria (id)
+      - nombre: string
+      - clave: string
+
+ - administracion:
+   - flujos
+      - obra (id)
+         - pagos (firebase_id)
+            - concepto: string
+            - fecha_pago: float (timestamp)
+            - comprobante_url: string
+            - folio: string
+            - formato: string
+            - monto: float
+            - tipo_pago: string
+            - distribucion
+                - entradas (id generado "ANT-clave_proc o "EST_clave_proc")
+                    - clave_proc: string
+                    - formato: string
+                    - monto_pacial: float
+                    - 
+                    
+   - investime
+      - registros
+         - año (ej 2019)
+            - semana (ej 3)
+               - registro (por uid)
+                  - familia
+                  - subfamilia
+                  - actividad
+                  - activo
+                  - checkin
+                  - checkout
+                  - colaborador (por uid)
+                  - status_obra
+      - familias
+         - Globales
+            - subfamilias (por nombre)
+               - actividades: actividades
+         - Especificos
+            - actividades: actividades
+         - Rutinarios
+            - actividades: actividades
+
+DEFINIR DESPUÉS
+
+- buzon: * ()
+    - mensaje (por uid, solo los no leidos)
+        - destinatario (uid)
+        - remitente (uid)
+        - mensaje
+        - leido
+        - timestamps
+            - enviado
+            - leido
+- administracion
+   - centro de costos
+      - familia(nombre)
+         - nombre
+         - clave (definir!)
+         - years
+            - 2019: total (en float)
+            - 2020: total (en float)
+            - etc
+         - children:
+            - cuenta (por nombre)
+               - nombre
+               - clave
+               - total_cuenta (si no es hoja es suma)
+               - ppto_cuenta (si no es hoja es suma)
+               - forma_pago (GR, MIX, NA o (se me olvidó la ultima)) (si no es hoja es suma (O sea si solo un tipo en hojas ese, si hay mas entonces MIX))
+               - formato_fecha ("diario", "semanal", "quincenal", "mensual", "anual") (Hay que definir con lo del formato)
+               - areas_lectura: (si no es hoja es suma)
+                  - *todas las áreas que tienen acceso a esta cuenta, en bool
+               - areas_edicion: (si no es hoja es suma)
+                  - *todas las áreas que tienen acceso a esta cuenta, en bool
+               - children: "" si es hoja, si es nodo repite el formato json
+               - REGISTROS EN RAMA APARTE
+               - registros (si no es hoja NO puede existir, Hay que redistribuirlos a las hojas)
+                  - year (por numero)
+                     - total_year
+                     - semanas ???? O mensual? o que dependa del formato?? Hay que definir
+                        - semana (por numero)???
+                           - total_semana???
+                           - registro (por uid)
+                              - monto
+                              - timestamps
+                                 - ingreso (cuando se hace el registro)
+                                    - user: (username de quien lo hace)
+                                    - fecha (timestamp)
+                                 - fecha (de cuando es el valor)
+                                 - modificaciones:
+                                    - por push
+                                       - user: uid
+                                       - fecha: timestamp
+                              - concepto
+                              - cantidad //para compras? :/
+                              - clave_concepto //para compras? :/

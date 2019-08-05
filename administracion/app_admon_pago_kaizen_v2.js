@@ -43,7 +43,7 @@ var fileSelected = "";
 var divProcesos = document.getElementById(id_div_procesos_pago_kaizen);
 
 var id_dataTable_pago_kaizen = "dataTablePagoKaizen";
-var optionsPagoKaizen =  {year: 'numeric', month: 'numeric', day: 'numeric'};
+var optionsPagoKaizen =  {year: 'numeric', month: '2-digit', day: '2-digit'};
 
 $('#' + tab_pago_kaizen).click(function(){
     existenProcesos = false
@@ -286,9 +286,10 @@ function realizarPago(downloadURL){
                 formato: formato,
                 clave_proc: "",
             }
+            var fecha_pago = $('#' + id_fecha_pago_kaizen).val().split('.');
             
             json_pago = {
-                fecha_pago: new Date($('#' + id_fecha_pago_kaizen).val()).getTime(),
+                fecha_pago: new Date(fecha_pago[2], fecha_pago[0] - 1, fecha_pago[1]).getTime(),
                 folio: $('#' + id_folio_pago_kaizen).val(),
                 concepto: $('#' + id_concepto_pago_kaizen).val(),
                 formato: formato,
@@ -370,9 +371,11 @@ function realizarPago(downloadURL){
             }
             
         });
-        
+
+        var fecha_pago = $('#' + id_fecha_pago_kaizen).val().split('.');
+
         json_pago = {
-            fecha_pago: new Date($('#' + id_fecha_pago_kaizen).val()).getTime(),
+            fecha_pago: new Date(fecha_pago[2], fecha_pago[0] - 1, fecha_pago[1]).getTime(),
             folio: $('#' + id_folio_pago_kaizen).val(),
             concepto: $('#' + id_concepto_pago_kaizen).val(),
             formato: formato,
@@ -509,7 +512,10 @@ function tablaResumen(){
             destroy: true,
             data: datos,
             dom: 'Bfrtip',
-            buttons: ['excel'],
+            buttons: [
+                {extend: 'excelHtml5',
+                title: $('#' + id_obra_ddl_pago_kaizen + " option:selected").val() + "_pagos_administrativos"}
+            ],
             columns: [
                 {title: "timestamps"},
                 {title: "Fecha"},            

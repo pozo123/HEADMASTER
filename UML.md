@@ -423,10 +423,6 @@
             - total
             - obra: (por nombre) (Una es "Atencion a Clientes")
                - total (refleja TOTAL de kaizen)
-               - supervisores:
-                  - supervisor (por uid)
-                     - porcentaje (ej 30)
-                     - cantidad (= % * sueldo_base o pago nomina)
                - trabajadores:
                   - trabajador: (por id)
                      //- nombre NOSTA
