@@ -178,7 +178,6 @@ firebase.auth().onAuthStateChanged(user => {
                 }
             }
             if(!area_bool){
-                alert("es con refresh?")
                 window.location.reload("index.html");
                 window.location.assign("index.html");
             }

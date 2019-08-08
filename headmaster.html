@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--Favicon-->
+        <link rel="apple-touch-icon" sizes="57x57" href="favicon/apple-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="favicon/apple-icon-60x60.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="favicon/apple-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="favicon/apple-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="favicon/apple-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="favicon/apple-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="favicon/apple-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="favicon/apple-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-icon-180x180.png">
+        <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="favicon/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+        <link rel="manifest" href="favicon/manifest.json">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+        <meta name="theme-color" content="#ffffff">
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        
+        <!-- Font Awesome-->
+        
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/solid.css" integrity="sha384-VGP9aw4WtGH/uPAOseYxZ+Vz/vaTb1ehm1bwx92Fm8dTrE+3boLfF1SpAtB1z7HW" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/fontawesome.css" integrity="sha384-1rquJLNOM3ijoueaaeS5m+McXPJCGdr5HcA03/VHXxcp2kX2sUrQDmFc3jR5i/C7" crossorigin="anonymous">  
+        
+        <link rel="stylesheet" href="BS-DDL-checkbox/bootstrap-dropdown-checkbox.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.23.0/slimselect.min.css" rel="stylesheet"></link>
+        
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css">
+        
+        <!-- My styles-->
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <link rel="stylesheet" type="text/css" href="spinner.css">
+        <link rel="stylesheet" type="text/css" href="sidebar.css">
+        <link rel="stylesheet" type="text/css" href="tabs.css">
+        <link rel="stylesheet" type ="text/css" href="dataPicker/jquery.datetimepicker.css">
+        
+        <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+
+        <title>HEAD Master</title>        
+    </head>
+    
+    <body class = "hidden">
+        <div class="modal fade" id="contraseñaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Cambia tu contraseña</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form onsubmit="return false;">
+                                <div class="form-group">
+                                    <label for="">Ingresa la nueva contraseña</label>
+                                    <input type="password" name="" id="newpass" class="form-control" placeholder="" aria-describedby="helpId">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="">Confirma la nueva contraseña</label>
+                                    <input type="password" name="" id="confirm" class="form-control" placeholder="" aria-describedby="helpId">
+                                </div>
+                                <div class="form-row align-items-center">
+                                    <div class="col-md-6 col-sm-12">
+                                        <button id="button_cambio_contraseña" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12">
+                                        <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cerrar</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modales catalogos-->
+
+        <div class="modal fade" id="clienteModalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Editar Cliente</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form onsubmit="return false;">
+                                <div class="form-group">
+                                    <label for="nombreEditarCatalogoClientes" class="col-form-label">Nombre de la empresa:</label>
+                                    <input type="text" class="form-control" id="nombreEditarCatalogoClientes">
+                                </div>
+                                <div class="form-group">
+                                    <label for="claveEditarCatalogoClientes" class="col-form-label">Clave:</label>
+                                    <input type="text" class="form-control" id="claveEditarCatalogoClientes">
+                                </div>
+                                <div class="form-group">
+                                    <label for="telefonoEditarCatalogoClientes" class="col-form-label">Teléfono oficina:</label>
+                                    <input type="text" class="form-control" id="telefonoEditarCatalogoClientes">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pptoEspEditarCatalogoClientes" class="form-check-label">Formato ppto especial:</label>
+                                    <input type="checkbox" class="custom-checkbox" id="pptoEspEditarCatalogoClientes">
+                                </div>
+                                <h5>Dirección</h5>
+                                <div class="form-group">
+                                    <label for="calleEditarCatalogoClientes" class="col-form-label">Calle:</label>
+                                    <input type="text" class="form-control" id="calleEditarCatalogoClientes">
+                                </div>
+                                <div class="form-group">
+                                    <label for="numeroEditarCatalogoClientes" class="col-form-label">Número:</label>
+                                    <input type="text" class="form-control" id="numeroEditarCatalogoClientes">
+                                </div>
+                                <div class="form-group">
+                                    <label for="coloniaEditarCatalogoClientes" class="col-form-label">Colonia:</label>
+                                    <input type="text" class="form-control" id="coloniaEditarCatalogoClientes">
+                                </div>
+                                <div class="form-group">
+                                    <label for="delegacionEditarCatalogoClientes" class="col-form-label">Delegación/Municipio:</label>
+                                    <input type="text" class="form-control" id="delegacionEditarCatalogoClientes">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ciudadEditarCatalogoClientes" class="col-form-label">Ciudad:</label>
+                                    <input type="text" class="form-control" id="ciudadEditarCatalogoClientes">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cpEditarCatalogoClientes" class="col-form-label">Código Postal:</label>
+                                    <input type="text" class="form-control" id="cpEditarCatalogoClientes">
+                                </div>
+                            <div class="form-row align-items-center">
+                                <div class="col-md-6 col-sm-12">
+                                    <button id="buttonEditarCatalogoClientes" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cancelar</button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="obraModalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Editar Obra</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form onsubmit="return false;">
+                                <div class="form-group">
+                                    <label for="claveEditarCatalogoObras" class="col-form-label">Clave:</label>
+                                    <input type="text" class="form-control" id="claveEditarCatalogoObras">
+                                </div>
+                                <div class="form-group">
+                                    <label for="clienteDdlEditarCatalogoObras" class="col-form-label">Cliente:</label>
+                                    <select class="form-control" id="clienteDdlEditarCatalogoObras"></select>
+                                </div>
+                                <h5>Dirección</h5>
+                                <div class="form-group">
+                                    <label for="calleEditarCatalogoObras" class="col-form-label">Calle:</label>
+                                    <input type="text" class="form-control" id="calleEditarCatalogoObras">
+                                </div>
+                                <div class="form-group">
+                                    <label for="numeroEditarCatalogoObras" class="col-form-label">Número:</label>
+                                    <input type="text" class="form-control" id="numeroEditarCatalogoObras">
+                                </div>
+                                <div class="form-group">
+                                    <label for="coloniaEditarCatalogoObras" class="col-form-label">Colonia:</label>
+                                    <input type="text" class="form-control" id="coloniaEditarCatalogoObras">
+                                </div>
+                                <div class="form-group">
+                                    <label for="delegacionEditarCatalogoObras" class="col-form-label">Delegación/Municipio:</label>
+                                    <input type="text" class="form-control" id="delegacionEditarCatalogoObras">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ciudadEditarCatalogoObras" class="col-form-label">Ciudad:</label>
+                                    <input type="text" class="form-control" id="ciudadEditarCatalogoObras">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cpEditarCatalogoObras" class="col-form-label">Código Postal:</label>
+                                    <input type="text" class="form-control" id="cpEditarCatalogoObras">
+                                </div>
+                            <div class="form-row align-items-center">
+                                <div class="col-md-6 col-sm-12">
+                                    <button id="buttonEditarCatalogoObras" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cancelar</button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="categoriaModalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Editar Categoría</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form onsubmit="return false;">
+                                <div class="form-group">
+                                    <label for="nombreEditarCatalogoCategorias" class="col-form-label">Nombre:</label>
+                                    <input type="text" class="form-control" id="nombreEditarCatalogoCategorias">
+                                </div>
+                                <div class="form-group">
+                                    <label for="claveEditarCatalogoCategorias" class="col-form-label">Clave:</label>
+                                    <input type="text" class="form-control" id="claveEditarCatalogoCategorias">
+                                </div>
+                            <div class="form-row align-items-center">
+                                <div class="col-md-6 col-sm-12">
+                                    <button id="buttonEditarCatalogoCategorias" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cancelar</button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="atnModalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Editar Atención</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form onsubmit="return false;">
+                                <div class="form-group">
+                                    <label for="nombreEditarCatalogoAtn" class="col-form-label">Nombre:</label>
+                                    <input type="text" class="form-control" id="nombreEditarCatalogoAtn">
+                                </div>
+                                <div class="form-group">
+                                    <label for="areaEditarCatalogoAtn" class="col-form-label">Area:</label>
+                                    <input type="text" class="form-control" id="areaEditarCatalogoAtn">
+                                </div>
+                                <div class="form-group">
+                                    <label for="celularEditarCatalogoAtn" class="col-form-label">Celular:</label>
+                                    <input type="text" class="form-control" id="celularEditarCatalogoAtn">
+                                </div>
+                                <div class="form-group">
+                                    <label for="emailEditarCatalogoAtn" class="col-form-label">Email:</label>
+                                    <input type="text" class="form-control" id="emailEditarCatalogoAtn">
+                                </div>
+                                <div class="form-group">
+                                    <label for="extensionEditarCatalogoAtn" class="col-form-label">Extension:</label>
+                                    <input type="text" class="form-control" id="extensionEditarCatalogoAtn">
+                                </div>
+                            <div class="form-row align-items-center">
+                                <div class="col-md-6 col-sm-12">
+                                    <button id="buttonEditarCatalogoAtn" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cancelar</button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="atnModalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Eliminar Atención</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form onsubmit="return false;">
+                                <div class="form-group">
+                                    <label for="nombreEliminarCatalogoAtn" class="col-form-label">¿Eliminar de la base de datos?</label>
+                                    <br/>
+                                    <label class="col-form-label" id="nombreEliminarCatalogoAtn"></label>
+                                </div>
+                            <div class="form-row align-items-center">
+                                <div class="col-md-6 col-sm-12">
+                                    <button id="buttonEliminarCatalogoAtn" type="submit" class="btn btn-outline-danger btn-block">Confirmar</button>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cancelar</button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal InvestTime-->
+
+        <div class="modal fade" id="modalInvestTime" tabindex="-1" role="dialog" aria-labelledby="modalInvestTime" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edición de Registro Invest Time</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form onsubmit="return false;">
+                                <div class="form-group">
+                                    <label for="familiaInvestTime">*Familia:</label>
+                                    <select class="form-control" name="" id="familiaInvestTime"></select>
+                                </div>
+                                <div class="form-group" id ="groupSubfamiliaInvest">
+                                    <label for="subfamiliaInvestTime">*Subfamilia:</label>
+                                    <select class="form-control" name="" id="subfamiliaInvestTime"></select>
+                                </div>
+                                <div class="form-group" id="groupActividadInvest">
+                                    <label for="actividadInvestTime">*Actividad:</label>
+                                    <select class="form-control" name="" id="actividadInvestTime"></select>
+                                </div>
+
+                                <div class="form-group" id="groupOtrosInvest">
+                                    <label for="otrosInvestTime">¿En qué vas a trabajar?</label>
+                                    <textarea class="form-control" id="otrosInvestTime" rows="5"></textarea>
+                                </div>
+                                <div class="form-group" id="groupStatusInvest">
+                                    <label for="statusInvestTime">*Status:</label>
+                                    <select class="form-control" name="" id="statusInvestTime"></select>
+                                </div>
+
+                                <div class="form-row align-items-center">
+                                    <div class="col-5">
+                                        <label for="fechaInicioInvestTime">Fecha de inicio de registro:</label>
+                                    </div>
+                                    <div class="col-4">
+                                        <input class="form-control" type="text" id="fechaInicioInvestTime" placeholder="" readonly="readonly">
+                                    </div>
+                                    <div class="col-3">
+                                        <input class="form-control" type="text" id="horasInicioInvestTime" placeholder="hh:mm">
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="form-row align-items-center">
+                                    <div class="col-5">
+                                        <label for="fechaFinalInvestTime">Fecha de finalización de registro:</label>
+                                    </div>
+                                    <div class="col-4">
+                                        <input class="form-control" type="text" id="fechaFinalInvestTime" placeholder="" readonly="readonly">
+                                    </div>
+                                    <div class="col-3">
+                                        <input class="form-control" type="text" id="horasFinalInvestTime" placeholder="hh:mm">
+                                    </div>
+                                </div>
+
+                            <div class="form-row align-items-center">
+                                <div class="col-md-6 col-sm-12">
+                                    <button id="buttonEditarInvestTime" type="submit" class="btn btn-outline-success btn-block">Confirmar</button>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cancelar</button>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wrapper">
+            <!-- Sidebar -->
+            <nav id="sidebar" class = "loader hidden">
+                <div class="sidebar-header">
+                    <h3>Panel de Control</h3>
+                </div>
+            <!-- Sidebar Links -->
+                <ul class="list-unstyled components">
+                    <div class="text-center">
+                        <div class="form-group">
+                            <img id ="img_foto" src="img/pp.png" alt="..." class="rounded-circle" height="150" width="150">
+                        </div>
+                        <div class="form-group" id = "seleccionarFotoPersonal">
+                            <div class="upload-btn-wrapper">
+                                <button type="button" name="" id="" class="btn btn-outline-warning btn-lg btn-block">Selecciona imagen</button> 
+                                <input type="file" name="myfile"  id = "fotoPersonal_input" accept="image/*"/>
+                            </div>
+                        </div>                     
+                        <div class= "form-group hidden" id = "subirFotoPersonal">
+                            <div class="upload-btn-wrapper">
+                                <button type="button" name="" id="" class="btn btn-outline-success btn-lg btn-block" onclick="subirFotoPersonal()">Sube tu imagen</button> 
+                            </div>
+                        </div>
+                    </div>
+                </ul>
+                <ul class="list-unstyled components">
+                    <div class="text-center">
+                        <h6 class="card-title" id="usuarioConectado"></h6>
+                    </div>
+                    <div class="text-center">
+                        <h6 class="card-title" id="weekLabel"></h6>
+                    </div>
+                </ul>
+                <ul class="list-unstyled components hidden" id = "tabRegistrosAdmon">
+                    <div class="card text-center text-white bg-dark">
+                        <div class="card-body" id="card">                        
+                            <div class="container-fluid" id="entradaGroupRegistroAdmin">
+                                <label for="">¿En qué vas a trabajar hoy?</label>
+                                <div class="form-group">
+                                    <label for="familiaDdlRegistroAdmin">Familia:</label>
+                                    <select id ="familiaDdlRegistroAdmin" class="form-control"></select>
+                                </div>
+                                <div class="form-group" id="">
+                                    <label for="subfamiliaDdlRegistroAdmin">Subfamilia:</label>
+                                    <select id ="subfamiliaDdlRegistroAdmin" class="form-control"></select>
+                                </div>
+                                <div class="form-group hidden" id="actividadGroupRegistroAdmin">
+                                    <label for="actividadDdlRegistroAdmin">Actividad:</label>
+                                    <select id ="actividadDdlRegistroAdmin" class="form-control"></select>
+                                </div>   
+                                <div class="form-group hidden" id="otrosGroupRegistroAdmin">
+                                    <label for="actividadOtrosRegistroAdmin">¿En qué vas a trabajar?</label>
+                                    <textarea class="form-control" id="actividadOtrosRegistroAdmin" rows="5"></textarea>
+                                </div>
+                                <div class="form-group hidden" id="statusObraGroupRegistroAdmin">
+                                    <label for="actividadOtrosRegistroAdmin">Status:</label>
+                                    <select id ="statusObraDdlRegistroAdmin" class="form-control">
+                                        <option value="" style="display:none"></option>
+                                        <option value="Activa">Activa</option>
+                                        <option value="En Cierre">En Cierre</option>
+                                        <option value="Terminar">Terminar</option>
+                                    </select>
+                                </div>  
+                                <button type="button" name="" id="entradaButtonRegistroAdmin" class="btn btn-success btn-lg btn-block">Entrada</button> 
+                            </div>
+                            <div class="container-fluid">
+                                <label for="salidaButtonRegistroAdmin" id="id_label_familia_reg_investime"></label>
+                                <br/>
+                                <label for="salidaButtonRegistroAdmin" id="id_label_subfamilia_reg_investime"></label>
+                                <br/>
+                                <label for="salidaButtonRegistroAdmin" id="id_label_actividad_reg_investime"></label>
+                                <button type="button" name="" id="salidaButtonRegistroAdmin" class="btn btn-danger btn-lg btn-block hidden">Salida</button>
+                            </div>
+                        </div>
+                    </div>
+                </ul>
+                <ul class="list-unstyled components">
+                    <li class = "administracion">
+                        <a href="#pageColaborador" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Colaboradores HEAD</a>
+                        <ul class="collapse list-unstyled" id="pageColaborador">
+                            <li class="tab administracion" id="tabColaboradorHEAD"><a href="#" onclick="openTabs('tabColaboradorHEAD','colaboradorHEAD')">Alta y Edición - Colaboradores HEAD</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#pageClientes" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Clientes</a>
+                        <ul class="collapse list-unstyled" id="pageClientes">
+                            <li class="tab administracion" id="tabAltaCliente"><a href="#" onclick="openTabs('tabAltaCliente','altaCliente')">Alta y Edición - Clientes</a></li>
+                        </ul>
+                    </li>                       
+                </ul>
+                
+                
+                <ul class="list-unstyled components">
+                    <div class="text-center">
+                        <button type="button" class="btn btn-outline-info btn-lg" id="respaldoBD" onclick="descargaRespaldo()">Descarga Respaldo</button>
+                    </div>
+                </ul>
+                <ul class="list-unstyled components">
+                    <div class="text-center">
+                        <button type="button" class="btn btn-danger" id="cerrarSesion">Cerrar sesión</button>
+                    </div>
+                </ul>
+                <ul class="list-unstyled components hidden" id="botonMagicoAdmon">
+                    <div class="text-center">
+                        <button type="button" class="btn btn-warning" id="botonMagico">Botón Mágico</button>
+                    </div>
+                </ul>
+            </nav>
+                <!-- Page Content -->
+            <div id="content" class="container-fluid">
+                <div class="row loader hidden">
+                    <button type="button" id="sidebarCollapse" class="navbar-btn">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <br/>       
+                </div>               
+                <div class="row">
+                    <div class="container-fluid">
+
+                        <!-- Dashboard-->
+                        <div id="dashboard" class="tabcontent">
+                            <div class="container-fluid">
+                                <h3>Dashboard</h3>
+                            </div>                          
+                        </div>         
+                        <!-- Colaboradores-->
+                        <div id="colaboradorHEAD" class="tabcontent hidden">
+                            <h1>Alta o edición de colaboradores HEAD</h1>
+                            <p>Al escribir el correo electrónico de un usuario dado de alta se carga su información para su edición.</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-2"></div>
+                                    <div class="col-lg-8">
+                                        <form id= "formColaborador"action="#" onsubmit="return false;">
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="emailColaborador">Correo Electrónico:</label>
+                                                    <input type="text" name="" id="emailColaborador"class="form-control" placeholder="Email">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="pwdColaborador">Contraseña:</label>
+                                                    <input type="password" name="" id="pwdColaborador" class="form-control" placeholder="Password" aria-describedby="helpId">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="nicknameColaborador">Nickname:</label>
+                                                    <input type="text" name="" id="nicknameColaborador"class="form-control" placeholder="Nickname">
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="nombreColaborador">Nombre:</label>
+                                                    <input type="text" name="" id="nombreColaborador"class="form-control" placeholder="Nombre del colaborador">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="paternoColaborador">Apellido Paterno:</label>
+                                                    <input type="text" name="" id="paternoColaborador"class="form-control" placeholder="Apellido Paterno">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="maternoColaborador">Apellido Materno:</label>
+                                                    <input type="text" name="" id="maternoColaborador"class="form-control" placeholder="Apellido Materno">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="" id="liderCheckboxColaborador">
+                                                        <label class="form-check-label" for="liderCheckboxColaborador"> ¿Lider de área? </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <select id="colaboradorAreasList" multiple>
+                                                        <option value="administracion">Administración</option>
+                                                        <option value="compras">Compras</option>
+                                                        <option value="rrhh">Recursos Humanos</option>
+                                                        <option value="produccion">Producción</option>
+                                                        <option value="proyectos">Proyectos</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-4 text-center">
+                                                    <div class="form-check-inline hidden" id="groupIEAdmin">
+                                                        <input class="form-check-input" type="radio" name="especialidad" id="colaboradorIE" value="option1" checked>
+                                                        <label class="form-check-label" for="colaboradorIE">
+                                                            IE
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check-inline hidden" id="groupIHSAdmin">
+                                                        <input class="form-check-input" type="radio" name="especialidad" id="colaboradorIHS" value="option2">
+                                                        <label class="form-check-label" for="colaboradorIHS">
+                                                            IHS
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                                                                        
+                                            <div class="form-row">
+                                                <div class= "col-6">
+                                                    <button id="agregarButtonColaborador" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                                </div>
+                                                <div class= "col-6">
+                                                    <button id="borrarButtonColaborador" type="button" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class="col-lg-2"></div>
+                                    <div class = "tableWrapper">
+                                        <table id="dataTableColaborador" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nombre</th>
+                                                    <th>ID</th>
+                                                    <th>Nickname</th>
+                                                    <th>Email</th>
+                                                    <th>Áreas</th>
+                                                    <th>Esp</th>
+                                                    <th>Jerarquía</th>
+                                                    <th>Credenciales</th>
+                                                    <th>Habilitado</th>
+                                                    <th>Editar</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Nombre</th>
+                                                    <th>ID</th>
+                                                    <th>Nickname</th>
+                                                    <th>Email</th>
+                                                    <th>Áreas</th>
+                                                    <th>Esp</th>
+                                                    <th>Jerarquía</th>
+                                                    <th>Credenciales</th>
+                                                    <th>Habilitado</th>
+                                                    <th>Editar</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- alta Clientes -->
+                        <div id="altaCliente" class = "tabcontent hidden">
+                            <h1>Alta o edición de clientes HEAD</h1>
+                            <p>Página para dar de alta o modificar clientes existentes en el sistema.</p>
+                            <p>* Se entiende <b>"Atención"</b> como: el personal de una empresa <b>"Cliente"</b> a la cual se dirigen presupuestos HEAD.</p>
+                            <div class= "container-fluid">
+                                <div class= "row align-items-center">
+                                    <div class= "col-lg-2"></div>
+                                    <div class= "col-lg-8">
+                                        <form id="formCliente" action="#" onsubmit="return false;">
+                                            <div class="form-row">
+                                                <div class="form-group col-md-2">
+                                                    <label for="claveCliente">Clave:</label>
+                                                    <input type="text" name="" id="claveCliente"class="form-control" placeholder="Clave">
+                                                </div>
+                                                <div class="form-group col-md-7">
+                                                    <label for="nombreCliente">Nombre de la empresa:</label>
+                                                    <input type="text" name="" id="nombreCliente" class="form-control" placeholder="Nombre">
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="telCliente">Teléfono:</label>
+                                                    <input type="text" name="" id="telCliente"class="form-control" placeholder="Teléfono">
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <h3>Dirección</h3>
+                                            <br/>
+                                            <div class="form-row">
+                                                <div class="form-estadoCliente col-md-4">
+                                                    <label for="emailColaborador">Estado <span style="font-size: 8pt">(Ciudad de México aquí)</span>:</label>
+                                                    <input type="text" name="" id="estadoCliente"class="form-control" placeholder="Estado">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="ciudadCliente">Ciudad/Alcaldía:</label>
+                                                    <input type="text" name="" id="ciudadCliente" class="form-control" placeholder="Ciudad/Alcaldía">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="coloniaCliente">Colonia:</label>
+                                                    <input type="text" name="" id="coloniaCliente "class="form-control" placeholder="Colonia">
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-lg-6 col-md-12">
+                                                    <label for="calleCliente">Calle</label>
+                                                    <input type="text" name="" id="calleCliente" class="form-control" placeholder="Calle">
+                                                </div>
+                                                <div class="form-estadoCliente col-lg-2 col-md-4">
+                                                    <label for="cpCliente">Código Postal:</label>
+                                                    <input type="text" name="" id="cpCliente"class="form-control" placeholder="C. Postal">
+                                                </div>
+                                                <div class="form-group col-lg-2 col-md-4">
+                                                    <label for="exteriorCliente">Núm Exterior:</label>
+                                                    <input type="text" name="" id="exteriorCliente "class="form-control" placeholder="Exterior">
+                                                </div>
+                                                <div class="form-group col-lg-2 col-md-4">
+                                                    <label for="interiorCliente">Núm Interior:</label>
+                                                    <input type="text" name="" id="interiorCliente "class="form-control" placeholder="Interior">
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class= "col-6">
+                                                    <button id="agregarButtonCliente" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                                </div>
+                                                <div class= "col-6">
+                                                    <button id="borrarButtonCliente" type="button" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class= "col-lg-2"></div>                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                    
+        <!-- Jquery scripts-->
+                    
+        <script src= "https://code.jquery.com/jquery-3.3.1.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        
+        <!-- DataTable-->
+        
+        <script src ="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
+        <script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/date-de.js"></script>
+
+        <!-- DDL CHECKBOX JS -->     
+        <script src="BS-DDL-checkbox/bootstrap-dropdown-checkbox.js"></script>
+        
+        <!-- Chart JS-->       
+        <script src = "Chart/Chart.bundle.js"></script>
+        <script src = "Chart/Chart.bundle.min.js"></script>
+        <script src = "Chart/utils.js"></script>
+        
+        <!--DataPicker JS-->
+        <script src="dataPicker/jquery.datetimepicker.full.min.js"></script>
+
+        <!-- Multi select-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.23.0/slimselect.min.js"></script>
+            
+        <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
+        <script>
+            
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyBJ8dJ8G-B6SldpKwHSe085VYRrzBZC0dA",
+            authDomain: "ingenieriahead.firebaseapp.com",
+            databaseURL: "https://ingenieriahead.firebaseio.com",
+            projectId: "ingenieriahead",
+            storageBucket: "ingenieriahead.appspot.com",
+            messagingSenderId: "893795596481"
+        };
+        firebase.initializeApp(config);
+        
+        var secondaryApp = firebase.initializeApp(config, "Secondary");
+        
+        </script>
+
+        <!--My scripts-->
+        <script src="numeroLetras.js"></script>
+        <script src="app_principal_v2.js"></script>        
+        <script src="app_funciones_v2.js"></script>
+
+        <script src="app_colaborador_v2.js"></script>
+        
+        <!-- Excel to Json-->
+        <script src="xlsx.full.min.js"></script>
+
+        <!-- PdfMaker-->
+        <script src="pdfMake/pdfmake.min.js"></script>
+        <script src="pdfMake/vfs_fonts.js" ></script>
+
+        <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    </body>
+</html>

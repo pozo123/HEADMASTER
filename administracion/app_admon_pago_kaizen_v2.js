@@ -528,6 +528,7 @@ function tablaResumen(){
             ],
             "columnDefs": [ 
                 { "visible": false, "targets": 0 },
+                
             ],
             language: idioma_espanol, // Esta en app_bibliotecas
         });

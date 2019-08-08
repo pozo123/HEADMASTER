@@ -1,96 +1,258 @@
-- personal
-  - colaborador (uid):
-    - nombre: string
-    - a_paterno: string
-    - a_materno: string
-    - nickname: string
-    - email: string
-    - foto_url: string
-    - areas:   
-      - proyectos: boolean
-      - produccion: boolean
-      - compras: boolean
-      - administracion: boolean
-      - rrhh: boolean
-    - credenciales: (0 sisadmin, 1 director, 2 lider de area, 3 colaboradores simples)
-    - especialidad: (si tienes area proyectos, "ie" (Instalación eléctrica), "ihs"(Instalación hidrosanitaria), "NA" si no tienes área proyectos)
-    - habilitado: boolean (acceso al sistema)
-    - estatus (si tienes area proy, true si trabajando) *
+Nota: Todo float se ingresa a 2 decimales.
 
-- clientes
-   - cliente (id_firebase)
-      - clave_cliente: string
-      - nombre: string
-      - telefono: string
-      - direccion
-         - estado: string
-         - ciudad: string
-         - colonia: string
-         - cp: int
-         - calle: string
-         - numero_exterior: string
-         - numero_interior: string
-      - atencion
-         - contacto (key numerado empezado por 0)
-            - prefijo: string
+- database
+    - personal
+        - colaborador (uid):
+            - nombre: string (alta)
+            - a_paterno: string (alta)
+            - a_materno: string (alta)
+            - nickname: string (alta)
+            - email: string (alta)
+            - foto_url: string
+            - areas: (al dar de alta, no necesito llenar en false los que no tengo. min 1 área)
+                - proyectos: boolean
+                - produccion: boolean
+                - compras: boolean
+                - administracion: boolean
+                - rrhh: boolean
+            - credenciales: (0 sisadmin, 1 director, 2 lider de area, 3 colaboradores simples) (alta)
+            - especialidad: (si tienes area proyectos, "IE" (Instalación eléctrica), "IHS"(Instalación hidrosanitaria), "NA" si no tienes área proyectos) (alta)
+            - habilitado: boolean (acceso al sistema) (alta)
+            - estatus (si tienes area proy, true si trabajando) *
+
+    - clientes
+        - despachos
+            - cliente (id_firebase)
+                - clave_cliente: string (Mayúsculas, letras y números)
+                - nombre: string
+                - telefono: string
+                - direccion
+                    - estado: string
+                    - ciudad: string
+                    - colonia: string
+                    - cp: int
+                    - calle: string
+                    - numero_exterior: string
+                    - numero_interior: string
+                - obras
+                    - obra (obra_id): true
+        - representantes
+            - cliente (id_firebase)
+                - contacto (firebase_id)
+                    - prefijo: string
+                    - nombre: string
+                    - a_paterno: string
+                    - a_materno: string
+                    - area: string
+                    - celular: string
+                    - email: string
+                    - extension: string
+        - habilitados
+            - clientes (id)
+                - nombre
+        - deshabilitados
+            - clientes (id)
+                - nombre
+        -num_atencion
+            - clientes(id)
+                - cantidad: int
+
+    - info_web
+        - version: float
+
+    - categorias
+        - categoria (id)
             - nombre: string
-            - a_paterno: string
-            - a_materno: string
-            - area: string
-            - celular: string
-            - email: string
-            - extension: string
+            - clave: string
 
-- info_web
-   - version
-
-- categorias
-   - categoria (id)
-      - nombre: string
-      - clave: string
-
- - administracion:
-   - flujos
-      - obra (id)
-         - pagos (firebase_id)
-            - concepto: string
-            - fecha_pago: float (timestamp)
-            - comprobante_url: string
-            - folio: string
-            - formato: string
-            - monto: float
-            - tipo_pago: string
-            - distribucion
-                - entradas (id generado "ANT-clave_proc o "EST_clave_proc")
-                    - clave_proc: string
+    - administracion:
+        - flujos
+            - pagos
+                - pagos (firebase_id)
+                    - id_obra: string
+                    - concepto: string
+                    - fecha_pago: float (timestamp)
+                    - comprobante_url: string
+                    - folio: string
                     - formato: string
-                    - monto_pacial: float
-                    - 
-                    
-   - investime
-      - registros
-         - año (ej 2019)
-            - semana (ej 3)
-               - registro (por uid)
-                  - familia
-                  - subfamilia
-                  - actividad
-                  - activo
-                  - checkin
-                  - checkout
-                  - colaborador (por uid)
-                  - status_obra
-      - familias
-         - Globales
-            - subfamilias (por nombre)
-               - actividades: actividades
-         - Especificos
-            - actividades: actividades
-         - Rutinarios
-            - actividades: actividades
+                    - monto: float
+                    - tipo_pago: string
+                    - distribucion
+                        - entradas (id generado "ANT-clave_proc o "EST_clave_proc")
+                            - clave__subproc: string
+                            - formato: string
+                            - monto_pacial: float
+            - obras
+                - obras (id_obra)
+                    - pagos
+                        - pagos_id: true
+            - fechas
+                - fecha (aaaammdd)
+                    - pagos
+                        -pagos_id: true
+            - folios
+                - folio_pago: string (el mismo del pago)
+                    - pagos
+                        - pagos_id: true
 
+- obras
+    - obras
+        - obra: (firebase_id)
+            - nombre: string
+            - cliente_id: string
+            - clave_obra: string
+            - terminada: true (true cuando todos los "terminado" de procesos son true)
+            - activa: true (para ddls)
+            - direccion
+                - estado: string
+                - ciudad: string
+                - colonia: string
+                - cp: int
+                - calle: string
+                - numero: string
+            - retencion_fondo_garantia: float [0 a 1]
+            - fechas:
+                - fecha_inicio_real: timestamp 
+                - fecha_inicio_teorica: timestamp (al dar de alta/edicion)
+                - fecha_final_real: timestamp
+                - fecha_final_teorica: timestamp (al dar de alta/edicion) 
+            - supervisor (solo pueden ser colaboradores con área de producción)
+                - supervisor (uid)
+                    - nombre
+                    - activo: bool
+                    - fechas (lista ya que puede haber varios ingresos)
+                        - fecha_ingreso (aaaammdd)
+                            - fecha_ingreso: timestamp
+                            - fecha_salida: timestamp
+    - procesos
+        - id_obra
+            - num_procesos: int (se inicializa en 0)
+            - procesos (3 por default, ADIC, MISC y PC00 y los subprocesos clon de MISC y PC00)
+                - proceso (por clave - generada por nosotros):
+                    - nombre: string (en alta)
+                    - alcance: string ( en alta)
+                    - fechas
+                        - fecha_inicio_real: timestamp 
+                        - fecha_inicio_teorica: timestamp (al dar de alta/edicion)
+                        - fecha_final_real: timestamp
+                        - fecha_final_teorica: timestamp (al dar de alta/edicion) 
+                    - terminado: boolean (se termina hasta que todos los subprocesos están terminados)
+                    - num_subprocesos: int (se inicializa en 0)
+                    - subprocesos (en cada proceso se genera automáticamente una copia como subproceso menos en ADIC. MISC solo se tiene a sí mismo como subproceso) (Por default)
+                        - subproceso (por clave):
+                            - nombre: string
+                            - alcance: string
+                            - fechas
+                                - fecha_inicio_real: timestamp 
+                                - fecha_inicio_teorica: timestamp (al dar de alta/edicion)
+                                - fecha_final_real: timestamp
+                                - fecha_final_teorica: timestamp (al dar de alta/edicion) 
+                            - categoria: string (de db categorias)
+                            - terminado: boolean (definir manera de actualizar este valor. Empieza en false)
+
+                            - precio_venta: float
+                            - costo_suministros:float
+                            - precopeo: float
+                            - SCORE 
+                                - horas_programadas: (en horas)
+                                - costo_hora: float (2 decimales)
+
+    - copeo 
+        - id_obra
+            - subproceso_clave
+                - impuestos: float (0 a 1)
+                - num_entradas: int
+                - entradas
+                    - entrada (num)
+                        - nombre: string
+                        - alcance: string
+                        - subtotal: float
+                        - cuadrilla:
+                            - ayudante
+                                - cantidad: int
+                                - sueldo_diario: float (sin impuestos)
+                            - medio_oficial
+                                - cantidad: int
+                                - sueldo_diario: float (sin impuestos)
+                            - oficial
+                                - cantidad: int
+                                - sueldo_diario: float (sin impuestos)
+                            - encargado
+                                - cantidad: int
+                                - sueldo_diario: float (sin impuestos)
+                            - supervisor
+                                - cantidad: int
+                                - sueldo_diario: float (sin impuestos)
+                        - multiplicadores
+                            - dias: float
+                            - unidades: float 
+
+    - presupuesto: (adic o pc00. pc00-misc = "") (terminar de definir con Ray)
+        - id_obra
+            - presupuestos (id del subproceso)
+                - terminado
+                - nombre
+                - fisc_bool
+                - banc_bool
+                - imagenes
+                    - index (int)
+                    - url
+                - fecha_ppto (timestamp)
+                - titulo_ppto
+                - nombre
+                - tiempoEntrega
+                - json_excel (SI ADIC)
+                - json_alcance (SI PC00)
+                - anticipo
+                - exc_lista
+                - reqs_lista
+                - atn_lista
+                - validacion_ppto
+                    - precio_negociado
+                    - documento_evidencia
+    - listas (al dar de alta se ingresa en obras_activas )
+        - obras_terminadas
+            - id_obra
+                - obra_nombre:string
+        - obras_no_terminada
+            - id_obra
+                - obra_nombre: string
+        - obras_activas
+            - id_obra
+                - obra_nombre: string
+        - obras_no_activas
+            - id_obra
+                - obra_nombre: string
+
+- kaizen: (Mayúsculas en caso de que haga falta llenarlas desde un excel)
+  - PROYECTOS:
+     - PPTO -> Admin/prod
+     - PAG -> SCORE (yo)
+  - PRODUCCION:
+     - SUMINISTROS:
+        - CUANT -> Proyectos
+        - OdeC -> Compras
+        - PAG -> Compras
+     - COPEO:
+        - PREC -> supervisor
+        - COPEO -> supervisor
+        - PAG -> rrhh
+  - ADMINISTRACION:
+     - ESTIMACIONES:
+        - PPTO -> admin
+        - EST -> supervisor
+        - PAG -> admin
+     - ANTICIPOS:
+        - PPTO -> admin
+        - PAG -> admin
+  - PROFIT:
+     - PROG:
+        - BRUTO -> NADIEEEEE
+        - NETO -> NADIEEEEE
+     - REAL:
+        - BRUTO -> NADIEEEEE
+        - NETO -> NADIEEEEE
 DEFINIR DESPUÉS
-
 - buzon: * ()
     - mensaje (por uid, solo los no leidos)
         - destinatario (uid)
@@ -143,3 +305,68 @@ DEFINIR DESPUÉS
                               - concepto
                               - cantidad //para compras? :/
                               - clave_concepto //para compras? :/
+        
+- investime
+    - usuarios
+        - uid
+            - habilitado: boolean
+            - registros
+                - año (ej 2019)
+                    - semana (ej 3)
+                        - registro (id_firebase)
+                            - familia: string
+                            - subfamilia: string
+                            - actividad: string
+                            - activo: boolean
+                            - checkin: timestamp
+                            - checkout: timestamp
+                            - colaborador:string (por uid)
+                            - status_obra: string
+    - familias
+        - Globales
+            - subfamilias (por nombre)
+                - actividades: actividades
+        - Especificos
+            - actividades: actividades
+        - Rutinarios
+            - actividades: actividades
+
+- estimaciones (pendiente con matricial)
+    - obra (uid)
+        - estimacion (firebase_id)
+            - fechas
+                - fecha_regisro: timestamp
+                - fecha_inicio: timestamp
+                - fecha_fin: timestamp
+            - numero_estimacion: int (semi automatico) 
+            - distribucion
+                        - contrato_compras (en hoja menos en IQONO MEXICO, ahi en proc)
+                        - clave
+                        - solpeds
+                            - solped (por clave)
+                                - nombre
+                                - fecha
+                                - foto
+                                - subproceso (Solo en IQONO MEXICO, menos en MISC)
+                                - autorizacion
+                                - odecs 
+                                    - odec (por clave)
+                                    - proveedor (clave)
+                                    - costo
+                                    - pad
+                                    - fecha
+                                    - cotizaciones(DEFINIR)
+                                    - notas
+                                    - pdfs
+                                        - pdf(consecutivo)
+                                            - proveedor
+                                            - pdf (link)
+                                    - remisiones (DEFINIR)
+                                    - pagos
+                                        - pago (por push?)
+                                            - cantidad
+                                            - tipo (CO, CR, CH, EF, NC o DE)
+                                            - no_factura (si cr, si no "")
+                                            - notas
+                                            - fecha
+                                            - pdf (factura si CR, evidencia si no)

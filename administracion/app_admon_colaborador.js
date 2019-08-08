@@ -27,6 +27,7 @@ var  id_borrar_button_col_admin = "borrarButtonColAdmin";
 
 var rama_bd_personal = "personal";
 
+
 $(document).ready(function(){
 
 });
@@ -127,8 +128,6 @@ $('#' + id_registrar_button_col_admin).click(function () {
         secondaryApp.auth().createUserWithEmailAndPassword($('#' + id_email_col_admin).val(), $('#' + id_password_col_admin).val())
             .then(function (result) {
                 guardaDatosPersonalAdmin(result.user);
-                console.log(result);
-                console.log(result.user);
                 secondaryApp.auth().signOut();
             }
         );

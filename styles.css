@@ -246,3 +246,20 @@ hr.style2 {
   .margin {
     margin-bottom: 20px;
 }
+
+.tableWrapper {
+  margin: 0 auto;
+}
+
+.btn-transparente {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.icono_rojo {
+  color:red;
+}
+
+.icono_verde {
+  color:green;
+}
