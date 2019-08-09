@@ -4,7 +4,7 @@ function highLight(id){
     setTimeout(function(){  document.getElementById(id).style.background = "white";}, 1000);
 }
 
-// función estética que hace uso de la función highLight
+//función estética que hace uso de la función highLight
 function highLightAll(){
     highLight(id_email_colaborador);
     highLight(id_nickname_colaborador);
@@ -43,3 +43,45 @@ function getWeek(dia) {
     
     return [week,y];
   }
+
+// función para revisar si un string es una preposicion o artículo
+// sirve para ver qué palabaras en un apellido son con letras minúsculas solamente.
+function isPrepOrArt(string){
+    var preposiciones = ["a", "ante", "del", "bajo", "cabe", "con", "contra", "de", "desde", "durante", "en", "entre", "hacia", "hasta", "mediante", "para", "por", "según", "sin", "so", "sobre", "tras", "versus", "vía"];
+    var articulos =  ["el", "la", "los", "las", "un", "una", "unos", "unas"];
+
+    if(preposiciones.includes(string.toLowerCase()) || articulos.includes(string.toLowerCase())){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// función para validar email
+function validateEmail(email) {
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
+
+function charactersAllowed(string,e){
+    if((string).indexOf(String.fromCharCode(e.keyCode))===-1){
+        e.preventDefault();
+        return false;
+   }
+}
+function deleteBlankSpaces(id_text){
+    var aux = $('#' + id_text).val();
+    while(aux.charAt(0) == " "){
+        aux = aux.slice(1);
+    }
+    while(aux.charAt(aux.length-1) == " "){
+        aux = aux.slice(0,-1);
+    }
+    for(var i=0; i<aux.length;i++){
+        if(aux.charAt(i) == " " && aux.charAt(i+1) == " "){
+            aux = aux.slice(0,i) + aux.slice(i+1);
+            i = i-1;
+        }
+    }
+    return aux;
+}

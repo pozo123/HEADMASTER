@@ -485,7 +485,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="#pageClientes" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Clientes</a>
+                        <a href="#pageClientes" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Despachos (Clientes) </a>
                         <ul class="collapse list-unstyled" id="pageClientes">
                             <li class="tab administracion" id="tabAltaCliente"><a href="#" onclick="openTabs('tabAltaCliente','altaCliente')">Alta y Edición - Clientes</a></li>
                         </ul>
@@ -584,13 +584,13 @@
                                                 </div>
                                                 <div class="form-group col-md-4 text-center">
                                                     <div class="form-check-inline hidden" id="groupIEAdmin">
-                                                        <input class="form-check-input" type="radio" name="especialidad" id="colaboradorIE" value="option1" checked>
+                                                        <input class="form-check-input" type="checkbox" id="colaboradorIE">
                                                         <label class="form-check-label" for="colaboradorIE">
                                                             IE
                                                         </label>
                                                     </div>
                                                     <div class="form-check-inline hidden" id="groupIHSAdmin">
-                                                        <input class="form-check-input" type="radio" name="especialidad" id="colaboradorIHS" value="option2">
+                                                        <input class="form-check-input" type="checkbox" id="colaboradorIHS">
                                                         <label class="form-check-label" for="colaboradorIHS">
                                                             IHS
                                                         </label>
@@ -647,9 +647,9 @@
                         </div>
                         <!-- alta Clientes -->
                         <div id="altaCliente" class = "tabcontent hidden">
-                            <h1>Alta o edición de clientes HEAD</h1>
+                            <h1>Alta o edición de Despachos (Clientes) </h1>
                             <p>Página para dar de alta o modificar clientes existentes en el sistema.</p>
-                            <p>* Se entiende <b>"Atención"</b> como: el personal de una empresa <b>"Cliente"</b> a la cual se dirigen presupuestos HEAD.</p>
+                            <p>* Se entiende <b>"Atención"</b> como: el personal de un <b>Despacho (Cliente)</b> a la cual se dirigen presupuestos HEAD.</p>
                             <div class= "container-fluid">
                                 <div class= "row align-items-center">
                                     <div class= "col-lg-2"></div>
@@ -661,12 +661,12 @@
                                                     <input type="text" name="" id="claveCliente"class="form-control" placeholder="Clave">
                                                 </div>
                                                 <div class="form-group col-md-7">
-                                                    <label for="nombreCliente">Nombre de la empresa:</label>
+                                                    <label for="nombreCliente">Nombre del despacho:</label>
                                                     <input type="text" name="" id="nombreCliente" class="form-control" placeholder="Nombre">
                                                 </div>
                                                 <div class="form-group col-md-3">
-                                                    <label for="telCliente">Teléfono:</label>
-                                                    <input type="text" name="" id="telCliente"class="form-control" placeholder="Teléfono">
+                                                    <label for="telCliente">Teléfono: <span style="font-size: 8pt">(10 dig)</span></label>
+                                                    <input type="text" name="" maxlength="10" id="telCliente" class="form-control" placeholder="Teléfono">
                                                 </div>
                                             </div>
                                             <br/>
@@ -674,7 +674,7 @@
                                             <br/>
                                             <div class="form-row">
                                                 <div class="form-estadoCliente col-md-4">
-                                                    <label for="emailColaborador">Estado <span style="font-size: 8pt">(Ciudad de México aquí)</span>:</label>
+                                                    <label for="estadoCliente">Estado <span style="font-size: 8pt">(Ciudad de México aquí)</span>:</label>
                                                     <input type="text" name="" id="estadoCliente"class="form-control" placeholder="Estado">
                                                 </div>
                                                 <div class="form-group col-md-4">
@@ -683,7 +683,7 @@
                                                 </div>
                                                 <div class="form-group col-md-4">
                                                     <label for="coloniaCliente">Colonia:</label>
-                                                    <input type="text" name="" id="coloniaCliente "class="form-control" placeholder="Colonia">
+                                                    <input type="text" name="" id="coloniaCliente" class="form-control" placeholder="Colonia">
                                                 </div>
                                             </div>
                                             <div class="form-row">
@@ -693,7 +693,7 @@
                                                 </div>
                                                 <div class="form-estadoCliente col-lg-2 col-md-4">
                                                     <label for="cpCliente">Código Postal:</label>
-                                                    <input type="text" name="" id="cpCliente"class="form-control" placeholder="C. Postal">
+                                                    <input type="text" name="" maxlength="5" id="cpCliente" class="form-control" placeholder="C. Postal">
                                                 </div>
                                                 <div class="form-group col-lg-2 col-md-4">
                                                     <label for="exteriorCliente">Núm Exterior:</label>
@@ -709,7 +709,7 @@
                                                     <button id="agregarButtonCliente" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
                                                 </div>
                                                 <div class= "col-6">
-                                                    <button id="borrarButtonCliente" type="button" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                    <button id="borrarButtonCliente" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -776,6 +776,7 @@
         <script src="numeroLetras.js"></script>
         <script src="app_principal_v2.js"></script>        
         <script src="app_funciones_v2.js"></script>
+        <script src="app_altaCliente_v2.js"></script>
 
         <script src="app_colaborador_v2.js"></script>
         

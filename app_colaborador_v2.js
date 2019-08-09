@@ -11,10 +11,10 @@ var id_paterno_colaborador = "paternoColaborador";
 var id_materno_colaborador = "maternoColaborador";
 var id_lider_checkbox_colaborador = "liderCheckboxColaborador";
 var id_select_areas_colaborador = "colaboradorAreasList";
-var id_group_radio_ie = "groupIEAdmin";
-var id_group_radio_ihs = "groupIHSAdmin";
-var id_ie_rb_colaborador = "colaboradorIE";
-var id_ihs_rb_colaborador = "colaboradorIHS";
+var id_group_checkbox_ie = "groupIEAdmin";
+var id_group_checkbox_ihs = "groupIHSAdmin";
+var id_ie_checkbox_colaborador = "colaboradorIE";
+var id_ihs_checkbox_colaborador = "colaboradorIHS";
 
 
 var id_reset_form_colaborador = "borrarButtonColaborador";
@@ -38,7 +38,7 @@ $('#' + id_tab_colaborador).click(function() {
         placeholder: 'Elige las áreas correspondientes',
     });
     resetFormColaborador(true);  
-    actualizarTabla();      
+    actualizarTablaCol();      
 });
 
 // al apretar el botón de resetear, se resetea todo el formulario
@@ -81,7 +81,7 @@ $('#' + id_email_colaborador).change(function(){
                 materno = colaborador.a_materno;
                 nickname = colaborador.nickname;
                 if(areas.proyectos){
-                    especialidad = colaborador.especialidad;
+                    especialidad = child_snap.child("especialidad").val();
                 }
             }
         });
@@ -113,11 +113,11 @@ $('#' + id_email_colaborador).change(function(){
             select.set(areas_array);
 
             if(areas.proyectos){
-                if(especialidad == "IE"){
-                    document.getElementById(id_ie_rb_colaborador).checked = true;
+                if(especialidad.ie){
+                    document.getElementById(id_ie_checkbox_colaborador).checked = true;
                 }
-                else {
-                    document.getElementById(id_ihs_rb_colaborador).checked = true;
+                else if(especialidad.ihs) {
+                    document.getElementById(id_ihs_checkbox_colaborador).checked = true;
                 }
             }
         } else {
@@ -132,7 +132,7 @@ $('#' + id_email_colaborador).change(function(){
 // Se utiliza la funcion agregar_colaborador() para obtener los datos a ingresar al database.
 
 $('#' + id_agregar_colaborador).click(function(){
-    if(!validateForm()){
+    if(!validateFormCol()){
         return;
     } 
     if (existe_colaborador){
@@ -152,8 +152,6 @@ $('#' + id_agregar_colaborador).click(function(){
         }
     );
     }
-
-
 });
 
 // ----------------------- VALIDACIÓN DE FORMULARIO ------------------------
@@ -163,44 +161,22 @@ $('#' + id_email_colaborador).change(function(){
 });
 
 $('#' + id_email_colaborador).keypress(function(e){
-    if(("abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_.@0123456789").indexOf(String.fromCharCode(e.keyCode))===-1){
-        e.preventDefault();
-        return false;
-    }
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_.@0123456789",e)
 });
 
 $('#' + id_nickname_colaborador).keypress(function(e){
-    if(("abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ").indexOf(String.fromCharCode(e.keyCode))===-1){
-        e.preventDefault();
-        return false;
-    }
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ",e);
 });
 $('#' + id_nickname_colaborador).change(function(){
     $('#' + id_nickname_colaborador).val($('#' + id_nickname_colaborador).val().toUpperCase());
 });
 
 $('#' + id_nombre_colaborador).keypress(function(e){
-    if(("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ").indexOf(String.fromCharCode(e.keyCode))===-1){
-        e.preventDefault();
-        return false;
-    }
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",e);
 });
-$('#' + id_nombre_colaborador).change(function(){
-    var aux = $('#' + id_nombre_colaborador).val();
-    while(aux.charAt(0) == " "){
-        aux = aux.slice(1);
-    }
-    while(aux.charAt(aux.length-1) == " "){
-        aux = aux.slice(0,-1);
-    }
 
-    for(var i=0; i<aux.length;i++){
-        if(aux.charAt(i) == " " && aux.charAt(i+1) == " "){
-            aux = aux.slice(0,i) + aux.slice(i+1);
-            i = i-1;
-        }
-    }
-    var nombre_array = aux.split(" ");
+$('#' + id_nombre_colaborador).change(function(){
+    var nombre_array = deleteBlankSpaces(id_nombre_colaborador).split(" ");
     var nombre = "";
     for(var i=0; i<nombre_array.length; i++){
         if(i>0){
@@ -212,26 +188,10 @@ $('#' + id_nombre_colaborador).change(function(){
 });
 
 $('#' + id_paterno_colaborador).keypress(function(e){
-    if(("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ").indexOf(String.fromCharCode(e.keyCode))===-1){
-        e.preventDefault();
-        return false;
-    }
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",e);
 });
 $('#' + id_paterno_colaborador).change(function(){
-    var aux = $('#' + id_paterno_colaborador).val();
-    while(aux.charAt(0) == " "){
-        aux = aux.slice(1);
-    }
-    while(aux.charAt(aux.length-1) == " "){
-        aux = aux.slice(0,-1);
-    }
-    for(var i=0; i<aux.length;i++){
-        if(aux.charAt(i) == " " && aux.charAt(i+1) == " "){
-            aux = aux.slice(0,i) + aux.slice(i+1);
-            i = i-1;
-        }
-    }
-    var paterno_array = aux.split(" ");
+    var paterno_array = deleteBlankSpaces(id_paterno_colaborador).split(" ");
     var paterno = "";
     for(var i=0; i<paterno_array.length; i++){
         if(i>0){
@@ -247,26 +207,10 @@ $('#' + id_paterno_colaborador).change(function(){
 });
 
 $('#' + id_materno_colaborador).keypress(function(e){
-    if(("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ").indexOf(String.fromCharCode(e.keyCode))===-1){
-        e.preventDefault();
-        return false;
-    }
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",e);
 });
 $('#' + id_materno_colaborador).change(function(){
-    var aux = $('#' + id_materno_colaborador).val();
-    while(aux.charAt(0) == " "){
-        aux = aux.slice(1);
-    }
-    while(aux.charAt(aux.length-1) == " "){
-        aux = aux.slice(0,-1);
-    }
-    for(var i=0; i<aux.length;i++){
-        if(aux.charAt(i) == " " && aux.charAt(i+1) == " "){
-            aux = aux.slice(0,i) + aux.slice(i+1);
-            i = i-1;
-        }
-    }
-    var materno_array = aux.val().split(" ");
+    var materno_array = deleteBlankSpaces(id_materno_colaborador).split(" ");
     var materno = "";
     for(var i=0; i<materno_array.length; i++){
         if(i>0){
@@ -283,13 +227,32 @@ $('#' + id_materno_colaborador).change(function(){
 
 $('#' + id_select_areas_colaborador).change(function(){
     if(select.selected().includes("proyectos")){
-        $('#' + id_group_radio_ie).removeClass("hidden");
-        $('#' + id_group_radio_ihs).removeClass("hidden");
+        $('#' + id_group_checkbox_ie).removeClass("hidden");
+        $('#' + id_group_checkbox_ihs).removeClass("hidden");
     } else {
-        $('#' + id_group_radio_ie).addClass("hidden");
-        $('#' + id_group_radio_ihs).addClass("hidden");
+        $('#' + id_group_checkbox_ie).addClass("hidden");
+        $('#' + id_group_checkbox_ihs).addClass("hidden");
     }
 });
+
+$('#' + id_email_colaborador).on("cut copy paste",function(e) {
+    e.preventDefault();
+ });
+ $('#' + id_password_colaborador).on("cut copy paste",function(e) {
+     e.preventDefault();
+  });
+  $('#' + id_nickname_colaborador).on("cut copy paste",function(e) {
+     e.preventDefault();
+  });
+  $('#' + id_nombre_colaborador).on("cut copy paste",function(e) {
+     e.preventDefault();
+  });
+  $('#' + id_paterno_colaborador).on("cut copy paste",function(e) {
+     e.preventDefault();
+  });
+  $('#' + id_materno_colaborador).on("cut copy paste",function(e) {
+     e.preventDefault();
+  });
 
 // ----------------------- FUNCIONES NECESARIAS ----------------------------
 
@@ -310,35 +273,18 @@ function resetFormColaborador(emailReset){
     select.set([]);
     document.getElementById(id_lider_checkbox_colaborador).checked = false;
     document.getElementById(id_password_colaborador).disabled = false;
+    document.getElementById(id_ie_checkbox_colaborador).checked = false;
+    document.getElementById(id_ihs_checkbox_colaborador).checked = false;
 
     existe_colaborador = false;
     uid_existente = "";
 }
 
 
-// función para revisar si un string es una preposicion o artículo
-// sirve para ver qué palabaras en un apellido son con letras minúsculas solamente.
-function isPrepOrArt(string){
-    var preposiciones = ["a", "ante", "del", "bajo", "cabe", "con", "contra", "de", "desde", "durante", "en", "entre", "hacia", "hasta", "mediante", "para", "por", "según", "sin", "so", "sobre", "tras", "versus", "vía"];
-    var articulos =  ["el", "la", "los", "las", "un", "una", "unos", "unas"];
-
-    if(preposiciones.includes(string.toLowerCase()) || articulos.includes(string.toLowerCase())){
-        return true;
-    } else {
-        return false;
-    }
-}
-
-// función para validar email
-function validateEmail(email) {
-    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(email);
-}
-
 // función para validar el formulario. Si al apretar el botón de agregar hay algún campo obligatorio vacío, esta función
 // detecta el error y avisa al usuario la corrección necesaria.
 
-function validateForm(){
+function validateFormCol(){
     if ($('#' + id_email_colaborador).val() == ""){
         alert("Escribe el correo electrónico del colaborador que será dado de alta o será modificado.");
         return false;
@@ -357,6 +303,9 @@ function validateForm(){
     }  else if(select.selected().length == 0){
         alert("Ningún área fue seleccionada");
         return false;
+    } else if (select.selected().includes("proyectos") && !document.getElementById(id_ie_checkbox_colaborador).checked && !document.getElementById(id_ihs_checkbox_colaborador).checked){
+        alert("Si el usuario tiene el área proyectos, se debe indicar su especialidad");
+        return false;
     } else {
         return true;
     }
@@ -366,7 +315,7 @@ function validateForm(){
 // el objeto JSON "persona" es el objeto que se ingresa al database (revisar UML_v2 para ver estructura)
 function agregar_colaborador(){
     var areas = {};
-    var especialidad;
+    var especialidad = {};
     
     for(var i=0; i<select.selected().length; i++){
         areas[select.selected()[i]] = true;
@@ -374,14 +323,13 @@ function agregar_colaborador(){
     
 
     if(select.selected().includes("proyectos")){
-        if(document.getElementById(id_ie_rb_colaborador).checked) {
-            especialidad = "IE";
-        } else {
-            especialidad = "IHS";
+        if(document.getElementById(id_ie_checkbox_colaborador).checked) {
+            especialidad["ie"] = true;
         }
-    } else {
-        especialidad = "NA";
-    }
+        if (document.getElementById(id_ihs_checkbox_colaborador).checked) {
+            especialidad ["ihs"] = true;
+        }
+    } 
 
     var persona = {
         email: $('#' + id_email_colaborador).val(),
@@ -401,7 +349,7 @@ function agregar_colaborador(){
 // función que actualiza la tabla (revisar librería DataTable para ver funcionalidad)
 // se utiliza on "value" para que en cada movimiento en la base de datos "colaboradores", la tabla se actualize
 // automáticamente.
-function actualizarTabla(){
+function actualizarTablaCol(){
     firebase.database().ref(rama_bd_personal).on("value",function(snapshot){
         var datos_colaborador = [];
         snapshot.forEach(function(colSnap){
@@ -411,7 +359,7 @@ function actualizarTabla(){
             var email = colaborador.email;
             var areas = colSnap.child("areas").val();
             var credenciales = colaborador.credenciales;
-            var especialidad = colaborador.especialidad;
+            var especialidad = colSnap.child("especialidad").val();
             var habilitado = colaborador.habilitado;
             var uid = colSnap.key;
 
@@ -419,7 +367,12 @@ function actualizarTabla(){
             for (key in areas){
                 areas_text += key + "\n";
             }
+            var especialidad_text = "";
+            for(key in especialidad){
+                especialidad_text += key + "\n";
+            }
             areas_text = areas_text.substring(0, areas_text.length - 1);
+            especialidad_text = especialidad_text.substring(0, especialidad_text.length - 1)
 
             credenciales_text = "";
             if(credenciales == 0){
@@ -445,7 +398,7 @@ function actualizarTabla(){
                 nickname,
                 email,
                 areas_text,
-                especialidad,
+                especialidad_text,
                 credenciales_text,
                 credenciales,
                 "<button type='button' class='btn btn-transparente' onclick='habilitarColaborador(" + habilitado + "," + "\`"  + uid  + "\`" + ")'><i class=" + icon_class + "></i></button>",
@@ -457,7 +410,8 @@ function actualizarTabla(){
             data: datos_colaborador,
             language: idioma_espanol,
             "columnDefs": [
-                { "width": "150px", "targets": 2 },
+                { "width": "150px", "targets": 0 },
+                { "width": "100px", "targets": 4 },
                 {
                     targets: -2,
                     className: 'dt-body-center'
@@ -502,12 +456,15 @@ function actualizarTabla(){
         
             var areas_array = data[4].split("\n");
             select.set(areas_array);
-        
-            if(data[5] == "IE"){
-                document.getElementById(id_ie_rb_colaborador).checked = true;
-            }
-            else {
-                document.getElementById(id_ihs_rb_colaborador).checked = true;
+            
+            var areas_array = data[5].split("\n");
+            for(i=0;i<areas_array.length;i++){
+                if(areas_array[i] == "ie"){
+                    document.getElementById(id_ie_checkbox_colaborador).checked = true;
+                }
+                else if(areas_array[i] == "ihs"){
+                    document.getElementById(id_ihs_checkbox_colaborador).checked = true;
+                }
             }
         } );
     });

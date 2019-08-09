@@ -126,8 +126,7 @@
       - timestamps
          - enviado
          - leido
-
-         
+      
 - obras (magico)
    - AFECTAN: app_obra app_obras_prod app_procesos
    - SUSCRIBEN: app_procesos app_asistencia app_desplegar_procesos app_kaizen_global app_presupuesto
