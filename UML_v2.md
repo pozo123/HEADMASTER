@@ -1,6 +1,9 @@
 Nota: Todo float se ingresa a 2 decimales.
 
 - database
+    - info_web
+        - version: float
+        - año_inicio: int
     - personal
         - colaborador (uid):
             - nombre: string (alta)
@@ -9,13 +12,13 @@ Nota: Todo float se ingresa a 2 decimales.
             - nickname: string (alta)
             - email: string (alta)
             - foto_url: string
+            - credenciales: (0 sisadmin, 1 director, 2 lider de area, 3 colaboradores simples) (alta)
             - areas: (al dar de alta, no necesito llenar en false los que no tengo. min 1 área)
                 - proyectos: boolean
                 - produccion: boolean
                 - compras: boolean
                 - administracion: boolean
                 - rrhh: boolean
-            - credenciales: (0 sisadmin, 1 director, 2 lider de area, 3 colaboradores simples) (alta)
             - especialidad
                 - ie: boolean
                 - ihs: boolean
@@ -45,9 +48,10 @@ Nota: Todo float se ingresa a 2 decimales.
                     - calle: string
                     - numero_exterior: string
                     - numero_interior: string
-        - obras
-            - cliente (id_firebase)
-                - obra (obra_id): true
+                - obras
+                    - id_obra:true
+                - num_contactos: int
+                - habilitado: boolean
         - contactos
             - cliente (id_firebase)
                 - contacto (firebase_id)
@@ -59,17 +63,13 @@ Nota: Todo float se ingresa a 2 decimales.
                     - celular: string
                     - email: string
                     - extension: string
-        - habilitados
-            - clientes (id)
-                - nombre
-        - deshabilitados
-            - clientes (id)
-                - nombre
-        -num_contactos
-            - clientes(id)
-                - cantidad: int
-    - info_web
-        - version: float
+        - listas
+            - habilitados
+                - clientes (id): true
+            - deshabilitados
+                - clientes (id): true
+
+
     - administracion:
         - flujos
             - pagos
@@ -101,12 +101,13 @@ Nota: Todo float se ingresa a 2 decimales.
                 - folio_pago: string (el mismo del pago)
                     - pagos
                         - pagos_id: true
+    
     - obras
         - obras
             - obra: (firebase_id)
                 - nombre: string
-                - cliente_id: string
                 - clave_obra: string
+                - cliente_id: string
                 - terminada: true (true cuando todos los "terminado" de procesos son true)
                 - activa: true (para ddls)
                 - direccion
@@ -122,7 +123,7 @@ Nota: Todo float se ingresa a 2 decimales.
                     - fecha_inicio_teorica: timestamp (al dar de alta/edicion)
                     - fecha_final_real: timestamp
                     - fecha_final_teorica: timestamp (al dar de alta/edicion) 
-                - supervisor (solo pueden ser colaboradores con área de producción)
+                - supervisores (solo pueden ser colaboradores con área de producción)
                     - supervisor (uid)
                         - nombre
                         - activo: bool
@@ -159,7 +160,7 @@ Nota: Todo float se ingresa a 2 decimales.
                                 - precio_venta: float
                                 - costo_suministros:float
                                 - precopeo: float
-                                - SCORE 
+                                - score 
                                     - horas_programadas: (en horas)
                                     - costo_hora: float (2 decimales)
         - copeo 
@@ -199,7 +200,7 @@ Nota: Todo float se ingresa a 2 decimales.
             - obras_terminadas
                 - id_obra
                     - obra_nombre:string
-            - obras_no_terminada
+            - obras_no_terminadas
                 - id_obra
                     - obra_nombre: string
             - obras_activas
@@ -208,39 +209,31 @@ Nota: Todo float se ingresa a 2 decimales.
             - obras_no_activas
                 - id_obra
                     - obra_nombre: string
-            (en listas fechas true = fecha real y false = fecha programada)
+            
             - fechas_obra_inicio:
                 - PROG
-                    - aaaa
-                        - mm
-                            - dd
-                                - id_obra: true
+                    - aaaammdd
+                        - id_obra: true
                 - REAL
-                    - aaaa
-                        - mm
-                            - dd
-                                - id_obra: true
+                    - aaaammdd
+                        - id_obra: true
             - fechas_obra_fin:
                 - PROG
-                    - aaaa
-                        - mm
-                            - dd
-                                - id_obra: true
+                    - aaaammdd
+                        - id_obra: true
                 - REAL
-                    - aaaa
-                        - mm
-                            - dd
-                                - id_obra: true
+                    - aaaammdd
+                        - id_obra: true
+
     - datos_referencia
         - cuadrilla:
-            - id_puesto
+            - puesto_id
                 - puesto: string
                 - sueldo: float (semanal)
         - especialidad_mo:
-            - firebase_id
-                - especialidad (nombre): true
+            - especialidad_id: nombre
         - categorias_procesos
-            - categoria (id)
+            - id_categoria
                 - nombre: string
                 - clave: string
         - exclusiones
@@ -260,10 +253,8 @@ Nota: Todo float se ingresa a 2 decimales.
                 - especialidad: string
         - listas
             - fechas
-                - aaaa
-                    - mm
-                        - dd
-                            - id_registro: true
+                - aaaammdd
+                    - id_registro: true
             - colaboradores
                 - colaborador_id
                     - id_registro: true
@@ -306,6 +297,8 @@ Nota: Todo float se ingresa a 2 decimales.
                     - camisa: string (S, M, L, XL ...) desde el HTML
                     - pantalon: string (concatenar int + "x" + int) cintura/largo
                     - zapatos: float
+                - vacaciones_asignadas:(alta opcional)
+                    - aaaammdd: true
             - listas
                 - destajistas
                     - id_destajista (firebase)
@@ -323,134 +316,133 @@ Nota: Todo float se ingresa a 2 decimales.
                     - id_especialidad
                         - id_trabajador: true
 
-        - pagos_nomina:
-            - registro (firebase_id):
-                - trabajador_id: string
-                - año: int
-                - sem: int
-                - sueldo_semanal: float
-                - asistencia
-                    - dia (lu,ma, mi, ju, vi)
-                        - obra: obra_id
-                        - ssubproceso: subproceso
-                        - actividad: string(asistencia, falta o vacaciones)
-                - h_extras
-                    - entrada (firebase_id)
-                        - fecha: timestamp
-                        - obra: obra_id
-                        - subproceso: subproceso_id
-                        - cantidad_horas: int
-                        - pago_h_extras: float
-                - diversos
-                    - entrada (firebase_id)
-                        - tipo: string (se obtiene de diversos)
-                        - obra: obra_id
-                        - subproceso: subproceso_id
-                        - total: float
-
-        - nomina
-            - year: (ej 2019)
-            - semana: (ej 1)
-                - lunes:
-                    - obra (nombre) 
-                    - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente, "Vacaciones" si Vacaciones)
-                    - asistencia (bool)
-                - martes:
-                    - obra (nombre) 
-                    - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente, "Vacaciones" si Vacaciones)
-                    - asistencia (bool)
-                - miercoles:
-                    - obra (nombre) 
-                    - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente, "Vacaciones" si Vacaciones)
-                    - asistencia (bool)
-                - jueves:
-                    - obra (nombre) 
-                    - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente, "Vacaciones" si Vacaciones)
-                    - asistencia (bool)
-                - viernes:
-                    - obra (nombre) 
-                    - proceso (clave) (Si obra es "Atencion a Clientes" proc es cliente, "Vacaciones" si Vacaciones)
-                    - asistencia (bool)
-                - horas_extra:
-                    - por push:
-                        - fecha (timestamp)
-                        - obra 
-                        - proceso (Si obra es "Atencion a Clientes" proc es cliente)
-                        - horas (en horas)
-                - diversos
-                    - por push:
-                        - cantidad
-                        - distribuible: bool
-                        - obra: ("NA" si distribuilble == true) 
-                        - proceso: ("NA" si distribuilble == true) (Si obra es "Atencion a Clientes" proc es cliente)
-                        - diverso (nombre de un catálogo)
-                - total_diversos (No incluyen impuestos)
-                - total_horas_extra (en $ y sin impuestos)
-                - total_asistencia (sueldo_base * asistencias)
-                - impuestos:
-                    - impuestos_horas_extra
-                    - impuestos_diversos
-                    - impuestos_asistencia (pagadora_trabajador - 3 totales - impu_div - impu_HE)
-                - total (pagadora)
-        - pagos_nomina: 
-            - AFECTAN: app_pagos_nomina, app_asistencia
-            - SUSCRIBEN: 
-            - year: (ej 2019)
-                - semana: (ej 1)
-                    - terminada: bool
-                    - asistencias_terminadas: bool
-                    - horas_extra_terminadas: bool
-                    - diversos_terminados: bool
-                    - total
-                    - obra: (por nombre) (Una es "Atencion a Clientes")
-                        - total (refleja TOTAL de kaizen)
-                        - trabajadores:
-                            - trabajador: (por id)
-                                //- nombre NOSTA
-                                - dias 
-                                    - lunes:
-                                    - asistencia: bool
-                                    - proceso: (clave) "NA" si asistencia es false, "vacaciones" si obra es vacaciones
-                                    - martes:
-                                    - asistencia: bool
-                                    - proceso: (clave) "NA" si asistencia es false, "vacaciones" si obra es vacaciones
-                                    - miercoles:
-                                    - asistencia: bool
-                                    - proceso: (clave) "NA" si asistencia es false, "vacaciones" si obra es vacaciones
-                                    - jueves:
-                                    - asistencia: bool
-                                    - proceso: (clave) "NA" si asistencia es false, "vacaciones" si obra es vacaciones
-                                    - viernes:
-                                    - asistencia: bool
-                                    - proceso: (clave) "NA" si asistencia es false, "vacaciones" si obra es vacaciones
-                                - horas_extra:
-                                    - push:
-                                    - horas (EN $)
-                                    - proceso (clave)
-                                    - fecha (ms, de un datepicker, es de cuando se trabajaron, no de cuando se pagan)
-                                - diversos (SE GUARDAN HASTA EL TERMINAR, POR LOS DISTRIBUIBLES)
-                                    - por push: (si es distribuido se hacen entradas separadas)
-                                    - cantidad
-                                    - proceso 
-                                    - diverso (nombre de un catálogo)
-                                - total_horas_extra (en $ y No incluyen impuestos)
-                                - total_diversos (No incluyen impuestos)
-                                - total_asistencia
-                                - impuestos:
-                                    - impuestos_horas_extra
-                                    - impuestos_diversos
-                                    - impuestos_asistencia (impuestos_asistencia_trabajador * asistencias_esta_obra/asistencias totales)
-                                - total (subtotal + impuestos)
+                - vacaciones_asignadas
+                    - aaaammdd:
+                        - id_trabajador: true
+        - nomina: 
+            - asistencia:
+                - registro (firebase_id):
+                    - trabajador_id: string
+                    - fecha: timestamp
+                    - año_head: int
+                    - semana_head: int
+                    - obra: obra_id
+                    - ssubproceso: subproceso
+                    - actividad: string (asistencia, falta o vacaciones)
+                    - sueldo_diario: float
+                    - pago_id: string
+            - h_extras:
+                - registro (firebase_id):
+                    - trabajador_id: string
+                    - fecha: timestamp
+                    - año_head: int
+                    - semana_head: int
+                    - obra: obra_id
+                    - subproceso: subproceso_id
+                    - cantidad_horas: int
+                    - costo_hora: float: float
+                    - pago_id: string
+            - diversos:
+                - registro (firebase_id)
+                    - trabajador_id: string
+                    - año_head: int
+                    - semana_head: int
+                    - tipo: string (se obtiene de diversos)
+                    - obra: obra_id
+                    - subproceso: subproceso_id
+                    - costo_diversos: float
+                    - pago_id: string
+            - pagos_nomina:
+                - registro (firebase_id)
+                    - trabajador_id: string
+                    - fecha: timestamp
+                    - semana_head: int
+                    - monto: float
+                    - datos:
+                        - asistencia
+                            - registros_id: string
+                        - horas_extra
+                            - registros_id: string
+                        - diverso
+                            - registros_id: string
+            - listas:
+                - obras:
+                    - id_obra:
+                        - subprocesos:
+                            - asistencia
+                                - registros_id: string
+                            - horas_extra
+                                - registros_id: string
+                            - diverso
+                                - registros_id: string
+                            - nomina
+                                - registros_id: string
+                - fecha_datos:
+                    - año:
+                        - semana_head:
+                            - asistencia
+                                - registros_id: string
+                            - horas_extra
+                                - registros_id: string
+                            - diverso
+                                - registros_id: string
+                            - nomina
+                                - registros_id: string
+                - fechas_pagos:
+                    - aaaammdd:
+                        - asistencia
+                            - registros_id: string
+                        - horas_extra
+                            - registros_id: string
+                        - diverso
+                            - registros_id: string
+                        - nomina
+                            - registros_id: string
+            - trabajadores: 
+                - id_trabajador:
+                    - asistencia
+                        - registros_id: string
+                    - horas_extra
+                        - registros_id: string
+                    - diverso
+                        - registros_id: string
+                    - nomina
+                        - registros_id: string
+            - faltas:
+                - fechas
+                    - aaaammdd
+                        - id_asistencia: true
+                - trabajadores:
+                    - id_trabajador
+                        - id_asistencia: true
+            - vacaciones:
+                - fechas
+                    - aaaammdd
+                        - id_asistencia: true
+                - trabajadores:
+                    - id_trabajador
+                        - id_asistencia: true
+    - pda
+        - pistas
+            - id_registro:
+                id_colaborador: string
+                fecha: timestamp
+                tipo: (alta, modificación, eliminación)
+                ruta_bd: string
+                registro_antiguo: {}
+        - listas:
+            - colaboradores
+                - id_colaborador
+                    id_registro: true
+            - fecha
+                - timestamp
+                    - id_registro: true
+            - tipos
+                - tipo
+                    - id_registro: true
+            
 DEFINIR DESPUÉS
-    
-- destajistas: 
-    - AFECTAN: app_destajistas
-    - SUSCRIBEN:
-    - destajista: (por nombre)
-        - nombre
-        - telefono
-        - cuenta_bancaria
-        - especialidad: ("IE"/"IHS"/"Ambas")
+        
 - buzon: * ()
     - mensaje (por uid, solo los no leidos)
         - destinatario (uid)
@@ -593,6 +585,7 @@ DEFINIR DESPUÉS
                     - precio_negociado
                     - documento_evidencia
 
+- COMPRAS
 ANEXO
 
 - kaizen: (Mayúsculas en caso de que haga falta llenarlas desde un excel)

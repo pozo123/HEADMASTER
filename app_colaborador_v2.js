@@ -135,8 +135,10 @@ $('#' + id_agregar_colaborador).click(function(){
     if(!validateFormCol()){
         return;
     } 
+
+    var colaborador = agregar_colaborador();
     if (existe_colaborador){
-        firebase.database().ref(rama_bd_personal + "/" + uid_existente).update(agregar_colaborador());
+        firebase.database().ref(rama_bd_personal + "/" + uid_existente).update(colaborador);
         alert("¡Edición exitosa!");
         resetFormColaborador(true);
     } else {
@@ -144,7 +146,14 @@ $('#' + id_agregar_colaborador).click(function(){
         .then(function (result) {
             // ----- SUBIR COLABORADOR A REALTIME DATABASE -----------------------------------------
             var user = result.user;
-            firebase.database().ref(rama_bd_personal + "/" + user.uid).set(agregar_colaborador());
+            firebase.database().ref(rama_bd_personal + "/" + user.uid).set(colaborador);
+            
+            for(key in colaborador.areas){
+                firebase.database().ref(rama_bd_personal + "/listas/areas/" + key + "/" + user.uid).set(true)
+            }
+            firebase.database().ref(rama_bd_personal + "/listas/habilitado/" + user.uid).set(true)
+            firebase.database().ref(rama_bd_personal + "/listas/credenciales/" + colaborador.credenciales + "/" + user.uid).set(true)
+
             alert("¡Alta exitosa!")
             resetFormColaborador(true);
             // -------------------------------------------------------------------------------------
@@ -474,4 +483,12 @@ function actualizarTablaCol(){
 function  habilitarColaborador(habilitado, uid){
     var aux = {"habilitado": !habilitado};
     firebase.database().ref(rama_bd_personal + "/" + uid).update(aux);
+
+    if(habilitado){
+        firebase.database().ref(rama_bd_personal + "/listas/habilitado/" + uid).set("");
+        firebase.database().ref(rama_bd_personal + "/listas/deshabilitado/" + uid).set(true);
+    } else {
+        firebase.database().ref(rama_bd_personal + "/listas/habilitado/" + uid).set(true)
+        firebase.database().ref(rama_bd_personal + "/listas/deshabilitado/" + uid).set("");
+    }
 }
