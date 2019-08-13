@@ -263,3 +263,11 @@ hr.style2 {
 .icono_verde {
   color:green;
 }
+
+.icono_grande {
+  color:rgb(0, 0, 0);
+}
+
+.icono_numero {
+  color:rgb(243, 234, 234);
+}

@@ -87,7 +87,7 @@ $('#' + id_email_colaborador).change(function(){
         });
 
         if(existe_colaborador){
-            highLightAll();
+            highLightAllColaborador();
             $('#' + id_nombre_colaborador).val(nombre);
             $('#' + id_paterno_colaborador).val(paterno);
             $('#' + id_materno_colaborador).val(materno);
@@ -139,11 +139,34 @@ $('#' + id_agregar_colaborador).click(function(){
     var colaborador = agregar_colaborador();
     if (existe_colaborador){
         // actualizar colaborador en db
-        // firebase.database().ref(rama_bd_personal + "/colaboradores/" + uid_existente).update(colaborador);
-        // actualizar listas
-        // pda
-        alert("¡Edición exitosa!");
-        resetFormColaborador(true);
+        firebase.database().ref(rama_bd_personal + "/colaboradores/" + uid_existente).once("value").then(function(snapshot){
+            var registro_antiguo = snapshot.val();
+            // actualizar registro
+            firebase.database().ref(rama_bd_personal + "/colaboradores/" + uid_existente).update(colaborador);
+
+            // eliminar registro antiguo de listas
+            var listas_antiguo_path = {}
+            listas_antiguo_path["listas/credenciales/" + registro_antiguo.credenciales + "/" + uid_existente] = null;
+            for(key in registro_antiguo.areas){
+                listas_antiguo_path["listas/areas/" + key + "/" + uid_existente] = null;
+            }
+            firebase.database().ref(rama_bd_personal).update(listas_antiguo_path);
+            
+
+            // actualizar listas
+            var listas_path = {}
+            listas_path["listas/credenciales/" + colaborador.credenciales + "/" + uid_existente] = true;
+            for(key in colaborador.areas){
+                listas_path["listas/areas/" + key + "/" + uid_existente] = true;
+            }
+            firebase.database().ref(rama_bd_personal).update(listas_path);
+
+            // pista de auditoria
+            pda("modificacion", rama_bd_personal + "/colaboradores/" + uid_existente, registro_antiguo);
+
+            alert("¡Edición exitosa!");
+            resetFormColaborador(true);
+        });
     } else {
         secondaryApp.auth().createUserWithEmailAndPassword($('#' + id_email_colaborador).val(), $('#' + id_password_colaborador).val())
         .then(function (result) {
@@ -446,7 +469,7 @@ function actualizarTablaCol(){
         });
 
         $('#' + id_dataTable_colaborador + ' tbody').on( 'click', '.editar', function () {
-            highLightAll();
+            highLightAllColaborador();
             var data = tabla_colaborador.row( $(this).parents('tr') ).data();
             resetFormColaborador(true);
             existe_colaborador = true;
@@ -492,13 +515,31 @@ function actualizarTablaCol(){
 // función para actualizar el valor "habilitado:boolean" en la database. 
 function  habilitarColaborador(habilitado, uid){
     var aux = {"habilitado": !habilitado};
-    firebase.database().ref(rama_bd_personal + "/colaboradores/" + uid).update(aux).then(function(){
+
+    firebase.database().ref(rama_bd_personal + "/colaboradores/" + uid).once("value").then(function(snapshot){
+        var registro_antiguo = snapshot.val();
+
+        // actualizar registro
+        firebase.database().ref(rama_bd_personal + "/colaboradores/" + uid).update(aux);
+
+        // actualizar listas
         if(habilitado){
-            firebase.database().ref(rama_bd_personal + "/listas/habilitado/" + uid).set("");
+            firebase.database().ref(rama_bd_personal + "/listas/habilitado/" + uid).remove();
             firebase.database().ref(rama_bd_personal + "/listas/deshabilitado/" + uid).set(true);
         } else {
             firebase.database().ref(rama_bd_personal + "/listas/habilitado/" + uid).set(true)
-            firebase.database().ref(rama_bd_personal + "/listas/deshabilitado/" + uid).set("");
+            firebase.database().ref(rama_bd_personal + "/listas/deshabilitado/" + uid).remove();
         }
+        // pda
+        pda("modificacion", rama_bd_personal + "/colaboradores/" + uid, registro_antiguo)
     });
+}
+
+//función estética que hace uso de la función highLight
+function highLightAllColaborador(){
+    highLight(id_email_colaborador);
+    highLight(id_nickname_colaborador);
+    highLight(id_nombre_colaborador);
+    highLight(id_paterno_colaborador);
+    highLight(id_materno_colaborador);
 }

@@ -3,16 +3,6 @@ function highLight(id){
     //console.log("Gray: " + id);
     setTimeout(function(){  document.getElementById(id).style.background = "white";}, 1000);
 }
-
-//función estética que hace uso de la función highLight
-function highLightAll(){
-    highLight(id_email_colaborador);
-    highLight(id_nickname_colaborador);
-    highLight(id_nombre_colaborador);
-    highLight(id_paterno_colaborador);
-    highLight(id_materno_colaborador);
-}
-
 //input un dia en ms
 //regresa un array [week, year]
 //var week = getWeek(dia_en_ms)[0];
@@ -104,9 +94,15 @@ function pda(tipo,ruta, registro_antiguo){
     firebase.database().ref(rama_bd_pda + "/pistas").push(registro).then(function(snapshot){
         var regKey = snapshot.key;
         pda_path["listas/colaboradores/" + uid_usuario_global + "/" + regKey] = true;
-        pda_path["listas/fechas/" + fecha + "/" + regKey] = true;
+        pda_path["listas/fechas/" + aaaammdd(fecha) + "/" + regKey] = true;
         pda_path["listas/tipos/" + tipo + "/" + regKey] = true;
-    
         firebase.database().ref(rama_bd_pda).update(pda_path);
     });
+}
+
+// funcion que devuelve un string con formato aaaammdd
+
+function aaaammdd(timestamp){
+    var fecha = new Date(timestamp);
+    return fecha.getFullYear() + ("0" + (fecha.getMonth() + 1)).slice(-2) + ("0" + fecha.getDate()).slice(-2)
 }
