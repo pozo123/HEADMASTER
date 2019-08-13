@@ -478,16 +478,22 @@
                     </div>
                 </ul>
                 <ul class="list-unstyled components">
-                    <li class = "administracion">
+                    <li class="administracion">
                         <a href="#pageColaborador" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Colaboradores HEAD</a>
                         <ul class="collapse list-unstyled" id="pageColaborador">
                             <li class="tab administracion" id="tabColaboradorHEAD"><a href="#" onclick="openTabs('tabColaboradorHEAD','colaboradorHEAD')">Alta y Edición - Colaboradores HEAD</a></li>
                         </ul>
                     </li>
                     <li>
-                        <a href="#pageClientes" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Despachos (Clientes) </a>
-                        <ul class="collapse list-unstyled" id="pageClientes">
+                        <a href="#pageCliente" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Despachos (Clientes)</a>
+                        <ul class="collapse list-unstyled" id="pageCliente">
                             <li class="tab administracion" id="tabAltaCliente"><a href="#" onclick="openTabs('tabAltaCliente','altaCliente')">Alta y Edición - Clientes</a></li>
+                        </ul>
+                    </li>   
+                    <li>
+                        <a href="#pageObra" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Obras</a>
+                        <ul class="collapse list-unstyled" id="pageObra">
+                            <li class="tab administracion" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Alta y Edición - Obras</a></li>
                         </ul>
                     </li>                       
                 </ul>
@@ -673,7 +679,7 @@
                                             <h3>Dirección</h3>
                                             <br/>
                                             <div class="form-row">
-                                                <div class="form-estadoCliente col-md-4">
+                                                <div class="form-group col-md-4">
                                                     <label for="estadoCliente">Estado <span style="font-size: 8pt">(Ciudad de México aquí)</span>:</label>
                                                     <input type="text" name="" id="estadoCliente"class="form-control" placeholder="Estado">
                                                 </div>
@@ -719,6 +725,123 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- alta Obras -->
+                        <div id="altaObra" class = "tabcontent hidden">
+                            <h1>Alta o edición de Obras </h1>
+                            <p>Página para dar de alta o modificar obras existentes en el sistema.</p>
+                            <div class= "container-fluid">
+                                <div class= "row align-items-center">
+                                    <div class= "col-lg-2"></div>
+                                    <div class= "col-lg-8">
+                                        <form id="formObra" action="#" onsubmit="return false;">
+                                            <div class="form-row">
+                                                <div class="form-group col-md-2">
+                                                    <label for="claveObra">Clave:</label>
+                                                    <input type="text" name="" id="claveObra"class="form-control" placeholder="Clave">
+                                                </div>
+                                                <div class="form-group col-md-7">
+                                                    <label for="nombreObra">Nombre de la obra:</label>
+                                                    <input type="text" name="" id="nombreObra" class="form-control" placeholder="Nombre">
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="garantiaObra">Fondo de Garantía: <span style="font-size: 8pt">(opcional)</span></label>
+                                                    <input type="text" name="" maxlength="10" id="garantiaObra" class="form-control" placeholder="Ejemplo: 5%">
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-3 col-sm-12">
+                                                    <label for="fechaInicioObra">Fecha de inicio:</label>
+                                                </div>
+                                                <div class="col-lg-3 col-sm-12">
+                                                    <input class="form-control" type="text" id="fechaInicioObra" placeholder="" readonly="readonly">
+                                                </div>
+                                                <div class="col-lg-3 col-sm-12">
+                                                    <label for="fechaFinalObra">Fecha de terminación:</label>
+                                                </div>
+                                                <div class="col-lg-3 col-sm-12">
+                                                    <input class="form-control" type="text" id="fechaFinalObra" placeholder="" readonly="readonly">
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <h3>Dirección</h3>
+                                            <br/>
+                                            <div class="form-row">
+                                                <div class="form-estadoCliente col-md-4">
+                                                    <label for="estadoObra">Estado <span style="font-size: 8pt">(Ciudad de México aquí)</span>:</label>
+                                                    <input type="text" name="" id="estadoObra"class="form-control" placeholder="Estado">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="ciudadObra">Ciudad/Alcaldía:</label>
+                                                    <input type="text" name="" id="ciudadObra" class="form-control" placeholder="Ciudad/Alcaldía">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="coloniaObra">Colonia:</label>
+                                                    <input type="text" name="" id="coloniaObra" class="form-control" placeholder="Colonia">
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-lg-6 col-md-12 col-sm-12">
+                                                    <label for="calleObra">Calle</label>
+                                                    <input type="text" name="" id="calleObra" class="form-control" placeholder="Calle">
+                                                </div>
+                                                <div class="form-group col-lg-3 col-md-4 col-sm-6">
+                                                    <label for="cpObra">Código Postal:</label>
+                                                    <input type="text" name="" maxlength="5" id="cpObra" class="form-control" placeholder="C. Postal">
+                                                </div>
+                                                <div class="form-group col-lg-3 col-md-4 col-sm-6">
+                                                    <label for="numeroObra">Número:</label>
+                                                    <input type="text" name="" id="numeroObra "class="form-control" placeholder="Número">
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class= "col-6">
+                                                    <button id="agregarButtonObra" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                                </div>
+                                                <div class= "col-6">
+                                                    <button id="borrarButtonObra" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class= "col-lg-2"></div>   
+                                    <div class = "tableWrapper">
+                                        <table id="dataTableObra" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>Editar</th>
+                                                    <th>Clave</th>
+                                                    <th>Nombre</th>
+                                                    <th>Cliente</th>
+                                                    <th>Dirección (Aquí concatenar)</th>
+                                                    <th>Fondo de Garantía</th>
+                                                    <th>Fecha de inicio programada</th>
+                                                    <th>Fecha de terminación programada</th>
+                                                    <th>Terminada</th>
+                                                    <th>Habilitada</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Editar</th>
+                                                    <th>Clave</th>
+                                                    <th>Nombre</th>
+                                                    <th>Cliente</th>
+                                                    <th>Dirección (Aquí concatenar)</th>
+                                                    <th>Fondo de Garantía</th>
+                                                    <th>Fecha de inicio programada</th>
+                                                    <th>Fecha de terminación programada</th>
+                                                    <th>Terminada</th>
+                                                    <th>Habilitada</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>             
+                                </div>
+                            </div>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -776,7 +899,9 @@
         <script src="numeroLetras.js"></script>
         <script src="app_principal_v2.js"></script>        
         <script src="app_funciones_v2.js"></script>
+
         <script src="app_altaCliente_v2.js"></script>
+        <script src="app_altaObra_v2.js"></script>
 
         <script src="app_colaborador_v2.js"></script>
         

@@ -68,8 +68,6 @@ Nota: Todo float se ingresa a 2 decimales.
                 - clientes (id): true
             - deshabilitados
                 - clientes (id): true
-
-
     - administracion:
         - flujos
             - pagos
@@ -109,7 +107,7 @@ Nota: Todo float se ingresa a 2 decimales.
                 - clave_obra: string
                 - cliente_id: string
                 - terminada: true (true cuando todos los "terminado" de procesos son true)
-                - activa: true (para ddls)
+                - habilitada: true (para ddls)
                 - direccion
                     - estado: string
                     - ciudad: string
