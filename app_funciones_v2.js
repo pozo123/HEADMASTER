@@ -85,3 +85,28 @@ function deleteBlankSpaces(id_text){
     }
     return aux;
 }
+
+
+// función para generar las pda's
+function pda(tipo,ruta, registro_antiguo){
+    var pda_path = {};
+    var registro = {};
+
+    var fecha = new Date().getTime();
+
+    registro["id_colaborador"] = uid_usuario_global;
+    registro["fecha"] = fecha;
+    registro["tipo"] = tipo;
+    registro["ruta_bd"] = ruta;
+    registro["registro_antiguo"] = registro_antiguo;
+
+    // push en registros y listas
+    firebase.database().ref(rama_bd_pda + "/pistas").push(registro).then(function(snapshot){
+        var regKey = snapshot.key;
+        pda_path["listas/colaboradores/" + uid_usuario_global + "/" + regKey] = true;
+        pda_path["listas/fechas/" + fecha + "/" + regKey] = true;
+        pda_path["listas/tipos/" + tipo + "/" + regKey] = true;
+    
+        firebase.database().ref(rama_bd_pda).update(pda_path);
+    });
+}

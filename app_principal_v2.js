@@ -20,6 +20,7 @@ var id_div_dropdown_areas = "dropdown_areas";
 var rama_bd_personal = "test/personal";
 var rama_bd_obras = "test/obras";
 var rama_bd_clientes = "test/clientes";
+var rama_bd_pda = "test/pda"
 
 $(document).ready(function() {    
     $('#sidebarCollapse').on('click', function () {

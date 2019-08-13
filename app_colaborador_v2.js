@@ -60,7 +60,7 @@ $('#' + id_email_colaborador).change(function(){
         $('#' + id_email_colaborador).focus();
         return;
     }
-    firebase.database().ref(rama_bd_personal).once("value").then(function(snapshot){
+    firebase.database().ref(rama_bd_personal + "/colaboradores").once("value").then(function(snapshot){
         var areas;
         var nombre;
         var paterno;
@@ -138,21 +138,32 @@ $('#' + id_agregar_colaborador).click(function(){
 
     var colaborador = agregar_colaborador();
     if (existe_colaborador){
-        firebase.database().ref(rama_bd_personal + "/" + uid_existente).update(colaborador);
+        // actualizar colaborador en db
+        
+        // firebase.database().ref(rama_bd_personal + "/colaboradores/" + uid_existente).update(colaborador);
+        // actualizar listas
+        // pda
         alert("¡Edición exitosa!");
         resetFormColaborador(true);
     } else {
         secondaryApp.auth().createUserWithEmailAndPassword($('#' + id_email_colaborador).val(), $('#' + id_password_colaborador).val())
         .then(function (result) {
+            
             // ----- SUBIR COLABORADOR A REALTIME DATABASE -----------------------------------------
             var user = result.user;
-            firebase.database().ref(rama_bd_personal + "/" + user.uid).set(colaborador);
+            firebase.database().ref(rama_bd_personal + "/colaboradores/" + user.uid).set(colaborador);
             
+            // actualizar listas
+            var listas_path = {}
+            listas_path["listas/habilitado/" + user.uid] = true;
+            listas_path["listas/credenciales/" + colaborador.credenciales + "/" + user.uid] = true;
             for(key in colaborador.areas){
-                firebase.database().ref(rama_bd_personal + "/listas/areas/" + key + "/" + user.uid).set(true)
+                listas_path["listas/areas/" + key + "/" + user.uid] = true;
             }
-            firebase.database().ref(rama_bd_personal + "/listas/habilitado/" + user.uid).set(true)
-            firebase.database().ref(rama_bd_personal + "/listas/credenciales/" + colaborador.credenciales + "/" + user.uid).set(true)
+            firebase.database().ref(rama_bd_personal).update(listas_path);
+
+            // pista de auditoría
+            pda("alta", rama_bd_personal + "/" + user.uid, "");
 
             alert("¡Alta exitosa!")
             resetFormColaborador(true);
@@ -359,7 +370,7 @@ function agregar_colaborador(){
 // se utiliza on "value" para que en cada movimiento en la base de datos "colaboradores", la tabla se actualize
 // automáticamente.
 function actualizarTablaCol(){
-    firebase.database().ref(rama_bd_personal).on("value",function(snapshot){
+    firebase.database().ref(rama_bd_personal + "/colaboradores").on("value",function(snapshot){
         var datos_colaborador = [];
         snapshot.forEach(function(colSnap){
             var colaborador = colSnap.val();
@@ -482,13 +493,13 @@ function actualizarTablaCol(){
 // función para actualizar el valor "habilitado:boolean" en la database. 
 function  habilitarColaborador(habilitado, uid){
     var aux = {"habilitado": !habilitado};
-    firebase.database().ref(rama_bd_personal + "/" + uid).update(aux);
-
-    if(habilitado){
-        firebase.database().ref(rama_bd_personal + "/listas/habilitado/" + uid).set("");
-        firebase.database().ref(rama_bd_personal + "/listas/deshabilitado/" + uid).set(true);
-    } else {
-        firebase.database().ref(rama_bd_personal + "/listas/habilitado/" + uid).set(true)
-        firebase.database().ref(rama_bd_personal + "/listas/deshabilitado/" + uid).set("");
-    }
+    firebase.database().ref(rama_bd_personal + "/colaboradores/" + uid).update(aux).then(function(){
+        if(habilitado){
+            firebase.database().ref(rama_bd_personal + "/listas/habilitado/" + uid).set("");
+            firebase.database().ref(rama_bd_personal + "/listas/deshabilitado/" + uid).set(true);
+        } else {
+            firebase.database().ref(rama_bd_personal + "/listas/habilitado/" + uid).set(true)
+            firebase.database().ref(rama_bd_personal + "/listas/deshabilitado/" + uid).set("");
+        }
+    });
 }

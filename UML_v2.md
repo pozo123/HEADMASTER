@@ -5,24 +5,25 @@ Nota: Todo float se ingresa a 2 decimales.
         - version: float
         - año_inicio: int
     - personal
-        - colaborador (uid):
-            - nombre: string (alta)
-            - a_paterno: string (alta)
-            - a_materno: string (alta)
-            - nickname: string (alta)
-            - email: string (alta)
-            - foto_url: string
-            - credenciales: (0 sisadmin, 1 director, 2 lider de area, 3 colaboradores simples) (alta)
-            - areas: (al dar de alta, no necesito llenar en false los que no tengo. min 1 área)
-                - proyectos: boolean
-                - produccion: boolean
-                - compras: boolean
-                - administracion: boolean
-                - rrhh: boolean
-            - especialidad
-                - ie: boolean
-                - ihs: boolean
-            - habilitado: boolean (acceso al sistema) (alta)
+        - colaboradores
+            - colaborador (uid):
+                - nombre: string (alta)
+                - a_paterno: string (alta)
+                - a_materno: string (alta)
+                - nickname: string (alta)
+                - email: string (alta)
+                - foto_url: string
+                - credenciales: (0 sisadmin, 1 director, 2 lider de area, 3 colaboradores simples) (alta)
+                - areas: (al dar de alta, no necesito llenar en false los que no tengo. min 1 área)
+                    - proyectos: boolean
+                    - produccion: boolean
+                    - compras: boolean
+                    - administracion: boolean
+                    - rrhh: boolean
+                - especialidad
+                    - ie: boolean
+                    - ihs: boolean
+                - habilitado: boolean (acceso al sistema) (alta)
         - listas
             - areas
                 - area 

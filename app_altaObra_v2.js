@@ -22,6 +22,7 @@ var id_dataTable_obra = "dataTableObra";
 
 var id_clave_obra = "claveObra";
 var id_nombre_obra = "nombreObra";
+var id_ddl_cliente_obra = "clienteObra"; // primero terminar app de clientes.
 var id_garantia_obra = "garantiaObra";
 var id_estado_obra = "estadoObra";
 var id_ciudad_obra = "ciudadObra";
@@ -31,6 +32,7 @@ var id_codigo_postal_obra = "cpObra";
 var id_numero_obra = "numeroObra";
 
 var id_agregar_obra = "agregarButtonObra";
+
 
 jQuery.datetimepicker.setLocale('es');
 
@@ -50,4 +52,6 @@ $('#' + id_tab_obra).click(function() {
     jQuery('#' + id_fecha_final_obra).datetimepicker(
         {timepicker:false, weeks:true,format:'Y.m.d'}
     );
+
+    // Necesita funcionalidad para llenar el ddl de cliente.
 });
