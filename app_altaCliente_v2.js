@@ -25,7 +25,7 @@ var id_num_exterior_cliente = "exteriorCliente";
 var id_num_interior_cliente = "interiorCliente";
 
 var id_agregar_cliente = "agregarButtonCliente";
-
+var id_reset_form_cliente = "borrarButtonCliente";
 // Variables globales
 
 var existe_cliente = false;
@@ -41,33 +41,52 @@ $('#' + id_tab_cliente).click(function() {
     actualizarTablaCliente();   
 });
 
+// al apretar el botón de resetear, se resetea todo el formulario
+$('#' + id_reset_form_cliente).click(function(){
+    resetFormCliente();
+});
+
 
 $('#' + id_agregar_cliente).click(function(){
     if(!validateCliente()){
         return;
     } 
-    if (existe_colaborador){
-        firebase.database().ref(rama_bd_clientes + "/despachos/" + uid_existente).update(datos_cliente());
-        alert("¡Edición exitosa!");
-        resetFormCliente();
-    } else {
-        firebase.database().ref(rama_bd_clientes + "/despachos").push(datos_cliente());
-        alert("¡Alta exitosa!");
-        resetFormCliente();
+    if (existe_cliente){
+
+        firebase.database().ref(rama_bd_clientes + "/despachos/" + uid_existente).once("value").then(function(snapshot){
+            var registro_antiguo = snapshot.val();
+            
+            var cliente_update = {};
+            cliente_update["despachos/" + uid_existente + "/clave_cliente"] = $('#' + id_clave_cliente).val();
+            cliente_update["despachos/" + uid_existente + "/nombre"] = $('#' + id_nombre_cliente).val();
+            cliente_update["despachos/" + uid_existente + "/telefono"] = $('#' + id_telefono_cliente).val();
+            cliente_update["despachos/" + uid_existente + "/direccion"] = datosAltaCliente().direccion;
+            firebase.database().ref(rama_bd_clientes).update(cliente_update);
+            // pad
+            pda("modificacion", rama_bd_clientes + "/despachos/" + uid_existente, registro_antiguo);
+            alert("¡Edición exitosa!");
+            resetFormCliente();
+        });
+    } else {     
+        firebase.database().ref(rama_bd_clientes + "/despachos").push(datosAltaCliente()).then(function(snapshot){
+            var regKey = snapshot.key
+            // actualizar listas
+            var listas_path = {}
+            listas_path["listas/habilitado/" + regKey] = true;
+            firebase.database().ref(rama_bd_clientes).update(listas_path);
+
+            // pista de auditoría
+            pda("alta", rama_bd_clientes + "/despachos/" + regKey, "");
+            alert("¡Alta exitosa!");
+            resetFormCliente();
+        });
     };
 });
 
 // ----------------------- VALIDACIÓN DE FORMULARIO ------------------------
 
-$('#' + id_clave_cliente).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789,.-_/",e);
-});
 $('#' + id_clave_cliente).change(function(){
-    $('#' + id_clave_cliente).val($('#' + id_clave_cliente).val().toUpperCase());
-});
-
-$('#' + id_nombre_cliente).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ,.-_/",e);
+    $('#' + id_clave_cliente).val(deleteBlankSpaces(id_clave_cliente).toUpperCase());
 });
 
 $('#' + id_nombre_cliente).change(function(){
@@ -90,13 +109,22 @@ $('#' + id_telefono_cliente).change(function(){
     if(telefono.length > 0){
         var aux = "";
         for(i=0;i<telefono.length;i++){
-            if(i%2 == 0){
+            if(i%2 == 0 && i > 0){
                 aux+= " ";
             }
             aux += telefono.charAt(i);
         }
         $('#' + id_telefono_cliente).val(aux);
     }
+});
+
+$('#' + id_telefono_cliente).focus(function(){
+    var aux_array = $('#' + id_telefono_cliente).val().split(" ");
+    var aux = "";
+    for(var i=0;i< aux_array.length;i++){
+        aux += aux_array[i];
+    }
+    $('#' + id_telefono_cliente).val(aux);
 });
 
 $('#' + id_estado_cliente).keypress(function(e){
@@ -208,6 +236,7 @@ $('#' + id_nombre_cliente).on("cut copy paste",function(e) {
 
 function resetFormCliente(){
     $('#' + id_form_cliente).trigger("reset");
+    existe_cliente = false;
 };
 
 function validateCliente(){
@@ -230,22 +259,104 @@ function validateCliente(){
 };
 
 function actualizarTablaCliente(){
-    firebase.database().ref(rama_bd_clientes).on("value").then(function(snapshot){
-        var datos_cliente = [];
+    firebase.database().ref(rama_bd_clientes+ "/despachos").on("value", function(snapshot){
+        var datosAltaCliente = [];
         snapshot.forEach(function(clienteSnap){
             var cliente = clienteSnap.val();
+            var cliente_id = clienteSnap.key;
+
             var clave_cliente = cliente.clave_cliente;
             var nombre_cliente = cliente.nombre;
             var telefono_cliente = cliente.telefono;
-            var direccion = clienteSnap.child("direccion").val();
+            var habilitado = cliente.habilitado;
+
+            var icon_class = "";
+            if(habilitado) {
+                icon_class = "'icono_verde fas fa-check-circle'";
+            } else {
+                icon_class = "'icono_rojo fas fa-times-circle'"
+            }
+
+            var estado = clienteSnap.child("direccion").val().estado;
+            var ciudad = clienteSnap.child("direccion").val().ciudad;
+            var colonia = clienteSnap.child("direccion").val().colonia;
+            var codigo_postal = clienteSnap.child("direccion").val().codigo_postal;
+            var calle = clienteSnap.child("direccion").val().calle;
+            var numero_exterior = clienteSnap.child("direccion").val().numero_exterior;
+            var numero_interior = clienteSnap.child("direccion").val().numero_interior;
+            
+            var direccion_text = calle + " " + numero_exterior + " " + numero_interior + ", " + colonia + ", " + ciudad + ", " + estado + ". " + codigo_postal;
+            var direccion = estado + "/" + ciudad + "/" + colonia + "/" + codigo_postal + "/" + calle + "/" + numero_exterior + "/" + numero_interior;
+
+            datosAltaCliente.push([
+                "",
+                cliente_id,
+                direccion,
+                clave_cliente,
+                nombre_cliente,
+                direccion_text,
+                telefono_cliente,
+                "<button type='button' class='btn btn-dark'><span class='fas fa-address-book'></span></button>", 
+                "<button type='button' class='btn btn-transparente' onclick='habilitarCliente(" + habilitado + "," + "\`"  + cliente_id  + "\`" + ")'><span class=" + icon_class + "></span></button>",
+            ])  ;        
+        });
+        tabla_cliente = $('#'+ id_dataTable_cliente).DataTable({
+            destroy: true,
+            data: datosAltaCliente,
+            language: idioma_espanol,
+            "columnDefs": [
+                {
+                    "targets": 0,
+                    "data": null,
+                    "defaultContent": "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>"
+                },
+                { "width": "225px", "targets": 5 },
+                { "width": "100px", "targets": 3 },
+                { "width": "50px", "targets": - 2},
+                {
+                    targets: -1,
+                    className: 'dt-body-center'
+                },
+                {
+                    targets: -2,
+                    className: 'dt-body-center'
+                },
+                {
+                    targets: 0,
+                    className: 'dt-body-center'
+                },
+                { "visible": false, "targets": 1 },
+                { "visible": false, "targets": 2 },
+              ]
         });
 
+        $('#' + id_dataTable_cliente + ' tbody').on( 'click', '.editar', function () {
+            highLightAllCliente();
+            var data = tabla_cliente.row( $(this).parents('tr') ).data();
+            resetFormCliente();
+            existe_cliente = true;
+            uid_existente = data[1];
+            var direccion = data[2].split("/");
+            
+        
+            $('#' + id_estado_cliente).val(direccion[0]);
+            $('#' + id_ciudad_cliente).val(direccion[1]);
+            $('#' + id_colonia_cliente).val(direccion[2]);
+            $('#' + id_codigo_postal_cliente).val(direccion[3]);
+            $('#' + id_calle_cliente).val(direccion[4]);
+            $('#' + id_num_exterior_cliente).val(direccion[5]);
+            $('#' + id_num_interior_cliente).val(direccion[6]);
+            $('#' + id_clave_cliente).val(data[3]);
+            $('#' + id_nombre_cliente).val(data[4]);
+            $('#' + id_telefono_cliente).val(data[6]);
+        } );
     });
 };
 
-function datos_cliente(){
+function datosAltaCliente(){
     var cliente = {};
     var direccion = {};
+    var 
     direccion = {
         estado: $('#' + id_estado_cliente).val(),
         ciudad: $('#' + id_ciudad_cliente).val(),
@@ -255,13 +366,52 @@ function datos_cliente(){
         numero_exterior: $('#' + id_num_exterior_cliente).val(),
         numero_interior: $('#' + id_num_interior_cliente).val()
     }
-
     cliente = {
         clave_cliente: $('#' + id_clave_cliente).val(),
         nombre: $('#' + id_nombre_cliente).val(),
         telefono: $('#' + id_telefono_cliente).val(),
-        direccion: direccion
+        direccion: direccion,
+        num_contactos: 0,
+        habilitado: true
     }
 
     return cliente;
 };
+
+//función estética que hace uso de la función highLight
+function highLightAllCliente(){
+    highLight(id_clave_cliente);
+    highLight(id_nombre_cliente);
+    highLight(id_telefono_cliente);
+    highLight(id_estado_cliente);
+    highLight(id_ciudad_cliente);
+    highLight(id_colonia_cliente);
+    highLight(id_calle_cliente);
+    highLight(id_codigo_postal_cliente);
+    highLight(id_num_exterior_cliente);
+    highLight(id_num_interior_cliente);
+}
+
+
+// función para actualizar el valor "habilitado:boolean" en la database. 
+function  habilitarCliente(habilitado, id){
+    var aux = {"habilitado": !habilitado};
+
+    firebase.database().ref(rama_bd_clientes + "/despachos/" + id).once("value").then(function(snapshot){
+        var registro_antiguo = snapshot.val();
+
+        // actualizar registro
+        firebase.database().ref(rama_bd_clientes + "/despachos/" + id).update(aux);
+
+        // actualizar listas
+        if(habilitado){
+            firebase.database().ref(rama_bd_clientes + "/listas/habilitado/" + id).remove();
+            firebase.database().ref(rama_bd_clientes + "/listas/deshabilitado/" + id).set(true);
+        } else {
+            firebase.database().ref(rama_bd_clientes + "/listas/habilitado/" + id).set(true)
+            firebase.database().ref(rama_bd_clientes + "/listas/deshabilitado/" + id).remove();
+        }
+        // pda
+        pda("modificacion", rama_bd_clientes + "/despachos/" + id, registro_antiguo)
+    });
+}

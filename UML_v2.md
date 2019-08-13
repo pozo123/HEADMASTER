@@ -426,7 +426,7 @@ Nota: Todo float se ingresa a 2 decimales.
             - id_registro:
                 id_colaborador: string
                 fecha: timestamp
-                tipo: (alta, modificación, eliminación)
+                tipo: (alta, modificacion, baja)
                 ruta_bd: string
                 registro_antiguo: {}
         - listas:

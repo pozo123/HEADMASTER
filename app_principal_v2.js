@@ -34,9 +34,6 @@ $(document).ready(function() {
     document.getElementById(id_week_label).innerHTML = "Semana " + getWeek(new Date().getTime())[0];
 });
 
-$('#botonMagico').click(function(){
-});
-
 firebase.auth().onAuthStateChanged(user => {
     if(user) {
         $('body').removeClass("hidden");
@@ -195,6 +192,7 @@ $("#cerrarSesion").click((function () {
         // Sign-out successful.
     }).catch(function(error) {
         // An error happened.
+        console.log("Sucedió un error al cerrar sesión")
     });
     alert("Inicia sesión para entrar a comunidad");
 }));
