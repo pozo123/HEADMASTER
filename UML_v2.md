@@ -434,7 +434,7 @@ Nota: Todo float se ingresa a 2 decimales.
                 - id_colaborador
                     id_registro: true
             - fecha
-                - timestamp
+                - aaaammdd
                     - id_registro: true
             - tipos
                 - tipo

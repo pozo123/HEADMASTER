@@ -139,7 +139,6 @@ $('#' + id_agregar_colaborador).click(function(){
     var colaborador = agregar_colaborador();
     if (existe_colaborador){
         // actualizar colaborador en db
-        
         // firebase.database().ref(rama_bd_personal + "/colaboradores/" + uid_existente).update(colaborador);
         // actualizar listas
         // pda
