@@ -53,7 +53,6 @@ $('#' + id_agregar_cliente).click(function(){
         return;
     } 
     if (existe_cliente){
-
         firebase.database().ref(rama_bd_clientes + "/despachos/" + uid_existente).once("value").then(function(snapshot){
             var registro_antiguo = snapshot.val();
             
@@ -71,6 +70,7 @@ $('#' + id_agregar_cliente).click(function(){
     } else {     
         firebase.database().ref(rama_bd_clientes + "/despachos").push(datosAltaCliente()).then(function(snapshot){
             var regKey = snapshot.key
+            
             // actualizar listas
             var listas_path = {}
             listas_path["listas/habilitado/" + regKey] = true;

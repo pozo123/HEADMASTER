@@ -229,8 +229,10 @@ Nota: Todo float se ingresa a 2 decimales.
             - puesto_id
                 - puesto: string
                 - sueldo: float (semanal)
-        - especialidad_mo:
-            - especialidad_id: nombre
+        - especialidades:
+            - especialidad_id
+                - clave: string
+                - nombre: string
         - categorias_procesos
             - id_categoria
                 - nombre: string

@@ -15,7 +15,6 @@ var existe_puesto = false;
 var id_puesto_existente = "";
 
 // Lo necesario para inicializar la pestaña (se hace al seleccionar la pestaña)
-// se inicializa el select con librería slim Select
 // se resetea el formulario (ver en funciones)
 // se llena la tabla con todos los colaboradores
 

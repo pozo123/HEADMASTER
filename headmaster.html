@@ -252,6 +252,7 @@
                     <li>
                         <a href="#pageManoObra" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Mano de Obra</a>
                         <ul class="collapse list-unstyled" id="pageManoObra">
+                            <li class="tab administracion" id="tabEspecialidades"><a href="#" onclick="openTabs('tabEspecialidades','especialidadesHEAD')">Puestos HEAD</a></li>
                             <li class="tab administracion" id="tabPuestos"><a href="#" onclick="openTabs('tabPuestos','puestosHEAD')">Puestos HEAD</a></li>
                             <li class="tab administracion" id="tabTrabajadores"><a href="#" onclick="openTabs('tabTrabajadores','trabajadoresHEAD')">Trabajadores de obra</a></li>
                         </ul>
@@ -593,7 +594,7 @@
                                                 </div>
                                                 <div class="form-group col-lg-3 col-md-4 col-sm-6">
                                                     <label for="numeroObra">Número:</label>
-                                                    <input type="text" name="" id="numeroObra "class="form-control" placeholder="Número">
+                                                    <input type="text" name="" id="numeroObra"class="form-control" placeholder="Número">
                                                 </div>
                                             </div>
                                             <div class="form-row">
@@ -650,8 +651,8 @@
                             <p>Página para definir los distintos puestos posibles para el área de producción</p>
                             <div class= "container-fluid">
                                 <div class= "row">  
-                                    <div class="col-lg-2"></div>   
-                                    <div class="col-lg-8">
+                                    <div class="col-lg-1"></div>   
+                                    <div class="col-lg-10">
                                         <div class= "row">                                                       
                                             <div class= "col-md-6">
                                                 <form id="formPuesto" action="#" onsubmit="return false;">
@@ -684,7 +685,7 @@
                                                             <tr>
                                                                 <th>ID_puesto</th>
                                                                 <th>Puesto</th>
-                                                                <th>Sueldo</th>
+                                                                <th>Sueldo Semanal</th>
                                                                 <th>Editar</th>
                                                             </tr>
                                                         </thead>
@@ -692,7 +693,7 @@
                                                             <tr>
                                                                 <th>ID_puesto</th>
                                                                 <th>Puesto</th>
-                                                                <th>Sueldo</th>
+                                                                <th>Sueldo Semanal</th>
                                                                 <th>Editar</th>
                                                             </tr>
                                                         </tfoot>
@@ -701,11 +702,72 @@
                                             </div>
                                         </div> 
                                     </div> 
-                                    <div class="col-lg-2"></div>   
+                                    <div class="col-lg-1"></div>   
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Definición de especialidades -->
+                        <div id="especialidadesHEAD" class = "tabcontent hidden">
+                            <h1>Definición de especialidades para el personal de producción. </h1>
+                            <p>Página para definir las posibles especialidades para el área de producción</p>
+                            <div class= "container-fluid">
+                                <div class= "row">  
+                                    <div class="col-lg-1"></div>   
+                                    <div class="col-lg-10">
+                                        <div class= "row">                                                       
+                                            <div class= "col-md-6">
+                                                <form id="formEspecialidad" action="#" onsubmit="return false;">
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-3">
+                                                            <label for="nombreEspecialidad">Clave:</label>
+                                                            <input type="text" name="" id="claveEspecialidad" class="form-control" placeholder="Ej: IE">
+                                                        </div>
+                                                        <div class="form-group col-md-9">
+                                                            <label for="nombreEspecialidad">Nombre:</label>
+                                                            <input type="text" name="" id="nombreEspecialidad" class="form-control" placeholder="Ej: Instalación Eléctrica">
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                    <div class="form-row">
+                                                        <div class= "col-6">
+                                                            <button id="agregarButtonEspecialidad" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                                        </div>
+                                                        <div class= "col-6">
+                                                            <button id="borrarButtonEspecialidad" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <br/>
+                                            </div> 
+                                            <div class= "col-md-6">
+                                                <div class = "tableWrapper">
+                                                    <table id="dataTableEspecialidad" class="display" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID_Especialidad</th>
+                                                                <th>Clave</th>
+                                                                <th>Nombre</th>
+                                                                <th>Editar</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th>ID_Especialidad</th>
+                                                                <th>Clave</th>
+                                                                <th>Especialidad</th>
+                                                                <th>Editar</th>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                    </div> 
+                                    <div class="col-lg-1"></div>   
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -21,7 +21,6 @@ var id_reset_form_colaborador = "borrarButtonColaborador";
 var id_agregar_colaborador = "agregarButtonColaborador";
 
 // variables globales
-
 var select;
 var existe_colaborador = false;
 var uid_existente = "";
@@ -135,12 +134,11 @@ $('#' + id_agregar_colaborador).click(function(){
     if(!validateFormCol()){
         return;
     } 
-
-    var colaborador = agregar_colaborador();
     if (existe_colaborador){
         // actualizar colaborador en db
         firebase.database().ref(rama_bd_personal + "/colaboradores/" + uid_existente).once("value").then(function(snapshot){
             var registro_antiguo = snapshot.val();
+            var colaborador = agregar_colaborador(registro_antiguo.habilitado);
             // actualizar registro
             firebase.database().ref(rama_bd_personal + "/colaboradores/" + uid_existente).update(colaborador);
 
@@ -173,6 +171,7 @@ $('#' + id_agregar_colaborador).click(function(){
             
             // ----- SUBIR COLABORADOR A REALTIME DATABASE -----------------------------------------
             var user = result.user;
+            var colaborador = agregar_colaborador(true);
             firebase.database().ref(rama_bd_personal + "/colaboradores/" + user.uid).set(colaborador);
             
             // actualizar listas
@@ -355,7 +354,7 @@ function validateFormCol(){
 
 // función para obtener datos a ingresar del usuario
 // el objeto JSON "persona" es el objeto que se ingresa al database (revisar UML_v2 para ver estructura)
-function agregar_colaborador(){
+function agregar_colaborador(habilitado){
     var areas = {};
     var especialidad = {};
     
@@ -382,7 +381,7 @@ function agregar_colaborador(){
         areas: areas,
         especialidad: especialidad,
         credenciales: $('#' + id_lider_checkbox_colaborador).prop('checked') ? 2:3,
-        habilitado: true,
+        habilitado: habilitado,
     }
     return persona;
 };
