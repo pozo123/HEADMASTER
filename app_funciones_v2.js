@@ -106,3 +106,28 @@ function aaaammdd(timestamp){
     var fecha = new Date(timestamp);
     return fecha.getFullYear() + ("0" + (fecha.getMonth() + 1)).slice(-2) + ("0" + fecha.getDate()).slice(-2)
 }
+
+function formatMoney(n, c, d, t) {
+    var c = isNaN(c = Math.abs(c)) ? 2 : c,
+      d = d == undefined ? "." : d,
+      t = t == undefined ? "," : t,
+      s = n < 0 ? "-" : "",
+      i = String(parseFloat(n = Math.abs(Number(n) || 0).toFixed(c))),
+      j = (j = i.length) > 3 ? j % 3 : 0;
+    var parts = i.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    aux = parts[1] == undefined ? "00" : parts[1] + "00"
+    aux = aux.slice(0,2)
+    return "$" + s + parts[0] + "." + aux;
+};
+
+function deformatMoney(string){
+    if(string == ""){
+      string = "0";
+    }
+    var sin_comas = string.replace(/,/g,"");
+    return parseFloat(sin_comas.replace("$",""));
+}
+
+
+  

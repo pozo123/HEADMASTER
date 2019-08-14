@@ -85,247 +85,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Modales catalogos-->
-
-        <div class="modal fade" id="clienteModalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Editar Cliente</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container">
-                            <form onsubmit="return false;">
-                                <div class="form-group">
-                                    <label for="nombreEditarCatalogoClientes" class="col-form-label">Nombre de la empresa:</label>
-                                    <input type="text" class="form-control" id="nombreEditarCatalogoClientes">
-                                </div>
-                                <div class="form-group">
-                                    <label for="claveEditarCatalogoClientes" class="col-form-label">Clave:</label>
-                                    <input type="text" class="form-control" id="claveEditarCatalogoClientes">
-                                </div>
-                                <div class="form-group">
-                                    <label for="telefonoEditarCatalogoClientes" class="col-form-label">Teléfono oficina:</label>
-                                    <input type="text" class="form-control" id="telefonoEditarCatalogoClientes">
-                                </div>
-                                <div class="form-group">
-                                    <label for="pptoEspEditarCatalogoClientes" class="form-check-label">Formato ppto especial:</label>
-                                    <input type="checkbox" class="custom-checkbox" id="pptoEspEditarCatalogoClientes">
-                                </div>
-                                <h5>Dirección</h5>
-                                <div class="form-group">
-                                    <label for="calleEditarCatalogoClientes" class="col-form-label">Calle:</label>
-                                    <input type="text" class="form-control" id="calleEditarCatalogoClientes">
-                                </div>
-                                <div class="form-group">
-                                    <label for="numeroEditarCatalogoClientes" class="col-form-label">Número:</label>
-                                    <input type="text" class="form-control" id="numeroEditarCatalogoClientes">
-                                </div>
-                                <div class="form-group">
-                                    <label for="coloniaEditarCatalogoClientes" class="col-form-label">Colonia:</label>
-                                    <input type="text" class="form-control" id="coloniaEditarCatalogoClientes">
-                                </div>
-                                <div class="form-group">
-                                    <label for="delegacionEditarCatalogoClientes" class="col-form-label">Delegación/Municipio:</label>
-                                    <input type="text" class="form-control" id="delegacionEditarCatalogoClientes">
-                                </div>
-                                <div class="form-group">
-                                    <label for="ciudadEditarCatalogoClientes" class="col-form-label">Ciudad:</label>
-                                    <input type="text" class="form-control" id="ciudadEditarCatalogoClientes">
-                                </div>
-                                <div class="form-group">
-                                    <label for="cpEditarCatalogoClientes" class="col-form-label">Código Postal:</label>
-                                    <input type="text" class="form-control" id="cpEditarCatalogoClientes">
-                                </div>
-                            <div class="form-row align-items-center">
-                                <div class="col-md-6 col-sm-12">
-                                    <button id="buttonEditarCatalogoClientes" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
-                                </div>
-                                <div class="col-md-6 col-sm-12">
-                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cancelar</button>
-                                </div>
-                            </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="obraModalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Editar Obra</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container">
-                            <form onsubmit="return false;">
-                                <div class="form-group">
-                                    <label for="claveEditarCatalogoObras" class="col-form-label">Clave:</label>
-                                    <input type="text" class="form-control" id="claveEditarCatalogoObras">
-                                </div>
-                                <div class="form-group">
-                                    <label for="clienteDdlEditarCatalogoObras" class="col-form-label">Cliente:</label>
-                                    <select class="form-control" id="clienteDdlEditarCatalogoObras"></select>
-                                </div>
-                                <h5>Dirección</h5>
-                                <div class="form-group">
-                                    <label for="calleEditarCatalogoObras" class="col-form-label">Calle:</label>
-                                    <input type="text" class="form-control" id="calleEditarCatalogoObras">
-                                </div>
-                                <div class="form-group">
-                                    <label for="numeroEditarCatalogoObras" class="col-form-label">Número:</label>
-                                    <input type="text" class="form-control" id="numeroEditarCatalogoObras">
-                                </div>
-                                <div class="form-group">
-                                    <label for="coloniaEditarCatalogoObras" class="col-form-label">Colonia:</label>
-                                    <input type="text" class="form-control" id="coloniaEditarCatalogoObras">
-                                </div>
-                                <div class="form-group">
-                                    <label for="delegacionEditarCatalogoObras" class="col-form-label">Delegación/Municipio:</label>
-                                    <input type="text" class="form-control" id="delegacionEditarCatalogoObras">
-                                </div>
-                                <div class="form-group">
-                                    <label for="ciudadEditarCatalogoObras" class="col-form-label">Ciudad:</label>
-                                    <input type="text" class="form-control" id="ciudadEditarCatalogoObras">
-                                </div>
-                                <div class="form-group">
-                                    <label for="cpEditarCatalogoObras" class="col-form-label">Código Postal:</label>
-                                    <input type="text" class="form-control" id="cpEditarCatalogoObras">
-                                </div>
-                            <div class="form-row align-items-center">
-                                <div class="col-md-6 col-sm-12">
-                                    <button id="buttonEditarCatalogoObras" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
-                                </div>
-                                <div class="col-md-6 col-sm-12">
-                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cancelar</button>
-                                </div>
-                            </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="categoriaModalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Editar Categoría</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container">
-                            <form onsubmit="return false;">
-                                <div class="form-group">
-                                    <label for="nombreEditarCatalogoCategorias" class="col-form-label">Nombre:</label>
-                                    <input type="text" class="form-control" id="nombreEditarCatalogoCategorias">
-                                </div>
-                                <div class="form-group">
-                                    <label for="claveEditarCatalogoCategorias" class="col-form-label">Clave:</label>
-                                    <input type="text" class="form-control" id="claveEditarCatalogoCategorias">
-                                </div>
-                            <div class="form-row align-items-center">
-                                <div class="col-md-6 col-sm-12">
-                                    <button id="buttonEditarCatalogoCategorias" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
-                                </div>
-                                <div class="col-md-6 col-sm-12">
-                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cancelar</button>
-                                </div>
-                            </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="atnModalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Editar Atención</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container">
-                            <form onsubmit="return false;">
-                                <div class="form-group">
-                                    <label for="nombreEditarCatalogoAtn" class="col-form-label">Nombre:</label>
-                                    <input type="text" class="form-control" id="nombreEditarCatalogoAtn">
-                                </div>
-                                <div class="form-group">
-                                    <label for="areaEditarCatalogoAtn" class="col-form-label">Area:</label>
-                                    <input type="text" class="form-control" id="areaEditarCatalogoAtn">
-                                </div>
-                                <div class="form-group">
-                                    <label for="celularEditarCatalogoAtn" class="col-form-label">Celular:</label>
-                                    <input type="text" class="form-control" id="celularEditarCatalogoAtn">
-                                </div>
-                                <div class="form-group">
-                                    <label for="emailEditarCatalogoAtn" class="col-form-label">Email:</label>
-                                    <input type="text" class="form-control" id="emailEditarCatalogoAtn">
-                                </div>
-                                <div class="form-group">
-                                    <label for="extensionEditarCatalogoAtn" class="col-form-label">Extension:</label>
-                                    <input type="text" class="form-control" id="extensionEditarCatalogoAtn">
-                                </div>
-                            <div class="form-row align-items-center">
-                                <div class="col-md-6 col-sm-12">
-                                    <button id="buttonEditarCatalogoAtn" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
-                                </div>
-                                <div class="col-md-6 col-sm-12">
-                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cancelar</button>
-                                </div>
-                            </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="atnModalEliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Eliminar Atención</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container">
-                            <form onsubmit="return false;">
-                                <div class="form-group">
-                                    <label for="nombreEliminarCatalogoAtn" class="col-form-label">¿Eliminar de la base de datos?</label>
-                                    <br/>
-                                    <label class="col-form-label" id="nombreEliminarCatalogoAtn"></label>
-                                </div>
-                            <div class="form-row align-items-center">
-                                <div class="col-md-6 col-sm-12">
-                                    <button id="buttonEliminarCatalogoAtn" type="submit" class="btn btn-outline-danger btn-block">Confirmar</button>
-                                </div>
-                                <div class="col-md-6 col-sm-12">
-                                    <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cancelar</button>
-                                </div>
-                            </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Modal InvestTime-->
 
         <div class="modal fade" id="modalInvestTime" tabindex="-1" role="dialog" aria-labelledby="modalInvestTime" aria-hidden="true">
@@ -489,7 +248,14 @@
                         <ul class="collapse list-unstyled" id="pageCliente">
                             <li class="tab administracion" id="tabAltaCliente"><a href="#" onclick="openTabs('tabAltaCliente','altaCliente')">Alta y Edición - Clientes</a></li>
                         </ul>
-                    </li>   
+                    </li>
+                    <li>
+                        <a href="#pageManoObra" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Mano de Obra</a>
+                        <ul class="collapse list-unstyled" id="pageManoObra">
+                            <li class="tab administracion" id="tabPuestos"><a href="#" onclick="openTabs('tabPuestos','puestosHEAD')">Puestos HEAD</a></li>
+                            <li class="tab administracion" id="tabTrabajadores"><a href="#" onclick="openTabs('tabTrabajadores','trabajadoresHEAD')">Trabajadores de obra</a></li>
+                        </ul>
+                    </li>       
                     <li>
                         <a href="#pageObra" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Obras</a>
                         <ul class="collapse list-unstyled" id="pageObra">
@@ -757,7 +523,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- alta Obras -->
                         <div id="altaObra" class = "tabcontent hidden">
                             <h1>Alta o edición de Obras </h1>
@@ -877,7 +642,70 @@
                                     </div>             
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Definición de puestos -->
+                        <div id="puestosHEAD" class = "tabcontent hidden">
+                            <h1>Definición de puestos M.O. </h1>
+                            <p>Página para definir los distintos puestos posibles para el área de producción</p>
+                            <div class= "container-fluid">
+                                <div class= "row">  
+                                    <div class="col-lg-2"></div>   
+                                    <div class="col-lg-8">
+                                        <div class= "row">                                                       
+                                            <div class= "col-md-6">
+                                                <form id="formPuesto" action="#" onsubmit="return false;">
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6">
+                                                            <label for="puestoPuesto">Puesto:</label>
+                                                            <input type="text" name="" id="puestoPuesto" class="form-control" placeholder="Ejemplo: Medio Oficial">
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <label for="sueldoPuesto">Sueldo Semanal:</label>
+                                                            <input type="text" name="" id="sueldoPuesto" class="form-control" placeholder="Sueldo que recibe el trabajador">
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                    <div class="form-row">
+                                                        <div class= "col-6">
+                                                            <button id="agregarButtonPuesto" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                                        </div>
+                                                        <div class= "col-6">
+                                                            <button id="borrarButtonPuesto" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <br/>
+                                            </div> 
+                                            <div class= "col-md-6">
+                                                <div class = "tableWrapper">
+                                                    <table id="dataTablePuesto" class="display" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID_puesto</th>
+                                                                <th>Puesto</th>
+                                                                <th>Sueldo</th>
+                                                                <th>Editar</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th>ID_puesto</th>
+                                                                <th>Puesto</th>
+                                                                <th>Sueldo</th>
+                                                                <th>Editar</th>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                    </div> 
+                                    <div class="col-lg-2"></div>   
+                                </div>
                             </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -932,14 +760,13 @@
         </script>
 
         <!--My scripts-->
-        <script src="numeroLetras.js"></script>
         <script src="app_principal_v2.js"></script>        
         <script src="app_funciones_v2.js"></script>
-
+        <script src="numeroLetras.js"></script>
         <script src="app_altaCliente_v2.js"></script>
         <script src="app_altaObra_v2.js"></script>
-
         <script src="app_colaborador_v2.js"></script>
+        <script src="app_puestosMO_v2.js"></script>
         
         <!-- Excel to Json-->
         <script src="xlsx.full.min.js"></script>

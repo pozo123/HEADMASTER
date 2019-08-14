@@ -225,7 +225,7 @@ Nota: Todo float se ingresa a 2 decimales.
                         - id_obra: true
 
     - datos_referencia
-        - cuadrilla:
+        - puestos:
             - puesto_id
                 - puesto: string
                 - sueldo: float (semanal)

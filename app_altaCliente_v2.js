@@ -26,6 +26,7 @@ var id_num_interior_cliente = "interiorCliente";
 
 var id_agregar_cliente = "agregarButtonCliente";
 var id_reset_form_cliente = "borrarButtonCliente";
+
 // Variables globales
 
 var existe_cliente = false;
