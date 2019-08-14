@@ -246,15 +246,15 @@
                     <li>
                         <a href="#pageCliente" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Despachos (Clientes)</a>
                         <ul class="collapse list-unstyled" id="pageCliente">
-                            <li class="tab administracion" id="tabAltaCliente"><a href="#" onclick="openTabs('tabAltaCliente','altaCliente')">Alta y Edición - Clientes</a></li>
+                            <li class="tab administracion" id="tabAltaCliente"><a href="#" onclick="openTabs('tabAltaCliente','altaCliente')">Alta y Edición - Despachos</a></li>
                         </ul>
                     </li>
                     <li>
                         <a href="#pageManoObra" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Mano de Obra</a>
                         <ul class="collapse list-unstyled" id="pageManoObra">
-                            <li class="tab administracion" id="tabEspecialidades"><a href="#" onclick="openTabs('tabEspecialidades','especialidadesHEAD')">Puestos HEAD</a></li>
-                            <li class="tab administracion" id="tabPuestos"><a href="#" onclick="openTabs('tabPuestos','puestosHEAD')">Puestos HEAD</a></li>
-                            <li class="tab administracion" id="tabTrabajadores"><a href="#" onclick="openTabs('tabTrabajadores','trabajadoresHEAD')">Trabajadores de obra</a></li>
+                            <li class="tab administracion" id="tabEspecialidades"><a href="#" onclick="openTabs('tabEspecialidades','especialidadesHEAD')">Definición - Especialidades</a></li>
+                            <li class="tab administracion" id="tabPuestos"><a href="#" onclick="openTabs('tabPuestos','puestosHEAD')">Definición - Puestos</a></li>
+                            <li class="tab administracion" id="tabTrabajadores"><a href="#" onclick="openTabs('tabTrabajadores','trabajadoresProduccion')">Trabajadores de obra</a></li>
                         </ul>
                     </li>       
                     <li>
@@ -755,7 +755,7 @@
                                                             <tr>
                                                                 <th>ID_Especialidad</th>
                                                                 <th>Clave</th>
-                                                                <th>Especialidad</th>
+                                                                <th>Nombre</th>
                                                                 <th>Editar</th>
                                                             </tr>
                                                         </tfoot>
@@ -765,6 +765,42 @@
                                         </div> 
                                     </div> 
                                     <div class="col-lg-1"></div>   
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Definición de especialidades -->
+                        <div id="trabajadoresProduccion" class = "tabcontent hidden">
+                            <h1>Importar trabajadores desde Excel</h1>
+                            <p>Selecciona el archivo con el formato correspondiete el cual puedes descargar en esta misma pestaña.</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-2"></div>
+                                    <div class="col-lg-8">
+                                        <form id= "formImportar"action="#" onsubmit="return false;">                             
+                                            <div class="form-group">
+                                                <label for="">Selecciona archivo con el formato deseado</label>
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="fileImportarTrabajador" accept=".xlsx, .xls">
+                                                    <label class = "custom-file-label" id="fileLabelImportarTrabajador">Archivo no seleccionado</label>
+                                                </div>
+                                            </div>                                
+                                            <br>
+                                            <div class="list-group list-group-horizontal-xl">
+                                                <a href="#" class="list-group-item list-group-item-success">Trabajadores ingresados correctamente <span class="badge badge-pill badge-success float-right mt-">23</span></a>
+                                                <a href="#" class="list-group-item list-group-item-danger">Trabajadores con errores <span class="badge badge-pill badge-danger float-right mt-">5</span></a>
+                                            </div>
+                                            <br>
+                                            <div class="form-row">
+                                                <div class= "col-4"></div>
+                                                <div class= "col-4">
+                                                    <button id ="importarButtonTrabajador" type='button' class='editar btn btn-success btn-block'><i class='fas fa-file-excel'></i><span>&nbsp;Importar</span></button>
+                                                </div>
+                                                <div class= "col-4"></div>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class="col-lg-2"></div>
                                 </div>
                             </div>
                         </div>
@@ -829,6 +865,7 @@
         <script src="app_altaObra_v2.js"></script>
         <script src="app_colaborador_v2.js"></script>
         <script src="app_puestosMO_v2.js"></script>
+        <script src="app_especialidadMO_v2.js"></script>
         
         <!-- Excel to Json-->
         <script src="xlsx.full.min.js"></script>

@@ -298,7 +298,7 @@ Nota: Todo float se ingresa a 2 decimales.
                     - camisa: string (S, M, L, XL ...) desde el HTML
                     - pantalon: string (concatenar int + "x" + int) cintura/largo
                     - zapatos: float
-                - vacaciones_asignadas:(alta opcional)
+                - vacaciones_asignadas:(opcional)
                     - aaaammdd: true
             - listas
                 - destajistas
