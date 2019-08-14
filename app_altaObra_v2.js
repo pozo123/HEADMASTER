@@ -1,24 +1,22 @@
 // id's de los elementos HTML
 var id_tab_obra = "tabAltaObra";
 var id_form_obra = "formobra";
-
-// Hay que definir bien como queremos esta tabla.
-// Creo solo hay que desplegar los datos que pueden ser modificados desde aquí
-
-var id_dataTable_obra = "dataTableObra";
+var id_dataTable_obra = "dataTableObra"; //falta por definir
 
 // NOTA: Creo que lo mejor es no asignar supervisores desde esta pestaña por 2 razones:
 // 1) puede ser que den de alta una obra sin saber a quienes van a asignar a esa obra
 // 2) para manejar las fechas de salida del supervisor.
 
-// Validaciones (Igual se pueden decidir más) OBL significa obligatorio
-
-// la clave es letras y números (Todo en mayúscula) OBL
-// Nombre: Sólo la primera letra mayúscula es obligatorio OBL
-// Fondo de Garantía: Solo que escriba número, y quizá que se le acepte el signo "%" ya el procesamiendo del dato
-// lo hacemos internamente.
-
-// Dirección: IDEM a app_altaCliente_v2.js
+// Clave: es letras y números (Todo en mayúscula) OBL
+// Nombre: todo en mayusculas OBL
+// Cliente: viene de la base de datos
+// Garantía: numero real entre 0 y 100
+// Estado: Se trata como apellido (Ciudad de México va aquí)
+// Ciudad: idem a Estado (ciudades o alcaldías en caso de la cdmx)
+// Colonia: primera letra en mayuscula
+// Calle:  primera letra en mayuscula
+// Codigo Postal: Solo Números (string por el 0) solo son 5 números
+// numero: numeros y letras son caracterés permitidos: ("- .")
 
 var id_clave_obra = "claveObra";
 var id_nombre_obra = "nombreObra";
@@ -33,15 +31,13 @@ var id_numero_obra = "numeroObra";
 
 var id_agregar_obra = "agregarButtonObra";
 
-
-jQuery.datetimepicker.setLocale('es');
-
-// "Fechas" Puedes ver en la app_admon_reporte_investime.js la funcionalidad
-// Usabamos el formato m.d.Y ya que así lo sacaba más facil, pero por lo de Mozilla necesitamos ya hacerlo como en
-// app_admon_pago_kaizen_v2.js
-
 var id_fecha_inicio_obra = "fechaInicioObra";
 var id_fecha_final_obra = "fechaFinalObra";
+
+var existe_obra = false;
+var uid_existente = "";
+
+jQuery.datetimepicker.setLocale('es');
 
 $('#' + id_tab_obra).click(function() {
     resetFormObra();
@@ -74,10 +70,48 @@ $('#' + id_tab_obra).click(function() {
 });
 
 $('#' + id_agregar_obra).click(function() {
-  validateFormObra();
+  if (validateFormObra()){
+    if (existe_obra){
+        firebase.database().ref(rama_bd_obras + "/obras/" + uid_existente).once("value").then(function(snapshot){
+            var registro_antiguo = snapshot.val();
+
+            var obra_update = {};
+            obra_update["obras/" + uid_existente + "/clave_obra"] = $('#' + id_clave_obra).val();
+            obra_update["obras/" + uid_existente + "/nombre"] = $('#' + id_nombre_obra).val();
+            obra_update["obras/" + uid_existente + "/cliente_id"] = $('#' + id_ddl_cliente_obra).val();
+            obra_update["obras/" + uid_existente + "/direccion"] = direccionAltaObra();
+            obra_update["obras/" + uid_existente + "/fechas"] = fechasAltaObra();
+            obra_update["obras/" + uid_existente + "/retencion_fondo_garantia"] =id_garantia_obra;
+
+            //firebase.database().ref(rama_bd_obras).update(cliente_update);
+            // pad
+            //pda("modificacion", rama_bd_clientes + "/despachos/" + uid_existente, registro_antiguo);
+            //alert("¡Edición exitosa!");
+            //resetFormCliente();
+        });
+    } else {
+
+        firebase.database().ref(rama_bd_obras + "/obras").push(datosAltaCliente()).then(function(snapshot){
+            var regKey = snapshot.key
+
+            // actualizar listas
+            var listas_path = {}
+            listas_path["listas/habilitado/" + regKey] = true;
+            firebase.database().ref(rama_bd_clientes).update(listas_path);
+
+            // pista de auditoría
+            pda("alta", rama_bd_clientes + "/despachos/" + regKey, "");
+            alert("¡Alta exitosa!");
+            resetFormCliente();
+        });
+    };
+    alert("Registro exitoso");
+    resetFormObra();
+  };
 })
 
 // ----------------------- VALIDACIÓN DE FORMULARIO ------------------------
+
 $('#' + id_clave_obra).change(function(){
     $('#' + id_clave_obra).val($('#' + id_clave_obra).val().toUpperCase());
 });
@@ -115,11 +149,13 @@ $('#' + id_ciudad_obra).change(function(){
 });
 
 $('#' + id_colonia_obra).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789",e);
 });
 
 $('#' + id_colonia_obra).change(function(){
-  $('#' + id_colonia_obra).val(corrigeCampoComplejo(id_colonia_obra));
+  var colonia = deleteBlankSpaces(id_colonia_obra);
+  colonia = colonia.charAt(0).toUpperCase() + colonia.slice(1);
+  $('#' + id_colonia_obra).val(colonia);
 });
 
 $('#' + id_calle_obra).keypress(function(e){
@@ -127,18 +163,22 @@ $('#' + id_calle_obra).keypress(function(e){
 });
 
 $('#' + id_calle_obra).change(function(){
-  $('#' + id_calle_obra).val(corrigeCampoComplejo(id_calle_obra));
+  var calle = deleteBlankSpaces(id_calle_obra);
+  calle = calle.charAt(0).toUpperCase() + calle.slice(1);
+  $('#' + id_calle_obra).val(calle);
 });
 
 $('#' + id_codigo_postal_obra).keypress(function(e){
     charactersAllowed("0123456789",e);
 });
 
+$('#' + id_codigo_postal_obra).change(function(){
+    $('#' + id_codigo_postal_obra).val("" + $('#' + id_codigo_postal_obra).val());
+});
+
 $('#' + id_numero_obra).keypress(function(e){
     charactersAllowed("ABCDEFGHIJKLMNÑOPQRSTUVWXYZ 0123456789-",e);
 });
-
-
 
 // ----------------------- FUNCIONES NECESARIAS ----------------------------
 function resetFormObra (){
@@ -152,6 +192,8 @@ function resetFormObra (){
   $('#' + id_codigo_postal_obra).val("");
   $('#' + id_numero_obra).val("");
   $('#' + id_ddl_cliente_obra + " option:selected").val("")
+  $('#' + id_fecha_inicio_obra).val("");
+  $('#' + id_fecha_final_obra).val("");
 }
 
 function corrigeCampoComplejo(campo){
@@ -200,7 +242,7 @@ function validateFormObra(){
         highLightColor(id_calle_obra,"#FF0000");
         return false;
     } else if($('#' + id_codigo_postal_obra).val() == "" || $('#' + id_codigo_postal_obra).val().length < 5 ){
-        alert("Escribe el codigo postal correspondiente a la ubicacion de la obra.");
+        alert("Escribe el codigo postal correspondiente a la ubicacion de la obra (5 dígitos).");
         highLightColor(id_codigo_postal_obra,"#FF0000");
         return false;
     } else if($('#' + id_numero_obra).val() == ""){
@@ -211,10 +253,69 @@ function validateFormObra(){
         alert("Ningún cliente fue seleccionado");
         highLightColor(id_ddl_cliente_obra,"#FF0000");
         return false;
+    } else if($('#' + id_fecha_inicio_obra).val() == ""){
+        alert("Selecciona la fecha esperada de inicio de la obra");
+        return false;
+    } else if($('#' + id_fecha_final_obra).val() == ""){
+        alert("Selecciona la fecha esperada de fin de la obra");
+        return false;
     } else {
         return true;
     }
 }
+
+function direccionAltaObra(){
+  var direccion = {};
+  direccion = {
+      estado: $('#' + id_estado_obra).val(),
+      ciudad: $('#' + id_ciudad_obra).val(),
+      colonia: $('#' + id_colonia_obra).val(),
+      codigo_postal: $('#' + id_codigo_postal_obra).val(),
+      calle: $('#' + id_calle_obra).val(),
+      numero: $('#' + id_num_exterior_cliente).val()
+  }
+  return direccion;
+};
+
+function fechasAltaObra(){
+  var fechas = {};
+  var f_inicio = $('#' + id_fecha_inicio_obra).val().split('.');
+  var f_final = $('#' + id_fecha_final_obra).val().split('.');
+  fechas = {
+      fecha_inicio_teorica: new Date(f_inicio[2], f_inicio[0] - 1, f_inicio[1]).getTime(),
+      fecha_final_teorica: new Date(f_final[2], f_final[0] - 1, f_final[1]).getTime()
+  }
+  return fechas;
+}
+
+function datosAltaObra(){
+  var direccion = {};
+  var fechas = {};
+  var obra = {};
+  var f_inicio = $('#' + id_fecha_inicio_obra).val().split('.');
+  var f_final = $('#' + id_fecha_final_obra).val().split('.');
+
+  direccion = {
+      estado: $('#' + id_estado_obra).val(),
+      ciudad: $('#' + id_ciudad_obra).val(),
+      colonia: $('#' + id_colonia_obra).val(),
+      codigo_postal: $('#' + id_codigo_postal_obra).val(),
+      calle: $('#' + id_calle_obra).val(),
+      numero: $('#' + id_num_exterior_cliente).val()
+  }
+  fechas = {
+      fecha_inicio_teorica: new Date(f_inicio[2], f_inicio[0] - 1, f_inicio[1]).getTime(),
+      fecha_final_teorica: new Date(f_final[2], f_final[0] - 1, f_final[1]).getTime()
+  }
+  obra = {
+    clave_obra :
+    nombre:
+    id_cliente:
+    
+  }
+
+}
+
 function highLightColor(id, color){
   document.getElementById(id).style.background = color;
   setTimeout(function(){  document.getElementById(id).style.background = "white";}, 1000);

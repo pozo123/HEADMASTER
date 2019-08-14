@@ -26,7 +26,7 @@ Nota: Todo float se ingresa a 2 decimales.
                 - habilitado: boolean (acceso al sistema) (alta)
         - listas
             - areas
-                - area 
+                - area
                     - id_colaborador
             - habilitado
                 - id_colaborador: true
@@ -100,13 +100,13 @@ Nota: Todo float se ingresa a 2 decimales.
                 - folio_pago: string (el mismo del pago)
                     - pagos
                         - pagos_id: true
-    
+
     - obras
         - obras
             - obra: (firebase_id)
-                - nombre: string
                 - clave_obra: string
-                - cliente_id: string
+                - nombre: string
+                - id_cliente: string
                 - terminada: true (true cuando todos los "terminado" de procesos son true)
                 - habilitada: true (para ddls)
                 - direccion
@@ -118,10 +118,10 @@ Nota: Todo float se ingresa a 2 decimales.
                     - numero: string
                 - retencion_fondo_garantia: float [0 a 1]
                 - fechas:
-                    - fecha_inicio_real: timestamp 
+                    - fecha_inicio_real: timestamp
                     - fecha_inicio_teorica: timestamp (al dar de alta/edicion)
                     - fecha_final_real: timestamp
-                    - fecha_final_teorica: timestamp (al dar de alta/edicion) 
+                    - fecha_final_teorica: timestamp (al dar de alta/edicion)
                 - supervisores (solo pueden ser colaboradores con área de producción)
                     - supervisor (uid)
                         - nombre
@@ -138,10 +138,10 @@ Nota: Todo float se ingresa a 2 decimales.
                         - nombre: string (en alta)
                         - alcance: string ( en alta)
                         - fechas
-                            - fecha_inicio_real: timestamp 
+                            - fecha_inicio_real: timestamp
                             - fecha_inicio_teorica: timestamp (al dar de alta/edicion)
                             - fecha_final_real: timestamp
-                            - fecha_final_teorica: timestamp (al dar de alta/edicion) 
+                            - fecha_final_teorica: timestamp (al dar de alta/edicion)
                         - terminado: boolean (se termina hasta que todos los subprocesos están terminados)
                         - num_subprocesos: int (se inicializa en 0)
                         - subprocesos (en cada proceso se genera automáticamente una copia como subproceso menos en ADIC. MISC solo se tiene a sí mismo como subproceso) (Por default)
@@ -149,20 +149,20 @@ Nota: Todo float se ingresa a 2 decimales.
                                 - nombre: string
                                 - alcance: string
                                 - fechas
-                                    - fecha_inicio_real: timestamp 
+                                    - fecha_inicio_real: timestamp
                                     - fecha_inicio_teorica: timestamp (al dar de alta/edicion)
                                     - fecha_final_real: timestamp
-                                    - fecha_final_teorica: timestamp (al dar de alta/edicion) 
+                                    - fecha_final_teorica: timestamp (al dar de alta/edicion)
                                 - categoria: string (de db categorias)
                                 - terminado: boolean (definir manera de actualizar este valor. Empieza en false)
 
                                 - precio_venta: float
                                 - costo_suministros:float
                                 - precopeo: float
-                                - score 
+                                - score
                                     - horas_programadas: (en horas)
                                     - costo_hora: float (2 decimales)
-        - copeo 
+        - copeo
             - id_obra
                 - subproceso_clave
                     - impuestos: float (0 a 1)
@@ -190,7 +190,7 @@ Nota: Todo float se ingresa a 2 decimales.
                                     - sueldo_diario: float (sin impuestos)
                             - multiplicadores
                                 - dias: float
-                                - unidades: float 
+                                - unidades: float
         - presupuesto: (adic o pc00. pc00-misc = "") (DEFINIR CON RAY)
             - id_obra
                 - presupuestos (id del subproceso)
@@ -208,7 +208,7 @@ Nota: Todo float se ingresa a 2 decimales.
             - obras_no_activas
                 - id_obra
                     - obra_nombre: string
-            
+
             - fechas_obra_inicio:
                 - PROG
                     - aaaammdd
@@ -320,7 +320,7 @@ Nota: Todo float se ingresa a 2 decimales.
                 - vacaciones_asignadas
                     - aaaammdd:
                         - id_trabajador: true
-        - nomina: 
+        - nomina:
             - asistencia:
                 - registro (firebase_id):
                     - trabajador_id: string
@@ -399,7 +399,7 @@ Nota: Todo float se ingresa a 2 decimales.
                             - registros_id: string
                         - nomina
                             - registros_id: string
-            - trabajadores: 
+            - trabajadores:
                 - id_trabajador:
                     - asistencia
                         - registros_id: string
@@ -441,9 +441,9 @@ Nota: Todo float se ingresa a 2 decimales.
             - tipos
                 - tipo
                     - id_registro: true
-            
+
 DEFINIR DESPUÉS
-        
+
 - buzon: * ()
     - mensaje (por uid, solo los no leidos)
         - destinatario (uid)
@@ -496,7 +496,7 @@ DEFINIR DESPUÉS
                               - concepto
                               - cantidad //para compras? :/
                               - clave_concepto //para compras? :/
-        
+
 - investime
     - usuarios
         - uid
@@ -529,7 +529,7 @@ DEFINIR DESPUÉS
                 - fecha_regisro: timestamp
                 - fecha_inicio: timestamp
                 - fecha_fin: timestamp
-            - numero_estimacion: int (semi automatico) 
+            - numero_estimacion: int (semi automatico)
             - distribucion
                         - contrato_compras (en hoja menos en IQONO MEXICO, ahi en proc)
                         - clave
@@ -540,7 +540,7 @@ DEFINIR DESPUÉS
                                 - foto
                                 - subproceso (Solo en IQONO MEXICO, menos en MISC)
                                 - autorizacion
-                                - odecs 
+                                - odecs
                                     - odec (por clave)
                                     - proveedor (clave)
                                     - costo
