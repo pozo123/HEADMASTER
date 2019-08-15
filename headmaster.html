@@ -542,11 +542,11 @@
                                                     <label for="nombreObra">Nombre de la obra:</label>
                                                     <input type="text" name="" id="nombreObra" class="form-control" placeholder="Nombre">
                                                 </div>
-                                                <div class="form-group col-md-4">
+                                                <div class="form-group col-md-3">
                                                     <label for="clienteObra">Cliente:</label>
                                                     <select id ="clienteObra" class="form-control"></select>
                                                 </div>
-                                                <div class="form-group col-md-2">
+                                                <div class="form-group col-md-3">
                                                     <label for="garantiaObra">F. de Garantía: <span style="font-size: 8pt">(opcional)</span></label>
                                                     <input type="text" name="" maxlength="10" id="garantiaObra" class="form-control" placeholder="Ejemplo: 5%">
                                                 </div>
@@ -768,7 +768,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Definición de especialidades -->
+                        <!-- trabajadores -->
                         <div id="trabajadoresProduccion" class = "tabcontent hidden">
                             <h1>Importar trabajadores desde Excel</h1>
                             <p>Selecciona el archivo con el formato correspondiete el cual puedes descargar en esta misma pestaña.</p>
@@ -791,16 +791,115 @@
                                             </div>
                                             <br>
                                             <div class="form-row">
-                                                <div class= "col-4"></div>
+                                                <div class= "col-2"></div>
                                                 <div class= "col-4">
-                                                    <button id ="importarButtonTrabajador" type='button' class='editar btn btn-success btn-block'><i class='fas fa-file-excel'></i><span>&nbsp;Importar</span></button>
+                                                    <button id ="importarButtonTrabajador" type='button' class='editar btn btn-success btn-block'><i class='fas fa-file-excel'></i><span>&nbsp; Descargar formato</span></button>
                                                 </div>
-                                                <div class= "col-4"></div>
+                                                <div class= "col-4">
+                                                        <button id ="importarButtonTrabajador" type='button' class='editar btn btn-info btn-block'><i class='fas fa-file-import'></i><span>&nbsp;Importar</span></button>
+                                                </div>
+                                                <div class= "col-2"></div>
                                             </div>
                                         </form>
                                         <br/>
                                     </div>
                                     <div class="col-lg-2"></div>
+                                </div>
+                            </div>
+                            <h1>Alta o edición de trabajadores </h1>
+                            <p> Aquí es para dar de alta o editar trabajadores desde la aplicación (uno en uno).</p>
+                            <div class= "container-fluid">
+                                <div class= "row align-items-center">
+                                    <div class= "col-lg-2"></div>
+                                    <div class= "col-lg-8">
+                                        <form id="formAltaTrabajadores" action="#" onsubmit="return false;">
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="nombreTrabajador">Nombre(s):</label>
+                                                    <input type="text" name="" id="nombreTrabajador"class="form-control" placeholder="Nombre(s)">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="paternoTrabajador">Apellido Paterno</label>
+                                                    <input type="text" name="" id="paternoTrabajador"class="form-control" placeholder="Apellido Paterno">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="paternoTrabajador">Apellido Paterno</label>
+                                                    <input type="text" name="" id="paternoTrabajador"class="form-control" placeholder="Apellido Paterno">
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="claveHeadTrabajador">ID HEAD:</label>
+                                                    <input type="text" name="" id="claveHeadTrabajador"class="form-control" placeholder="ID HEAD">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="clavePagadoraTrabajador">ID Pagadora:</label>
+                                                    <input type="text" name="" id="clavePagadoraTrabajador"class="form-control" placeholder="ID Pagadora">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="puestoDdlrabajador">Puesto:</label>
+                                                    <select id ="puestoDdlrabajador" class="form-control"></select>
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="form-row">
+                                                <div class="form-grou col-md-4">
+                                                    <label for="especialidadDdlrabajador">Especialidad:</label>
+                                                    <select id ="especialidadDdlrabajador" class="form-control"></select>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="sueldoTrabajador">Sueldo:</label>
+                                                    <input type="text" name="" id="sueldoTrabajador"class="form-control" placeholder="Sueldo">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="jefeTrabajador">Jefe:</label>
+                                                    <select id ="jefeTrabajador" class="form-control"></select>
+                                                </div>
+                                            </div>
+                                                <br/>
+                                            <h3>Datos Personales (opcionales)</h3>
+                                            <br/>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="antiguedadTrabajador">Fecha de ingreso a HEAD</label>
+                                                    <input class="form-control" type="text" id="antiguedadTrabajador"  placeholder="" readonly="readonly">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="ciudadObra">Ciudad/Alcaldía:</label>
+                                                    <input type="text" name="" id="ciudadObra" class="form-control" placeholder="Ciudad/Alcaldía">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="coloniaObra">Colonia:</label>
+                                                    <input type="text" name="" id="coloniaObra" class="form-control" placeholder="Colonia">
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-lg-6 col-md-12 col-sm-12">
+                                                    <label for="calleObra">Calle</label>
+                                                    <input type="text" name="" id="calleObra" class="form-control" placeholder="Calle">
+                                                </div>
+                                                <div class="form-group col-lg-3 col-md-4 col-sm-6">
+                                                    <label for="cpObra">Código Postal:</label>
+                                                    <input type="text" name="" maxlength="5" id="cpObra" class="form-control" placeholder="C. Postal">
+                                                </div>
+                                                <div class="form-group col-lg-3 col-md-4 col-sm-6">
+                                                    <label for="numeroObra">Número:</label>
+                                                    <input type="text" name="" id="numeroObra"class="form-control" placeholder="Número">
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class= "col-6">
+                                                    <button id="agregarButtonObra" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                                </div>
+                                                <div class= "col-6">
+                                                    <button id="borrarButtonObra" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class= "col-lg-2"></div>        
                                 </div>
                             </div>
                         </div>
