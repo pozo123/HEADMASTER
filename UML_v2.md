@@ -198,29 +198,29 @@ Nota: Todo float se ingresa a 2 decimales.
         - listas (al dar de alta se ingresa en obras_activas )
             - obras_terminadas
                 - id_obra
-                    - obra_nombre:string
+                    - nombre:string
             - obras_no_terminadas
                 - id_obra
-                    - obra_nombre: string
+                    - nombre: string
             - obras_activas
                 - id_obra
-                    - obra_nombre: string
+                    - nombre: string
             - obras_no_activas
                 - id_obra
-                    - obra_nombre: string
+                    - nombre: string
 
             - fechas_obra_inicio:
-                - PROG
+                - programada
                     - aaaammdd
                         - id_obra: true
-                - REAL
+                - real
                     - aaaammdd
                         - id_obra: true
             - fechas_obra_fin:
-                - PROG
+                - programada
                     - aaaammdd
                         - id_obra: true
-                - REAL
+                - real
                     - aaaammdd
                         - id_obra: true
 
