@@ -71,17 +71,27 @@ $('#' + id_tab_obra).click(function() {
 
 $('#' + id_agregar_obra).click(function() {
   if (validateFormObra()){
+    var datos_obra = datosAltaObra();
+    console.log(datos_obra);
+    //Revisar bien como se quiere la funcionalidad en cuanto a edición o alta de una obra
     if (existe_obra){
         firebase.database().ref(rama_bd_obras + "/obras/" + uid_existente).once("value").then(function(snapshot){
             var registro_antiguo = snapshot.val();
-            var json_obra = datosAltaObra();
             var obra_update = {};
-            obra_update["obras/" + uid_existente + "/clave_obra"] = json_obra.clave_obra;
-            obra_update["obras/" + uid_existente + "/nombre"] = json_obra.nombre;
-            obra_update["obras/" + uid_existente + "/id_cliente"] = json_obra.id_cliente;
-            obra_update["obras/" + uid_existente + "/direccion"] = json_obra.direccion;
-            obra_update["obras/" + uid_existente + "/fechas"] = json_obra.fechas;
-            obra_update["obras/" + uid_existente + "/retencion_fondo_garantia"] =json_obra.retencion_fondo_garantia;
+            obra_update["obras/" + uid_existente + "/clave_obra"] = datos_obra.clave_obra;
+            obra_update["obras/" + uid_existente + "/nombre"] = datos_obra.nombre;
+            obra_update["obras/" + uid_existente + "/id_cliente"] = datos_obra.id_cliente;
+            obra_update["obras/" + uid_existente + "/direccion"] = datos_obra.direccion;
+            obra_update["obras/" + uid_existente + "/fechas"] = datos_obra.fechas;
+            obra_update["obras/" + uid_existente + "/retencion_fondo_garantia"] =datos_obra.retencion_fondo_garantia;
+            if (registro_antiguo.fechas.fecha_inicio_teorica !== datos_obra.fechas.fecha_inicio_teorica){
+              listas_path["listas/fechas_obra_inicio/programada/" + datos_obra.fechas.fecha_inicio_teorica + "/" + regKey] = true;
+              listas_path["listas/fechas_obra_inicio/programada/" + registro_antiguo.fechas.fecha_inicio_teorica + "/" + regKey] = null;
+            }
+            if (registro_antiguo.fechas.fecha_final_teorica !== datos_obra.fechas.fecha_final_teorica){
+              listas_path["listas/fechas_obra_fin/programada/" + datos_obra.fechas.fecha_final_teorica + "/" + regKey] = true;
+              listas_path["listas/fechas_obra_fin/programada/" + registro_antiguo.fechas.fecha_final_teorica + "/" + regKey] = null;
+            }
             firebase.database().ref(rama_bd_obras).update(obra_update);
             // pad
             pda("modificacion", rama_bd_obras + "/obras/" + uid_existente, registro_antiguo);
@@ -89,15 +99,16 @@ $('#' + id_agregar_obra).click(function() {
             resetFormObra();
         });
     } else {
-        console.log(datosAltaObra());
-        firebase.database().ref(rama_bd_obras + "/obras").push(datosAltaObra()).then(function(snapshot){
+        firebase.database().ref(rama_bd_obras + "/obras").push(datos_obra).then(function(snapshot){
             var regKey = snapshot.key
-
             // actualizar listas
+            var fechas = fechasProgramadas();
             var listas_path = {}
-            listas_path["listas/obras_no_terminadas/" + regKey + "/nombre"] = ;
-            listas_path["listas/obras_activas/" + regKey + "/nombre"] = ;
-            listas_path["listas/fechas_obra_inicio/programada/" +  + ] = ;
+            listas_path["listas/obras_no_terminadas/" + regKey + "/nombre"] = datos_obra.nombre;
+            listas_path["listas/obras_activas/" + regKey + "/nombre"] = datos_obra.nombre;
+            listas_path["listas/fechas_obra_inicio/programada/" + fechas.inicio + "/" + regKey] = true;
+            listas_path["listas/fechas_obra_fin/programada/" + fechas.final + "/" + regKey] = true;
+            console.log(listas_path);
             //firebase.database().ref(rama_bd_obras).update(listas_path);
 
             // pista de auditoría
@@ -105,7 +116,7 @@ $('#' + id_agregar_obra).click(function() {
             //alert("¡Alta exitosa!");
             //resetFormCliente();
             alert("Registro exitoso");
-            resetFormObra();
+            //resetFormObra();
         });
     };
   };
@@ -114,6 +125,7 @@ $('#' + id_agregar_obra).click(function() {
 // ----------------------- VALIDACIÓN DE FORMULARIO ------------------------
 $('#' + id_clave_obra).change(function(){
     $('#' + id_clave_obra).val($('#' + id_clave_obra).val().toUpperCase());
+    existe_obra=false;
     llenaCampos($('#' + id_clave_obra).val());
 });
 
@@ -303,11 +315,6 @@ function datosAltaObra(){
   return obra;
 }
 
-function highLightColor(id, color){
-  document.getElementById(id).style.background = color;
-  setTimeout(function(){  document.getElementById(id).style.background = "white";}, 1000);
-}
-
 function llenaCampos(clave){
   firebase.database().ref(rama_bd_obras + "/obras").orderByChild('clave_obra').equalTo(clave).limitToFirst(1).once("value").then(function(snapshot){
       snapshot.forEach(function(child_snap){
@@ -336,4 +343,21 @@ function llenaCampos(clave){
           }
       });
   });
+}
+
+function highLightColor(id, color){
+  document.getElementById(id).style.background = color;
+  setTimeout(function(){  document.getElementById(id).style.background = "white";}, 1000);
+}
+
+function fechasProgramadas(){
+  var f_inicio = $('#' + id_fecha_inicio_obra).val().split('.');
+  var f_final = $('#' + id_fecha_final_obra).val().split('.');
+  var lista_obra_inicio = f_inicio[0] + ("0" + f_inicio[1]).slice(-2) + ("0" + f_inicio[2]).slice(-2);
+  var lista_obra_final = f_final[0] + ("0" + f_final[1]).slice(-2) + ("0" + f_final[2]).slice(-2);
+  var fechas = {
+    inicio: lista_obra_inicio,
+    final: lista_obra_final
+  }
+  return fechas;
 }
