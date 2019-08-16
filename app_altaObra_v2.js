@@ -108,15 +108,12 @@ $('#' + id_agregar_obra).click(function() {
             listas_path["listas/obras_activas/" + regKey + "/nombre"] = datos_obra.nombre;
             listas_path["listas/fechas_obra_inicio/programada/" + fechas.inicio + "/" + regKey] = true;
             listas_path["listas/fechas_obra_fin/programada/" + fechas.final + "/" + regKey] = true;
-            console.log(listas_path);
-            //firebase.database().ref(rama_bd_obras).update(listas_path);
+            firebase.database().ref(rama_bd_obras).update(listas_path);
 
-            // pista de auditoría
-            //pda("alta", rama_bd_clientes + "/despachos/" + regKey, "");
-            //alert("¡Alta exitosa!");
-            //resetFormCliente();
+            // pad
+            pda("alta", rama_bd_obras + "/obras/" + regKey, "");
             alert("Registro exitoso");
-            //resetFormObra();
+            resetFormObra();
         });
     };
   };
