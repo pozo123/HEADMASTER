@@ -3,10 +3,6 @@ var id_tab_obra = "tabAltaObra";
 var id_form_obra = "formobra";
 var id_dataTable_obra = "dataTableObra"; //falta por definir
 
-// NOTA: Creo que lo mejor es no asignar supervisores desde esta pestaña por 2 razones:
-// 1) puede ser que den de alta una obra sin saber a quienes van a asignar a esa obra
-// 2) para manejar las fechas de salida del supervisor.
-
 // Clave: es letras y números (Todo en mayúscula) OBL
 // Nombre: todo en mayusculas OBL
 // Cliente: viene de la base de datos
@@ -18,9 +14,10 @@ var id_dataTable_obra = "dataTableObra"; //falta por definir
 // Codigo Postal: Solo Números (string por el 0) solo son 5 números
 // numero: numeros y letras son caracterés permitidos: ("- .")
 
+//Definición de variables del formulario
 var id_clave_obra = "claveObra";
 var id_nombre_obra = "nombreObra";
-var id_ddl_cliente_obra = "clienteObra"; // primero terminar app de clientes.
+var id_ddl_cliente_obra = "clienteObra";
 var id_garantia_obra = "garantiaObra";
 var id_estado_obra = "estadoObra";
 var id_ciudad_obra = "ciudadObra";
@@ -28,17 +25,19 @@ var id_colonia_obra = "coloniaObra";
 var id_calle_obra = "calleObra";
 var id_codigo_postal_obra = "cpObra";
 var id_numero_obra = "numeroObra";
-
-var id_agregar_obra = "agregarButtonObra";
-
 var id_fecha_inicio_obra = "fechaInicioObra";
 var id_fecha_final_obra = "fechaFinalObra";
 
+var id_agregar_obra = "agregarButtonObra";
+var id_borrar_obra = "borrarButtonObra";
+
+//Variables globales para controlar edición
 var existe_obra = false;
 var uid_existente = "";
 
 jQuery.datetimepicker.setLocale('es');
 
+//Dar formato a los elementos existentes
 $('#' + id_tab_obra).click(function() {
     resetFormObra();
     // Con las líneas siguiente se genera el cuadro para las fechas en el HTML
@@ -69,57 +68,76 @@ $('#' + id_tab_obra).click(function() {
 
 });
 
+//Funcionalidad del boton 'Registrar/Editar'
 $('#' + id_agregar_obra).click(function() {
+  //Validar datos ingresados
   if (validateFormObra()){
     var datos_obra = datosAltaObra();
     console.log(datos_obra);
-    //Revisar bien como se quiere la funcionalidad en cuanto a edición o alta de una obra
-    if (existe_obra){
+    //Decidir si editar o dar de alta
+    if (existe_obra){ //editar
         firebase.database().ref(rama_bd_obras + "/obras/" + uid_existente).once("value").then(function(snapshot){
             var registro_antiguo = snapshot.val();
             var obra_update = {};
-
+            //Actualizar los campos de la obra
             obra_update["obras/" + uid_existente + "/clave_obra"] = datos_obra.clave_obra;
             obra_update["obras/" + uid_existente + "/nombre"] = datos_obra.nombre;
             obra_update["obras/" + uid_existente + "/id_cliente"] = datos_obra.id_cliente;
             obra_update["obras/" + uid_existente + "/direccion"] = datos_obra.direccion;
-            obra_update["obras/" + uid_existente + "/fechas"] = datos_obra.fechas;
             obra_update["obras/" + uid_existente + "/retencion_fondo_garantia"] =datos_obra.retencion_fondo_garantia;
 
+            //Actualizar fechas en obra y MISC
             if (registro_antiguo.fechas.fecha_inicio_teorica !== datos_obra.fechas.fecha_inicio_teorica){
+              obra_update["obras/" + uid_existente + "/fechas/fecha_inicio_teorica"] = datos_obra.fechas.fecha_inicio_teorica;
+              obra_update["procesos/" + uid_existente + "/procesos/MISC/subprocesos/MISC/fechas/fecha_inicio_teorica"] = datos_obra.fechas.fecha_inicio_teorica;
               obra_update["listas/fechas_obra_inicio/programada/" + datos_obra.fechas.fecha_inicio_teorica + "/" + uid_existente] = true;
               obra_update["listas/fechas_obra_inicio/programada/" + registro_antiguo.fechas.fecha_inicio_teorica + "/" + uid_existente] = null;
             }
             if (registro_antiguo.fechas.fecha_final_teorica !== datos_obra.fechas.fecha_final_teorica){
+              obra_update["obras/" + uid_existente + "/fechas/fecha_final_teorica"] = datos_obra.fechas.fecha_final_teorica;
+              obra_update["procesos/" + uid_existente + "/procesos/MISC/subprocesos/MISC/fechas/fecha_final_teorica"] = datos_obra.fechas.fecha_final_teorica;
               obra_update["listas/fechas_obra_fin/programada/" + datos_obra.fechas.fecha_final_teorica + "/" + uid_existente] = true;
               obra_update["listas/fechas_obra_fin/programada/" + registro_antiguo.fechas.fecha_final_teorica + "/" + uid_existente] = null;
             }
             firebase.database().ref(rama_bd_obras).update(obra_update);
-            // pad
+
+            // PAD
             pda("modificacion", rama_bd_obras + "/obras/" + uid_existente, registro_antiguo);
             alert("¡Edición exitosa!");
             resetFormObra();
         });
-    } else {
+    } else { //dar de alta
         firebase.database().ref(rama_bd_obras + "/obras").push(datos_obra).then(function(snapshot){
             var regKey = snapshot.key;
-            var listas_path = {};
-            // actualizar listas
-            var fechas = fechasProgramadas();
-            listas_path["listas/obras_no_terminadas/" + regKey + "/nombre"] = datos_obra.nombre;
-            listas_path["listas/obras_activas/" + regKey + "/nombre"] = datos_obra.nombre;
-            listas_path["listas/fechas_obra_inicio/programada/" + fechas.inicio + "/" + regKey] = true;
-            listas_path["listas/fechas_obra_fin/programada/" + fechas.final + "/" + regKey] = true;
-            firebase.database().ref(rama_bd_obras).update(listas_path);
+            var obra_paths = {};
+            var fechas = fechasAltaObra();
+            //Dar de alta los 3 procesos default
+            obra_paths["procesos/" + regKey + "/procesos/PC00"]=datosPC00();
+            obra_paths["procesos/" + regKey + "/procesos/MISC"]=datosMISC(fechas);
+            obra_paths["procesos/" + regKey + "/procesos/ADIC"]=datosADIC();
+            obra_paths["procesos/" + regKey + "/num_procesos"]=3;
 
-            // pad
+            // Actualizar listas
+            var fechas = fechasProgramadas();
+            obra_paths["listas/obras_no_terminadas/" + regKey + "/nombre"] = datos_obra.nombre;
+            obra_paths["listas/obras_activas/" + regKey + "/nombre"] = datos_obra.nombre;
+            obra_paths["listas/fechas_obra_inicio/programada/" + fechas.inicio + "/" + regKey] = true;
+            obra_paths["listas/fechas_obra_fin/programada/" + fechas.final + "/" + regKey] = true;
+            firebase.database().ref(rama_bd_obras).update(obra_paths);
+
+            // PAD
             pda("alta", rama_bd_obras + "/obras/" + regKey, "");
-            alert("Registro exitoso");
+            alert("¡Alta exitosa!");
             resetFormObra();
         });
     };
   };
-})
+});
+//Funcionalidad del boton 'Borrar todo'
+$('#' + id_borrar_obra).click(function() {
+  resetFormObra();
+  existe_obra=false;
+});
 
 // ----------------------- VALIDACIÓN DE FORMULARIO ------------------------
 $('#' + id_clave_obra).change(function(){
@@ -193,6 +211,7 @@ $('#' + id_numero_obra).keypress(function(e){
 });
 
 // ----------------------- FUNCIONES NECESARIAS ----------------------------
+//Borrar la información de todos los campos
 function resetFormObra (){
   $('#' + id_clave_obra).val("");
   $('#' + id_nombre_obra).val("");
@@ -207,7 +226,8 @@ function resetFormObra (){
   $('#' + id_fecha_inicio_obra).val("");
   $('#' + id_fecha_final_obra).val("");
 }
-
+//Dar formato de mayusculas y minúsculas
+//Ejemplo: ciudad de    mexico -> Ciudad de Mexico
 function corrigeCampoComplejo(campo){
   var campo_array = deleteBlankSpaces(campo).split(" ");
   var aux = "";
@@ -223,7 +243,7 @@ function corrigeCampoComplejo(campo){
   }
   return aux;
 }
-
+//Validar que no esté vacío nungún campo
 function validateFormObra(){
     if ($('#' + id_clave_obra).val() == ""){
         alert("Escribe la clave de la obra");
@@ -275,7 +295,7 @@ function validateFormObra(){
         return true;
     }
 }
-
+//Construir el JSON de direccion para la obra
 function direccionAltaObra(){
   var direccion = {};
   direccion = {
@@ -288,7 +308,7 @@ function direccionAltaObra(){
   }
   return direccion;
 };
-
+//Construir el JSON de fechas para la obra
 function fechasAltaObra(){
   var fechas = {};
   var f_inicio = $('#' + id_fecha_inicio_obra).val().split('.');
@@ -299,7 +319,7 @@ function fechasAltaObra(){
   }
   return fechas;
 }
-
+//Construir el JSON de la obra
 function datosAltaObra(){
   var obra = {};
   obra = {
@@ -313,7 +333,50 @@ function datosAltaObra(){
   }
   return obra;
 }
-
+//Construir el JSON del proceso PC00
+function datosPC00(){
+  var pc00 = {};
+  pc00 = {
+    nombre: "PREPROYECTO",
+    alcance:"Trabajo previo a firmar contrato",
+    num_subprocesos: 1,
+    subprocesos:{
+      PC00:{
+        nombre: "PREPROYECTO",
+        alcance: "Trabajo previo a firmar contrato"
+      }
+    }
+  }
+  return pc00;
+}
+//Construir el JSON del proceso MISC
+function datosMISC(fechas){
+  var misc = {};
+  misc = {
+    nombre: "MISCELANEOS",
+    alcance:"Miscelaneos",
+    num_subprocesos: 1,
+    subprocesos:{
+      MISC:{
+        nombre: "MISCELANEOS",
+        alcance: "",
+        fechas: fechas,
+      }
+    }
+  }
+  return misc
+}
+//Construir el JSON del proceso ADIC
+function datosADIC(){
+  var adic = {};
+  adic = {
+    nombre: "ADICIONALES",
+    alcance:"Adicionales",
+    num_subprocesos: 0
+  }
+  return adic;
+}
+//Llenar los campos en caso de existir la clave de la obra
 function llenaCampos(clave){
   firebase.database().ref(rama_bd_obras + "/obras").orderByChild('clave_obra').equalTo(clave).limitToFirst(1).once("value").then(function(snapshot){
       snapshot.forEach(function(child_snap){
@@ -343,12 +406,12 @@ function llenaCampos(clave){
       });
   });
 }
-
+//Funcion para colorear un campo
 function highLightColor(id, color){
   document.getElementById(id).style.background = color;
   setTimeout(function(){  document.getElementById(id).style.background = "white";}, 1000);
 }
-
+//Dar formato AAAAMMDD a las fechas
 function fechasProgramadas(){
   var f_inicio = $('#' + id_fecha_inicio_obra).val().split('.');
   var f_final = $('#' + id_fecha_final_obra).val().split('.');
