@@ -269,37 +269,38 @@ Nota: Todo float se ingresa a 2 decimales.
                 - id_registro: true
     - rrhh
         - mano_obra:
-            - trabajador(firebase_id:
-                - id_head: string
-                - id_pagadora: string
-                - nombre: string
-                - fecha_antiguedad: timestamp
-                - id_puesto: sstring (obtener de datos_referencia -> cuadrilla)
-                - id_especialidad: string
-                - sueldo_base: float (semanal)
-                - id_jefe: string (Se obtiene de destajistas) (trabajador por parte de HEAD no tiene este atributo)
-                - activo: boolean
-                - destajista: boolean
-                - claves:
-                    - RFC: string
-                    - IMSS: string
-                    - CURP: string
-                - info_personal
-                    - fecha_nacimiento: timestamp
-                    - estado_civil: string
-                    - sexo: string
-                    - domicilio: string
-                    - codigo_postal: string
-                - datos_bancarios:
-                    - banco: string
-                    - cuenta: string
-                    - clabe: string
-                - tallas:
-                    - camisa: string (S, M, L, XL ...) desde el HTML
-                    - pantalon: string (concatenar int + "x" + int) cintura/largo
-                    - zapatos: float
-                - vacaciones_asignadas:(opcional)
-                    - aaaammdd: true
+            - trabajadores
+                - trabajador(firebase_id):
+                    - id_head: string
+                    - id_pagadora: string
+                    - nombre: string
+                    - id_puesto: sstring (obtener de datos_referencia -> cuadrilla)
+                    - id_especialidad: string
+                    - sueldo_base: float (semanal)
+                    - id_jefe: string (Se obtiene de destajistas) (trabajador por parte de HEAD no tiene este atributo)
+                    - activo: boolean
+                    - destajista: boolean
+                    - fecha_antiguedad: timestamp
+                    - info_personal
+                        - fecha_nacimiento: timestamp
+                        - estado_civil: string
+                        - sexo: string
+                        - domicilio: string
+                        - codigo_postal: string
+                    - claves:
+                        - RFC: string
+                        - IMSS: string
+                        - CURP: string
+                    - datos_bancarios:
+                        - banco: string
+                        - cuenta: string
+                        - clabe: string
+                    - tallas:
+                        - camisa: string (S, M, L, XL ...) desde el HTML
+                        - pantalon: string (concatenar int + "x" + int) cintura/largo
+                        - zapatos: float
+                    - vacaciones_asignadas:(opcional)
+                        - aaaammdd: true
             - listas
                 - destajistas
                     - id_destajista (firebase)
