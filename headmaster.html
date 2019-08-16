@@ -644,7 +644,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Definición de puestos -->
                         <div id="puestosHEAD" class = "tabcontent hidden">
                             <h1>Definición de puestos M.O. </h1>
@@ -706,7 +705,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Definición de especialidades -->
                         <div id="especialidadesHEAD" class = "tabcontent hidden">
                             <h1>Definición de especialidades para el personal de producción. </h1>
@@ -780,7 +778,7 @@
                                             <div class="form-group">
                                                 <label for="">Selecciona archivo con el formato deseado</label>
                                                 <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" id="fileImportarTrabajador" accept=".xlsx, .xls">
+                                                    <input type="file" class="custom-file-input" id="fileInputImportarTrabajador" accept=".xlsx, .xls">
                                                     <label class = "custom-file-label" id="fileLabelImportarTrabajador">Archivo no seleccionado</label>
                                                 </div>
                                             </div>                                
@@ -793,7 +791,7 @@
                                             <div class="form-row">
                                                 <div class= "col-2"></div>
                                                 <div class= "col-4">
-                                                    <button id ="importarButtonTrabajador" type='button' class='editar btn btn-success btn-block'><i class='fas fa-file-excel'></i><span>&nbsp; Descargar formato</span></button>
+                                                    <button id ="descargarFormatoButtonTrabajador" type='button' class='editar btn btn-success btn-block'><i class='fas fa-file-excel'></i><span>&nbsp; Descargar formato</span></button>
                                                 </div>
                                                 <div class= "col-4">
                                                         <button id ="importarButtonTrabajador" type='button' class='editar btn btn-info btn-block'><i class='fas fa-file-import'></i><span>&nbsp;Importar</span></button>
@@ -829,13 +827,17 @@
                                             </div>
                                             <br/>
                                             <div class="form-row">
-                                                <div class="form-group col-md-4">
+                                                <div class="form-group col-md-2">
                                                     <label for="claveHeadTrabajador">ID HEAD:</label>
                                                     <input type="text" name="" id="claveHeadTrabajador"class="form-control" placeholder="ID HEAD">
                                                 </div>
-                                                <div class="form-group col-md-4">
+                                                <div class="form-group col-md-2">
                                                     <label for="clavePagadoraTrabajador">ID Pagadora:</label>
                                                     <input type="text" name="" id="clavePagadoraTrabajador"class="form-control" placeholder="ID Pagadora">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="antiguedadTrabajador">Fecha de ingreso a HEAD</label>
+                                                    <input class="form-control" type="text" id="antiguedadTrabajador"  placeholder="" readonly="readonly">
                                                 </div>
                                                 <div class="form-group col-md-4">
                                                     <label for="puestoDdlrabajador">Puesto:</label>
@@ -844,7 +846,7 @@
                                             </div>
                                             <br/>
                                             <div class="form-row">
-                                                <div class="form-grou col-md-4">
+                                                <div class="form-group col-md-4">
                                                     <label for="especialidadDdlrabajador">Especialidad:</label>
                                                     <select id ="especialidadDdlrabajador" class="form-control"></select>
                                                 </div>
@@ -857,43 +859,118 @@
                                                     <select id ="jefeTrabajador" class="form-control"></select>
                                                 </div>
                                             </div>
-                                                <br/>
-                                            <h3>Datos Personales (opcionales)</h3>
-                                            <br/>
+                                            <br>
                                             <div class="form-row">
-                                                <div class="form-group col-md-4">
-                                                    <label for="antiguedadTrabajador">Fecha de ingreso a HEAD</label>
-                                                    <input class="form-control" type="text" id="antiguedadTrabajador"  placeholder="" readonly="readonly">
+                                                <div class="form-group col-1">
+                                                    <button id ="hideOpcionalesButtonTrabajador" type='button' class='editar btn btn-warning'><i id= "hideOpcionalesIconTrabajador" class='fas fa-eye'></i></button>
                                                 </div>
-                                                <div class="form-group col-md-4">
-                                                    <label for="ciudadObra">Ciudad/Alcaldía:</label>
-                                                    <input type="text" name="" id="ciudadObra" class="form-control" placeholder="Ciudad/Alcaldía">
-                                                </div>
-                                                <div class="form-group col-md-4">
-                                                    <label for="coloniaObra">Colonia:</label>
-                                                    <input type="text" name="" id="coloniaObra" class="form-control" placeholder="Colonia">
+                                                <div class="form-group col-md-11">
+                                                    <h3>Datos Opcionales</h3>
                                                 </div>
                                             </div>
-                                            <div class="form-row">
-                                                <div class="form-group col-lg-6 col-md-12 col-sm-12">
-                                                    <label for="calleObra">Calle</label>
-                                                    <input type="text" name="" id="calleObra" class="form-control" placeholder="Calle">
+                                            <br>
+                                            <div id="opcionalesContainer" class="container-fluid hidden">
+                                                <h5>Datos Personales</h5>
+                                                <br>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-4">
+                                                        <label for="nacimientoTrabajador">Fecha de nacimiento</label>
+                                                        <input class="form-control" type="text" id="nacimientoTrabajador"  placeholder="" readonly="readonly">
+                                                    </div>
+                                                    <div class="form-group col-md-4">
+                                                        <label for="edoCivilTrabajador">Estado Civil:</label>
+                                                        <input type="text" name="" id="edoCivilTrabajador" class="form-control" placeholder="Estado Civil">
+                                                    </div>
+                                                    <div class="form-group col-md-4">
+                                                        <label for="sexoDdlTrabajador">Sexo:</label>
+                                                        <select id ="sexoDdlTrabajador" class="form-control">
+                                                            <option style="display:none"></option>
+                                                            <option>Hombre</option>
+                                                            <option>Mujer</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                                <div class="form-group col-lg-3 col-md-4 col-sm-6">
-                                                    <label for="cpObra">Código Postal:</label>
-                                                    <input type="text" name="" maxlength="5" id="cpObra" class="form-control" placeholder="C. Postal">
+                                                <br>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-8">
+                                                        <label for="direccionTrabajador">Dirección:</label>
+                                                        <input type="text" name="" id="direccionTrabajador" class="form-control" placeholder="Dirección">
+                                                    </div>
+                                                    <div class="form-group col-md-4">
+                                                        <label for="cpTrabajador">Código Postal:</label>
+                                                        <input type="text" name="" id="cpTrabajador" class="form-control" placeholder="Código Postal">
+                                                    </div>
                                                 </div>
-                                                <div class="form-group col-lg-3 col-md-4 col-sm-6">
-                                                    <label for="numeroObra">Número:</label>
-                                                    <input type="text" name="" id="numeroObra"class="form-control" placeholder="Número">
+                                                <br>
+                                                <h5>Claves</h5>
+                                                <br>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-4">
+                                                        <label for="rfcTrabajador">RFC:</label>
+                                                        <input type="text" name="" id="rfcTrabajador" class="form-control" placeholder="RFC">
+                                                    </div>
+                                                    <div class="form-group col-md-4">
+                                                        <label for="imssTrabajador">IMSS:</label>
+                                                        <input type="text" name="" id="imssTrabajador" class="form-control" placeholder="IMSS">
+                                                    </div>
+                                                    <div class="form-group col-md-4">
+                                                        <label for="curpTrabajador">CURP:</label>
+                                                        <input type="text" name="" id="curpTrabajador" class="form-control" placeholder="CURP">
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <h5> Datos Bancarios</h5>
+                                                <br>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-4">
+                                                        <label for="bancoTrabajador">Banco:</label>
+                                                        <input type="text" name="" id="bancoTrabajador" class="form-control" placeholder="Banco">
+                                                    </div>
+                                                    <div class="form-group col-md-4">
+                                                        <label for="cuentaTrabajador">Cuenta:</label>
+                                                        <input type="text" name="" id="cuentaTrabajador" class="form-control" placeholder="Cuenta Bancaria">
+                                                    </div>
+                                                    <div class="form-group col-md-4">
+                                                        <label for="clabeTrabajador">CLABE:</label>
+                                                        <input type="text" name="" id="clabeTrabajador" class="form-control" placeholder="CLABE Interbancaria">
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <h5> Tallas </h5>
+                                                <br>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-3">
+                                                        <label for="camisaDdlTrabajador">Camisa:</label>
+                                                        <select id ="camisaDdlTrabajador" class="form-control">
+                                                            <option style="display:none"></option>
+                                                            <option>S</option>
+                                                            <option>M</option>
+                                                            <option>L</option>
+                                                            <option>XL</option>
+                                                            <option>XLL</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="cinturaTrabajador">Pantalón-Cintura:</label>
+                                                        <input type="text" name="" id="cinturaTrabajador" class="form-control" placeholder="Cintura (pulgadas)">
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="largoTrabajador">Pantalón-Largo</label>
+                                                        <input type="text" name="" id="largoTrabajador" class="form-control" placeholder="Largo (pulgadas)">
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label for="zapatoTrabajador">Zapatos</label>
+                                                        <input type="text" name="" id="zapatoTrabajador" class="form-control" placeholder="Zapatos">
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <br>
                                             <div class="form-row">
                                                 <div class= "col-6">
-                                                    <button id="agregarButtonObra" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                                    <button id="agregarButtonTrabajador" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
                                                 </div>
                                                 <div class= "col-6">
-                                                    <button id="borrarButtonObra" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                    <button id="borrarButtonTrabajador" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -965,6 +1042,7 @@
         <script src="app_colaborador_v2.js"></script>
         <script src="app_puestosMO_v2.js"></script>
         <script src="app_especialidadMO_v2.js"></script>
+        <script src="app_altaTrabajadores_v2.js"></script>
         
         <!-- Excel to Json-->
         <script src="xlsx.full.min.js"></script>
