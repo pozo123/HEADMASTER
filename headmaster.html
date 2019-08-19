@@ -160,6 +160,65 @@
             </div>
         </div>
 
+        <!-- Modal Trabajadores Correctos -->
+        <div class="modal" id="modalCorrectos" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Trabajadores ingresados correctamente</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr class="table-success">
+                                <th scope="col">ID HEAD</th>
+                                <th scope="col">Nombre Completo</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodyModalCorrectos"></tbody>
+                            </table>
+                        </div>   
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-success" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Trabajadores Correctos -->
+        <div class="modal" id="modalIncorrectos" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Trabajadores con errores</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="table-danger">
+                                <th scope="col">ID HEAD</th>
+                                <th scope="col">Nombre Completo</th>
+                                <th scope="col">Error(es)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyModalIncorrectos"></tbody>
+                        </table>
+                    </div>   
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal">Cerrar</button>
+                </div>
+                </div>
+            </div>
+        </div>
         <div class="wrapper">
             <!-- Sidebar -->
             <nav id="sidebar" class = "loader hidden">
@@ -936,26 +995,30 @@
                                     <div class="col-lg-2"></div>
                                     <div class="col-lg-8">
                                         <form id= "formImportarTrabajadores"action="#" onsubmit="return false;">
-                                            <div class="form-group">
-                                                <label for="">Selecciona archivo con el formato deseado</label>
-                                                <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" id="fileInputImportarTrabajador" accept=".xlsx, .xls">
-                                                    <label class = "custom-file-label" id="fileLabelImportarTrabajador">Archivo no seleccionado</label>
+                                            <div class="form-row">
+                                                <div class="form-group col-11">
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input" id="fileInputImportarTrabajador" accept=".xlsx, .xls">
+                                                        <label class = "custom-file-label" id="fileLabelImportarTrabajador">Archivo no seleccionado</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-1">
+                                                    <button id ="resetFileButtonTrabajador" type='button' class=' btn btn-outline-danger'>Reset</button>
                                                 </div>
                                             </div>
                                             <br>
                                             <div class="list-group list-group-horizontal-xl">
-                                                <a href="#" class="list-group-item list-group-item-success">Trabajadores ingresados correctamente <span id="spanCorrectosTrabajador" class="badge badge-pill badge-success float-right mt-"></span></a>
-                                                <a href="#" class="list-group-item list-group-item-danger">Trabajadores con errores <span id="spanIncorrectosTrabajador" class="badge badge-pill badge-danger float-right mt-"></span></a>
+                                                <a href="#" data-toggle="modal" data-target="#modalCorrectos" id="classCorrectosTrabajador" class="list-group-item list-group-item-success hidden">Trabajadores ingresados correctamente <span id="spanCorrectosTrabajador" class="badge badge-pill badge-success float-right"></span></a>
+                                                <a href="#" data-toggle="modal" data-target="#modalIncorrectos" id="classIncorrectosTrabajador" class="list-group-item list-group-item-danger hidden">Trabajadores con errores <span id="spanIncorrectosTrabajador" class="badge badge-pill badge-danger float-right"></span></a>
                                             </div>
                                             <br>
                                             <div class="form-row">
                                                 <div class= "col-2"></div>
                                                 <div class= "col-4">
-                                                    <button id ="descargarFormatoButtonTrabajador" type='button' class='editar btn btn-success btn-block'><i class='fas fa-file-excel'></i><span>&nbsp; Descargar formato</span></button>
+                                                    <button id ="descargarFormatoButtonTrabajador" type='button' class='btn btn-success btn-block'><i class='fas fa-file-excel'></i><span>&nbsp; Descargar formato</span></button>
                                                 </div>
                                                 <div class= "col-4">
-                                                        <button id ="importarButtonTrabajador" type='button' class='editar btn btn-info btn-block'><i class='fas fa-file-import'></i><span>&nbsp;Importar</span></button>
+                                                        <button id ="importarButtonTrabajador" type='button' class='btn btn-info btn-block'><i class='fas fa-file-import'></i><span>&nbsp;Importar</span></button>
                                                 </div>
                                                 <div class= "col-2"></div>
                                             </div>

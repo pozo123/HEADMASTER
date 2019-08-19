@@ -14,6 +14,10 @@ var id_ddl_especialidad_trabajador = "especialidadDdlrabajador";
 var id_ddl_puesto_trabajador = "puestoDdlrabajador";
 var id_span_correctos_trabajador = "spanCorrectosTrabajador";
 var id_span_incorrectos_trabajador = "spanIncorrectosTrabajador";
+var id_class_correctos_trabajador = "classCorrectosTrabajador";
+var id_class_incorrectos_trabajador = "classIncorrectosTrabajador";
+var id_body_modal_correctos_trabajador = "bodyModalCorrectos";
+var id_body_modal_incorrectos_trabajador = "bodyModalIncorrectos"
 
 var id_descargar_formato_button_trabajador = "descargarFormatoButtonTrabajador";
 
@@ -24,6 +28,8 @@ var id_container_opcionales_trabajador = "opcionalesContainer";
 // variables globales
 
 var formato_importar_fileSelected = "";
+var array_destajistas = [];
+var array_no_destajistas = [];
 
 $('#' + id_tab_trabajador).click(function() {
     resetFormImportar()
@@ -69,12 +75,12 @@ $('#' + id_file_input_formato_excel_trabajador).on("change", function(event){
     formato_importar_fileSelected = event.target.files[0];
     $('#' + id_file_label_formato_excel_trabajador).text(formato_importar_fileSelected.name);
     $('#' + id_file_label_formato_excel_trabajador).attr("style", "color: #00C851");
+    array_destajistas = [];
+    array_no_destajistas = [];
 
     var reader = new FileReader();
     reader.onload = function (e) {
         var array_datos_xlsx = [];
-        var array_destajistas = [];
-        var array_no_destajistas = [];
         var corrupted_rows = 0;
 
         var data = e.target.result;
@@ -110,7 +116,7 @@ $('#' + id_file_input_formato_excel_trabajador).on("change", function(event){
                 if(validated_data[i][0] != ""){
                     if(!snapshot.child(validated_data[i][0]).exists()){
                         validated_data[i][2] = true;
-                        validated_data[i][3] = "El ID Firebase ingresado no se encuentra en la base de datos";
+                        validated_data[i][3] = "El ID Firebase ingresado no se encuentra en la base de datos/" + validated_data[i][3];
                     }
                 } else {
                     validated_data[i][0] = firebase.database().ref(rama_bd_mano_obra + "/trabajadores").push().key;
@@ -120,8 +126,16 @@ $('#' + id_file_input_formato_excel_trabajador).on("change", function(event){
 
             // Método para llenar las tablas con info de usuarios correctos e incorrectos
 
+            var corrupted_data = [];
+            var ok_data = [];
+
             for(i=0;i <validated_data.length;i++){
-                corrupted_rows = validated_data[i][2] ? corrupted_rows: corrupted_rows + 1;
+                if(validated_data[i][2]){
+                    corrupted_rows += 1;
+                    corrupted_data.push(validated_data[i]);                
+                } else {
+                    ok_data.push(validated_data[i])
+                }
 
                 if(validated_data[i][1]["destajista"]){
                     array_destajistas.push(validated_data[i]);
@@ -129,11 +143,24 @@ $('#' + id_file_input_formato_excel_trabajador).on("change", function(event){
                     array_no_destajistas.push(validated_data[i]);
                 };
             }
+            
+            if(corrupted_rows > 0){
+                $('#' + id_span_incorrectos_trabajador).text(corrupted_rows)
+                $('#' + id_class_incorrectos_trabajador).removeClass("hidden");
+                modalIncorrectos(corrupted_data);
+            } else {
+                alert("¡Todos los datos son correctos!")
+            }
 
-            $('#' + id_span_incorrectos_trabajador).text(corrupted_rows)
-            $('#' + id_span_correctos_trabajador).text(validated_data.length - corrupted_rows)
+            $('#' + id_span_correctos_trabajador).text(validated_data.length - corrupted_rows);
+            $('#' + id_class_correctos_trabajador).removeClass("hidden");
+
+            modalCorrectos(ok_data)
+            console.log(ok_data);
+            
+
+            console.log(corrupted_rows);
             // --------------------------------------------------------------------------- 
-            console.log(validated_data);
         });
     };
     reader.readAsArrayBuffer(formato_importar_fileSelected);
@@ -153,6 +180,8 @@ function resetFormImportar(){
     formato_importar_fileSelected = "";
     $('#' + id_file_label_formato_excel_trabajador).text("Archivo no seleccionado")
     $('#' + id_file_label_formato_excel_trabajador).attr("style", "color: black");
+    $('#' + id_class_correctos_trabajador).addClass("hidden");
+    $('#' + id_class_incorrectos_trabajador).addClass("hidden");
 }
 
 function deleteBlankSpacesString(string){
@@ -528,6 +557,51 @@ function validateExcelRow(array){
     return  new_array;
 }
 
+function modalCorrectos(array){
+    $('#' + id_body_modal_correctos_trabajador).html('');
+    var body = document.getElementById(id_body_modal_correctos_trabajador);
+    console.log(array);
+    for(i=0;i<array.length;i++){
+        var row = document.createElement('tr');
+
+        var id_head = document.createElement('th');
+        id_head.setAttribute("scope", "row");
+        id_head.textContent = array[i][1]["id_head"];
+        console.log(array[i][1]["id_head"])
+
+        var nombre = document.createElement('td');
+        nombre.textContent= array[i][1]["nombre"];
+
+        row.appendChild(id_head);
+        row.appendChild(nombre);
+        body.appendChild(row);
+    }
+}
+
+function modalIncorrectos(array){
+    $('#' + id_body_modal_incorrectos_trabajador).html('');
+    var body = document.getElementById(id_body_modal_incorrectos_trabajador);
+    console.log(array);
+    for(i=0;i<array.length;i++){
+        var row = document.createElement('tr');
+
+        var id_head = document.createElement('th');
+        id_head.setAttribute("scope", "row");
+        id_head.textContent = array[i][1]["id_head"];
+        console.log(array[i][1]["id_head"])
+
+        var nombre = document.createElement('td');
+        nombre.textContent= array[i][1]["nombre"];
+
+        var razones = document.createElement('td');
+        razones.textContent= array[i][3];
+
+        row.appendChild(id_head);
+        row.appendChild(nombre);
+        row.appendChild(razones);
+        body.appendChild(row);
+    }
+}
 // --------------------------------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------
