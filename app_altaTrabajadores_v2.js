@@ -98,17 +98,36 @@ $('#' + id_file_input_formato_excel_trabajador).on("change", function(event){
             dateNF: "YYYY-MM-DD"
         });
 
-        // llenar arrays de destajistas y no destajistas
-        console.log(array_datos_xlsx);
-        for(i=0;i<array_datos_xlsx.length;i++){
-            if(array_datos_xlsx[i]["¿Es destajista?"] == "Sí"){
-                array_destajistas.push(array_datos_xlsx[i]);
-            } else {
-                array_no_destajistas.push(array_datos_xlsx[i]);
+        var validated_data = validateExcelRow(array_datos_xlsx)
+        firebase.database().ref(rama_bd_mano_obra + "/trabajadores").once("value").then(function(snapshot){
+            for(i=0;i<validated_data.length;i++){
+                if(validated_data[i][0] != ""){
+                    if(!snapshot.child(validated_data[i][0]).exists()){
+                        validated_data[i][2] = true;
+                        validated_data[i][3] = "El ID Firebase ingresado no se encuentra en la base de datos";
+                    }
+                } else {
+                    validated_data[i][0] = firebase.database().ref(rama_bd_mano_obra + "/trabajadores").push().key;
+                }
+
             };
-        };
-        var validated_data = validateExcelRow(array_destajistas);
-        console.log(validated_data)
+
+            // Método para llenar las tablas con info de usuarios correctos e incorrectos
+
+            for(i=0;i <validated_data.length;i++){
+                corrupted_rows = validated_data[i][2] ? corrupted_rows: corrupted_rows + 1;
+
+                if(validated_data[i][1]["destajista"]){
+                    array_destajistas.push(validated_data[i]);
+                } else {
+                    array_no_destajistas.push(validated_data[i]);
+                };
+            }
+
+            // --------------------------------------------------------------------------- 
+            console.log(corrupted_rows);
+            console.log(validated_data);
+        });
     };
     reader.readAsArrayBuffer(formato_importar_fileSelected);
 });
@@ -152,7 +171,8 @@ function validateExcelRow(array){
         var is_corrupted = false;
         var razon = "";
 
-        var id_firebase = id_firebase == undefined ? "" : id_firebase;
+        var id_firebase = array[i]["ID FIREBASE (Necesario si deseas editar)"];
+        id_firebase = id_firebase == undefined ? "" : deleteBlankSpacesString(id_firebase);
         
         // Validación ID_head
         var id_head = array[i]["ID HEAD"];
@@ -292,7 +312,170 @@ function validateExcelRow(array){
         if(sueldo == ""){
             razon += "/Hace falta el sueldo base del trabajador ingresado";
             is_corrupted = true;
-        } 
+        } else {
+            sueldo = deformatMoney(sueldo).toFixed(2);
+            if(isNaN(sueldo)){
+                razon += "/El sueldo base se ingresó incorrectamente"
+                is_corrupted = true;
+            }
+        }
+
+        // Validación id_jefe / ¿es destajista?
+        var destajista = array[i]["¿Es destajista?"];
+        destajista = destajista == undefined ? "": destajista;
+        var is_destajista;
+        var id_jefe;
+        if(destajista == ""){
+            razon += "/Hace falta indicar si el trabajador es destajista."
+            is_corrupted = true;
+        } else {
+            destajista = destajista.charAt(0).toUpperCase() + destajista.slice(1).toLowerCase();
+        }
+        if(destajista == "Sí"){
+            id_jefe = id_head;
+            is_destajista = true;
+        } else {
+            id_jefe = array[i]["ID HEAD de su jefe (en caso de ser trabajador de un destajista)"];
+            id_jefe = id_jefe == undefined ? "": id_jefe;
+            is_destajista = false;
+        }
+
+        // Validación fecha de antiguedad
+
+        var fecha_antiguedad = array[i]["Fecha de Ingreso a HEAD"];
+        fecha_antiguedad = fecha_antiguedad == undefined ? "" : fecha_antiguedad;
+        var fecha_antiguedad_timestamps = "";
+
+        if(fecha_antiguedad == ""){
+            razon += "/Hace falta indicar la fecha en la que el trabajador ingresó a HEAD";
+            is_corrupted = true;
+        } else {
+            antiguedad_array = fecha_antiguedad.split("-");
+            if(antiguedad_array.length != 3){
+                razon += "/El formato de fecha es incorrecto";
+                is_corrupted = true;
+            } else {
+                fecha_antiguedad_timestamps = new Date(antiguedad_array[0], antiguedad_array[1] - 1, antiguedad_array[2])
+                if(isNaN(fecha_antiguedad_timestamps.getTime())){
+                    razon += "/El formato de fecha es incorrecto";
+                    is_corrupted = true;
+                } else {
+                    fecha_antiguedad_timestamps = fecha_antiguedad_timestamps.getTime();
+                };
+            };
+        };
+
+        // Validación fecha de nacimiento
+        var fecha_nacimiento = array[i]["Fecha de Nacimiento"];
+        fecha_nacimiento = fecha_nacimiento == undefined ? "" : fecha_nacimiento;
+        var fecha_nacimiento_timestamps = "";
+
+        if(fecha_nacimiento != ""){
+            nacimiento_array = fecha_nacimiento.split("-");
+            if(nacimiento_array.length != 3){
+                razon += "/El formato de fecha es incorrecto";
+                is_corrupted = true;
+            } else {
+                fecha_nacimiento_timestamps = new Date(nacimiento_array[0], nacimiento_array[1] - 1, nacimiento_array[2])
+                if(isNaN(fecha_nacimiento_timestamps.getTime())){
+                    razon += "/El formato de fecha es incorrecto";
+                    is_corrupted = true;
+                } else {
+                    fecha_nacimiento_timestamps = fecha_nacimiento_timestamps.getTime();
+                };
+            };
+        }
+
+        // Validación estado civil
+
+        var estado_civil = array[i]["Estado Civil"];
+        estado_civil = estado_civil == undefined ? "": deleteBlankSpacesString(estado_civil)
+
+        if(estado_civil != ""){
+            var estado_civil_array = estado_civil.split(" ");
+            var estado_civil = "";
+            for(var j=0; j<estado_civil_array.length; j++){
+                if(j>0){
+                    estado_civil += " ";
+                }
+                estado_civil += estado_civil_array[j].charAt(0).toUpperCase() + estado_civil_array[j].slice(1).toLowerCase();
+            }
+        }
+
+        // Validación sexo. Ya viene semi validado desde el Excel
+        var sexo = array[i]["Sexo"];
+        sexo = sexo == undefined ? "": deleteBlankSpacesString(sexo)
+
+        if(sexo != ""){
+            sexo = sexo.charAt(0).toUpperCase() + sexo.slice(1).toLowerCase();
+        }
+
+        // Validación direccion
+
+        var domicilio = array[i]["Domicilio"];
+        domicilio = domicilio == undefined ? "": deleteBlankSpacesString(domicilio)
+
+        // Validación código postal
+
+        var codigo_postal = array[i]["Codigo Postal"];
+        codigo_postal = codigo_postal == undefined ? "": deleteBlankSpacesString(codigo_postal)
+
+        if(codigo_postal != ""){
+            if(isNaN(parseInt(codigo_postal)) || codigo_postal.length != 5){
+                razon += "/El código postal debe ser un número de 5 dígitos";
+                is_corrupted = true;
+            }
+        }
+
+        // Validación claves
+
+        var rfc = array[i]["RFC"];
+        rfc = rfc == undefined ? "": deleteBlankSpacesString(rfc).toUpperCase();
+
+        var imss= array[i]["IMSS"];
+        imss =imss == undefined ? "": deleteBlankSpacesString(imss).toUpperCase();
+
+        var curp = array[i]["CURP"];
+        curp = curp == undefined ? "": deleteBlankSpacesString(curp).toUpperCase();
+
+        // validacion datos bancarios
+
+        var banco= array[i]["Banco"];
+         banco =  banco == undefined ? "" : deleteBlankSpacesString(banco);
+        if(banco != ""){
+            var banco_array = banco.split(" ");
+            var banco = "";
+            for(var j=0; j<banco_array.length; j++){
+                if(j>0){
+                    banco += " ";
+                }
+                if(isPrepOrArt(banco_array[j].toLowerCase())){
+                    banco += banco_array[j].toLowerCase();
+                } else {
+                    banco += banco_array[j].charAt(0).toUpperCase() + banco_array[j].slice(1).toLowerCase();
+                }
+            }
+        }
+
+        var cuenta = array[i]["Cuenta"];
+        cuenta = cuenta == undefined ? "": deleteBlankSpacesString(cuenta).toUpperCase();
+
+        var clabe = array[i]["CLABE Interbancaria"];
+        clabe = clabe == undefined ? "": deleteBlankSpacesString(clabe).toUpperCase();
+
+        // validación tallas
+
+        var camisa = array[i]["Talla Camisa"];
+        camisa = camisa == undefined ? "": deleteBlankSpacesString(camisa).toUpperCase();
+
+        var cintura = array[i]["Talla Pantalón (Cintura)"];
+        cintura = cintura == undefined ? "": deleteBlankSpacesString(cintura).toUpperCase();
+
+        var largo = array[i]["Talla Pantalón (Largo)"];
+        largo = largo == undefined ? "": deleteBlankSpacesString(largo).toUpperCase();
+
+        var zapatos = array[i]["Talla Zapatos"];
+        zapatos = zapatos == undefined ? "": deleteBlankSpacesString(zapatos).toUpperCase();
 
         json_trabajador = {
             id_head: id_head,
@@ -300,6 +483,33 @@ function validateExcelRow(array){
             nombre: nombre_completo,
             id_especialidad: id_especialidad,
             id_puesto: id_puesto,
+            sueldo_base: sueldo,
+            id_jefe: id_jefe,
+            activo: true,
+            destajista: is_destajista,
+            fecha_antiguedad: fecha_antiguedad_timestamps,
+            info_personal:{
+                fecha_nacimiento: fecha_nacimiento_timestamps,
+                estado_civil: estado_civil,
+                sexo: sexo,
+                domicilio: domicilio,
+                codigo_postal: codigo_postal
+            },
+            claves: {
+                rfc: rfc,
+                imss: imss,
+                curp: curp
+            },
+            datos_bancarios: {
+                banco: banco,
+                cuenta: cuenta,
+                clabe: clabe
+            },
+            tallas: {
+                camisa: camisa,
+                pantalon: cintura + "x" + largo,
+                zapatos: zapatos,
+            }
         };
         new_array.push([
             id_firebase,
