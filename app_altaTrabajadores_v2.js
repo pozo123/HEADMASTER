@@ -12,7 +12,8 @@ var id_file_label_formato_excel_trabajador = "fileLabelImportarTrabajador";
 var id_file_input_formato_excel_trabajador = "fileInputImportarTrabajador";
 var id_ddl_especialidad_trabajador = "especialidadDdlrabajador";
 var id_ddl_puesto_trabajador = "puestoDdlrabajador";
-
+var id_span_correctos_trabajador = "spanCorrectosTrabajador";
+var id_span_incorrectos_trabajador = "spanIncorrectosTrabajador";
 
 var id_descargar_formato_button_trabajador = "descargarFormatoButtonTrabajador";
 
@@ -98,6 +99,11 @@ $('#' + id_file_input_formato_excel_trabajador).on("change", function(event){
             dateNF: "YYYY-MM-DD"
         });
 
+        if(array_datos_xlsx.length == 0){
+            alert("No se importaron datos")
+            resetFormImportar();
+            return;
+        }
         var validated_data = validateExcelRow(array_datos_xlsx)
         firebase.database().ref(rama_bd_mano_obra + "/trabajadores").once("value").then(function(snapshot){
             for(i=0;i<validated_data.length;i++){
@@ -124,8 +130,9 @@ $('#' + id_file_input_formato_excel_trabajador).on("change", function(event){
                 };
             }
 
+            $('#' + id_span_incorrectos_trabajador).text(corrupted_rows)
+            $('#' + id_span_correctos_trabajador).text(validated_data.length - corrupted_rows)
             // --------------------------------------------------------------------------- 
-            console.log(corrupted_rows);
             console.log(validated_data);
         });
     };
