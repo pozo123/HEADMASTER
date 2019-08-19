@@ -181,7 +181,7 @@
                             </thead>
                             <tbody id="bodyModalCorrectos"></tbody>
                             </table>
-                        </div>   
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary btn-success" data-dismiss="modal">Cerrar</button>
@@ -211,7 +211,7 @@
                         </thead>
                         <tbody id="bodyModalIncorrectos"></tbody>
                         </table>
-                    </div>   
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal">Cerrar</button>
@@ -722,95 +722,100 @@
                                             <br/>
                                             <h3>Obra</h3>
                                             <div class="form-row">
-                                                <div class="form-group col-md-2">
-                                                    <label for="obraProceso">Obra:</label>
-                                                    <select id ="obraProceso" class="form-control"></select>
+                                                <div class="form-group col-md-4">
+                                                    <label for="obraProcesos">Obra:</label>
+                                                    <select id ="obraProcesos" class="form-control"></select>
                                                 </div>
                                             </div>
                                             <br/>
                                             <h3>Procesos</h3>
                                             <div class="form-row">
-                                                <div class="form-group col-md-4">
-                                                    <label for="nombreProceso">Proceso:</label>
-                                                    <select id ="nombreProceso" class="form-control"></select>
+                                                <div class="form-group col-md-3">
+                                                    <label for="ddl_nombreProcesoProcesos">Proceso:</label>
+                                                    <select id ="ddl_nombreProcesoProcesos" class="form-control"></select>
                                                 </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="altaProcesoCheckbox">
-                                                    <label class="form-check-label" for="altaProcesoCheckbox"> Agregar nuevo proceso </label>
-                                                </div>
-                                            </div>
-                                            <br/>
-                                            <div class="form-row align-items-center">
                                                 <div class="form-group col-md-2">
-                                                    <label for="claveProceso">Clave:</label>
-                                                    <input type="text" name="" id="claveProceso" class="form-control" placeholder="Clave" readonly="readonly">
+                                                    <label for="claveProcesoProcesos">Clave:</label>
+                                                    <input type="text" name="" id="claveProcesoProcesos" class="form-control" placeholder="Clave" readonly="readonly">
                                                 </div>
-                                                <div class="form-group col-md-4">
+                                                <div class="form-group col-md-6">
                                                     <label for="nombreProceso">Nombre:</label>
-                                                    <input type="text" name="" id="nombreProceso" class="form-control" placeholder="Nombre">
+                                                    <input type="text" name="" id="nombreProcesoProcesos" class="form-control" placeholder="Nombre">
                                                 </div>
                                             </div>
-                                            <br/>
                                             <div class="form-row align-items-center">
-                                                <div class="form-group col-md-8">
+                                                <div class="form-group col-md-11">
                                                     <label for="alcanceProceso">Alcance:</label>
-                                                    <input type="text" name="" id="alcanceProceso" class="form-control" placeholder="Alcance del proceso">
+                                                    <textarea class="form-control" id="alcanceProcesoProcesos" rows="4"></textarea>
                                                 </div>
                                             </div>
-                                            <br/>
-                                            <h3>Subprocesos</h3>
-                                            <br/>
                                             <div class="form-row align-items-center">
-                                                <div class="form-group col-md-2">
-                                                    <label for="claveSubproceso">Clave:</label>
-                                                    <input type="text" name="" id="claveSubproceso" class="form-control" placeholder="Clave" readonly="readonly">
-                                                </div>
-                                                <div class="form-group col-md-4">
-                                                    <label for="nombreSubproceso">Nombre:</label>
-                                                    <input type="text" name="" id="nombreSubroceso" class="form-control" placeholder="Nombre">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="" id="altaSubprocesoCheckbox">
+                                                    <label class="form-check-label" for="altaSubprocesoCheckbox"> Agregar/Editar Subproceso </label>
                                                 </div>
                                             </div>
-                                            </br>
-                                            <div class="form-row align-items-center">
-                                                <div class="col-lg-3 col-sm-8">
-                                                    <label for="fechaInicioSubproceso">Fecha de inicio:</label>
-                                                </div>
-                                                <div class="col-lg-3 col-sm-12">
-                                                    <input class="form-control" type="text" id="fechaInicioSubproceso" placeholder="" readonly="readonly">
-                                                </div>
-                                                <div class="col-lg-3 col-sm-12">
-                                                    <label for="fechaFinalSubproceso">Fecha de terminación:</label>
-                                                </div>
-                                                <div class="col-lg-3 col-sm-12">
-                                                    <input class="form-control" type="text" id="fechaFinalSubproceso" placeholder="" readonly="readonly">
-                                                </div>
-                                            </div>
-                                            </br>
-                                            <div class="form-row align-items-center">
-                                                <div class="form-group col-md-4">
-                                                    <label for="categoriaSubproceso">Categoría:</label>
-                                                    <select id ="categoriaSubproceso" class="form-control"></select>
-                                                </div>
-                                                <div class="form-group col-md-3">
-                                                    <label for="suministrosSubproceso">Costo suministros:</label>
-                                                    <input type="text" name="" id="suministrosSubproceso" class="form-control" placeholder="Costo suministros">
-                                                </div>
-                                                <div class="form-group col-md-3">
-                                                    <label for="precopeoSubproceso">Precopeo:</label>
-                                                    <input type="text" name="" id="precopeoSubproceso" class="form-control" placeholder="Precopeo">
-                                                </div>
-                                            </div>
-                                            <h2>Score</h2>
-                                            <div class="form-row">
-                                                <div class="form-group col-md-3">
-                                                    <label for="horasScore">Horas programadas</label>
-                                                    <input type="text" name="" id="horasScore" class="form-control" placeholder="Horas programadas">
-                                                </div>
-                                                <div class="form-group col-md-3">
-                                                    <label for="costoScore">Costo por hora:</label>
-                                                    <input type="text" name="" id="costoScore" class="form-control" placeholder="Costo por hora">
-                                                </div>
-                                            </div>
+                                            <div class="container-fluid" id="seccionSubprocesoProcesos">
+                                              <br/>
+                                              <h3>Subprocesos</h3>
+                                              <br/>
+                                              <div class="form-row">
+                                                  <div class="form-group col-md-3">
+                                                      <label for="ddl_subprocesoProcesos">Subproceso:</label>
+                                                      <select id ="ddl_subprocesoProcesos" class="form-control"></select>
+                                                  </div>
+                                                  <div class="form-group col-md-2">
+                                                      <label for="claveSubproceso">Clave:</label>
+                                                      <input type="text" name="" id="claveSubproceso" class="form-control" placeholder="Clave" readonly="readonly">
+                                                  </div>
+                                                  <div class="form-group col-md-6">
+                                                      <label for="nombreSubproceso">Nombre:</label>
+                                                      <input type="text" name="" id="nombreSubroceso" class="form-control" placeholder="Nombre">
+                                                  </div>
+                                              </div>
+                                              <div class="form-row align-items-center">
+                                                  <div class="form-group col-md-4">
+                                                      <label for="categoriaSubprocesoProcesos">Categoría:</label>
+                                                      <select id ="categoriaSubprocesoProcesos" class="form-control"></select>
+                                                  </div>
+                                                  <div class="form-group col-md-4">
+                                                      <label for="suministrosSubproceso">Costo suministros:</label>
+                                                      <input type="text" name="" id="suministrosSubproceso" class="form-control" placeholder="Costo suministros">
+                                                  </div>
+                                                  <div class="form-group col-md-3">
+                                                      <label for="precopeoSubproceso">Precopeo:</label>
+                                                      <input type="text" name="" id="precopeoSubproceso" class="form-control" placeholder="Precopeo">
+                                                  </div>
+                                              </div>
+                                              </br>
+                                              <div class="form-row align-items-center">
+                                                  <div class="col-lg-2 col-sm-12">
+                                                      <label for="fechaInicioSubproceso">Fecha de inicio:</label>
+                                                  </div>
+                                                  <div class="col-lg-3 col-sm-12">
+                                                      <input class="form-control" type="text" id="fechaInicioSubproceso" placeholder="" readonly="readonly">
+                                                  </div>
+                                                  <div class="col-lg-3 col-sm-12">
+                                                      <label for="fechaFinalSubproceso">Fecha de terminación:</label>
+                                                  </div>
+                                                  <div class="col-lg-3 col-sm-12">
+                                                      <input class="form-control" type="text" id="fechaFinalSubproceso" placeholder="" readonly="readonly">
+                                                  </div>
+                                              </div>
+                                              </br>
+                                              <h5>Score</h5>
+                                              <div class="form-row">
+                                                  <div class="form-group col-md-3">
+                                                      <label for="horasScore">Horas programadas</label>
+                                                      <input type="text" name="" id="horasScore" class="form-control" placeholder="Horas programadas">
+                                                  </div>
+                                                  <div class="form-group col-md-3">
+                                                      <label for="costoScore">Costo por hora:</label>
+                                                      <input type="text" name="" id="costoScore" class="form-control" placeholder="Costo por hora">
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          </br>
                                             <div class="form-row">
                                                 <div class= "col-6">
                                                     <button id="agregarButtonSubproceso" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
@@ -827,36 +832,34 @@
                                         <table id="dataTableProcesos" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
                                             <thead>
                                                 <tr>
-                                                    <th>Id_obra</th>
-                                                    <th>Id_cliente</th>
+                                                    <th>Id_subproceso</th>
                                                     <th>Clave</th>
                                                     <th>Nombre</th>
-                                                    <th>Cliente</th>
-                                                    <th>Dirección</th>
-                                                    <th>Dirección</th>
-                                                    <th>Fondo de Garantía</th>
+                                                    <th>Categoría</th>
+                                                    <th>Categoría</th>
+                                                    <th>Suministros</th>
+                                                    <th>Precopeo</th>
                                                     <th>Fecha de inicio programada</th>
                                                     <th>Fecha de terminación programada</th>
-                                                    <th>Terminada</th>
-                                                    <th>Habilitada</th>
+                                                    <th>Horas Score</th>
+                                                    <th>Costo por hora</th>
                                                     <th>Editar</th>
                                                 </tr>
                                             </thead>
                                             <tfoot>
                                                 <tr>
-                                                  <th>Id_obra</th>
-                                                  <th>Id_cliente</th>
-                                                  <th>Clave</th>
-                                                  <th>Nombre</th>
-                                                  <th>Cliente</th>
-                                                  <th>Dirección</th>
-                                                  <th>Dirección</th>
-                                                  <th>Fondo de Garantía</th>
-                                                  <th>Fecha de inicio programada</th>
-                                                  <th>Fecha de terminación programada</th>
-                                                  <th>Terminada</th>
-                                                  <th>Habilitada</th>
-                                                  <th>Editar</th>
+                                                    <th>Id_subproceso</th>
+                                                    <th>Clave</th>
+                                                    <th>Nombre</th>
+                                                    <th>Categoría</th>
+                                                    <th>Categoría</th>
+                                                    <th>Suministros</th>
+                                                    <th>Precopeo</th>
+                                                    <th>Fecha de inicio programada</th>
+                                                    <th>Fecha de terminación programada</th>
+                                                    <th>Horas Score</th>
+                                                    <th>Costo por hora</th>
+                                                    <th>Editar</th>
                                                 </tr>
                                             </tfoot>
                                         </table>
