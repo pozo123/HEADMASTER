@@ -447,6 +447,9 @@ function actualizarTablaObras(){
             var direccion = direccion_json.calle + "/" + direccion_json.numero + "/" +
                             direccion_json.colonia + "/" + direccion_json.ciudad + "/" +
                             direccion_json.estado + "/" + direccion_json.cp;
+            var direccion_text = direccion_json.calle + " " + direccion_json.numero + ", " +
+                              direccion_json.colonia + ". " + direccion_json.ciudad + ", " +
+                              direccion_json.estado + ". CP: " + direccion_json.cp;
 
             var fecha = new Date(fechas.fecha_inicio_teorica);
             var fecha_inicio = fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2);
@@ -472,6 +475,7 @@ function actualizarTablaObras(){
                 nombre,
                 cliente,
                 direccion,
+                direccion_text,
                 fondo_garantia,
                 fecha_inicio,
                 fecha_final,
@@ -486,13 +490,14 @@ function actualizarTablaObras(){
             language: idioma_espanol,
             "columnDefs": [
                 { "width": "150px", "targets": 3 },
-                { "width": "100px", "targets": 5 },
+                { "width": "100px", "targets": 6 },
                 {
                     targets: -2,
                     className: 'dt-body-center'
                 },
                 { "visible": false, "targets": 0 },
                 { "visible": false, "targets": 1 },
+                { "visible": false, "targets": 5 },
                 {
                     "targets": -1,
                     "data": null,
@@ -511,15 +516,15 @@ function actualizarTablaObras(){
             $('#' + id_clave_obra).val(data[2]);
             $('#' + id_nombre_obra).val(data[3]);
             $('#' + id_ddl_cliente_obra).val(data[1]);
-            $('#' + id_garantia_obra).val(data[6]);
+            $('#' + id_garantia_obra).val(data[7]);
             $('#' + id_estado_obra).val(direccion[4]);
             $('#' + id_ciudad_obra).val(direccion[3]);
             $('#' + id_colonia_obra).val(direccion[2]);
             $('#' + id_calle_obra).val(direccion[0]);
             $('#' + id_codigo_postal_obra).val(direccion[5]);
             $('#' + id_numero_obra).val(direccion[1]);
-            $('#' + id_fecha_inicio_obra).val(data[7]);
-            $('#' + id_fecha_final_obra).val(data[8]);
+            $('#' + id_fecha_inicio_obra).val(data[8]);
+            $('#' + id_fecha_final_obra).val(data[9]);
         } );
     });
 }
