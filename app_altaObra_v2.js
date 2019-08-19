@@ -65,6 +65,7 @@ $('#' + id_tab_obra).click(function() {
         option.text = cliente.nombre;
         select.appendChild(option);
     });
+    actualizarTablaObras();
 
 });
 
@@ -400,17 +401,14 @@ function llenaCampos(clave){
               $('#' + id_fecha_inicio_obra).val(fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2));
               fecha = new Date(fechas.fecha_final_teorica);
               $('#' + id_fecha_final_obra).val(fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2));
+              highLightAllObra();
           } else {
               existe_obra = false;
           }
       });
   });
 }
-//Funcion para colorear un campo
-function highLightColor(id, color){
-  document.getElementById(id).style.background = color;
-  setTimeout(function(){  document.getElementById(id).style.background = "white";}, 1000);
-}
+
 //Dar formato AAAAMMDD a las fechas
 function fechasProgramadas(){
   var f_inicio = $('#' + id_fecha_inicio_obra).val().split('.');
@@ -422,4 +420,150 @@ function fechasProgramadas(){
     final: lista_obra_final
   }
   return fechas;
+}
+
+// función que actualiza la tabla (revisar librería DataTable para ver funcionalidad)
+// se utiliza on "value" para que en cada movimiento en la base de datos "colaboradores", la tabla se actualize
+// automáticamente.
+function actualizarTablaObras(){
+    firebase.database().ref(rama_bd_obras + "/obras").on("value",function(snapshot){
+        var datos_obras = [];
+        snapshot.forEach(function(obraSnap){
+            var uid = obraSnap.key;
+            var obra = obraSnap.val();
+            var clave = obra.clave_obra;
+            var nombre = obra.nombre;
+            var habilitada = obra.habilitada;
+            var fondo_garantia = obra.retencion_fondo_garantia;
+            var direccion_json = obra.direccion;
+            var fechas = obra.fechas;
+            var id_cliente = obra.id_cliente;
+            var terminada = obra.terminada;
+            var cliente;
+            firebase.database().ref(rama_bd_clientes + "/despachos/" + id_cliente + "/nombre").on("value", function(snapcliente){
+              cliente = snapcliente.val();
+            });
+
+            var direccion = direccion_json.calle + "/" + direccion_json.numero + "/" +
+                            direccion_json.colonia + "/" + direccion_json.ciudad + "/" +
+                            direccion_json.estado + "/" + direccion_json.cp;
+
+            var fecha = new Date(fechas.fecha_inicio_teorica);
+            var fecha_inicio = fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2);
+            fecha = new Date(fechas.fecha_final_teorica);
+            var fecha_final = fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2);
+
+            var icon_class = "";
+            if(habilitada) {
+                icon_class = "'icono_verde fas fa-check-circle'";
+            } else {
+                icon_class = "'icono_rojo fas fa-times-circle'"
+            }
+            if (terminada){
+              terminada = "Sí";
+            } else {
+              terminada = "No";
+            }
+
+            datos_obras.push([
+                uid,
+                id_cliente,
+                clave,
+                nombre,
+                cliente,
+                direccion,
+                fondo_garantia,
+                fecha_inicio,
+                fecha_final,
+                terminada,
+                "<button type='button' class='btn btn-transparente' onclick='habilitarObra(" + habilitada + "," + "\`"  + uid  + "\`" + ")'><i class=" + icon_class + "></i></button>",
+            ]);
+        });
+
+        tabla_obra = $('#'+ id_dataTable_obra).DataTable({
+            destroy: true,
+            data: datos_obras,
+            language: idioma_espanol,
+            "columnDefs": [
+                { "width": "150px", "targets": 3 },
+                { "width": "100px", "targets": 5 },
+                {
+                    targets: -2,
+                    className: 'dt-body-center'
+                },
+                { "visible": false, "targets": 0 },
+                { "visible": false, "targets": 1 },
+                {
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>"
+                }
+              ]
+        });
+
+        $('#' + id_dataTable_obra + ' tbody').on( 'click', '.editar', function () {
+            highLightAllObra();
+            var data = tabla_obra.row( $(this).parents('tr') ).data();
+            var direccion = data[5].split("/");
+            resetFormObra();
+            existe_obra = true;
+            uid_existente = data[0];
+            $('#' + id_clave_obra).val(data[2]);
+            $('#' + id_nombre_obra).val(data[3]);
+            $('#' + id_ddl_cliente_obra).val(data[1]);
+            $('#' + id_garantia_obra).val(data[6]);
+            $('#' + id_estado_obra).val(direccion[4]);
+            $('#' + id_ciudad_obra).val(direccion[3]);
+            $('#' + id_colonia_obra).val(direccion[2]);
+            $('#' + id_calle_obra).val(direccion[0]);
+            $('#' + id_codigo_postal_obra).val(direccion[5]);
+            $('#' + id_numero_obra).val(direccion[1]);
+            $('#' + id_fecha_inicio_obra).val(data[7]);
+            $('#' + id_fecha_final_obra).val(data[8]);
+        } );
+    });
+}
+
+// función para actualizar el valor "habilitado:boolean" en la database.
+function  habilitarObra(habilitada, id){
+    var aux = {"habilitada": !habilitada};
+
+    firebase.database().ref(rama_bd_obras + "/obras/" + id).once("value").then(function(snapshot){
+        var registro_antiguo = snapshot.val();
+
+        // actualizar registro
+        firebase.database().ref(rama_bd_obras + "/obras/" + id).update(aux);
+
+        // actualizar listas
+        if(habilitada){
+            firebase.database().ref(rama_bd_obras + "/listas/obras_activas/" + id).remove();
+            firebase.database().ref(rama_bd_obras + "/listas/obras_no_activas/" + id).set(true);
+        } else {
+            firebase.database().ref(rama_bd_obras + "/listas/obras_activas/" + id).set(true)
+            firebase.database().ref(rama_bd_obras + "/listas/obras_no_activas/" + id).remove();
+        }
+        // pda
+        pda("modificacion", rama_bd_obras + "/obras/" + id, registro_antiguo)
+    });
+}
+
+function highLightAllObra(){
+    highLight(id_clave_obra);
+    highLight(id_nombre_obra);
+    highLight(id_ddl_cliente_obra);
+    highLight(id_garantia_obra);
+    highLight(id_estado_obra);
+    highLight(id_ciudad_obra);
+    highLight(id_colonia_obra);
+    highLight(id_calle_obra);
+    highLight(id_codigo_postal_obra);
+    highLight(id_numero_obra);
+    highLight(id_fecha_inicio_obra);
+    highLight(id_fecha_final_obra);
+}
+
+//Funcion para colorear un campo
+function highLightColor(id, color){
+  document.getElementById(id).style.background = color;
+  setTimeout(function(){  document.getElementById(id).style.background = "white";}, 1000);
 }
