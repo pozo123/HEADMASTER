@@ -25,19 +25,21 @@ var id_hide_opcionales_button_trabajador = "hideOpcionalesButtonTrabajador";
 var id_hide_opcionales_icon_trabajador = "hideOpcionalesIconTrabajador";
 var id_container_opcionales_trabajador = "opcionalesContainer";
 
+var id_button_reset_file_trabajador = "resetFileButtonTrabajador";
+var id_button_desargar_file_trabajador = "descargarFormatoButtonTrabajador";
+var id_button_importar_file_trabajador = "importarButtonTrabajador";
+
 // variables globales
 
 var formato_importar_fileSelected = "";
 var array_destajistas = [];
 var array_no_destajistas = [];
+var corrupted_rows = 0;
 
 $('#' + id_tab_trabajador).click(function() {
     resetFormImportar()
     resetFormTrabajador();
    // actualizarTrabajador();   
-
-   //var prueba = firebase.database().ref(rama_bd_mano_obra + "/prueba").push().getKey();
-   //console.log(prueba);
 
    // load data firebase
    // --- ESPECIALIDAD -----
@@ -74,14 +76,14 @@ $('#' + id_tab_trabajador).click(function() {
 $('#' + id_file_input_formato_excel_trabajador).on("change", function(event){
     formato_importar_fileSelected = event.target.files[0];
     $('#' + id_file_label_formato_excel_trabajador).text(formato_importar_fileSelected.name);
-    $('#' + id_file_label_formato_excel_trabajador).attr("style", "color: #00C851");
+    $('#' + id_file_label_formato_excel_trabajador).attr("style", "color: #A7C5A1");
     array_destajistas = [];
     array_no_destajistas = [];
 
     var reader = new FileReader();
     reader.onload = function (e) {
         var array_datos_xlsx = [];
-        var corrupted_rows = 0;
+        corrupted_rows = 0;
 
         var data = e.target.result;
         data = new Uint8Array(data);
@@ -121,11 +123,11 @@ $('#' + id_file_input_formato_excel_trabajador).on("change", function(event){
                 } else {
                     validated_data[i][0] = firebase.database().ref(rama_bd_mano_obra + "/trabajadores").push().key;
                 }
-
             };
 
-            // Método para llenar las tablas con info de usuarios correctos e incorrectos
+            console.lo
 
+            // Método para llenar las tablas con info de usuarios correctos e incorrectos
             var corrupted_data = [];
             var ok_data = [];
 
@@ -150,16 +152,13 @@ $('#' + id_file_input_formato_excel_trabajador).on("change", function(event){
                 modalIncorrectos(corrupted_data);
             } else {
                 alert("¡Todos los datos son correctos!")
+                $('#' + id_button_importar_file_trabajador).attr("disabled", false);
             }
 
             $('#' + id_span_correctos_trabajador).text(validated_data.length - corrupted_rows);
             $('#' + id_class_correctos_trabajador).removeClass("hidden");
 
             modalCorrectos(ok_data)
-            console.log(ok_data);
-            
-
-            console.log(corrupted_rows);
             // --------------------------------------------------------------------------- 
         });
     };
@@ -173,15 +172,95 @@ $('#' + id_descargar_formato_button_trabajador).click(function(){
     });
 });
 
+$('#' + id_button_reset_file_trabajador).click(function(){
+    resetFormImportar();
+});
 
+$('#' + id_button_importar_file_trabajador).click(function(){
+
+    if(corrupted_rows > 0){
+        alert("¡Existen renglones con información incorrecta!")
+        return;
+    }
+    
+    var destajistas_path = {};
+    var no_destajistas_path = {};
+    
+    // generar rutas donde se actualiza datos, listas y pista de auditoria
+    
+    
+    firebase.database().ref(rama_bd_mano_obra + "/listas/").once("value").then(function(snapshot){
+        for(var i=0;i<array_destajistas.length;i++){       
+            destajistas_path[rama_bd_mano_obra + "/trabajadores/" + array_destajistas[i][0]] = array_destajistas[i][1];
+
+            snapshot.child("destajistas").forEach(function(destSnap){
+                destajistas_path[rama_bd_mano_obra + "/listas/destajistas/" + destSnap.key + "/" + array_destajistas[i][0]] = null;
+            });
+            snapshot.child("puesto").forEach(function(puestoSnap){
+                destajistas_path[rama_bd_mano_obra + "/listas/puesto/" + puestoSnap.key + "/" + array_destajistas[i][0]] = null;
+            });
+            snapshot.child("especialidad").forEach(function(espSnap){
+                destajistas_path[rama_bd_mano_obra + "/listas/especialidad/" + espSnap.key + "/" + array_destajistas[i][0]] = null;
+            });
+
+            destajistas_path[rama_bd_mano_obra + "/listas/no_activos/" + array_destajistas[i][0]] = null;
+            destajistas_path[rama_bd_mano_obra + "/listas/activos/" + array_destajistas[i][0]] = true;
+            destajistas_path[rama_bd_mano_obra + "/listas/destajistas/" + array_destajistas[i][0] + "/" + array_destajistas[i][0]] = true;
+            destajistas_path[rama_bd_mano_obra + "/listas/puesto/" + array_destajistas[i][1]["id_puesto"] + "/" + array_destajistas[i][0]] = true;
+            destajistas_path[rama_bd_mano_obra + "/listas/especialidad/" + array_destajistas[i][1]["id_especialidad"] + "/" + array_destajistas[i][0]] = true;
+        };
+
+        firebase.database().ref().update(destajistas_path).then(function(){
+            firebase.database().ref(rama_bd_mano_obra + "/listas/").once("value").then(function(otroSnap){
+                for(var k=0;k<array_no_destajistas.length;k++){
+                    no_destajistas_path[rama_bd_mano_obra + "/trabajadores/" + array_no_destajistas[k][0]] = array_no_destajistas[k][1];
+                    // necesito checar si el trabajador era destajista, si sí para a sus trabajadores actualizarlos en HEAD;
+                    otroSnap.child("destajistas").forEach(function(destSnap){
+                        no_destajistas_path[rama_bd_mano_obra + "/listas/destajistas/" + destSnap.key + "/" + array_no_destajistas[k][0]] = null;
+                        if(array_no_destajistas[k][0] == destSnap.key){
+                            destSnap.forEach(function(subDestSnap){
+                                no_destajistas_path[rama_bd_mano_obra + "/listas/destajistas/HEAD/" + subDestSnap.key] = true;
+                            });
+                        }
+                    });
+
+                    otroSnap.child("puesto").forEach(function(puestoSnap){
+                        no_destajistas_path[rama_bd_mano_obra + "/listas/puesto/" + puestoSnap.key + "/" + array_no_destajistas[k][0]] = null;
+                    });
+                    otroSnap.child("especialidad").forEach(function(espSnap){
+                        no_destajistas_path[rama_bd_mano_obra + "/listas/especialidad/" + espSnap.key + "/" + array_no_destajistas[k][0]] = null;
+                    });
+
+                    no_destajistas_path[rama_bd_mano_obra + "/listas/no_activos/" + array_no_destajistas[k][0]] = null;
+                    no_destajistas_path[rama_bd_mano_obra + "/listas/activos/" + array_no_destajistas[k][0]] = true;
+                    no_destajistas_path[rama_bd_mano_obra + "/listas/puesto/" + array_no_destajistas[k][1]["id_puesto"] + "/" + array_no_destajistas[k][0]] = true;
+                    no_destajistas_path[rama_bd_mano_obra + "/listas/especialidad/" + array_no_destajistas[k][1]["id_especialidad"] + "/" + array_no_destajistas[k][0]] = true;
+
+                }
+                console.log(destajistas_path);
+                console.log(no_destajistas_path);
+            });
+        }).catch(function(error){
+            alert("Error: " + error + ". Contacta al administrador del sistema");
+        });
+
+
+    });
+});
 // ----------------------- FUNCIONES NECESARIAS ----------------------------
 
 function resetFormImportar(){
     formato_importar_fileSelected = "";
-    $('#' + id_file_label_formato_excel_trabajador).text("Archivo no seleccionado")
+    array_destajistas = [];
+    array_no_destajistas = [];
+    corrupted_rows = 0;
+    $('#' + id_file_label_formato_excel_trabajador).text("Archivo no seleccionado");
+    $('#' + id_file_input_formato_excel_trabajador).val("");
     $('#' + id_file_label_formato_excel_trabajador).attr("style", "color: black");
     $('#' + id_class_correctos_trabajador).addClass("hidden");
     $('#' + id_class_incorrectos_trabajador).addClass("hidden");
+    $('#' + id_button_importar_file_trabajador).attr("disabled", true);
+
 }
 
 function deleteBlankSpacesString(string){
@@ -216,7 +295,7 @@ function validateExcelRow(array){
 
         if(id_head != ""){
             id_head = deleteBlankSpacesString(id_head);
-            if(isNaN(parseInt(id_head,10))){
+            if(isNaN(id_head)){
                 razon += "El ID HEAD debe ser un número sin decimales"
                 is_corrupted = true;
             }
@@ -457,7 +536,7 @@ function validateExcelRow(array){
         codigo_postal = codigo_postal == undefined ? "": deleteBlankSpacesString(codigo_postal)
 
         if(codigo_postal != ""){
-            if(isNaN(parseInt(codigo_postal)) || codigo_postal.length != 5){
+            if(isNaN(codigo_postal) || codigo_postal.length != 5){
                 razon += "/El código postal debe ser un número de 5 dígitos";
                 is_corrupted = true;
             }
@@ -560,15 +639,12 @@ function validateExcelRow(array){
 function modalCorrectos(array){
     $('#' + id_body_modal_correctos_trabajador).html('');
     var body = document.getElementById(id_body_modal_correctos_trabajador);
-    console.log(array);
     for(i=0;i<array.length;i++){
         var row = document.createElement('tr');
 
         var id_head = document.createElement('th');
         id_head.setAttribute("scope", "row");
         id_head.textContent = array[i][1]["id_head"];
-        console.log(array[i][1]["id_head"])
-
         var nombre = document.createElement('td');
         nombre.textContent= array[i][1]["nombre"];
 
@@ -581,23 +657,31 @@ function modalCorrectos(array){
 function modalIncorrectos(array){
     $('#' + id_body_modal_incorrectos_trabajador).html('');
     var body = document.getElementById(id_body_modal_incorrectos_trabajador);
-    console.log(array);
     for(i=0;i<array.length;i++){
         var row = document.createElement('tr');
 
         var id_head = document.createElement('th');
         id_head.setAttribute("scope", "row");
         id_head.textContent = array[i][1]["id_head"];
-        console.log(array[i][1]["id_head"])
 
         var nombre = document.createElement('td');
-        nombre.textContent= array[i][1]["nombre"];
-
+        nombre.textContent = array[i][1]["nombre"];
+           
         var razones = document.createElement('td');
-        razones.textContent= array[i][3];
-
+        var ul = document.createElement('ul');
+        
+        var razones_array = array[i][3].split("/");
+        
+        for(var j=0; j<razones_array.length; j++){
+            if(razones_array[j] != ""){
+                var li = document.createElement('li')
+                li.textContent = razones_array[j];
+                ul.appendChild(li);
+            }
+        }
         row.appendChild(id_head);
         row.appendChild(nombre);
+        razones.appendChild(ul);        
         row.appendChild(razones);
         body.appendChild(row);
     }

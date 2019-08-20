@@ -161,8 +161,8 @@
         </div>
 
         <!-- Modal Trabajadores Correctos -->
-        <div class="modal" id="modalCorrectos" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
+        <div class="modal fade" id="modalCorrectos" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Trabajadores ingresados correctamente</h5>
@@ -176,7 +176,7 @@
                             <thead>
                                 <tr class="table-success">
                                 <th scope="col">ID HEAD</th>
-                                <th scope="col">Nombre Completo</th>
+                                <th scope="col">Nombre completo</th>
                                 </tr>
                             </thead>
                             <tbody id="bodyModalCorrectos"></tbody>
@@ -190,8 +190,8 @@
             </div>
         </div>
         <!-- Modal Trabajadores Correctos -->
-        <div class="modal" id="modalIncorrectos" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
+        <div class="modal fade" id="modalIncorrectos">
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Trabajadores con errores</h5>
@@ -205,7 +205,7 @@
                         <thead>
                             <tr class="table-danger">
                                 <th scope="col">ID HEAD</th>
-                                <th scope="col">Nombre Completo</th>
+                                <th scope="col">Nombre completo</th>
                                 <th scope="col">Error(es)</th>
                             </tr>
                         </thead>
@@ -219,6 +219,7 @@
                 </div>
             </div>
         </div>
+
         <div class="wrapper">
             <!-- Sidebar -->
             <nav id="sidebar" class = "loader hidden">
@@ -1018,10 +1019,10 @@
                                             <div class="form-row">
                                                 <div class= "col-2"></div>
                                                 <div class= "col-4">
-                                                    <button id ="descargarFormatoButtonTrabajador" type='button' class='btn btn-success btn-block'><i class='fas fa-file-excel'></i><span>&nbsp; Descargar formato</span></button>
+                                                    <button id="descargarFormatoButtonTrabajador" type='button' class='btn btn-success btn-block'><i class='fas fa-file-excel'></i><span>&nbsp; Descargar formato</span></button>
                                                 </div>
                                                 <div class= "col-4">
-                                                        <button id ="importarButtonTrabajador" type='button' class='btn btn-info btn-block'><i class='fas fa-file-import'></i><span>&nbsp;Importar</span></button>
+                                                        <button id="importarButtonTrabajador" disabled="true" type='button' class='btn btn-info btn-block'><i class='fas fa-file-import'></i><span>&nbsp;Importar</span></button>
                                                 </div>
                                                 <div class= "col-2"></div>
                                             </div>
