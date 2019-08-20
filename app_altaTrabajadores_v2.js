@@ -1,7 +1,7 @@
 // id's de los elementos HTML
 var id_tab_trabajador = "tabTrabajadores";
 var id_form_importar_trabajador = "formImportarTrabajadores";
-var id_form__alta_trabajador = "formAltaTrabajadores";
+var id_form_alta_trabajador = "formAltaTrabajadores";
 var id_dataTable_trabajador = "dataTableCliente";
 
 // Lo necesario para inicializar la pestaña (se hace al seleccionar la pestaña)
@@ -28,11 +28,35 @@ var id_button_desargar_file_trabajador = "descargarFormatoButtonTrabajador";
 var id_button_importar_file_trabajador = "importarButtonTrabajador";
 
 var id_nombre_trabajador = "nombreTrabajador";
-var id_apellido_paterno = "paternoTrabajador";
-var id_apellido_materno = "maternoTrabajador";
+var id_paterno_trabajador = "paternoTrabajador";
+var id_materno_trabajador = "maternoTrabajador";
+var id_id_head_trabajador = "claveHeadTrabajador";
+var id_id_pagadora_trabajador = "clavePagadoraTrabajador";
+var id_antiguedad_trabajador = "antiguedadTrabajador";
+var id_sueldo_trabajador = "sueldoTrabajador";
 
 var id_ddl_especialidad_trabajador = "especialidadDdlrabajador";
 var id_ddl_puesto_trabajador = "puestoDdlrabajador";
+var id_ddl_jefe_trabajador = "jefeDdlTrabajador";
+var id_ddl_sexo_trabajador = "sexoDdlTrabajador";
+var id_ddl_camisa_trabajador = "camisaDdlTrabajador";
+var id_ddl_cintura_trabajador = "largoDdlTrabajador";
+var id_ddl_largo_trabajador = "largoDdlTrabajador";
+var id_ddl_zapatos_trabajador = "zapatoDdlTrabajador";
+
+var id_nacimiento_trabajador = "nacimientoTrabajador";
+var id_estado_civil_trabajador = "edoCivilTrabajador";
+var id_direccion_trabajador = "direccionTrabajador";
+var id_codigo_postal_trabajador = "cpTrabajador";
+var id_rfc_trabajador = "rfcTrabajador";
+var id_imss_trabajador = "imssTrabajador";
+var id_curp_trabajador = "curpTrabajador";
+var id_banco_trabajador = "bancoTrabajador";
+var id_cuenta_trabajador = "cuentaTrabajador";
+var id_clabe_trabajador = "clabeTrabajador";
+
+var id_reset_form_trabajador = "borrarButtonTrabajador";
+var id_agregar_trabajador = "agregarButtonTrabajador";
 // variables globales
 
 var formato_importar_fileSelected = "";
@@ -40,10 +64,20 @@ var array_destajistas = [];
 var array_no_destajistas = [];
 var corrupted_rows = 0;
 
+var existe_trabajador = false;
+var id_trabajador_existente = "";
+
 $('#' + id_tab_trabajador).click(function() {
     resetFormImportar()
     resetFormTrabajador();
-   // actualizarTrabajador();   
+    actualizarTablaTrabajador();   
+
+    jQuery('#' + id_antiguedad_trabajador).datetimepicker(
+        {timepicker:false, weeks:true,format:'Y.m.d'}
+    );
+    jQuery('#' + id_nacimiento_trabajador).datetimepicker(
+        {timepicker:false, weeks:true,format:'Y.m.d'}
+    );
 
    // load data firebase
    // --- ESPECIALIDAD -----
@@ -60,7 +94,7 @@ $('#' + id_tab_trabajador).click(function() {
        select_esp.appendChild(option_esp);
    });
 
-      // --- PUESTO -----
+    // --- PUESTO -----
     var select_puesto = document.getElementById(id_ddl_puesto_trabajador);
     var option_puesto = document.createElement('option');
     option_puesto.style = "display:none";
@@ -72,6 +106,30 @@ $('#' + id_tab_trabajador).click(function() {
         option_puesto.value = snapshot.key;
         option_puesto.text = puesto.puesto;
         select_puesto.appendChild(option_puesto);
+    });
+
+    // ---- JEFE -----
+
+    var select_jefe = document.getElementById(id_ddl_jefe_trabajador);
+    var option_jefe = document.createElement('option');
+    option_jefe.style = "display:none";
+    option_jefe.text = option_puesto.value = "";
+
+    var option_head = document.createElement('option');
+    option_head.text = option_head.value = "HEAD";
+    var option_el_mismo = document.createElement('option');
+    option_el_mismo.text = option_el_mismo.value = "Èl mismo";
+
+    select_jefe.appendChild(option_jefe);
+    select_jefe.append(option_head);
+    select_jefe.append(option_el_mismo);
+
+    firebase.database().ref(rama_bd_mano_obra + "/trabajadores").orderByChild("destajista").equalTo(true).on("child_added", function(snapshot){
+        var destajista = snapshot.val();
+        option_jefe = document.createElement('option');
+        option_jefe.value = snapshot.key;
+        option_jefe.text = destajista.nombre;
+        select_jefe.appendChild(option_jefe);
     });
 });
 
@@ -759,6 +817,9 @@ function modalIncorrectos(array){
         body.appendChild(row);
     }
 }
+
+
+
 // --------------------------------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------
@@ -773,8 +834,219 @@ $('#' + id_hide_opcionales_button_trabajador).click(function(){
     $('#' + id_container_opcionales_trabajador).toggleClass("hidden");
 });
 
+// al apretar el botón de resetear, se resetea todo el formulario
+$('#' + id_reset_form_trabajador).click(function(){
+    resetFormTrabajador();
+});
+
+// --------------------- VALIDACIÓN DE FORMULARIO --------------------------
+
+// ----------------- Nombre
+
+$('#' + id_nombre_trabajador).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",e);
+});
+
+$('#' + id_nombre_trabajador).change(function(){
+    var nombre_array = deleteBlankSpaces(id_nombre_trabajador).split(" ");
+    var nombre = "";
+    for(var i=0; i<nombre_array.length; i++){
+        if(i>0){
+            nombre += " ";
+        }
+        nombre += nombre_array[i].charAt(0).toUpperCase() + nombre_array[i].slice(1).toLowerCase();
+    }
+    $('#' + id_nombre_trabajador).val(nombre);
+});
+
+// ----------- Apellidos
+$('#' + id_paterno_trabajador).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",e);
+});
+
+$('#' + id_materno_trabajador).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",e);
+});
+
+$('#' + id_paterno_trabajador).change(function(){
+    var paterno_array = deleteBlankSpaces(id_paterno_trabajador).split(" ");
+    var paterno = "";
+    for(var i=0; i<paterno_array.length; i++){
+        if(i>0){
+            paterno += " ";
+        }
+        if(isPrepOrArt(paterno_array[i].toLowerCase())){
+            paterno += paterno_array[i].toLowerCase();
+        } else {
+            paterno += paterno_array[i].charAt(0).toUpperCase() + paterno_array[i].slice(1).toLowerCase();
+        }
+    }
+    $('#' + id_paterno_trabajador).val(paterno);
+});
+
+$('#' + id_materno_trabajador).change(function(){
+    var materno_array = deleteBlankSpaces(id_materno_trabajador).split(" ");
+    var materno = "";
+    for(var i=0; i<materno_array.length; i++){
+        if(i>0){
+            materno += " ";
+        }
+        if(isPrepOrArt(materno_array[i].toLowerCase())){
+            materno += materno_array[i].toLowerCase();
+        } else {
+            materno += materno_array[i].charAt(0).toUpperCase() + materno_array[i].slice(1).toLowerCase();
+        }
+    }
+    $('#' + id_materno_trabajador).val(materno);
+});
+
+// CLAVES
+
+$('#' + id_id_head_trabajador).keypress(function(e){
+    charactersAllowed("1234567890",e);
+});
+
+$('#' + id_id_pagadora_trabajador).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ1234567890",e);
+});
+
+$('#' + id_id_pagadora_trabajador).change(function(){
+    var id_pagadora = deleteBlankSpaces(id_id_pagadora_trabajador).toUpperCase();
+    $('#' + id_id_pagadora_trabajador).val(id_pagadora);
+});
+
+// Sueldo
+
+$('#' + id_sueldo_trabajador).keypress(function(e){
+    charactersAllowed("$1234567890,.",e);
+});
+
+$('#' + id_sueldo_trabajador).change(function(){
+    var deformat_sueldo = deformatMoney($('#' + id_sueldo_trabajador).val());
+    $('#' + id_sueldo_trabajador).val(formatMoney(deformat_sueldo));
+});
+
+// EDO CIVIL
+
+$('#' + id_estado_civil_trabajador).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",e);
+});
+
+$('#' + id_estado_civil_trabajador).change(function(){
+    var estado_civil_array = deleteBlankSpaces(id_estado_civil_trabajador).split(" ");
+    var estado_civil = "";
+    for(var i=0; i<estado_civil_array.length; i++){
+        if(i>0){
+            estado_civil += " ";
+        }
+        if(isPrepOrArt(estado_civil_array[i].toLowerCase())){
+            estado_civil += estado_civil_array[i].toLowerCase();
+        } else {
+            estado_civil += estado_civil_array[i].charAt(0).toUpperCase() + estado_civil_array[i].slice(1).toLowerCase();
+        }
+    }
+    $('#' + id_estado_civil_trabajador).val(estado_civil);
+});
+
+
+// Dirección
+
+$('#' + id_direccion_trabajador).change(function(){
+    var direccion = deleteBlankSpaces(id_direccion_trabajador);
+    direccion = direccion.charAt(0).toUpperCase() + direccion.slice(1);
+    $('#' + id_direccion_trabajador).val(direccion);
+});
+
+
+// Edo Civil
+
+$('#' + id_codigo_postal_trabajador).keypress(function(e){
+    charactersAllowed("1234567890",e);
+});
+
+$('#' + id_codigo_postal_trabajador).change(function(){
+    $('#' + id_codigo_postal_trabajador).val("" + $('#' + id_codigo_poid_codigo_postal_trabajadorstal_cliente).val());
+});
+
+// Claves
+
+$('#' + id_rfc_trabajador).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ1234567890",e);
+});
+
+$('#' + id_imss_trabajador).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ1234567890",e);
+});
+
+$('#' + id_curp_trabajador).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ1234567890",e);
+});
+
+$('#' + id_rfc_trabajador).change(function(){
+    var rfc= deleteBlankSpaces(id_rfc_trabajador).toUpperCase();
+    $('#' + id_rfc_trabajador).val(rfc);
+});
+
+$('#' + id_imss_trabajador).change(function(){
+    var rfc= deleteBlankSpaces(id_rfc_trabajador).toUpperCase();
+    $('#' + id_rfc_trabajador).val(rfc);
+});
+
+$('#' + id_imss_trabajador).change(function(){
+    var rfc= deleteBlankSpaces(id_rfc_trabajador).toUpperCase();
+    $('#' + id_rfc_trabajador).val(rfc);
+});
+
+// Banco
+
+$('#' + id_banco_trabajador).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ1234567890",e);
+});
+
+$('#' + id_cuenta_trabajador).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ1234567890",e);
+});
+
+$('#' + id_clabe_trabajador).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ1234567890",e);
+});
+
+$('#' + id_banco_trabajador).change(function(){
+    var banco_array = deleteBlankSpaces(id_banco_trabajador).split(" ");
+    var banco = "";
+    for(var i=0; i<banco_array.length; i++){
+        if(i>0){
+            banco += " ";
+        }
+        if(isPrepOrArt(banco_array[i].toLowerCase())){
+            banco += banco_array[i].toLowerCase();
+        } else {
+            banco += banco_array[i].charAt(0).toUpperCase() + banco_array[i].slice(1).toLowerCase();
+        }
+    }
+    $('#' + id_banco_trabajador).val(banco);
+});
+
+
+$('#' + id_cuenta_trabajador).change(function(){
+    var rfc= deleteBlankSpaces(id_rfc_trabajador).toUpperCase();
+    $('#' + id_rfc_trabajador).val(rfc);
+});
+
+$('#' + id_clabe_trabajador).change(function(){
+    var rfc= deleteBlankSpaces(id_rfc_trabajador).toUpperCase();
+    $('#' + id_rfc_trabajador).val(rfc);
+});
+
+
 // ----------------------- FUNCIONES NECESARIAS ----------------------------
 
 function resetFormTrabajador(){
-    $('#' + id_form__alta_trabajador).trigger("reset");
+    $('#' + id_form_alta_trabajador).trigger("reset");
+    existe_trabajador = false;
+    id_trabajador_existente = "";
+}
+
+function actualizarTablaTrabajador(){
+
 }
