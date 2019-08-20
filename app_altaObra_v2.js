@@ -1,7 +1,7 @@
 // id's de los elementos HTML
 var id_tab_obra = "tabAltaObra";
 var id_form_obra = "formobra";
-var id_dataTable_obra = "dataTableObra"; //falta por definir
+var id_dataTable_obra = "dataTableObra";
 
 // Clave: es letras y números (Todo en mayúscula) OBL
 // Nombre: todo en mayusculas OBL
