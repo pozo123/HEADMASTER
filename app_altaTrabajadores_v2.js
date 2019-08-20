@@ -10,8 +10,6 @@ var id_dataTable_trabajador = "dataTableCliente";
 
 var id_file_label_formato_excel_trabajador = "fileLabelImportarTrabajador";
 var id_file_input_formato_excel_trabajador = "fileInputImportarTrabajador";
-var id_ddl_especialidad_trabajador = "especialidadDdlrabajador";
-var id_ddl_puesto_trabajador = "puestoDdlrabajador";
 var id_span_correctos_trabajador = "spanCorrectosTrabajador";
 var id_span_incorrectos_trabajador = "spanIncorrectosTrabajador";
 var id_class_correctos_trabajador = "classCorrectosTrabajador";
@@ -29,6 +27,12 @@ var id_button_reset_file_trabajador = "resetFileButtonTrabajador";
 var id_button_desargar_file_trabajador = "descargarFormatoButtonTrabajador";
 var id_button_importar_file_trabajador = "importarButtonTrabajador";
 
+var id_nombre_trabajador = "nombreTrabajador";
+var id_apellido_paterno = "paternoTrabajador";
+var id_apellido_materno = "maternoTrabajador";
+
+var id_ddl_especialidad_trabajador = "especialidadDdlrabajador";
+var id_ddl_puesto_trabajador = "puestoDdlrabajador";
 // variables globales
 
 var formato_importar_fileSelected = "";
@@ -112,8 +116,28 @@ $('#' + id_file_input_formato_excel_trabajador).on("change", function(event){
             resetFormImportar();
             return;
         }
-        var validated_data = validateExcelRow(array_datos_xlsx)
+        var validated_data = validateExcelRow(array_datos_xlsx);
         firebase.database().ref(rama_bd_mano_obra + "/trabajadores").once("value").then(function(snapshot){
+
+            for(i=0;i<validated_data.length;i++){
+                if(validated_data[i][0] == ""){
+                    snapshot.forEach(function(trabSnap){
+                        var trabajador = trabSnap.val();
+                        if(trabajador["id_head"] == validated_data[i][1]["id_head"]){
+                            validated_data[i][2] = true;
+                            validated_data[i][3] = "El ID HEAD ya existe en el sistema/" + validated_data[i][3];
+                        };
+                    });
+
+                    for(j=0;j<validated_data.length;j++){
+                        if(validated_data[i][1]["id_head"] == validated_data[j][1]["id_head"] && i != j){
+                            validated_data[i][2] = true;
+                            validated_data[i][3] = "Existen dos registros con el mismo ID HEAD/" + validated_data[i][3];
+                        };
+                    };
+                }
+            }
+
             for(i=0;i<validated_data.length;i++){
                 if(validated_data[i][0] != ""){
                     if(!snapshot.child(validated_data[i][0]).exists()){
@@ -125,8 +149,31 @@ $('#' + id_file_input_formato_excel_trabajador).on("change", function(event){
                 }
             };
 
-            console.lo
-
+            // actualizar id_jefe con su firebase_id;
+            for(i=0;i<validated_data.length;i++){
+                if(validated_data[i][1]["id_jefe"] != ""){
+                    var id_jefe_correcto = true;
+                    // Reviso en el snapshot de la db
+                    snapshot.forEach(function(trabSnap){
+                        var trabajador = trabSnap.val();
+                        if(trabajador["id_head"] == validated_data[i][1]["id_jefe"]){
+                            validated_data[i][1]["id_jefe"] = trabSnap.key;
+                            id_jefe_correcto = true;
+                        };
+                    });
+                    // Reviso en los datos que vienen del excel ya que tengo el key con el que voy a pushearlos;
+                    for(j=0;j<validated_data.length;j++){
+                        if(validated_data[i][1]["id_jefe"] == validated_data[j][1]["id_head"]){
+                            validated_data[i][1]["id_jefe"] = validated_data[j][0];
+                            id_jefe_correcto = true;
+                        };
+                    };
+                    if(!id_jefe_correcto){
+                        validated_data[i][2] = true;
+                        validated_data[i][3] = "El Id del destajista no es correcto/" + validated_data[i][3];
+                    }
+                };
+            };
             // Método para llenar las tablas con info de usuarios correctos e incorrectos
             var corrupted_data = [];
             var ok_data = [];
@@ -236,12 +283,38 @@ $('#' + id_button_importar_file_trabajador).click(function(){
                     no_destajistas_path[rama_bd_mano_obra + "/listas/puesto/" + array_no_destajistas[k][1]["id_puesto"] + "/" + array_no_destajistas[k][0]] = true;
                     no_destajistas_path[rama_bd_mano_obra + "/listas/especialidad/" + array_no_destajistas[k][1]["id_especialidad"] + "/" + array_no_destajistas[k][0]] = true;
 
+                    if(array_no_destajistas[k][1]["id_jefe"] == ""){
+                        no_destajistas_path[rama_bd_mano_obra + "/listas/destajistas/HEAD/" + array_no_destajistas[k][0]] = true;
+                        no_destajistas_path[rama_bd_mano_obra + "/listas/destajistas/" + array_no_destajistas[k][1]["id_jefe"] + "/" + array_no_destajistas[k][0]] = null;
+                    } else {
+                        no_destajistas_path[rama_bd_mano_obra + "/listas/destajistas/HEAD/" + array_no_destajistas[k][0]] = null;
+                        no_destajistas_path[rama_bd_mano_obra + "/listas/destajistas/" + array_no_destajistas[k][1]["id_jefe"] + "/" + array_no_destajistas[k][0]] = true;
+                    }
+
                 }
-                console.log(destajistas_path);
-                console.log(no_destajistas_path);
+
+                firebase.database().ref().update(no_destajistas_path).then(function(){
+                    alert("¡Importación Exitosa!");
+                    var registro = {};
+
+                    for(var i=0;i<array_destajistas.length;i++){
+                        registro[array_destajistas[i][0]] = array_destajistas[i][1];
+                    }
+
+                    for(var i=0;i<array_no_destajistas.length;i++){
+                        registro[array_no_destajistas[i][0]] = array_no_destajistas[i][1];
+                    }
+
+                    pda("modificacion", rama_bd_mano_obra, "no aplica ya que fue importación de trabajadores.");
+                    resetFormImportar();
+                }).catch(function(er){
+                    alert("Error: " + er + " . Contacta al administrador del sistema");
+                    resetFormImportar();
+                });
             });
         }).catch(function(error){
-            alert("Error: " + error + ". Contacta al administrador del sistema");
+            alert("Error: " + error + " . Contacta al administrador del sistema");
+            resetFormImportar();
         });
 
 
@@ -447,7 +520,7 @@ function validateExcelRow(array){
             destajista = destajista.charAt(0).toUpperCase() + destajista.slice(1).toLowerCase();
         }
         if(destajista == "Sí"){
-            id_jefe = id_head;
+            id_jefe = "";
             is_destajista = true;
         } else {
             id_jefe = array[i]["ID HEAD de su jefe (en caso de ser trabajador de un destajista)"];
@@ -598,7 +671,7 @@ function validateExcelRow(array){
             nombre: nombre_completo,
             id_especialidad: id_especialidad,
             id_puesto: id_puesto,
-            sueldo_base: sueldo,
+            sueldo_base: parseFloat(sueldo),
             id_jefe: id_jefe,
             activo: true,
             destajista: is_destajista,
