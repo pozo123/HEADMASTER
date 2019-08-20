@@ -1042,19 +1042,19 @@
                                             </div>
                                             <br/>
                                             <div class="form-row">
-                                                <div class="form-group col-md-2">
+                                                <div class="form-group col-lg-2 col-md-6">
                                                     <label for="claveHeadTrabajador">ID HEAD:</label>
                                                     <input type="text" name="" id="claveHeadTrabajador"class="form-control" placeholder="ID HEAD">
                                                 </div>
-                                                <div class="form-group col-md-2">
+                                                <div class="form-group col-lg-2 col-md-6">
                                                     <label for="clavePagadoraTrabajador">ID Pagadora:</label>
                                                     <input type="text" name="" id="clavePagadoraTrabajador"class="form-control" placeholder="ID Pagadora">
                                                 </div>
-                                                <div class="form-group col-md-4">
+                                                <div class="form-group col-lg-4 col-md-6">
                                                     <label for="antiguedadTrabajador">Fecha de ingreso a HEAD</label>
                                                     <input class="form-control" type="text" id="antiguedadTrabajador"  placeholder="" readonly="readonly">
                                                 </div>
-                                                <div class="form-group col-md-4">
+                                                <div class="form-group col-lg-4 col-md-6">
                                                     <label for="puestoDdlrabajador">Puesto:</label>
                                                     <select id ="puestoDdlrabajador" class="form-control"></select>
                                                 </div>
@@ -1070,8 +1070,8 @@
                                                     <input type="text" name="" id="sueldoTrabajador"class="form-control" placeholder="Sueldo">
                                                 </div>
                                                 <div class="form-group col-md-4">
-                                                    <label for="jefeTrabajador">Jefe:</label>
-                                                    <select id ="jefeTrabajador" class="form-control"></select>
+                                                    <label for="jefeDdlTrabajador">Jefe:</label>
+                                                    <select id ="jefeDdlTrabajador" class="form-control"></select>
                                                 </div>
                                             </div>
                                             <br>
@@ -1166,16 +1166,49 @@
                                                         </select>
                                                     </div>
                                                     <div class="form-group col-md-3">
-                                                        <label for="cinturaTrabajador">Pantalón-Cintura:</label>
-                                                        <input type="text" name="" id="cinturaTrabajador" class="form-control" placeholder="Cintura (pulgadas)">
+                                                        <label for="cinturaDdlTrabajador">Pantalón-Cintura:</label>
+                                                        <select id ="cinturaDdlTrabajador" class="form-control">
+                                                            <option style="display:none"></option>
+                                                            <option>28</option>
+                                                            <option>29</option>
+                                                            <option>30</option>
+                                                            <option>32</option>
+                                                            <option>33</option>
+                                                            <option>34</option>
+                                                            <option>36</option>
+                                                            <option>38</option>
+                                                            <option>40</option>
+                                                            <option>42</option>
+                                                            <option>44</option>
+                                                        </select>
                                                     </div>
                                                     <div class="form-group col-md-3">
-                                                        <label for="largoTrabajador">Pantalón-Largo</label>
-                                                        <input type="text" name="" id="largoTrabajador" class="form-control" placeholder="Largo (pulgadas)">
+                                                        <label for="largoDdlTrabajador">Pantalón-Cintura:</label>
+                                                        <select id ="largoDdlTrabajador" class="form-control">
+                                                            <option style="display:none"></option>
+                                                            <option>30</option>
+                                                            <option>32</option>
+                                                            <option>33</option>
+                                                            <option>34</option>
+                                                        </select>
                                                     </div>
+
                                                     <div class="form-group col-md-3">
-                                                        <label for="zapatoTrabajador">Zapatos</label>
-                                                        <input type="text" name="" id="zapatoTrabajador" class="form-control" placeholder="Zapatos">
+                                                        <label for="zapatoDdlTrabajador">Zapatos (Mex):</label>
+                                                        <select id ="zapatoDdlTrabajador" class="form-control">
+                                                            <option style="display:none"></option>
+                                                            <option>25</option>
+                                                            <option>25.5</option>
+                                                            <option>26</option>
+                                                            <option>26.5</option>
+                                                            <option>27</option>
+                                                            <option>27.5</option>
+                                                            <option>28</option>
+                                                            <option>28.5</option>
+                                                            <option>29</option>
+                                                            <option>29.5</option>
+                                                            <option>30</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1185,7 +1218,7 @@
                                                     <button id="agregarButtonTrabajador" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
                                                 </div>
                                                 <div class= "col-6">
-                                                    <button id="borrarButtonTrabajador" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                    <button id="borrarButtonTrabajador" type="button" class="btn btn-outline-danger btn-block">Borrar Todo</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -1258,7 +1291,7 @@
         <script src="app_puestosMO_v2.js"></script>
         <script src="app_especialidadMO_v2.js"></script>
         <script src="app_altaTrabajadores_v2.js"></script>
-        <script src="app_altaProcesos_v2."></script>
+        <script src="app_altaProcesos_v2.js"></script>
 
         <!-- Excel to Json-->
         <script src="xlsx.full.min.js"></script>
