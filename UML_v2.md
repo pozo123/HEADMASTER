@@ -286,9 +286,9 @@ Nota: Todo float se ingresa a 2 decimales.
                         - domicilio: string
                         - codigo_postal: string
                     - claves:
-                        - RFC: string
-                        - IMSS: string
-                        - CURP: string
+                        - rfc: string
+                        - imss: string
+                        - curp: string
                     - datos_bancarios:
                         - banco: string
                         - cuenta: string
