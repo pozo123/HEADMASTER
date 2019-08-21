@@ -122,7 +122,8 @@ $('#' + id_tab_trabajador).click(function() {
     var option_head = document.createElement('option');
     option_head.text = option_head.value = "HEAD";
     var option_el_mismo = document.createElement('option');
-    option_el_mismo.text = option_el_mismo.value = "Èl mismo";
+    option_el_mismo.text = "Él mismo";
+    option_el_mismo.value = "destajista";
 
     select_jefe.appendChild(option_jefe);
     select_jefe.append(option_head);
@@ -589,8 +590,8 @@ function validateExcelRow(array){
             destajista = destajista.charAt(0).toUpperCase() + destajista.slice(1).toLowerCase();
         }
         if(destajista == "Sí"){
-            id_jefe = "";
-            jefe_text = "Él mismo";
+            id_jefe = "Él mismo";
+            jefe_text = "";
             is_destajista = true;
         } else {
             id_jefe = array[i]["ID HEAD de su jefe (en caso de ser trabajador de un destajista)"];
@@ -1175,9 +1176,10 @@ function actualizarTablaTrabajador(){
             var sueldo = formatMoney(trabajador.sueldo_base);
 
             var id_jefe = trabajador.id_jefe;
-            if(id_jefe = ""){
+            console.log(id_jefe);
+            if(id_jefe == ""){
                 if(trabajador.destajista){
-                    id_jefe = "Él mismo";
+                    id_jefe = "destajista";
                 } else {
                     id_jefe = "HEAD";
                 }
@@ -1265,9 +1267,9 @@ function actualizarTablaTrabajador(){
                 ,
                 { "visible": false, "targets": 0 },
                 { "visible": false, "targets": 4 }, 
-                //{ "visible": false, "targets": 7 }, 
-                //{ "visible": false, "targets": 9 }, 
-                //{ "visible": false, "targets": [12,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26]},
+                { "visible": false, "targets": 7 }, 
+                { "visible": false, "targets": 9 }, 
+                { "visible": false, "targets": [12,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26]},
 
                 { targets: 1, className: 'dt-body-center'},
                 { targets: 2, className: 'dt-body-center'},
@@ -1296,22 +1298,23 @@ function actualizarTablaTrabajador(){
             $('#' + id_ddl_jefe_trabajador + " [value=" + data[12] + "]").prop('selected', true);
             $('#' + id_nacimiento_trabajador).val(data[13]);
             $('#' + id_estado_civil_trabajador).val(data[14]);
+            console.log(data[15]);
             $('#' + id_ddl_sexo_trabajador + " [value=" + data[15] + "]").prop('selected', true);
             $('#' + id_direccion_trabajador).val(data[16]);
-            $('#' + id_codigo_postal_trabajador).val(data[16]);
-            $('#' + id_rfc_trabajador).val(data[17]);
-            $('#' + id_imss_trabajador).val(data[18]);
-            $('#' + id_curp_trabajador).val(data[19]);
-            $('#' + id_banco_trabajador).val(data[20]);
-            $('#' + id_cuenta_trabajador).val(data[21]);
-            $('#' + id_clabe_trabajador).val(data[22]);
-            $('#' + id_ddl_camisa_trabajador + " [value=" + data[23] + "]").prop('selected', true);
+            $('#' + id_codigo_postal_trabajador).val(data[17]);
+            $('#' + id_rfc_trabajador).val(data[18]);
+            $('#' + id_imss_trabajador).val(data[19]);
+            $('#' + id_curp_trabajador).val(data[20]);
+            $('#' + id_banco_trabajador).val(data[21]);
+            $('#' + id_cuenta_trabajador).val(data[22]);
+            $('#' + id_clabe_trabajador).val(data[23]);
+            $('#' + id_ddl_camisa_trabajador + " [value=" + data[24] + "]").prop('selected', true);
 
-            var pantalon_data = data[24].split("x");
+            var pantalon_data = data[25].split("x");
 
             $('#' + id_ddl_cintura_trabajador + " [value=" + pantalon_data[0] + "]").prop('selected', true);
             $('#' + id_ddl_largo_trabajador + " [value=" + pantalon_data[1] + "]").prop('selected', true);
-            $('#' + id_ddl_zapatos_trabajador + " [value=" + data[27] + "]").prop('selected', true);
+            $('#' + id_ddl_zapatos_trabajador + " [value=" + data[26] + "]").prop('selected', true);
         } );
     });
 };
