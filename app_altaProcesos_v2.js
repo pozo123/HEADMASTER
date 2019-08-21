@@ -119,6 +119,7 @@ $('#' + id_ddl_procesoProcesos).change(function(){
   if ($('#' + id_ddl_procesoProcesos + " option:selected").val() !== 0){
     existe_proceso = true;
     uid_proceso = $('#' + id_ddl_procesoProcesos + " option:selected").val();
+    $('#' + id_clave_proceso). val (uid_proceso);
     var proceso;
     firebase.database().ref(rama_bd_obras + "/procesos/" + $('#' + id_ddl_obraProcesos + " option:selected").val() + "/procesos/"+ uid_proceso).on('value',function(snapshot){
         proceso = snapshot.val();
@@ -127,7 +128,6 @@ $('#' + id_ddl_procesoProcesos).change(function(){
         $('#' + id_alcance_proceso ).val(proceso.alcance);
         if ($('#' + id_checkbox_supbroceso).prop("checked")){
           llenaDdlSubproceso(snapshot.key);
-          console.log("llenando subprocesos");
         }
     });
   } else {
@@ -140,7 +140,7 @@ $('#' + id_ddl_procesoProcesos).change(function(){
         }else {
           clave = "PC"+procesos;
         }
-        $('#' + id_clave_proceso).val(clave);
+        $('#'+id_clave_proceso).val(clave);
     });
   }
 });
@@ -222,9 +222,9 @@ $('#' + id_ddl_categoriaSubproceso).change(function(e){
   var subprocesos = cont + 1;
   var clave;
   if(subprocesos<10){
-    clave = $('#'+id_ddl_procesoProcesos +" option:selected").val() + "-" + $('#'+id_ddl_categoriaSubproceso+"option:selected").text() + "0" + clave;
+    clave = $('#'+id_clave_proceso).val() + "-" + $('#'+id_ddl_categoriaSubproceso+"option:selected").text() + "0" + clave;
   }else {
-    clave = $('#'+id_ddl_procesoProcesos +" option:selected").val() + "-" + + $('#'+id_ddl_categoriaSubproceso+"option:selected").text() + clave;
+    clave = $('#'+id_clave_proceso).val() + "-" + + $('#'+id_ddl_categoriaSubproceso+"option:selected").text() + clave;
   }
   $('#' + id_clave_subproceso).val(clave);
 });
