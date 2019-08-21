@@ -119,7 +119,7 @@ $('#' + id_agregar_obra).click(function() {
             obra_paths["procesos/" + regKey + "/num_procesos"]=3;
 
             // Actualizar listas
-            var fechas = fechasProgramadas();
+            var fechas = fechasProgramadasObra();
             obra_paths["listas/obras_no_terminadas/" + regKey + "/nombre"] = datos_obra.nombre;
             obra_paths["listas/obras_activas/" + regKey + "/nombre"] = datos_obra.nombre;
             obra_paths["listas/fechas_obra_inicio/programada/" + fechas.inicio + "/" + regKey] = true;
@@ -144,7 +144,7 @@ $('#' + id_borrar_obra).click(function() {
 $('#' + id_clave_obra).change(function(){
     $('#' + id_clave_obra).val($('#' + id_clave_obra).val().toUpperCase());
     existe_obra=false;
-    llenaCampos($('#' + id_clave_obra).val());
+    llenaCamposObra($('#' + id_clave_obra).val());
 });
 
 $('#' + id_clave_obra).keypress(function(e){
@@ -378,7 +378,7 @@ function datosADIC(){
   return adic;
 }
 //Llenar los campos en caso de existir la clave de la obra
-function llenaCampos(clave){
+function llenaCamposObra(clave){
   firebase.database().ref(rama_bd_obras + "/obras").orderByChild('clave_obra').equalTo(clave).limitToFirst(1).once("value").then(function(snapshot){
       snapshot.forEach(function(child_snap){
           var value = child_snap.val();
@@ -410,7 +410,7 @@ function llenaCampos(clave){
 }
 
 //Dar formato AAAAMMDD a las fechas
-function fechasProgramadas(){
+function fechasProgramadasObra(){
   var f_inicio = $('#' + id_fecha_inicio_obra).val().split('.');
   var f_final = $('#' + id_fecha_final_obra).val().split('.');
   var lista_obra_inicio = f_inicio[0] + ("0" + f_inicio[1]).slice(-2) + ("0" + f_inicio[2]).slice(-2);
@@ -542,9 +542,9 @@ function  habilitarObra(habilitada, id){
         // actualizar listas
         if(habilitada){
             firebase.database().ref(rama_bd_obras + "/listas/obras_activas/" + id).remove();
-            firebase.database().ref(rama_bd_obras + "/listas/obras_no_activas/" + id).set(true);
+            firebase.database().ref(rama_bd_obras + "/listas/obras_no_activas/" + id + "/nombre").set(registro_antiguo.nombre);
         } else {
-            firebase.database().ref(rama_bd_obras + "/listas/obras_activas/" + id).set(true)
+            firebase.database().ref(rama_bd_obras + "/listas/obras_activas/" + id+ "/nombre").set(registro_antiguo.nombre);
             firebase.database().ref(rama_bd_obras + "/listas/obras_no_activas/" + id).remove();
         }
         // pda
