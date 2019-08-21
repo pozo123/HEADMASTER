@@ -2,7 +2,7 @@
 var id_tab_trabajador = "tabTrabajadores";
 var id_form_importar_trabajador = "formImportarTrabajadores";
 var id_form_alta_trabajador = "formAltaTrabajadores";
-var id_dataTable_trabajador = "dataTableCliente";
+var id_dataTable_trabajador = "dataTableTrabajador";
 
 // Lo necesario para inicializar la pestaña (se hace al seleccionar la pestaña)
 // se resetea el formulario (ver en funciones)
@@ -40,7 +40,7 @@ var id_ddl_puesto_trabajador = "puestoDdlrabajador";
 var id_ddl_jefe_trabajador = "jefeDdlTrabajador";
 var id_ddl_sexo_trabajador = "sexoDdlTrabajador";
 var id_ddl_camisa_trabajador = "camisaDdlTrabajador";
-var id_ddl_cintura_trabajador = "largoDdlTrabajador";
+var id_ddl_cintura_trabajador = "cinturaDdlTrabajador";
 var id_ddl_largo_trabajador = "largoDdlTrabajador";
 var id_ddl_zapatos_trabajador = "zapatoDdlTrabajador";
 
@@ -57,6 +57,8 @@ var id_clabe_trabajador = "clabeTrabajador";
 
 var id_reset_form_trabajador = "borrarButtonTrabajador";
 var id_agregar_trabajador = "agregarButtonTrabajador";
+
+
 // variables globales
 
 var formato_importar_fileSelected = "";
@@ -81,6 +83,7 @@ $('#' + id_tab_trabajador).click(function() {
 
    // load data firebase
    // --- ESPECIALIDAD -----
+   $('#' + id_ddl_especialidad_trabajador).empty();
    var select_esp = document.getElementById(id_ddl_especialidad_trabajador);
    var option_esp = document.createElement('option');
    option_esp.style = "display:none";
@@ -95,6 +98,7 @@ $('#' + id_tab_trabajador).click(function() {
    });
 
     // --- PUESTO -----
+    $('#' + id_ddl_puesto_trabajador).empty();
     var select_puesto = document.getElementById(id_ddl_puesto_trabajador);
     var option_puesto = document.createElement('option');
     option_puesto.style = "display:none";
@@ -109,7 +113,7 @@ $('#' + id_tab_trabajador).click(function() {
     });
 
     // ---- JEFE -----
-
+    $('#' + id_ddl_jefe_trabajador).empty();
     var select_jefe = document.getElementById(id_ddl_jefe_trabajador);
     var option_jefe = document.createElement('option');
     option_jefe.style = "display:none";
@@ -216,6 +220,7 @@ $('#' + id_file_input_formato_excel_trabajador).on("change", function(event){
                         var trabajador = trabSnap.val();
                         if(trabajador["id_head"] == validated_data[i][1]["id_jefe"]){
                             validated_data[i][1]["id_jefe"] = trabSnap.key;
+                            validated_data[i][1]["jefe"] = trabajador["nombre"];
                             id_jefe_correcto = true;
                         };
                     });
@@ -223,6 +228,7 @@ $('#' + id_file_input_formato_excel_trabajador).on("change", function(event){
                     for(j=0;j<validated_data.length;j++){
                         if(validated_data[i][1]["id_jefe"] == validated_data[j][1]["id_head"]){
                             validated_data[i][1]["id_jefe"] = validated_data[j][0];
+                            validated_data[i][1]["jefe"] = validated_data[j][1]["nombre"];
                             id_jefe_correcto = true;
                         };
                     };
@@ -494,7 +500,7 @@ function validateExcelRow(array){
                 }
             }
         }
-        var nombre_completo = nombre + " " + a_paterno + " " + a_materno;
+        var nombre_completo = nombre + "_" + a_paterno + "_" + a_materno;
 
 
         // validación Especialidad y Puesto
@@ -502,6 +508,7 @@ function validateExcelRow(array){
         var especialidad = array[i]["Especialidad"];
         especialidad = especialidad == undefined ? "": deleteBlankSpacesString(especialidad).toUpperCase();
         var id_especialidad = "";
+        var especialidad_text = "";
         if(especialidad == ""){
             razon += "/La especialidad del trabajador es necesaria para su ingreso al sistema.";
             is_corrupted = true;
@@ -511,6 +518,7 @@ function validateExcelRow(array){
                 if (this.text == especialidad) {
                     exists = true;
                     id_especialidad = this.value;
+                    especialidad_text = this.text;
                     return false;
                 }
             });
@@ -523,6 +531,7 @@ function validateExcelRow(array){
         var puesto = array[i]["Puesto"];
         puesto = puesto == undefined ? "": deleteBlankSpacesString(puesto);
         var id_puesto = "";
+        var puesto_text = "";
 
         if(puesto == ""){
             razon  += "/El puesto del trabajador es necesaria para su ingreso al sistema.";
@@ -542,6 +551,7 @@ function validateExcelRow(array){
                 if (this.text == puesto) {
                     exists = true;
                     id_puesto = this.value;
+                    puesto_text = this.text;
                     return false;
                 }
             });
@@ -571,6 +581,7 @@ function validateExcelRow(array){
         destajista = destajista == undefined ? "": destajista;
         var is_destajista;
         var id_jefe;
+        var jefe_text = "";
         if(destajista == ""){
             razon += "/Hace falta indicar si el trabajador es destajista."
             is_corrupted = true;
@@ -579,10 +590,13 @@ function validateExcelRow(array){
         }
         if(destajista == "Sí"){
             id_jefe = "";
+            jefe_text = "Él mismo";
             is_destajista = true;
         } else {
             id_jefe = array[i]["ID HEAD de su jefe (en caso de ser trabajador de un destajista)"];
-            id_jefe = id_jefe == undefined ? "": id_jefe;
+            id_jefe = id_jefe == undefined ? "" : id_jefe;
+            jefe_text = id_jefe == "" ? "HEAD" : id_jefe;
+            console.log(jefe_text);
             is_destajista = false;
         }
 
@@ -728,9 +742,12 @@ function validateExcelRow(array){
             id_pagadora: id_pagadora,
             nombre: nombre_completo,
             id_especialidad: id_especialidad,
+            especialidad: especialidad_text,
             id_puesto: id_puesto,
+            puesto: puesto_text,
             sueldo_base: parseFloat(sueldo),
             id_jefe: id_jefe,
+            jefe: jefe_text,
             activo: true,
             destajista: is_destajista,
             fecha_antiguedad: fecha_antiguedad_timestamps,
@@ -837,6 +854,15 @@ $('#' + id_hide_opcionales_button_trabajador).click(function(){
 // al apretar el botón de resetear, se resetea todo el formulario
 $('#' + id_reset_form_trabajador).click(function(){
     resetFormTrabajador();
+});
+
+
+$('#' + id_agregar_trabajador).click(function(){
+    console.log(1);
+    if(!validateTrabajador()){
+        return false;
+    }
+
 });
 
 // --------------------- VALIDACIÓN DE FORMULARIO --------------------------
@@ -965,7 +991,7 @@ $('#' + id_codigo_postal_trabajador).keypress(function(e){
 });
 
 $('#' + id_codigo_postal_trabajador).change(function(){
-    $('#' + id_codigo_postal_trabajador).val("" + $('#' + id_codigo_poid_codigo_postal_trabajadorstal_cliente).val());
+    $('#' + id_codigo_postal_trabajador).val("" + $('#' + id_codigo_postal_trabajador).val());
 });
 
 // Claves
@@ -1038,6 +1064,26 @@ $('#' + id_clabe_trabajador).change(function(){
     $('#' + id_rfc_trabajador).val(rfc);
 });
 
+$('#' + id_nombre_trabajador).on("cut copy paste",function(e) {
+    e.preventDefault();
+ });
+
+ $('#' + id_paterno_trabajador).on("cut copy paste",function(e) {
+    e.preventDefault();
+ });
+
+ $('#' + id_materno_trabajador).on("cut copy paste",function(e) {
+    e.preventDefault();
+ });
+
+ $('#' + id_id_head_trabajador).on("cut copy paste",function(e) {
+    e.preventDefault();
+ });
+
+ $('#' + id_id_pagadora_trabajador).on("cut copy paste",function(e) {
+    e.preventDefault();
+ });
+
 
 // ----------------------- FUNCIONES NECESARIAS ----------------------------
 
@@ -1047,6 +1093,66 @@ function resetFormTrabajador(){
     id_trabajador_existente = "";
 }
 
+function validateTrabajador(){
+    if($('#' + id_nombre_trabajador).val() == ""){
+        alert("Escribe el nombre de pila del trabajador.");
+        return false;
+    } else if($('#' + id_paterno_trabajador).val() == ""){
+        alert("Escribe el apellido paterno del trabajador.");
+        return false;
+    } else if($('#' + id_id_head_trabajador).val() == ""){
+        alert("Escribe el ID HEAD del trabajador.");
+        return false;
+    } else if($('#' + id_id_pagadora_trabajador).val() == ""){
+        alert("Escribe el ID de la pagadora del trabajador.");
+        return false;
+    } else if($('#' + id_antiguedad_trabajador).val() == ""){
+        alert("Se necesita indicar la fecha de ingreso del trabajador a HEAD.");
+        return false;
+    } else if($('#' + id_ddl_puesto_trabajador + " option:selected").val() == ""){
+        alert("Se necesita indicar el puesto del trabajador.");
+        return false;
+    } else if($('#' + id_ddl_especialidad_trabajador + " option:selected").val() == ""){
+        alert("Se necesita indicar la especialidad del trabajador.");
+        return false;
+    } else if($('#' + id_sueldo_trabajador).val() == ""){
+        alert("Escribe el sueldo del trabajador.");
+        return false;
+    } else if($('#' + id_ddl_jefe_trabajador + " option:selected").val() == ""){
+        alert("Se necesita indicar si el trabajador es destajista, si es empleado de HEAD o empleado de algún destajista.");
+        return false;
+    } else if($('#' + id_codigo_postal_trabajador).val() != "" && $('#' + id_codigo_postal_trabajador).val().length < 5){
+        alert("El código postal tiene que ser de 5 dígitos.")
+        return false;
+    } else if($('#' + id_ddl_cintura_trabajador + " option:selected").val() != "" && $('#' + id_ddl_largo_trabajador + " option:selected").val().length == ""){
+        alert("Para el pantalón es necesario dar ambas medidas.")
+        return false;
+    } else if($('#' + id_ddl_cintura_trabajador + " option:selected").val() == "" && $('#' + id_ddl_largo_trabajador + " option:selected").val().length != ""){
+        alert("Para el pantalón es necesario dar ambas medidas.")
+        return false;
+    } else {
+        return true;
+    };
+}
+
 function actualizarTablaTrabajador(){
+    firebase.database().ref(rama_bd_mano_obra + "/trabajadores").on("value", function(snapshot){
+        var datosTrabajador = [];
+        snapshot.forEach(function(trabajadorSnap){
+            var trabajador = trabajadorSnap.val();
+            var firebase_id = trabajadorSnap.key;
+            var id_head = trabajador.id_head;
+            var id_pagadora = trabajador.id_pagadora;
+            var nombre = trabajador.nombre;
+            var puesto = "puestos[trabajador.id_puesto];"
+            var especialidad = "especialidades[trabajador.id_especialidad];"
+            var sueldo = trabajador.sueldo;
+            
+            var fecha_nacimiento = trabajadorSnap.child("info_personal").val().fecha_nacimiento
+            var estado_civil = trabajadorSnap.child("info_personal").val().estado_civil;
+            var sexo = trabajadorSnap.child("info_personal").val().sexo;;
+        });
+
+    });
 
 }

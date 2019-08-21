@@ -1046,7 +1046,7 @@
                                                     <label for="claveHeadTrabajador">ID HEAD:</label>
                                                     <input type="text" name="" id="claveHeadTrabajador"class="form-control" placeholder="ID HEAD">
                                                 </div>
-                                                <div class="form-group col-lg-2 col-md-6">
+                                                <div class="form-group col-lg-3 col-md-6">
                                                     <label for="clavePagadoraTrabajador">ID Pagadora:</label>
                                                     <input type="text" name="" id="clavePagadoraTrabajador"class="form-control" placeholder="ID Pagadora">
                                                 </div>
@@ -1054,7 +1054,7 @@
                                                     <label for="antiguedadTrabajador">Fecha de ingreso a HEAD</label>
                                                     <input class="form-control" type="text" id="antiguedadTrabajador"  placeholder="" readonly="readonly">
                                                 </div>
-                                                <div class="form-group col-lg-4 col-md-6">
+                                                <div class="form-group col-lg-3 col-md-6">
                                                     <label for="puestoDdlrabajador">Puesto:</label>
                                                     <select id ="puestoDdlrabajador" class="form-control"></select>
                                                 </div>
@@ -1113,7 +1113,7 @@
                                                     </div>
                                                     <div class="form-group col-md-4">
                                                         <label for="cpTrabajador">Código Postal:</label>
-                                                        <input type="text" name="" id="cpTrabajador" class="form-control" placeholder="Código Postal">
+                                                        <input type="text" name="" maxlength="5" id="cpTrabajador" class="form-control" placeholder="Código Postal">
                                                     </div>
                                                 </div>
                                                 <br>
@@ -1154,7 +1154,7 @@
                                                 <h5> Tallas </h5>
                                                 <br>
                                                 <div class="form-row">
-                                                    <div class="form-group col-md-3">
+                                                    <div class="form-group col-lg-3 col-md-6">
                                                         <label for="camisaDdlTrabajador">Camisa:</label>
                                                         <select id ="camisaDdlTrabajador" class="form-control">
                                                             <option style="display:none"></option>
@@ -1165,7 +1165,7 @@
                                                             <option>XLL</option>
                                                         </select>
                                                     </div>
-                                                    <div class="form-group col-md-3">
+                                                    <div class="form-group col-lg-3 col-md-6">
                                                         <label for="cinturaDdlTrabajador">Pantalón-Cintura:</label>
                                                         <select id ="cinturaDdlTrabajador" class="form-control">
                                                             <option style="display:none"></option>
@@ -1182,8 +1182,8 @@
                                                             <option>44</option>
                                                         </select>
                                                     </div>
-                                                    <div class="form-group col-md-3">
-                                                        <label for="largoDdlTrabajador">Pantalón-Cintura:</label>
+                                                    <div class="form-group col-lg-3 col-md-6">
+                                                        <label for="largoDdlTrabajador">Pantalón-Largo:</label>
                                                         <select id ="largoDdlTrabajador" class="form-control">
                                                             <option style="display:none"></option>
                                                             <option>30</option>
@@ -1193,7 +1193,7 @@
                                                         </select>
                                                     </div>
 
-                                                    <div class="form-group col-md-3">
+                                                    <div class="form-group col-lg-3 col-md-6">
                                                         <label for="zapatoDdlTrabajador">Zapatos (Mex):</label>
                                                         <select id ="zapatoDdlTrabajador" class="form-control">
                                                             <option style="display:none"></option>
@@ -1225,6 +1225,72 @@
                                         <br/>
                                     </div>
                                     <div class= "col-lg-2"></div>
+                                    <div class = "tableWrapper">
+                                        <table id="dataTableTrabajador" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID_firebase</th>
+                                                    <th>ID HEAD</th>
+                                                    <th>ID Pagadora</th>
+                                                    <th>Nombre(s)</th>
+                                                    <th>Apellido paterno</th>
+                                                    <th>Apellido materno</th>
+                                                    <th>Nombre</th>
+                                                    <th>Fecha de ingreso</th>
+                                                    <th>Puesto</th>
+                                                    <th>Esp</th>
+                                                    <th>Sueldo</th>
+                                                    <th>Jefe</th>
+                                                    <th>Fecha de nacimiento</th>
+                                                    <th>Estado Civil</th>
+                                                    <th>Sexo</th>
+                                                    <th>Dirección</th>
+                                                    <th>Código postal</th>
+                                                    <th>RFC</th>
+                                                    <th>IMSS</th>
+                                                    <th>CURP</th>
+                                                    <th>Banco</th>
+                                                    <th>Cuenta</th>
+                                                    <th>CLABE</th>
+                                                    <th>Camisa</th>
+                                                    <th>Cintura</th>
+                                                    <th>Largo</th>
+                                                    <th>Zapatos</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>ID_firebase</th>
+                                                    <th>ID HEAD</th>
+                                                    <th>ID Pagadora</th>
+                                                    <th>Nombre(s)</th>
+                                                    <th>Apellido paterno</th>
+                                                    <th>Apellido materno</th>
+                                                    <th>Nombre</th>
+                                                    <th>Fecha de ingreso</th>
+                                                    <th>Puesto</th>
+                                                    <th>Esp</th>
+                                                    <th>Sueldo</th>
+                                                    <th>Jefe</th>
+                                                    <th>Fecha de nacimiento</th>
+                                                    <th>Estado Civil</th>
+                                                    <th>Sexo</th>
+                                                    <th>Dirección</th>
+                                                    <th>Código postal</th>
+                                                    <th>RFC</th>
+                                                    <th>IMSS</th>
+                                                    <th>CURP</th>
+                                                    <th>Banco</th>
+                                                    <th>Cuenta</th>
+                                                    <th>CLABE</th>
+                                                    <th>Camisa</th>
+                                                    <th>Cintura</th>
+                                                    <th>Largo</th>
+                                                    <th>Zapatos</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>

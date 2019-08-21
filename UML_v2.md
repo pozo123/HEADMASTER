@@ -270,9 +270,12 @@ Nota: Todo float se ingresa a 2 decimales.
                     - id_pagadora: string
                     - nombre: string
                     - id_puesto: sstring (obtener de datos_referencia -> cuadrilla)
+                    - puesto: string
                     - id_especialidad: string
+                    - especialidad: string
                     - sueldo_base: float (semanal)
                     - id_jefe: string (Se obtiene de destajistas) (trabajador por parte de HEAD no tiene este atributo)
+                    - jefe: string
                     - activo: boolean
                     - destajista: boolean
                     - fecha_antiguedad: timestamp

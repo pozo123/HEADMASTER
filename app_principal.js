@@ -32,84 +32,17 @@ $(document).ready(function() {
 });
 
 $('#botonMagico').click(function(){
-    /*firebase.database().ref("obras").once('value').then(function(snapshot){
-        var obras_json = snapshot.val();
-        snapshot.forEach(function(obraSnap){
-            obraSnap.child("procesos").forEach(function(procSnap){
-                if(procSnap.child("num_subprocesos").val() == 0){
-                    //es hoja
-                    var preco = parseFloat(procSnap.child("kaizen/PRODUCCION/COPEO/PREC").val());
-                    var copeo = parseFloat(procSnap.child("kaizen/PRODUCCION/COPEO/COPEO").val());
-                    var copeo_rama = {
-                        total: copeo == 0 ? preco : copeo,
-                        subtotal: copeo == 0 ? preco / 1.34 : copeo / 1.34,
-                        impuestos: 34,
-                        num_entradas: 1,
-                        entradas: {
-                            1: {
-                                nombre: "Previo",
-                                alcance: "Datos previos a la calculadora",
-                                pad: pistaDeAuditoria(),
-                                total: copeo == 0 ? preco / 1.34 : copeo / 1.34,
-                                cuadrilla: {
-                                    ofi: 0,
-                                    mof: 0,
-                                    ayu: 0,
-                                    enc: 0,
-                                    sup: 0,
-                                },
-                                multiplicadores: {
-                                    dias: 0,
-                                    unidades: 0,
-                                }
-                            }
-                        }
-                    };
-                    obras_json[obraSnap.key]["procesos"][procSnap.key]["copeo"] = copeo_rama;
-                    if(copeo == 0){
-                        obras_json[obraSnap.key]["procesos"][procSnap.key]["kaizen"]["PRODUCCION"]["COPEO"]["COPEO"] = preco;
-                    }
-                } else {
-                    procSnap.child("subprocesos").forEach(function(subpSnap){
-                        //es hoja
-                        var preco = parseFloat(subpSnap.child("kaizen/PRODUCCION/COPEO/PREC").val());
-                        var copeo = parseFloat(subpSnap.child("kaizen/PRODUCCION/COPEO/COPEO").val());
-                        var copeo_rama = {
-                            total: copeo == 0 ? preco : copeo,
-                            subtotal: copeo == 0 ? preco / 1.34 : copeo / 1.34,
-                            impuestos: 34,
-                            num_entradas: 1,
-                            entradas: {
-                                1: {
-                                    nombre: "Previo",
-                                    alcance: "Datos previos a la calculadora",
-                                    pad: pistaDeAuditoria(),
-                                    total: copeo == 0 ? preco / 1.34 : copeo / 1.34,
-                                    cuadrilla: {
-                                        ofi: 0,
-                                        mof: 0,
-                                        ayu: 0,
-                                        enc: 0,
-                                        sup: 0,
-                                    },
-                                    multiplicadores: {
-                                        dias: 0,
-                                        unidades: 0,
-                                    }
-                                }
-                            }
-                        };
-                        obras_json[obraSnap.key]["procesos"][procSnap.key]["subprocesos"][subpSnap.key]["copeo"] = copeo_rama;
-                        if(copeo == 0){
-                            obras_json[obraSnap.key]["procesos"][procSnap.key]["subprocesos"][subpSnap.key]["kaizen"]["PRODUCCION"]["COPEO"]["COPEO"] = preco;
-                        }
-                    });
-                }
-            });
+/*     var actualizar_horas = {};
+    firebase.database().ref("rrhh/trabajadores").once("value").then(function(snapshot){
+        snapshot.forEach(function(childSnap){
+            actualizar_horas["rrhh/trabajadores/" + childSnap.key + "/nomina/2019/15/horas_extra"] = null;
+            actualizar_horas["rrhh/trabajadores/" + childSnap.key + "/nomina/2019/15/total_horas_extra"] = null;
+            actualizar_horas["rrhh/trabajadores/" + childSnap.key + "/nomina/2019/15/impuestos/impuestos_horas_extra"] = null;
         });
-        console.log(obras_json);
-        firebase.database().ref("obras").update(obras_json);
-    });*/
+
+        firebase.database().ref().update(actualizar_horas);
+        console.log(actualizar_horas);
+    }); */
 });
 
 firebase.auth().onAuthStateChanged(user => {

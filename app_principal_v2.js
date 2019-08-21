@@ -29,6 +29,7 @@ $(document).ready(function() {
         $('#sidebar').toggleClass('active');
         $(this).toggleClass('active');
     });
+    
     firebase.database().ref("info_web").once('value',function(snapshot){
         version = snapshot.child("version").val();
         verifyVersion();

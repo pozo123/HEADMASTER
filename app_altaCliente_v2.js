@@ -261,7 +261,7 @@ function validateCliente(){
 
 function actualizarTablaCliente(){
     firebase.database().ref(rama_bd_clientes+ "/despachos").on("value", function(snapshot){
-        var datosAltaCliente = [];
+        var datosCliente = [];
         snapshot.forEach(function(clienteSnap){
             var cliente = clienteSnap.val();
             var cliente_id = clienteSnap.key;
@@ -289,7 +289,7 @@ function actualizarTablaCliente(){
             var direccion_text = calle + " " + numero_exterior + " " + numero_interior + ", " + colonia + ", " + ciudad + ", " + estado + ". " + codigo_postal;
             var direccion = estado + "/" + ciudad + "/" + colonia + "/" + codigo_postal + "/" + calle + "/" + numero_exterior + "/" + numero_interior;
 
-            datosAltaCliente.push([
+            datosCliente.push([
                 "",
                 cliente_id,
                 direccion,
@@ -303,7 +303,7 @@ function actualizarTablaCliente(){
         });
         tabla_cliente = $('#'+ id_dataTable_cliente).DataTable({
             destroy: true,
-            data: datosAltaCliente,
+            data: datosCliente,
             language: idioma_espanol,
             "columnDefs": [
                 {
