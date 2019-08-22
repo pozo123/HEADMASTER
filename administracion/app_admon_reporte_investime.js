@@ -69,6 +69,7 @@ $('#' + id_generar_button_reporte_investime).click(function() {
                 {title: "Status Obra"},
                 {title: "Editar"},
                 {title: "UID"},
+                {title: "Activo"},
             ],
             "columnDefs": [ 
             	{ "visible": false, "targets": 7 },
@@ -595,6 +596,7 @@ function getRegsReporteAdmin(datos_reporte, data){
                                 reg.status_obra,
                                 button_text,
                                 regSnap.key,
+                                reg.activo
 	                        ]);
 		                }
 		            });
