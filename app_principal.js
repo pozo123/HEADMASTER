@@ -33,15 +33,18 @@ $(document).ready(function() {
 
 $('#botonMagico').click(function(){
 /*     var actualizar_horas = {};
-    firebase.database().ref("rrhh/trabajadores").once("value").then(function(snapshot){
+    firebase.database().ref("rrhh/pagos_nomina/2019/15").once("value").then(function(snapshot){
         snapshot.forEach(function(childSnap){
-            actualizar_horas["rrhh/trabajadores/" + childSnap.key + "/nomina/2019/15/horas_extra"] = null;
-            actualizar_horas["rrhh/trabajadores/" + childSnap.key + "/nomina/2019/15/total_horas_extra"] = null;
-            actualizar_horas["rrhh/trabajadores/" + childSnap.key + "/nomina/2019/15/impuestos/impuestos_horas_extra"] = null;
+            childSnap.child("trabajadores").forEach(function(trabSnap){
+                actualizar_horas[childSnap.key + "/trabajadores/" + trabSnap.key + "/horas_extra"] = null;
+                actualizar_horas[childSnap.key + "/trabajadores/" + trabSnap.key + "/total_horas_extra"] = null;
+                actualizar_horas[childSnap.key + "/trabajadores/" + trabSnap.key + "/impuestos/impuestos_horas_extra"] = null;
+            });
         });
 
-        firebase.database().ref().update(actualizar_horas);
-        console.log(actualizar_horas);
+        firebase.database().ref("rrhh/pagos_nomina/2019/15").update(actualizar_horas).then(function(){
+            alert("Exito");
+        });
     }); */
 });
 
