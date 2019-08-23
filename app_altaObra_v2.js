@@ -116,7 +116,7 @@ $('#' + id_agregar_obra).click(function() {
             obra_paths["procesos/" + regKey + "/procesos/PC00"]=datosPC00();
             obra_paths["procesos/" + regKey + "/procesos/MISC"]=datosMISC(fechas);
             obra_paths["procesos/" + regKey + "/procesos/ADIC"]=datosADIC();
-            obra_paths["procesos/" + regKey + "/num_procesos"]=3;
+            obra_paths["procesos/" + regKey + "/num_procesos"]=0;
 
             // Actualizar listas
             var fechas = fechasProgramadasObra();
@@ -341,7 +341,7 @@ function datosPC00(){
   pc00 = {
     nombre: "PREPROYECTO",
     alcance:"Trabajo previo a firmar contrato",
-    num_subprocesos: 1,
+    num_subprocesos: 0,
     subprocesos:{
       PC00:{
         nombre: "PREPROYECTO",
@@ -357,7 +357,7 @@ function datosMISC(fechas){
   misc = {
     nombre: "MISCELANEOS",
     alcance:"Miscelaneos",
-    num_subprocesos: 1,
+    num_subprocesos: 0,
     subprocesos:{
       MISC:{
         nombre: "MISCELANEOS",

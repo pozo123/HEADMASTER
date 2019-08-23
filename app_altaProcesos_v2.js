@@ -14,6 +14,8 @@ var id_ddl_subproceso = "ddl_subprocesoProcesos";
 var id_clave_subproceso = "claveSubproceso";
 var id_nombre_subproceso = "nombreSubproceso";
 var id_ddl_categoriaSubproceso = "categoriaSubprocesoProcesos";
+var id_fecha_inicio_proceso = "fechaInicioProceso";
+var id_fecha_final_proceso = "fechaFinalProceso";
 var id_fecha_inicio_subproceso = "fechaInicioSubproceso";
 var id_fecha_final_subproceso = "fechaFinalSubproceso";
 var id_alcance_subproceso = "alcanceSubprocesoProcesos";
@@ -33,6 +35,12 @@ jQuery.datetimepicker.setLocale('es');
 $('#' + id_tab_proceso).click(function() {
     resetFormProceso();
     // Con las líneas siguiente se genera el cuadro para las fechas en el HTML
+    jQuery('#' + id_fecha_inicio_proceso).datetimepicker(
+        {timepicker:false, weeks:true,format:'Y.m.d'}
+    );
+    jQuery('#' + id_fecha_final_proceso).datetimepicker(
+        {timepicker:false, weeks:true,format:'Y.m.d'}
+    );
     jQuery('#' + id_fecha_inicio_subproceso).datetimepicker(
         {timepicker:false, weeks:true,format:'Y.m.d'}
     );
@@ -67,7 +75,7 @@ $('#' + id_agregar_proceso).click(function() {
     var registro_antiguo_s;
     var registro_antiguo_p;
     var modificacion=false;
-    var cadena_alert;
+    var cadena_alert="";
     uid_proceso = $('#' + id_clave_proceso).val();
     firebase.database().ref(rama_bd_obras + "/procesos/" + uid_obra).once("value").then(function(snapshot){
       var registro_obra = snapshot.val();
@@ -75,10 +83,16 @@ $('#' + id_agregar_proceso).click(function() {
       if (existe_proceso){ //editar
         registro_antiguo_p = registro_obra["procesos"][uid_proceso];
         var datos_proceso= datosAltaProceso(0);
-        if ($('#' + id_nombre_proceso).val() !== registro_antiguo_p.nombre || $('#' + id_alcance_proceso).val() !== registro_antiguo_p.alcance){
+        var fechas = fechasSubproceso(id_fecha_inicio_proceso, id_fecha_final_proceso);
+        var subproceso_antiguo = registro_antiguo_p["subprocesos"][uid_proceso];
+        if ($('#' + id_nombre_proceso).val() !== registro_antiguo_p.nombre || $('#' + id_alcance_proceso).val() !== registro_antiguo_p.alcance || fechas.fecha_inicio_teorica == subproceso_antiguo.fechas.fecha_inicio_teorica || fechas.fecha_final_teorica == subproceso_antiguo.fechas.fecha_final_teorica){
           //Actualizar los campos del proceso
           proceso_update["procesos/" + uid_obra + "/procesos/" + uid_proceso + "/nombre"] = datos_proceso.nombre;
           proceso_update["procesos/" + uid_obra + "/procesos/" + uid_proceso + "/alcance"] = datos_proceso.alcance;
+          proceso_update["procesos/" + uid_obra + "/procesos/" + uid_proceso + "/subprocesos/" + uid_proceso + "/nombre"] = datos_proceso.nombre;
+          proceso_update["procesos/" + uid_obra + "/procesos/" + uid_proceso + "/subprocesos/" + uid_proceso + "/alcance"] = datos_proceso.alcance;
+          proceso_update["procesos/" + uid_obra + "/procesos/" + uid_proceso + "/subprocesos/" + uid_proceso + "/fechas/fecha_inicio_teorica"] = fechas.fecha_inicio_teorica;
+          proceso_update["procesos/" + uid_obra + "/procesos/" + uid_proceso + "/subprocesos/" + uid_proceso + "/fechas/fecha_final_teorica"] = fechas.fecha_final_teorica;
           cadena_alert= "¡Edición exitosa de proceso! ";
           modificacion = true;
         } else {
@@ -101,6 +115,7 @@ $('#' + id_agregar_proceso).click(function() {
         proceso_update[proceso_path + "/nombre"] = datos_proceso.nombre;
         proceso_update[proceso_path + "/alcance"] = datos_proceso.alcance;
         proceso_update[proceso_path + "/num_subprocesos"] = datos_proceso.num_subprocesos;
+        proceso_update[proceso_path + "/subprocesos/" + uid_proceso] = datosAltaSubprocesoCopia();
         proceso_update["procesos/" + uid_obra + "/num_procesos"] = obra_num_procesos;
         cadena_alert= cadena_alert + "¡Alta exitosa de proceso! ";
       };
@@ -191,12 +206,17 @@ $('#' + id_ddl_procesoProcesos).change(function(){
     var proceso;
     firebase.database().ref(rama_bd_obras + "/procesos/" + $('#' + id_ddl_obraProcesos + " option:selected").val() + "/procesos/"+ uid_proceso).on('value',function(snapshot){
         proceso = snapshot.val();
+        var fechas = proceso["subprocesos"][snapshot.key]["fechas"];
         $('#' + id_clave_proceso).val(snapshot.key);
         $('#' + id_nombre_proceso ).val(proceso.nombre);
         $('#' + id_alcance_proceso ).val(proceso.alcance);
         if ($('#' + id_checkbox_supbroceso).prop("checked")){
           llenaDdlSubproceso(snapshot.key);
         }
+        var fecha = new Date(fechas.fecha_inicio_teorica);
+        $('#' + id_fecha_inicio_proceso ).val(fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2));
+        fecha = new Date(fechas.fecha_final_teorica);
+        $('#' + id_fecha_final_proceso ).val(fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2));
     });
   } else {
     existe_proceso = false;
@@ -322,6 +342,8 @@ function resetFormProceso_proceso(proceso){
   }
   $('#' + id_clave_proceso ).val("");
   $('#' + id_nombre_proceso ).val("");
+  $('#' + id_fecha_inicio_proceso  ).val("");
+  $('#' + id_fecha_final_proceso  ).val("");
   $('#' + id_alcance_proceso ).val("");
 }
 function resetFormProceso_subproceso(subproceso){
@@ -403,24 +425,42 @@ function datosAltaProceso(num_subp){
   return proceso;
 }
 //Construir el JSON de fechas para la obra
-function fechasAltaSubproceso(){
+function fechasSubproceso(fechaDeInicio, fechaDeFinal){
   var fechas = {};
-  var f_inicio = $('#' + id_fecha_inicio_subproceso ).val().split('.');
-  var f_final = $('#' + id_fecha_final_subproceso ).val().split('.');
+  var f_inicio = $('#' + fechaDeInicio).val().split('.');
+  var f_final = $('#' + fechaDeFinal).val().split('.');
   fechas = {
       fecha_inicio_teorica: new Date(f_inicio[0], f_inicio[1] - 1, f_inicio[2]).getTime(),
       fecha_final_teorica: new Date(f_final[0], f_final[1] - 1, f_final[2]).getTime()
   }
   return fechas;
 }
+
 //Construir el JSON de la obra
-function datosAltaSubproceso(precio, suministros, precopeo, horas, costo){
+function datosAltaSubproceso(){
   var subproceso = {};
   subproceso = {
     nombre: $('#' + id_nombre_subproceso).val(),
     categoria: $('#'+id_ddl_categoriaSubproceso+' option:selected').val(),
     alcance: $('#' + id_alcance_subproceso).val(),
-    fechas: fechasAltaSubproceso(),
+    fechas: fechasSubproceso(id_fecha_inicio_subproceso, id_fecha_final_subproceso),
+    precio_venta: 0,
+    costo_suministros:0,
+    precopeo: 0,
+    score: {
+      horas_programadas: 0,
+      costo_hora: 0
+    }
+  }
+  return subproceso;
+}
+//Construir el JSON de la obra
+function datosAltaSubprocesoCopia(){
+  var subproceso = {};
+  subproceso = {
+    nombre: $('#' + id_nombre_proceso).val(),
+    alcance: $('#' + id_alcance_proceso).val(),
+    fechas: fechasSubproceso(id_fecha_inicio_proceso, id_fecha_final_proceso),
     precio_venta: 0,
     costo_suministros:0,
     precopeo: 0,
@@ -590,19 +630,4 @@ function actualizarTablaProcesos(){
             $('#' + id_fecha_final_obra).val(data[9]);
         } );
     });
-}
-
-function highLightAllProceso(){
-    highLight(id_ddl_obraProcesos);
-    highLight(id_ddl_procesoProcesos);
-    highLight(id_clave_proceso);
-    highLight(id_nombre_proceso);
-    highLight(id_alcance_proceso);
-    highLight(id_ddl_subproceso );
-    highLight(id_clave_subproceso );
-    highLight(id_nombre_subproceso );
-    highLight(id_ddl_categoriaSubproceso );
-    highLight(id_fecha_inicio_subproceso );
-    highLight(id_fecha_final_subproceso );
-    highLight(id_alcance_subproceso );
 }
