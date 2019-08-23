@@ -219,7 +219,34 @@
                 </div>
             </div>
         </div>
-
+        <!-- Modal Trabajadores Correctos -->
+        <div class="modal fade" id="modalTrabajador" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitleTrabajador"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr class="table-warning">
+                                    <th colspan="2">DATOS PERSONALES</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodyModalTrabajadores"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-dark" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="wrapper">
             <!-- Sidebar -->
             <nav id="sidebar" class = "loader hidden">
@@ -234,13 +261,13 @@
                         </div>
                         <div class="form-group" id = "seleccionarFotoPersonal">
                             <div class="upload-btn-wrapper">
-                                <button type="button" name="" id="" class="btn btn-outline-warning btn-lg btn-block">Selecciona imagen</button>
-                                <input type="file" name="myfile"  id = "fotoPersonal_input" accept="image/*"/>
+                                <button type="button" id="" class="btn btn-outline-warning btn-block">Selecciona imagen</button>
+                                <input type="file" name="myfile"id = "fotoPersonal_input" accept="image/*"/>
                             </div>
                         </div>
                         <div class= "form-group hidden" id = "subirFotoPersonal">
                             <div class="upload-btn-wrapper">
-                                <button type="button" name="" id="" class="btn btn-outline-success btn-lg btn-block" onclick="subirFotoPersonal()">Sube tu imagen</button>
+                                <button type="button" name="" id="" class="btn btn-outline-success btn-block" onclick="subirFotoPersonal()">Sube tu imagen</button>
                             </div>
                         </div>
                     </div>
@@ -387,7 +414,7 @@
                                             </div>
                                             <div class="form-row">
                                                 <div class="form-group col-md-4">
-                                                    <label for="nombreColaborador">Nombre:</label>
+                                                    <label for="nombreColaborador">Nombre(s):</label>
                                                     <input type="text" name="" id="nombreColaborador"class="form-control" placeholder="Nombre del colaborador">
                                                 </div>
                                                 <div class="form-group col-md-4">
@@ -448,6 +475,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Nombre</th>
+                                                        <th>Nombre</th>
                                                         <th>ID</th>
                                                         <th>Nickname</th>
                                                         <th>Email</th>
@@ -461,6 +489,7 @@
                                                 </thead>
                                                 <tfoot>
                                                     <tr>
+                                                        <th>Nombre</th>
                                                         <th>Nombre</th>
                                                         <th>ID</th>
                                                         <th>Nickname</th>
@@ -1034,11 +1063,11 @@
                                                     <input type="text" name="" id="nombreTrabajador"class="form-control" placeholder="Nombre(s)">
                                                 </div>
                                                 <div class="form-group col-md-4">
-                                                    <label for="paternoTrabajador">Apellido Paterno</label>
+                                                    <label for="paternoTrabajador">Apellido paterno</label>
                                                     <input type="text" name="" id="paternoTrabajador"class="form-control" placeholder="Apellido Paterno">
                                                 </div>
                                                 <div class="form-group col-md-4">
-                                                    <label for="maternoTrabajador">Apellido Materno</label>
+                                                    <label for="maternoTrabajador">Apellido materno</label>
                                                     <input type="text" name="" id="maternoTrabajador"class="form-control" placeholder="Apellido Materno">
                                                 </div>
                                             </div>
@@ -1095,7 +1124,7 @@
                                                         <input class="form-control" type="text" id="nacimientoTrabajador"  placeholder="" readonly="readonly">
                                                     </div>
                                                     <div class="form-group col-md-4">
-                                                        <label for="edoCivilTrabajador">Estado Civil:</label>
+                                                        <label for="edoCivilTrabajador">Estado civil:</label>
                                                         <input type="text" name="" id="edoCivilTrabajador" class="form-control" placeholder="Estado Civil">
                                                     </div>
                                                     <div class="form-group col-md-4">
@@ -1110,11 +1139,11 @@
                                                 <br>
                                                 <div class="form-row">
                                                     <div class="form-group col-md-8">
-                                                        <label for="direccionTrabajador">Dirección:</label>
+                                                        <label for="direccionTrabajador">Domicilio:</label>
                                                         <input type="text" name="" id="direccionTrabajador" class="form-control" placeholder="Dirección">
                                                     </div>
                                                     <div class="form-group col-md-4">
-                                                        <label for="cpTrabajador">Código Postal:</label>
+                                                        <label for="cpTrabajador">Código postal:</label>
                                                         <input type="text" name="" maxlength="5" id="cpTrabajador" class="form-control" placeholder="Código Postal">
                                                     </div>
                                                 </div>

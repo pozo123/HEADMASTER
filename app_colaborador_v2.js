@@ -397,6 +397,7 @@ function actualizarTablaCol(){
             var colaborador = colSnap.val();
             var nickname = colaborador.nickname;
             var nombre = colaborador.nombre + " " + colaborador.a_paterno + " " + colaborador.a_materno;
+            var nombre_text = colaborador.nombre + "_" + colaborador.a_paterno + "_" + colaborador.a_materno;
             var email = colaborador.email;
             var areas = colSnap.child("areas").val();
             var credenciales = colaborador.credenciales;
@@ -435,11 +436,12 @@ function actualizarTablaCol(){
 
             datos_colaborador.push([
                 nombre,
+                nombre_text,
                 uid,
                 nickname,
                 email,
                 areas_text,
-                especialidad_text,
+                especialidad_text.toUpperCase(),
                 credenciales_text,
                 credenciales,
                 "<button type='button' class='btn btn-transparente' onclick='habilitarColaborador(" + habilitado + "," + "\`"  + uid  + "\`" + ")'><i class=" + icon_class + "></i></button>",
@@ -452,12 +454,13 @@ function actualizarTablaCol(){
             language: idioma_espanol,
             "columnDefs": [
                 { "width": "150px", "targets": 0 },
-                { "width": "100px", "targets": 4 },
+                { "width": "100px", "targets": 5 },
                 {
                     targets: -2,
                     className: 'dt-body-center'
                 },
                 { "visible": false, "targets": 1 },
+                { "visible": false, "targets": 2 },
                 { "visible": false, "targets": -3 },
                 {
                     "targets": -1,
@@ -472,22 +475,24 @@ function actualizarTablaCol(){
             var data = tabla_colaborador.row( $(this).parents('tr') ).data();
             resetFormColaborador(true);
             existe_colaborador = true;
-            var nombre = data[0].split(" ");
-            uid_existente = data[1];
+            var nombre = data[1].split("_");
+            uid_existente = data[2];
             
+            console.log(data[1]);
         
             $('#' + id_nombre_colaborador).val(nombre[0]);
             $('#' + id_paterno_colaborador).val(nombre[1]);
             $('#' + id_materno_colaborador).val(nombre[2]);
-            $('#' + id_nickname_colaborador).val(data[2]);
-            $('#' + id_email_colaborador).val(data[3]);
+            $('#' + id_nickname_colaborador).val(data[3]);
+            $('#' + id_email_colaborador).val(data[4]);
         
             document.getElementById(id_password_colaborador).disabled = true;
-        
-            if(data[7] == 2){
+            
+            console.log(data[8]);
+            if(data[8] == 2){
                 document.getElementById(id_lider_checkbox_colaborador).checked = true;
                 document.getElementById(id_lider_checkbox_colaborador).disabled = false;
-            } else if(data[7]  == 3){
+            } else if(data[8]  == 3){
                 document.getElementById(id_lider_checkbox_colaborador).checked = false;
                 document.getElementById(id_lider_checkbox_colaborador).disabled = false;
             } else {
@@ -495,15 +500,15 @@ function actualizarTablaCol(){
                 document.getElementById(id_lider_checkbox_colaborador).disabled = true;
             }
         
-            var areas_array = data[4].split("\n");
+            var areas_array = data[5].split("\n");
             select.set(areas_array);
             
-            var areas_array = data[5].split("\n");
+            var especialidad_array = data[6].toLowerCase().split("\n");
             for(i=0;i<areas_array.length;i++){
-                if(areas_array[i] == "ie"){
+                if(especialidad_array[i] == "ie"){
                     document.getElementById(id_ie_checkbox_colaborador).checked = true;
                 }
-                else if(areas_array[i] == "ihs"){
+                else if(especialidad_array[i] == "ihs"){
                     document.getElementById(id_ihs_checkbox_colaborador).checked = true;
                 }
             }

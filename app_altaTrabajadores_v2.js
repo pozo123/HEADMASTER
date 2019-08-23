@@ -4,6 +4,10 @@ var id_form_importar_trabajador = "formImportarTrabajadores";
 var id_form_alta_trabajador = "formAltaTrabajadores";
 var id_dataTable_trabajador = "dataTableTrabajador";
 
+var id_modal_modal_trabajadores_trabajador = "modalTrabajador";
+var id_title_body_trabajadores_trabajador = "modalTitleTrabajador";
+var id_body_modal_trabajadores_trabajador = "bodyModalTrabajadores";
+
 // Lo necesario para inicializar la pestaña (se hace al seleccionar la pestaña)
 // se resetea el formulario (ver en funciones)
 // se llena la tabla con todos los clientes
@@ -876,11 +880,9 @@ $('#' + id_hide_opcionales_button_trabajador).click(function(){
     $('#' + id_container_opcionales_trabajador).toggleClass("hidden");
 });
 
-// al apretar el botón de resetear, se resetea todo el formulario
 $('#' + id_reset_form_trabajador).click(function(){
     resetFormTrabajador();
 });
-
 
 $('#' + id_agregar_trabajador).click(function(){
     if(!validateTrabajador()){
@@ -979,8 +981,6 @@ $('#' + id_agregar_trabajador).click(function(){
                 }
             }
 
-            console.log(listas_path);
-
             firebase.database().ref(rama_bd_mano_obra).update(listas_path).then(function(){
                 alert("¡Alta exitosa!");
                 resetFormTrabajador();
@@ -1015,6 +1015,10 @@ $('#' + id_nombre_trabajador).change(function(){
         nombre += nombre_array[i].charAt(0).toUpperCase() + nombre_array[i].slice(1).toLowerCase();
     }
     $('#' + id_nombre_trabajador).val(nombre);
+
+    if(id_trabajador_existente == $('#' + id_ddl_jefe_trabajador + " option:selected").val()){
+        $('#' + id_ddl_jefe_trabajador + " [value='Es destajista']").prop('selected', true);
+    }
 });
 
 // ----------- Apellidos
@@ -1040,6 +1044,7 @@ $('#' + id_paterno_trabajador).change(function(){
         }
     }
     $('#' + id_paterno_trabajador).val(paterno);
+    $('#' + id_ddl_jefe_trabajador + " [value='']").prop('selected', true);
 });
 
 $('#' + id_materno_trabajador).change(function(){
@@ -1056,6 +1061,7 @@ $('#' + id_materno_trabajador).change(function(){
         }
     }
     $('#' + id_materno_trabajador).val(materno);
+    $('#' + id_ddl_jefe_trabajador + " [value='']").prop('selected', true);
 });
 
 // CLAVES
@@ -1287,7 +1293,8 @@ function actualizarTablaTrabajador(){
                 nombre += nombre_array[i];
             }
             var fecha_ingreso = new Date(trabajador.fecha_antiguedad);
-            fecha_ingreso = fecha_ingreso.getFullYear() +"."+ ("0" + (fecha_ingreso.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha_ingreso.getDate()).slice(-2);
+            fecha_ingreso = fecha_ingreso.getFullYear() + "/"+ ("0" + (fecha_ingreso.getMonth() + 1)).slice(-2) + "/" + ("0" + fecha_ingreso.getDate()).slice(-2);
+
             var puesto = trabajador.puesto;
             var id_puesto = trabajador.id_puesto;
             var especialidad = trabajador.especialidad;
@@ -1367,7 +1374,7 @@ function actualizarTablaTrabajador(){
                 pantalon,
                 zapatos,
                 "<button type='button' class='btn btn-transparente' onclick='habilitarTrabajador(" + activo + "," + "\`"  + firebase_id  + "\`" + ")'><span class=" + icon_class + "></span></button>",
-                "<button type='button' class='btn btn-dark'><span class='fas fa-address-book'></span></button>",
+                "<button type='button' class='opcionales btn btn-dark'><span class='fas fa-address-book'></span></button>",
             ])
         });
 
@@ -1375,6 +1382,14 @@ function actualizarTablaTrabajador(){
             destroy: true,
             "autoWidth": false,
             data: datosTrabajador,
+            dom: 'Bfrtip',
+            buttons: [
+                {extend: 'excelHtml5',
+                title: "TrabajadoresHEAD",
+                exportOptions: {
+                    columns: [ 0, ':visible' ]
+                }}
+            ],
             language: idioma_espanol,
             "order": [[ 1, "asc" ]],
             "columnDefs": [
@@ -1410,7 +1425,7 @@ function actualizarTablaTrabajador(){
             $('#' + id_paterno_trabajador).val(nombre[1]);
             $('#' + id_materno_trabajador).val(nombre[2]);
             $('#' + id_antiguedad_trabajador).val(data[5]);
-            $('#' + id_ddl_puesto_trabajador + " [value='" + data[7] + "']").prop('selected', true);
+            $('#' + id_ddl_puesto_trabajador + " [value='" + data[7] + "']").prop('bb', true);
             $('#' + id_ddl_especialidad_trabajador + " [value=" + data[9] + "]").prop('selected', true);
             $('#' + id_sueldo_trabajador).val(data[10]);
             
@@ -1439,6 +1454,170 @@ function actualizarTablaTrabajador(){
             $('#' + id_ddl_cintura_trabajador + " [value='" + pantalon_data[0] + "']").prop('selected', true);
             $('#' + id_ddl_largo_trabajador + " [value='" + pantalon_data[1] + "']").prop('selected', true);
             $('#' + id_ddl_zapatos_trabajador + " [value='" + data[26] + "']").prop('selected', true);
+        } );
+        $('#' + id_dataTable_trabajador + ' tbody').on( 'click', '.opcionales', function () {
+            $('#' + id_body_modal_trabajadores_trabajador).html('');
+            var data = tabla_trabajador.row( $(this).parents('tr') ).data();
+
+            var nombre = data[4].split("_");
+            $('#' + id_title_body_trabajadores_trabajador).text(nombre[0] + " "+ nombre[1] + " " + nombre[2]);
+            var body = document.getElementById(id_body_modal_trabajadores_trabajador);
+            
+            var row = document.createElement('tr');     
+            var concepto = document.createElement('th');
+            concepto.setAttribute("scope", "row");
+            concepto.textContent = "Fecha de nacimiento: ";          
+            var fecha_nacimiento = document.createElement('td');
+            fecha_nacimiento.textContent = data[13];
+               
+            row.appendChild(concepto);
+            row.appendChild(fecha_nacimiento);    
+            body.appendChild(row);
+
+            var row = document.createElement('tr');     
+            var concepto = document.createElement('th');
+            concepto.setAttribute("scope", "row");
+            concepto.textContent = "Estado civil: ";          
+            var estado_civil = document.createElement('td');
+            estado_civil.textContent = data[14];
+               
+            row.appendChild(concepto);
+            row.appendChild(estado_civil);    
+            body.appendChild(row);
+
+            var row = document.createElement('tr');     
+            var concepto = document.createElement('th');
+            concepto.setAttribute("scope", "row");
+            concepto.textContent = "Sexo: ";          
+            var sexo = document.createElement('td');
+            sexo.textContent = data[15];
+               
+            row.appendChild(concepto);
+            row.appendChild(sexo);    
+            body.appendChild(row);
+
+            var row = document.createElement('tr');     
+            var concepto = document.createElement('th');
+            concepto.setAttribute("scope", "row");
+            concepto.textContent = "Domicilio: ";          
+            var direccion = document.createElement('td');
+            direccion.textContent = data[16];
+               
+            row.appendChild(concepto);
+            row.appendChild(direccion);    
+            body.appendChild(row);
+
+            var row = document.createElement('tr');     
+            var concepto = document.createElement('th');
+            concepto.setAttribute("scope", "row");
+            concepto.textContent = "Código postal: ";          
+            var codigo_postal = document.createElement('td');
+            codigo_postal.textContent = data[17];
+               
+            row.appendChild(concepto);
+            row.appendChild(codigo_postal);    
+            body.appendChild(row);
+
+            var row = document.createElement('tr');     
+            var concepto = document.createElement('th');
+            concepto.setAttribute("scope", "row");
+            concepto.textContent = "RFC: ";          
+            var rfc = document.createElement('td');
+            rfc.textContent = data[18];
+               
+            row.appendChild(concepto);
+            row.appendChild(rfc);    
+            body.appendChild(row);
+
+            var row = document.createElement('tr');     
+            var concepto = document.createElement('th');
+            concepto.setAttribute("scope", "row");
+            concepto.textContent = "IMSS: ";          
+            var imss = document.createElement('td');
+            imss.textContent = data[19];
+               
+            row.appendChild(concepto);
+            row.appendChild(imss);    
+            body.appendChild(row);
+
+            var row = document.createElement('tr');     
+            var concepto = document.createElement('th');
+            concepto.setAttribute("scope", "row");
+            concepto.textContent = "CURP: ";          
+            var curp = document.createElement('td');
+            curp.textContent = data[20];
+               
+            row.appendChild(concepto);
+            row.appendChild(curp);    
+            body.appendChild(row);
+
+            var row = document.createElement('tr');     
+            var concepto = document.createElement('th');
+            concepto.setAttribute("scope", "row");
+            concepto.textContent = "Banco: ";          
+            var banco = document.createElement('td');
+            banco.textContent = data[21];
+               
+            row.appendChild(concepto);
+            row.appendChild(banco);    
+            body.appendChild(row);
+
+            var row = document.createElement('tr');     
+            var concepto = document.createElement('th');
+            concepto.setAttribute("scope", "row");
+            concepto.textContent = "Cuenta: ";          
+            var cuenta = document.createElement('td');
+            cuenta.textContent = data[22];
+               
+            row.appendChild(concepto);
+            row.appendChild(cuenta);    
+            body.appendChild(row);
+
+            var row = document.createElement('tr');     
+            var concepto = document.createElement('th');
+            concepto.setAttribute("scope", "row");
+            concepto.textContent = "CLABE: ";          
+            var clabe = document.createElement('td');
+            clabe.textContent = data[23];
+               
+            row.appendChild(concepto);
+            row.appendChild(clabe);    
+            body.appendChild(row);
+
+            var row = document.createElement('tr');     
+            var concepto = document.createElement('th');
+            concepto.setAttribute("scope", "row");
+            concepto.textContent = "Talla de camisa: ";          
+            var camisa = document.createElement('td');
+            camisa.textContent = data[24];
+               
+            row.appendChild(concepto);
+            row.appendChild(camisa);    
+            body.appendChild(row);
+
+            var row = document.createElement('tr');     
+            var concepto = document.createElement('th');
+            concepto.setAttribute("scope", "row");
+            concepto.textContent = "Talla de pantalón: ";          
+            var pantalon = document.createElement('td');
+            pantalon.textContent = data[25];
+               
+            row.appendChild(concepto);
+            row.appendChild(pantalon);    
+            body.appendChild(row);
+
+            var row = document.createElement('tr');     
+            var concepto = document.createElement('th');
+            concepto.setAttribute("scope", "row");
+            concepto.textContent = "Talla de zapatos: ";          
+            var zapatos = document.createElement('td');
+            zapatos.textContent = data[26];
+               
+            row.appendChild(concepto);
+            row.appendChild(zapatos);    
+            body.appendChild(row);
+
+            $('#' + id_modal_modal_trabajadores_trabajador).modal('show');
         } );
     });
 };
@@ -1506,7 +1685,9 @@ function datosTrabajador(activo, is_destajista, id_jefe){
     var jefe = "";
 
     if($('#' + id_ddl_jefe_trabajador + " option:selected").text() == "Es destajista"){
-        jefe = $('#' + id_nombre_trabajador).val() + "_" + $('#' + id_paterno_trabajador).val() + "_" + $('#' + id_materno_trabajador).val()
+        jefe = $('#' + id_nombre_trabajador).val() + "_" + $('#' + id_paterno_trabajador).val() + "_" + $('#' + id_materno_trabajador).val();
+    } else if(id_trabajador_existente == $('#' + id_ddl_jefe_trabajador + " option:selected").val()){
+        jefe = $('#' + id_nombre_trabajador).val() + "_" + $('#' + id_paterno_trabajador).val() + "_" + $('#' + id_materno_trabajador).val();
     } else {
         jefe = $('#' + id_ddl_jefe_trabajador + " option:selected").text();
     }
@@ -1549,4 +1730,37 @@ function datosTrabajador(activo, is_destajista, id_jefe){
         }
     };
     return trabajador;
+}
+
+function modalIncorrectos(array){
+    $('#' + id_body_modal_incorrectos_trabajador).html('');
+    var body = document.getElementById(id_body_modal_incorrectos_trabajador);
+    for(i=0;i<array.length;i++){
+        var row = document.createElement('tr');
+
+        var id_head = document.createElement('th');
+        id_head.setAttribute("scope", "row");
+        id_head.textContent = array[i][1]["id_head"];
+
+        var nombre = document.createElement('td');
+        nombre.textContent = array[i][1]["nombre"];
+           
+        var razones = document.createElement('td');
+        var ul = document.createElement('ul');
+        
+        var razones_array = array[i][3].split("/");
+        
+        for(var j=0; j<razones_array.length; j++){
+            if(razones_array[j] != ""){
+                var li = document.createElement('li')
+                li.textContent = razones_array[j];
+                ul.appendChild(li);
+            }
+        }
+        row.appendChild(id_head);
+        row.appendChild(nombre);
+        razones.appendChild(ul);        
+        row.appendChild(razones);
+        body.appendChild(row);
+    }
 }
