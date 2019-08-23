@@ -63,89 +63,86 @@ $('#' + id_agregar_proceso).click(function() {
   //Validar datos ingresados
   if (validateFormProceso()){
     var uid_obra = $('#' + id_ddl_obraProcesos + " option:selected").val();
-    var cadena_alerta = "¡";
-    var modificacion = false;
     var proceso_update = {};
-    var proceso_antiguo;
-    //Decidir si editar o dar de alta
-    if (existe_proceso){ //editar
-        firebase.database().ref(rama_bd_obras + "/procesos/" + uid_obra + "/procesos/" +  uid_proceso).once("value").then(function(snapshot){
-            var registro_antiguo = snapshot.val();
-            if ($('#' + id_nombre_proceso).val() !== registro_antiguo.nombre || $('#' + id_alcance_proceso).val() !== registro_antiguo.alcance){
-              //Actualizar los campos del proceso
-              proceso_update["procesos/" + uid_obra + "/procesos/" + uid_proceso + "/nombre"] = $('#' + id_nombre_proceso).val();
-              proceso_update["procesos/" + uid_obra + "/procesos/" + uid_proceso + "/alcance"] = $('#' + id_alcance_proceso).val();
-              modificacion = true;
-            }
-            if ($('#' + id_checkbox_supbroceso ).prop("checked") && !existe_subproceso){
-              proceso_update["procesos/" + uid_obra + "/procesos/" + uid_proceso + "/num_subprocesos"] = registro_antiguo.num_subprocesos + 1;
-              modificacion=true;
-            }
-            if (modificacion){
-              console.log(proceso_update);
-              proceso_antiguo = registro_antiguo;
-              cadena_alerta = cadena_alerta + "Edición exitosa de proceso";
-            }else {
-              cadena_alerta = cadena_alerta + "Proceso no modificado";
-            }
-        });
-    } else { //dar de alta
-      var datos_proceso;
+    var registro_antiguo_s;
+    var registro_antiguo_p;
+    var modificacion=false;
+    var cadena_alert;
+    uid_proceso = $('#' + id_clave_proceso).val();
+    firebase.database().ref(rama_bd_obras + "/procesos/" + uid_obra).once("value").then(function(snapshot){
+      var registro_obra = snapshot.val();
+      //Decidir si editar o dar de alta
+      if (existe_proceso){ //editar
+        registro_antiguo_p = registro_obra["procesos"][uid_proceso];
+        var datos_proceso= datosAltaProceso(0);
+        if ($('#' + id_nombre_proceso).val() !== registro_antiguo_p.nombre || $('#' + id_alcance_proceso).val() !== registro_antiguo_p.alcance){
+          //Actualizar los campos del proceso
+          proceso_update["procesos/" + uid_obra + "/procesos/" + uid_proceso + "/nombre"] = datos_proceso.nombre;
+          proceso_update["procesos/" + uid_obra + "/procesos/" + uid_proceso + "/alcance"] = datos_proceso.alcance;
+          cadena_alert= "¡Edición exitosa de proceso! ";
+          modificacion = true;
+        } else {
+          cadena_alert = "¡Proceso no modificado! ";
+        }
+        if ($('#' + id_checkbox_supbroceso ).prop("checked") && !existe_subproceso){
+          proceso_update["procesos/" + uid_obra + "/procesos/" + uid_proceso + "/num_subprocesos"] = registro_antiguo_p.num_subprocesos + 1;
+          modificacion = true;
+        }
+        //resetFormProceso_proceso(true);
+      } else { //dar de alta
+        var datos_proceso;
+        var obra_num_procesos = registro_obra.num_procesos+1;;
         if ($('#' + id_checkbox_supbroceso ).prop("checked")){
             datos_proceso = datosAltaProceso(1);
         } else {
             datos_proceso = datosAltaProceso(0);
         }
-        uid_proceso = $('#' + id_clave_proceso).val()
-        firebase.database().ref(rama_bd_obras + "/procesos/" + uid_obra + "/num_procesos").once("value").then(function(snapshot){
-            var registro_antiguo = snapshot.val()+1;
-            proceso_update["procesos/" + uid_obra + "/procesos/" + uid_proceso] = datos_proceso;
-            proceso_update["procesos/" + uid_obra + "/num_procesos"] = registro_antiguo;
-        });
-        console.log(proceso_update);
-        cadena_alerta = cadena_alerta + "Alta exitosa de proceso";
-    };
-    if ($('#' + id_checkbox_supbroceso ).prop("checked")){ //tambien subproceso
-        var datos_subproceso = datosAltaSubproceso();
-        if (existe_subproceso){ //editar
-          firebase.database().ref(rama_bd_obras + "/procesos/" + uid_obra + "/procesos/" +  uid_proceso + "/subprocesos/" + uid_subproceso).once("value").then(function(snapshot){
-              var registro_antiguo = snapshot.val();
-              //Actualizar los campos del proceso
-              var subproceso_path = "procesos/" + uid_obra + "/procesos/" + uid_proceso + "/subprocesos/"+ uid_subproceso;
-              proceso_update[subproceso_path + "/nombre"] = datos_subproceso.nombre;
-              proceso_update[subproceso_path + "/categoria"] = datos_subproceso.categoria;
-              proceso_update[subproceso_path + "/alcance"] = datos_subproceso.alcance;
-              proceso_update[subproceso_path + "/fechas/fecha_inicio_teorica"] = datos_subproceso.fechas.fecha_inicio_teorica;
-              proceso_update[subproceso_path + "/fechas/fecha_final_teorica"] = datos_subproceso.fechas.fecha_final_teorica;
-              console.log(proceso_update);
-              cadena_alerta = cadena_alerta + ", edición exitosa de subproceso";
-          });
-        } else { //dar de alta
-          uid_proceso = $('#' + id_clave_proceso).val()
-          uid_subproceso = $('#'+id_clave_subproceso).val();
-          proceso_update["procesos/" + uid_obra + "/procesos/" +  uid_proceso + "/subprocesos/" + uid_subproceso] = datos_subproceso;
-          console.log(proceso_update);
-          cadena_alerta = cadena_alerta + ", alta exitosa de subproceso";
-        }
-    }
-    //Escribir los cambios en la base de datos
-    firebase.database().ref(rama_bd_obras).update(proceso_update);
-    //PDA
-    if(existe_proceso){
-      pda("modificacion", rama_bd_obras + "/procesos/" + uid_obra + "/procesos/" + uid_proceso, proceso_antiguo);
-    } else {
-      pda("alta", rama_bd_obras + "/procesos/" + uid_obra + "/procesos/" + uid_proceso, "");
-    }
-    if ($('#' + id_checkbox_supbroceso ).prop("checked")){
-      if (existe_subproceso){
-        pda("modificacion", rama_bd_obras + "/" + subproceso_path, subproceso_antiguo);
-      } else {
-        pda("alta", rama_bd_obras + "/procesos/" + uid_obra + "/procesos/" +  uid_proceso + "/subprocesos/" + uid_subproceso, "");
+        var proceso_path = "procesos/" + uid_obra + "/procesos/" + uid_proceso;
+        proceso_update[proceso_path + "/nombre"] = datos_proceso.nombre;
+        proceso_update[proceso_path + "/alcance"] = datos_proceso.alcance;
+        proceso_update[proceso_path + "/num_subprocesos"] = datos_proceso.num_subprocesos;
+        proceso_update["procesos/" + uid_obra + "/num_procesos"] = obra_num_procesos;
+        cadena_alert= cadena_alert + "¡Alta exitosa de proceso! ";
+      };
+      if ($('#' + id_checkbox_supbroceso ).prop("checked")){ //tambien subproceso
+          var datos_subproceso = datosAltaSubproceso();
+          if (existe_subproceso){ //editar
+            registro_antiguo_s = registro_obra["procesos"][uid_proceso]["subprocesos"][uid_subproceso];
+            //Actualizar los campos del proceso
+            var subproceso_path ="procesos/" + uid_obra + "/procesos/" + uid_proceso + "/subprocesos/"+ uid_subproceso;
+            proceso_update[subproceso_path + "/nombre"] = datos_subproceso.nombre;
+            proceso_update[subproceso_path + "/categoria"] = datos_subproceso.categoria;
+            proceso_update[subproceso_path + "/alcance"] = datos_subproceso.alcance;
+            proceso_update[subproceso_path + "/fechas/fecha_inicio_teorica"] = datos_subproceso.fechas.fecha_inicio_teorica;
+            proceso_update[subproceso_path + "/fechas/fecha_final_teorica"] = datos_subproceso.fechas.fecha_final_teorica;
+            cadena_alert = "¡Edición exitosa de subproceso!";
+          } else { //dar de alta
+            uid_subproceso = $('#'+id_clave_subproceso).val();
+            proceso_update["procesos/" + uid_obra + "/procesos/" +  uid_proceso + "/subprocesos/" + uid_subproceso] = datos_subproceso;
+            cadena_alert = cadena_alert + "¡Alta exitosa de subproceso!";
+          }
       }
-    }
-    cadena_alerta = cadena_alerta + "!";
-    alert(cadena_alerta);
-    resetFormProceso();
+      //Escribir los cambios en la base de datos
+      //console.log(proceso_update)
+      firebase.database().ref(rama_bd_obras).update(proceso_update);
+      //pda
+      if(existe_proceso){
+        if (modificacion){//edicion proceso
+          pda("modificacion", rama_bd_obras + "/procesos/" + uid_obra + "/procesos/" + uid_proceso, registro_antiguo_p);
+        }
+      } else {//alta proceso
+        pda("alta", rama_bd_obras + "/procesos/" + uid_obra + "/procesos/" + uid_proceso, "");
+      }
+      if ($('#' + id_checkbox_supbroceso ).prop("checked")){
+        if (existe_subproceso){//editar subproceso
+          pda("modificacion", rama_bd_obras + "/" + subproceso_path, registro_antiguo_s);
+        }else {//alta subproceso
+          pda("alta", rama_bd_obras + "/procesos/" + uid_obra + "/procesos/" +  uid_proceso + "/subprocesos/" + uid_subproceso, "");
+        }
+      }
+      alert(cadena_alert);
+      resetFormProceso();
+    });
   };
 });
 
@@ -188,7 +185,6 @@ $('#' + id_ddl_procesoProcesos).change(function(){
   resetFormProceso_proceso(false);
   resetFormProceso_subproceso(true);
   if ($('#' + id_ddl_procesoProcesos + " option:selected").val() !== "NUEVO"){
-    console.log("Existe proceso");
     existe_proceso = true;
     uid_proceso = $('#' + id_ddl_procesoProcesos + " option:selected").val();
     $('#' + id_clave_proceso). val (uid_proceso);
@@ -243,13 +239,16 @@ $('#' + id_checkbox_supbroceso ).change(function(){
 
 $('#' + id_ddl_subproceso ).change(function(){
   resetFormProceso_subproceso(false);
+  existe_subproceso = false;
   if ($('#' + id_ddl_subproceso + " option:selected").val() !== "NUEVO"){
+    $('#' + id_ddl_categoriaSubproceso).prop('disabled',true);
     existe_subproceso = true;
     uid_subproceso = $('#' + id_ddl_subproceso + " option:selected").val();
     var subproceso;
     var fecha;
     firebase.database().ref(rama_bd_obras + "/procesos/" + $('#'+id_ddl_obraProcesos+" option:selected").val() + "/procesos/"+ $('#'+id_ddl_procesoProcesos +" option:selected").val() + "/subprocesos/" + uid_subproceso).on('value',function(snapshot){
         subproceso = snapshot.val();
+        var fechas = subproceso.fechas;
         $('#' + id_clave_subproceso).val(snapshot.key);
         $('#' + id_nombre_subproceso).val(subproceso.nombre);
         $('#' + id_alcance_subproceso).val(subproceso.alcance);
@@ -260,7 +259,7 @@ $('#' + id_ddl_subproceso ).change(function(){
         $('#' + id_fecha_final_subproceso ).val(fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2));
     });
   } else {
-    existe_subproceso = false;
+    $('#' + id_ddl_categoriaSubproceso).prop('disabled',false);
   }
 });
 
@@ -285,23 +284,26 @@ $('#' + id_alcance_subproceso).keypress(function(e){
 });
 
 $('#' + id_ddl_categoriaSubproceso).change(function(e){
-  var cont = 1;
-  if(existe_proceso){
-    firebase.database().ref(rama_bd_obras + "/procesos/" + $('#'+id_ddl_obraProcesos+" option:selected").val() + "/procesos/"+ uid_proceso + "/subprocesos").orderByChild('categoria').equalTo($('#'+id_ddl_categoriaSubproceso+"option:selected").val()).on('child_added',function(snapshot){
-        if(snapshot.val()){
-          cont ++;
+  if(existe_proceso && !existe_subproceso){
+    firebase.database().ref(rama_bd_obras + "/procesos/" + $('#'+id_ddl_obraProcesos+" option:selected").val() + "/procesos/"+ uid_proceso + "/subprocesos").orderByChild('categoria').on('value',function(snapshot){
+        var cont = 1;
+        var clave;
+        if(snapshot.exists() ){
+          snapshot.forEach(function(snapChild){
+            if (snapChild.val().categoria == $('#'+id_ddl_categoriaSubproceso+" option:selected").val()){
+              cont ++;
+            }
+          })
         }
+        if(cont<10){
+          clave = $('#'+id_clave_proceso).val() + "-" + $('#'+id_ddl_categoriaSubproceso+" option:selected").text() + "0" + cont;
+        }else {
+          clave = $('#'+id_clave_proceso).val() + "-" + + $('#'+id_ddl_categoriaSubproceso+" option:selected").text() + cont;
+        }
+        $('#' + id_clave_subproceso).val(clave);
     });
   }
-  var clave;
-  if(cont<10){
-    clave = $('#'+id_clave_proceso).val() + "-" + $('#'+id_ddl_categoriaSubproceso+" option:selected").text() + "0" + cont;
-  }else {
-    clave = $('#'+id_clave_proceso).val() + "-" + + $('#'+id_ddl_categoriaSubproceso+" option:selected").text() + cont;
-  }
-  $('#' + id_clave_subproceso).val(clave);
 });
-
 
 // ----------------------- FUNCIONES NECESARIAS ----------------------------
 //Borrar la información de todos los campos
@@ -309,6 +311,7 @@ function resetFormProceso (){
   $('#' + id_ddl_obraProcesos ).val("");
   resetFormProceso_proceso(true);
   $('#' + id_checkbox_supbroceso ).prop('checked', false);
+  $('#' + id_seccion_subproceso ).addClass('hidden');
   resetFormProceso_subproceso(true);
   existe_proceso = false;
   existe_subproceso = false;

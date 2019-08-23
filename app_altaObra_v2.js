@@ -124,6 +124,7 @@ $('#' + id_agregar_obra).click(function() {
             obra_paths["listas/obras_activas/" + regKey + "/nombre"] = datos_obra.nombre;
             obra_paths["listas/fechas_obra_inicio/programada/" + fechas.inicio + "/" + regKey] = true;
             obra_paths["listas/fechas_obra_fin/programada/" + fechas.final + "/" + regKey] = true;
+            console.log(obra_paths);
             firebase.database().ref(rama_bd_obras).update(obra_paths);
 
             // PAD
