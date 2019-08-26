@@ -345,6 +345,12 @@
                         </ul>
                     </li>
                     <li>
+                        <a href="#pageNomina" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Nómina</a>
+                        <ul class="collapse list-unstyled" id="pageNomina">
+                            <li class="tab administracion" id="tabDatosNomina"><a href="#" onclick="openTabs('tabDatosNomina','datosNomina')">Nómina, Horas Extra y Diversos</a></li>
+                        </ul>
+                    </li>
+                    <li>
                         <a href="#pageObra" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Obras</a>
                         <ul class="collapse list-unstyled" id="pageObra">
                             <li class="tab administracion" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Alta y Edición - Obras</a></li>
@@ -1264,17 +1270,20 @@
                                                     <th>ID HEAD</th>
                                                     <th>ID Pagadora</th>
                                                     <th>Nombre</th>
-                                                    <th>Nombre_text</th>
+                                                    <th>Nombre(s)</th>
+                                                    <th>Apellido Paterno</th>
+                                                    <th>Apellido Materno</th>
                                                     <th>Fecha de ingreso</th>
                                                     <th>Puesto</th>
                                                     <th>ID Puesto</th>
                                                     <th>Esp</th>
                                                     <th>ID Esp</th>
                                                     <th>Sueldo</th>
+                                                    <th>¿Es destajista?</th>
                                                     <th>Jefe</th>
                                                     <th>ID jefe</th>
                                                     <th>Fecha de nacimiento</th>
-                                                    <th>Estado Civil</th>
+                                                    <th>Estado civil</th>
                                                     <th>Sexo</th>
                                                     <th>Dirección</th>
                                                     <th>Código postal</th>
@@ -1286,6 +1295,8 @@
                                                     <th>CLABE</th>
                                                     <th>Camisa</th>
                                                     <th>Pantalon</th>
+                                                    <th>Cintura</th>
+                                                    <th>Largo</th>
                                                     <th>Zapatos</th>
                                                     <th>Activo</th>
                                                     <th>Opcionales</th>
@@ -1298,17 +1309,20 @@
                                                     <th>ID HEAD</th>
                                                     <th>ID Pagadora</th>
                                                     <th>Nombre</th>
-                                                    <th>Nombre_text</th>
+                                                    <th>Nombre(s)</th>
+                                                    <th>Apellido Paterno</th>
+                                                    <th>Apellido Materno</th>
                                                     <th>Fecha de ingreso</th>
                                                     <th>Puesto</th>
                                                     <th>ID Puesto</th>
                                                     <th>Esp</th>
                                                     <th>ID Esp</th>
                                                     <th>Sueldo</th>
+                                                    <th>¿Es destajista?</th>
                                                     <th>Jefe</th>
                                                     <th>ID jefe</th>
                                                     <th>Fecha de nacimiento</th>
-                                                    <th>Estado Civil</th>
+                                                    <th>Estado civil</th>
                                                     <th>Sexo</th>
                                                     <th>Dirección</th>
                                                     <th>Código postal</th>
@@ -1320,10 +1334,98 @@
                                                     <th>CLABE</th>
                                                     <th>Camisa</th>
                                                     <th>Pantalon</th>
+                                                    <th>Cintura</th>
+                                                    <th>Largo</th>
                                                     <th>Zapatos</th>
                                                     <th>Activo</th>
                                                     <th>Opcionales</th>
                                                     <th>Editar</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Nómina -->
+                        <div id="datosNomina" class = "tabcontent hidden">
+                            <h1>Asistencias, Horas Extra y Diversos </h1>
+                            <p>Página para ingresar asistencias, horas extra y pagos diversos.</p>
+                            <div class= "container-fluid">
+                                <div class= "row align-items-center">
+                                    <div class= "col-lg-1"></div>
+                                    <div class= "col-lg-10">
+                                        <form id="formObra" action="#" onsubmit="return false;">
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="clienteObra">Año:</label>
+                                                    <select id ="clienteObra" class="form-control"></select>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="clienteObra">Trabajadores sin registro:</label>
+                                                    <select id ="clienteObra" class="form-control"></select>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="clienteObra">Semana:</label>
+                                                    <select id ="clienteObra" class="form-control"></select>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="direccionTrabajador">ID HEAD:</label>
+                                                    <input type="text" name="" id="direccionTrabajador" class="form-control" placeholder="Dirección">
+                                                </div>
+                                                <div class="form-group col-md-2">
+                                                        <label for="direccionTrabajador">Ingresar datos</label>
+                                                    <button id ="resetFileButtonTrabajador" type='button' class=' btn btn-outline-dark btn-block'>Datos</button>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class= "col-6">
+                                                    <button id="agregarButtonObra" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                                </div>
+                                                <div class= "col-6">
+                                                    <button id="borrarButtonObra" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class= "col-lg-1"></div>
+                                    <div class = "tableWrapper">
+                                        <table id="dataTableObra" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>Id_obra</th>
+                                                    <th>Id_cliente</th>
+                                                    <th>Clave</th>
+                                                    <th>Nombre</th>
+                                                    <th>Cliente</th>
+                                                    <th>Dirección</th>
+                                                    <th>Dirección</th>
+                                                    <th>Fondo de Garantía</th>
+                                                    <th>Fecha de inicio programada</th>
+                                                    <th>Fecha de terminación programada</th>
+                                                    <th>Terminada</th>
+                                                    <th>Habilitada</th>
+                                                    <th>Editar</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                  <th>Id_obra</th>
+                                                  <th>Id_cliente</th>
+                                                  <th>Clave</th>
+                                                  <th>Nombre</th>
+                                                  <th>Cliente</th>
+                                                  <th>Dirección</th>
+                                                  <th>Dirección</th>
+                                                  <th>Fondo de Garantía</th>
+                                                  <th>Fecha de inicio programada</th>
+                                                  <th>Fecha de terminación programada</th>
+                                                  <th>Terminada</th>
+                                                  <th>Habilitada</th>
+                                                  <th>Editar</th>
                                                 </tr>
                                             </tfoot>
                                         </table>

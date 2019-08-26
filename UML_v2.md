@@ -194,6 +194,7 @@ Nota: Todo float se ingresa a 2 decimales.
             - obras_terminadas
                 - id_obra
                     - nombre:string
+
             - obras_no_terminadas
                 - id_obra
                     - nombre: string
@@ -327,7 +328,7 @@ Nota: Todo float se ingresa a 2 decimales.
                     - año_head: int
                     - semana_head: int
                     - obra: obra_id
-                    - ssubproceso: subproceso
+                    - subproceso: subproceso
                     - actividad: string (asistencia, falta o vacaciones)
                     - sueldo_diario: float
                     - pago_id: string
@@ -422,6 +423,69 @@ Nota: Todo float se ingresa a 2 decimales.
                 - trabajadores:
                     - id_trabajador
                         - id_asistencia: true
+        - nomina (otra versión):
+            - nomina
+                - registro (firebase_id):
+                    - trabajador_id: string
+                    - año_head: int
+                    - semana_head: int
+                    - sueldo_diario: float        
+                    - costo_hora: float: float
+                    - asistencias:
+                        - registro (firebase_id);
+                            - fecha: timestamp
+                            - obra: obra_id
+                            - subproceso: subproceso
+                            - actividad: string (asistencia, falta o vacaciones)
+                    - h_extras:
+                        - registro (firebase_id):
+                            - fecha: timestamp
+                            - obra: obra_id
+                            - subproceso: subproceso_id
+                            - cantidad_horas: int
+                    - diversos:
+                        - registro (firebase_id)
+                            - tipo: string (se obtiene de diversos)
+                            - obra: obra_id
+                            - subproceso: subproceso_id
+                            - costo_diversos: float
+                            - pago_id: string
+                    - pagos_nomina:
+                        - registro (firebase_id)
+                            - fecha: timestamp
+                            - monto: float
+            - listas:
+                - obras:
+                    - id_obra:
+                        - subprocesos:
+                            - registros_id: true
+                - fecha_datos:
+                    - año:
+                        - semana_head:
+                            - registros_id: true
+
+                - fechas_pagos:
+                    - aaaammdd:
+                        - registros_id: true
+
+            - trabajadores:
+                - id_trabajador:
+                    - registros_id: true
+
+            - faltas:
+                - fechas
+                    - aaaammdd
+                        - registros_id: true
+                - trabajadores:
+                    - id_trabajador
+                        - registros_id: true
+            - vacaciones:
+                - fechas
+                    - aaaammdd
+                        - registros_id: true
+                - trabajadores:
+                    - id_trabajador
+                        - registros_id: true
     - pda
         - pistas
             - id_registro:
