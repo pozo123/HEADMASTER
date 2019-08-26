@@ -226,7 +226,7 @@ $('#' + id_file_input_formato_excel_trabajador).on("change", function(event){
                     // Reviso en el snapshot de la db
                     snapshot.forEach(function(trabSnap){
                         var trabajador = trabSnap.val();
-                        if(validated_data[i][1]["id_jefe"] == trabajador["id_head"]){
+                        if(validated_data[i][1]["id_jefe"] == trabajador["id_head"] || validated_data[i][1]["id_jefe"] == trabSnap.key){
                             if(trabajador["destajista"] == true){
                                 validated_data[i][1]["id_jefe"] = trabSnap.key;
                                 validated_data[i][1]["jefe"] = trabajador["nombre"];
@@ -238,7 +238,7 @@ $('#' + id_file_input_formato_excel_trabajador).on("change", function(event){
                     });
                     // Reviso en los datos que vienen del excel ya que tengo el key con el que voy a pushearlos;
                     for(j=0;j<validated_data.length;j++){
-                        if(validated_data[i][1]["id_jefe"] == validated_data[j][1]["id_head"]){
+                        if(validated_data[i][1]["id_jefe"] == validated_data[j][1]["id_head"] || validated_data[i][1]["id_jefe"] == validated_data[j][0]){
                             if(validated_data[j][1]["destajista"] == true){
                                 validated_data[i][1]["id_jefe"] = validated_data[j][0];
                                 validated_data[i][1]["jefe"] = validated_data[j][1]["nombre"];
@@ -480,7 +480,7 @@ function validateExcelRow(array){
             }
         }
 
-        var a_paterno = array[i]["Apellido Paterno"];
+        var a_paterno = array[i]["Apellido paterno"];
         a_paterno = a_paterno == undefined ? "": deleteBlankSpacesString(a_paterno);
         if(a_paterno == ""){
             razon += "/Hace falta el apellido paterno del trabajador ingresado";
@@ -500,7 +500,7 @@ function validateExcelRow(array){
             }
         }
         
-        var a_materno = array[i]["Apellido Materno"];
+        var a_materno = array[i]["Apellido materno"];
         a_materno = a_materno == undefined ? "": deleteBlankSpacesString(a_materno);
         if(a_materno != ""){
             var materno_array = a_materno.split(" ");
@@ -578,7 +578,7 @@ function validateExcelRow(array){
         }
 
         // Validación Sueldo
-        var sueldo = array[i]["Sueldo Base"];
+        var sueldo = array[i]["Sueldo base"];
         sueldo = sueldo == undefined ? "": deleteBlankSpacesString(sueldo);
 
         if(sueldo == ""){
@@ -609,7 +609,7 @@ function validateExcelRow(array){
             jefe_text = "Es destajista";
             is_destajista = true;
         } else {
-            id_jefe = array[i]["ID HEAD de su jefe (en caso de ser trabajador de un destajista)"];
+            id_jefe = array[i]["ID HEAD o ID Firebase de su jefe (en caso de ser trabajador de un destajista)"];
             id_jefe = id_jefe == undefined ? "" : id_jefe;
             jefe_text = id_jefe == "" ? "HEAD" : id_jefe;
             is_destajista = false;
@@ -617,7 +617,7 @@ function validateExcelRow(array){
 
         // Validación fecha de antiguedad
 
-        var fecha_antiguedad = array[i]["Fecha de Ingreso a HEAD"];
+        var fecha_antiguedad = array[i]["Fecha de ingreso a HEAD"];
         fecha_antiguedad = fecha_antiguedad == undefined ? "" : fecha_antiguedad;
         var fecha_antiguedad_timestamps = "";
 
@@ -641,7 +641,7 @@ function validateExcelRow(array){
         };
 
         // Validación fecha de nacimiento
-        var fecha_nacimiento = array[i]["Fecha de Nacimiento"];
+        var fecha_nacimiento = array[i]["Fecha de nacimiento"];
         fecha_nacimiento = fecha_nacimiento == undefined ? "" : fecha_nacimiento;
         var fecha_nacimiento_timestamps = "";
 
@@ -663,7 +663,7 @@ function validateExcelRow(array){
 
         // Validación estado civil
 
-        var estado_civil = array[i]["Estado Civil"];
+        var estado_civil = array[i]["Estado civil"];
         estado_civil = estado_civil == undefined ? "": deleteBlankSpacesString(estado_civil)
 
         if(estado_civil != ""){
@@ -692,7 +692,7 @@ function validateExcelRow(array){
 
         // Validación código postal
 
-        var codigo_postal = array[i]["Codigo Postal"];
+        var codigo_postal = array[i]["Codigo postal"];
         codigo_postal = codigo_postal == undefined ? "": deleteBlankSpacesString(codigo_postal)
 
         if(codigo_postal != ""){
@@ -740,13 +740,13 @@ function validateExcelRow(array){
 
         // validación tallas
 
-        var camisa = array[i]["Talla Camisa"];
+        var camisa = array[i]["Talla de amisa"];
         camisa = camisa == undefined ? "": deleteBlankSpacesString(camisa).toUpperCase();
 
-        var cintura = array[i]["Talla Pantalón (Cintura)"];
+        var cintura = array[i]["Talla de pantalón (cintura)"];
         cintura = cintura == undefined ? "": deleteBlankSpacesString(cintura).toUpperCase();
 
-        var largo = array[i]["Talla Pantalón (Largo)"];
+        var largo = array[i]["Talla de pantalón (largo)"];
         largo = largo == undefined ? "": deleteBlankSpacesString(largo).toUpperCase();
 
         if(cintura == "" && largo != ""){
@@ -763,7 +763,7 @@ function validateExcelRow(array){
             pantalon = cintura + "x" + largo;
         }
 
-        var zapatos = array[i]["Talla Zapatos"];
+        var zapatos = array[i]["Talla de zapatos"];
         zapatos = zapatos == undefined ? "": deleteBlankSpacesString(zapatos).toUpperCase();
         
         json_trabajador = {
@@ -1283,8 +1283,10 @@ function actualizarTablaTrabajador(){
             var id_pagadora = trabajador.id_pagadora;
 
             var nombre = "";
-            var nombre_text = trabajador.nombre;
             var nombre_array = trabajador.nombre.split("_");
+            var nombre_pila = nombre_array[0];
+            var a_paterno = nombre_array[1];
+            var a_materno = nombre_array[2];
 
             for(var i=0;i<nombre_array.length;i++){
                 if(i>0){
@@ -1293,13 +1295,20 @@ function actualizarTablaTrabajador(){
                 nombre += nombre_array[i];
             }
             var fecha_ingreso = new Date(trabajador.fecha_antiguedad);
-            fecha_ingreso = fecha_ingreso.getFullYear() + "/"+ ("0" + (fecha_ingreso.getMonth() + 1)).slice(-2) + "/" + ("0" + fecha_ingreso.getDate()).slice(-2);
+            fecha_ingreso = ("0" + fecha_ingreso.getDate()).slice(-2) + "/"+ ("0" + (fecha_ingreso.getMonth() + 1)).slice(-2) + "/" + fecha_ingreso.getFullYear();
 
             var puesto = trabajador.puesto;
             var id_puesto = trabajador.id_puesto;
             var especialidad = trabajador.especialidad;
             var id_especialidad = trabajador.id_especialidad;
             var sueldo = formatMoney(trabajador.sueldo_base);
+
+            var es_destajista = "";
+            if(trabajador.destajista){
+                es_destajista = "Sí";
+            } else {
+                es_destajista = "No";
+            }
 
             var id_jefe = trabajador.id_jefe;
             var jefe = "";
@@ -1317,7 +1326,7 @@ function actualizarTablaTrabajador(){
                 fecha_nacimiento = "";
             } else {
                 fecha_nacimiento = new Date(trabajadorSnap.child("info_personal").val().fecha_nacimiento);
-                fecha_nacimiento = fecha_nacimiento.getFullYear() +"."+ ("0" + (fecha_nacimiento.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha_nacimiento.getDate()).slice(-2);
+                fecha_nacimiento = ("0" + fecha_nacimiento.getDate()).slice(-2) +"/"+ ("0" + (fecha_nacimiento.getMonth() + 1)).slice(-2) +"/" + fecha_nacimiento.getFullYear();
             }
             var estado_civil = trabajadorSnap.child("info_personal").val().estado_civil;
             var sexo = trabajadorSnap.child("info_personal").val().sexo;
@@ -1333,7 +1342,17 @@ function actualizarTablaTrabajador(){
             var clabe = trabajadorSnap.child("datos_bancarios").val().clabe;
 
             var camisa = trabajadorSnap.child("tallas").val().camisa;            
-            var pantalon = trabajadorSnap.child("tallas").val().pantalon;          
+            var pantalon = trabajadorSnap.child("tallas").val().pantalon
+            
+            var cintura = "";
+            var largo = "";
+            if(pantalon != ""){
+                var pantalon_array = pantalon.split("x");      
+                cintura = pantalon_array[0];
+                largo = pantalon_array[1];
+            }
+            
+            
             var zapatos = trabajadorSnap.child("tallas").val().zapatos;
 
             var activo = trabajador.activo;
@@ -1346,32 +1365,37 @@ function actualizarTablaTrabajador(){
             }
 
             datosTrabajador.push([
-                firebase_id,
-                id_head,
-                id_pagadora,
-                nombre,
-                nombre_text,
-                fecha_ingreso,
+                firebase_id, // 0
+                id_head, // 1
+                id_pagadora, // 2
+                nombre, // 3
+                nombre_pila, // // 4
+                a_paterno, //
+                a_materno, //s
+                fecha_ingreso, // 7
                 puesto,
                 id_puesto,
                 especialidad,
                 id_especialidad,
-                sueldo,
+                sueldo,// 12
+                es_destajista, //
                 jefe,
                 id_jefe,
-                fecha_nacimiento,
+                fecha_nacimiento, // 16
                 estado_civil,
                 sexo,
                 direccion,
                 codigo_postal,
-                rfc,
+                rfc, // 21
                 imss,
                 curp,
                 banco,
                 cuenta,
                 clabe,
-                camisa,
+                camisa, // 27
                 pantalon,
+                cintura, //
+                largo, //
                 zapatos,
                 "<button type='button' class='btn btn-transparente' onclick='habilitarTrabajador(" + activo + "," + "\`"  + firebase_id  + "\`" + ")'><span class=" + icon_class + "></span></button>",
                 "<button type='button' class='opcionales btn btn-dark'><span class='fas fa-address-book'></span></button>",
@@ -1387,7 +1411,7 @@ function actualizarTablaTrabajador(){
                 {extend: 'excelHtml5',
                 title: "TrabajadoresHEAD",
                 exportOptions: {
-                    columns: [ 0, ':visible' ]
+                    columns: [ 0,1,2,4,5,6,7,8,10,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,29,30,31]
                 }}
             ],
             language: idioma_espanol,
@@ -1401,9 +1425,13 @@ function actualizarTablaTrabajador(){
                 ,
                 { "visible": false, "targets": 0 },
                 { "visible": false, "targets": 4 }, 
-                { "visible": false, "targets": 7 }, 
+                { "visible": false, "targets": 5 }, 
+                { "visible": false, "targets": 6 }, 
                 { "visible": false, "targets": 9 }, 
-                { "visible": false, "targets": [12,13,14,15,16,17,18,19,20,21,22,23,24,25,26]},
+                { "visible": false, "targets": 11 }, 
+                { "visible": false, "targets": 13 },
+                { "visible": false, "targets": 15 },  
+                { "visible": false, "targets": [16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]},
 
                 { targets: 1, className: 'dt-body-center'},
                 { targets: 2, className: 'dt-body-center'},
@@ -1420,47 +1448,46 @@ function actualizarTablaTrabajador(){
             id_trabajador_existente = data[0];
             $('#' + id_id_head_trabajador).val(data[1]);
             $('#' + id_id_pagadora_trabajador).val(data[2]);
-            var nombre = data[4].split("_");
-            $('#' + id_nombre_trabajador).val(nombre[0]);
-            $('#' + id_paterno_trabajador).val(nombre[1]);
-            $('#' + id_materno_trabajador).val(nombre[2]);
-            $('#' + id_antiguedad_trabajador).val(data[5]);
-            $('#' + id_ddl_puesto_trabajador + " [value='" + data[7] + "']").prop('bb', true);
-            $('#' + id_ddl_especialidad_trabajador + " [value=" + data[9] + "]").prop('selected', true);
-            $('#' + id_sueldo_trabajador).val(data[10]);
+            $('#' + id_nombre_trabajador).val(data[4]);
+            $('#' + id_paterno_trabajador).val(data[5]);
+            $('#' + id_materno_trabajador).val(data[6]);
+            var antiguedad = data[7].split("/");
+
+            $('#' + id_antiguedad_trabajador).val(antiguedad[2] + "." + antiguedad[1] + "." + antiguedad[0]);
+            $('#' + id_ddl_puesto_trabajador + " [value='" + data[9] + "']").prop('bb', true);
+            $('#' + id_ddl_especialidad_trabajador + " [value=" + data[11] + "]").prop('selected', true);
+            $('#' + id_sueldo_trabajador).val(data[12]);
             
             
-            var is_HEAD = data[12] == "" ? true: false;
+            var is_HEAD = data[15] == "" ? true: false;
 
             if(is_HEAD){
                 $('#' + id_ddl_jefe_trabajador + " [value='HEAD']").prop('selected', true);
             } else {
-                $('#' + id_ddl_jefe_trabajador + " [value='" + data[12] + "']").prop('selected', true);
+                $('#' + id_ddl_jefe_trabajador + " [value='" + data[15] + "']").prop('selected', true);
             }
-            $('#' + id_nacimiento_trabajador).val(data[13]);
-            $('#' + id_estado_civil_trabajador).val(data[14]);
-            $('#' + id_ddl_sexo_trabajador + " [value='" + data[15] + "']").prop('selected', true);
-            $('#' + id_direccion_trabajador).val(data[16]);
-            $('#' + id_codigo_postal_trabajador).val(data[17]);
-            $('#' + id_rfc_trabajador).val(data[18]);
-            $('#' + id_imss_trabajador).val(data[19]);
-            $('#' + id_curp_trabajador).val(data[20]);
-            $('#' + id_banco_trabajador).val(data[21]);
-            $('#' + id_cuenta_trabajador).val(data[22]);
-            $('#' + id_clabe_trabajador).val(data[23]);
-            $('#' + id_ddl_camisa_trabajador + " [value='" + data[24] + "']").prop('selected', true);
-
-            var pantalon_data = data[25].split("x");
-            $('#' + id_ddl_cintura_trabajador + " [value='" + pantalon_data[0] + "']").prop('selected', true);
-            $('#' + id_ddl_largo_trabajador + " [value='" + pantalon_data[1] + "']").prop('selected', true);
-            $('#' + id_ddl_zapatos_trabajador + " [value='" + data[26] + "']").prop('selected', true);
+            var nacimiento = data[16].split("/")
+            $('#' + id_nacimiento_trabajador).val(nacimiento[2] + "." + nacimiento[1] + "." + nacimiento[0]);
+            $('#' + id_estado_civil_trabajador).val(data[17]);
+            $('#' + id_ddl_sexo_trabajador + " [value='" + data[18] + "']").prop('selected', true);
+            $('#' + id_direccion_trabajador).val(data[19]);
+            $('#' + id_codigo_postal_trabajador).val(data[20]);
+            $('#' + id_rfc_trabajador).val(data[21]);
+            $('#' + id_imss_trabajador).val(data[22]);
+            $('#' + id_curp_trabajador).val(data[23]);
+            $('#' + id_banco_trabajador).val(data[24]);
+            $('#' + id_cuenta_trabajador).val(data[25]);
+            $('#' + id_clabe_trabajador).val(data[26]);
+            $('#' + id_ddl_camisa_trabajador + " [value='" + data[27] + "']").prop('selected', true);
+            $('#' + id_ddl_cintura_trabajador + " [value='" + data[29] + "']").prop('selected', true);
+            $('#' + id_ddl_largo_trabajador + " [value='" + data[30] + "']").prop('selected', true);
+            $('#' + id_ddl_zapatos_trabajador + " [value='" + data[31] + "']").prop('selected', true);
         } );
         $('#' + id_dataTable_trabajador + ' tbody').on( 'click', '.opcionales', function () {
             $('#' + id_body_modal_trabajadores_trabajador).html('');
             var data = tabla_trabajador.row( $(this).parents('tr') ).data();
 
-            var nombre = data[4].split("_");
-            $('#' + id_title_body_trabajadores_trabajador).text(nombre[0] + " "+ nombre[1] + " " + nombre[2]);
+            $('#' + id_title_body_trabajadores_trabajador).text(data[4] + " "+ data[5] + " " + data[6]);
             var body = document.getElementById(id_body_modal_trabajadores_trabajador);
             
             var row = document.createElement('tr');     
@@ -1468,7 +1495,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "Fecha de nacimiento: ";          
             var fecha_nacimiento = document.createElement('td');
-            fecha_nacimiento.textContent = data[13];
+            fecha_nacimiento.textContent = data[16];
                
             row.appendChild(concepto);
             row.appendChild(fecha_nacimiento);    
@@ -1479,7 +1506,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "Estado civil: ";          
             var estado_civil = document.createElement('td');
-            estado_civil.textContent = data[14];
+            estado_civil.textContent = data[17];
                
             row.appendChild(concepto);
             row.appendChild(estado_civil);    
@@ -1490,7 +1517,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "Sexo: ";          
             var sexo = document.createElement('td');
-            sexo.textContent = data[15];
+            sexo.textContent = data[18];
                
             row.appendChild(concepto);
             row.appendChild(sexo);    
@@ -1501,7 +1528,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "Domicilio: ";          
             var direccion = document.createElement('td');
-            direccion.textContent = data[16];
+            direccion.textContent = data[19];
                
             row.appendChild(concepto);
             row.appendChild(direccion);    
@@ -1512,7 +1539,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "Código postal: ";          
             var codigo_postal = document.createElement('td');
-            codigo_postal.textContent = data[17];
+            codigo_postal.textContent = data[20];
                
             row.appendChild(concepto);
             row.appendChild(codigo_postal);    
@@ -1523,7 +1550,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "RFC: ";          
             var rfc = document.createElement('td');
-            rfc.textContent = data[18];
+            rfc.textContent = data[21];
                
             row.appendChild(concepto);
             row.appendChild(rfc);    
@@ -1534,7 +1561,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "IMSS: ";          
             var imss = document.createElement('td');
-            imss.textContent = data[19];
+            imss.textContent = data[22];
                
             row.appendChild(concepto);
             row.appendChild(imss);    
@@ -1545,7 +1572,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "CURP: ";          
             var curp = document.createElement('td');
-            curp.textContent = data[20];
+            curp.textContent = data[23];
                
             row.appendChild(concepto);
             row.appendChild(curp);    
@@ -1556,7 +1583,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "Banco: ";          
             var banco = document.createElement('td');
-            banco.textContent = data[21];
+            banco.textContent = data[24];
                
             row.appendChild(concepto);
             row.appendChild(banco);    
@@ -1567,7 +1594,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "Cuenta: ";          
             var cuenta = document.createElement('td');
-            cuenta.textContent = data[22];
+            cuenta.textContent = data[25];
                
             row.appendChild(concepto);
             row.appendChild(cuenta);    
@@ -1578,7 +1605,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "CLABE: ";          
             var clabe = document.createElement('td');
-            clabe.textContent = data[23];
+            clabe.textContent = data[26];
                
             row.appendChild(concepto);
             row.appendChild(clabe);    
@@ -1589,7 +1616,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "Talla de camisa: ";          
             var camisa = document.createElement('td');
-            camisa.textContent = data[24];
+            camisa.textContent = data[27];
                
             row.appendChild(concepto);
             row.appendChild(camisa);    
@@ -1600,7 +1627,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "Talla de pantalón: ";          
             var pantalon = document.createElement('td');
-            pantalon.textContent = data[25];
+            pantalon.textContent = data[28];
                
             row.appendChild(concepto);
             row.appendChild(pantalon);    
@@ -1611,7 +1638,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "Talla de zapatos: ";          
             var zapatos = document.createElement('td');
-            zapatos.textContent = data[26];
+            zapatos.textContent = data[31];
                
             row.appendChild(concepto);
             row.appendChild(zapatos);    
