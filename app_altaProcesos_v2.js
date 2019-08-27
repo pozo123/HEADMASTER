@@ -210,7 +210,7 @@ $('#' + id_ddl_procesoProcesos).change(function(){
   if ($('#' + id_ddl_procesoProcesos + " option:selected").val() !== "NUEVO"){ //Proceso ya existe
     existe_proceso = true;
     uid_proceso = $('#' + id_ddl_procesoProcesos + " option:selected").val();
-    $('#' + id_clave_proceso). val (uid_proceso);
+    $('#' + id_clave_proceso).val(uid_proceso);
     var proceso;
     firebase.database().ref(rama_bd_obras + "/procesos/" + $('#' + id_ddl_obraProcesos + " option:selected").val() + "/procesos/"+ uid_proceso).on('value',function(snapshot){
         proceso = snapshot.val();

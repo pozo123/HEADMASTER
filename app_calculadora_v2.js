@@ -4,6 +4,8 @@ var id_form_calculadora = "formCalculadora";
 
 var id_ddl_obraCalculadora = "obraDdlCalculadora";
 var id_ddl_procesoCalculadora = "procesoDdlCalculadora";
+var id_ddl_subprocesoCalculadora = "subprocesoDdlCalculadora";
+var id_horas_proyectoCalculadora = "horasProyectoCalculadora";
 var id_costo_proyectoCalculadora = "costoProyectoCalculadora";
 var id_costo_suministrosCalculadora = "costoSuministrosCalculadora";
 var id_costo_copeoCalculadora = "costoCopeoCalculadora";
@@ -18,6 +20,10 @@ var id_impuestosCalculadora = "impuestosCalculadora";
 
 var id_agregar_calculadora = "botonGuardarCalculadora";
 var id_borrar_calculadora = "botonBorrarCalculadora";
+
+var uid_obra;
+var uid_proceso;
+var uid_subproceso;
 
 $('#' + id_tab_calculadora).click(function(){
 	$('#' + id_form_calculadora).trigger("reset");
@@ -48,6 +54,7 @@ $('#' + id_agregar_calculadora).click(function(){
 // ----------------------- VALIDACIÓN DE FORMULARIO ------------------------
 $("#" + id_ddl_obraCalculadora ).change(function(){
   resetFormCalculadora(true);
+  uid_obra = $('#' + id_ddl_obraCalculadora + " option:selected").val();
   $('#' + id_ddl_procesoCalculadora).empty();
   var select = document.getElementById(id_ddl_procesoCalculadora );
   var option = document.createElement('option');
@@ -55,7 +62,7 @@ $("#" + id_ddl_obraCalculadora ).change(function(){
   option.text = option.value = "";
   select.appendChild(option);
   var proceso;
-  firebase.database().ref(rama_bd_obras + "/procesos/" + $('#' + id_ddl_obraProcesos + " option:selected").val() + "/procesos").orderByKey().on('child_added',function(snapshot){
+  firebase.database().ref(rama_bd_obras + "/procesos/" + uid_obra + "/procesos").orderByKey().on('child_added',function(snapshot){
       proceso = snapshot.val();
       if (snapshot.exists()){
         if (snapshot.key !== "ADIC" && snapshot.key !== "MISC" && snapshot.key !== "PC00"){ //descartamos los procesos default
@@ -68,8 +75,36 @@ $("#" + id_ddl_obraCalculadora ).change(function(){
   });
 });
 
-$("#" + id_proceso_ddl_kaizen_ppto).change(function(){
-	refreshKaizenPpto();
+$("#" + id_ddl_procesoCalculadora).change(function(){
+  uid_proceso = $('#'+id_ddl_procesoCalculadora+" option:selected").val();
+  $('#' + id_ddl_subprocesoCalculadora).empty();
+  var select = document.getElementById(id_ddl_subprocesoCalculadora);
+  var option = document.createElement('option');
+  option.style = "display:none";
+  option.text = option.value = "";
+  select.appendChild(option);
+  var subproceso;
+  firebase.database().ref(rama_bd_obras + "/procesos/" + uid_obra + "/procesos/" + uid_proceso + "/subprocesos").orderByKey().on('child_added',function(snapshot){
+      subproceso = snapshot.val();
+      if (snapshot.exists()){
+        option = document.createElement('option');
+        option.value = snapshot.key;
+        if ($('#'+id_ddl_procesoCalculadora+" option:selected").val() == snapshot.key){
+          option.text = "-MISMO PROCESO-";
+        } else {
+          option.text = snapshot.key + " " + subproceso.nombre;
+        }
+        select.appendChild(option);
+      }
+  });
+});
+
+$("#" + id_ddl_subprocesoCalculadora).change(function(){
+  resetFormCalculadora_subproceso();
+  uid_subproceso = $('#'+id_ddl_subprocesoCalculadora+" option:selected").val()
+  firebase.database().ref(rama_bd_obras + "/procesos/" + uid_obra + "/procesos/" + uid_proceso + "/subprocesos/" + uid_subproceso).on('value',function(snapshot){
+
+  });
 });
 
 $('#' + id_impuestos_kaizen_ppto).change(function(){
@@ -249,25 +284,24 @@ function loadValuesKaizenPpto(query){
     });
 };
 
-function resetKaizPpto(){
-	kaiz_ppto = {
-		proy: 0,
-		sum: 0,
-		cop:0,
-		ant: 0,
-		est: 0,
-	}
-}
-
 function resetFormCalculadora (){
   $('#' + id_ddl_obraCalculadora).val("");
   $('#' + id_ddl_procesoCalculadora).empty();
+  $('#' + id_ddl_subprocesoCalculadora).empty();
+  resetFormCalculadora_subproceso();
+  resetFormCalculadora_extra();
+}
+
+function resetFormCalculadora_subproceso(){
   $('#' + id_costo_proyectoCalculadora ).val("");
   $('#' + id_costo_suministrosCalculadora).val("");
   $('#' + id_costo_copeoCalculadora).val("");
   $('#' + id_profit_cantidadCalculadora).val("");
   $('#' + id_profit_porcentajeCalculadora).val("");
   $('#' + id_precio_ventaCalculadora).val("");
+}
+
+function resetFormCalculadora_extra(){
   $('#' + id_anticipoCalculadora).val("");
   $('#' + id_estimacionesCalculadora).val("");
   $('#' + id_costo_horasScoreCalculadora).val("");
