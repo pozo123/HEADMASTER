@@ -18,6 +18,7 @@ var id_estimacionesCalculadora = "estimacionesCalculadora";
 var id_costo_horaScoreCalculadora = "costoHoraScoreCalculadora";
 var id_indirectosCalculadora = "indirectosCalculadora";
 var id_impuestosCalculadora = "impuestosCalculadora";
+var id_costo_operacionesCalculadora = "costoOperacionesCalculadora";
 
 var id_agregar_calculadora = "botonGuardarCalculadora";
 var id_borrar_calculadora = "botonBorrarCalculadora";
@@ -118,7 +119,7 @@ $("#" + id_ddl_subprocesoCalculadora).change(function(){
     } else {
       var costoScore = subproceso.score.horas_programadas*subproceso.score.costo_hora;
       var costoOperacion = costoScore + subproceso.costo_suministros + subproceso.precopeo;
-      var utilidad = subproceso.precio_venta - ; 
+
       $('#' + id_horas_proyectoCalculadora ).val(subproceso.score.horas_programadas);
       $('#' + id_costo_proyectoCalculadora ).val(costoScore);
       $('#' + id_costo_suministrosCalculadora).val(subproceso.costo_suministros);
