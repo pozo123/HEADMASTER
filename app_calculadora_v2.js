@@ -118,15 +118,19 @@ $("#" + id_ddl_subprocesoCalculadora).change(function(){
 
     } else {
       var costoScore = subproceso.score.horas_programadas*subproceso.score.costo_hora;
-      var costoOperacion = costoScore + subproceso.costo_suministros + subproceso.precopeo;
+      var costoOperacion = (costoScore + subproceso.costo_suministros + subproceso.precopeo)*subproceso.porcentaje_indirectos*0.01;
+      var costoUtilidad = costoOperacion + subproceso.utilidad;
+      var precioDeVenta = costoUtilidad*subproceso.porcentaje_impuestos*0.01;
 
       $('#' + id_horas_proyectoCalculadora ).val(subproceso.score.horas_programadas);
-      $('#' + id_costo_proyectoCalculadora ).val(costoScore);
+      $('#' + id_costo_proyectoCalculadora ).val(formatMoney(costoScore));
       $('#' + id_costo_suministrosCalculadora).val(subproceso.costo_suministros);
       $('#' + id_costo_copeoCalculadora).val(subproceso.precopeo);
       $('#' + id_profit_cantidadCalculadora).val(subproceso);
       $('#' + id_profit_porcentajeCalculadora).val("");
+      $('#' + id_profit_netoCalculadora).val("");
       $('#' + id_precio_ventaCalculadora).val("");
+      $('#' + id_costo_operacionesCalculadora).val("");
 
       $('#' + id_anticipoCalculadora).val();
       $('#' + id_estimacionesCalculadora).val();

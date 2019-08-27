@@ -330,7 +330,7 @@ function datosAltaObra(){
     id_cliente: $('#' + id_ddl_cliente_obra + ' option:selected').val(),
     habilitada: true,
     direccion: direccionAltaObra(),
-    retencion_fondo_garantia: $('#' + id_garantia_obra).val(),
+    retencion_fondo_garantia: parseFloat($('#' + id_garantia_obra).val()),
     fechas: fechasAltaObra()
   }
   return obra;
