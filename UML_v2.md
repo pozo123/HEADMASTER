@@ -154,6 +154,9 @@ Nota: Todo float se ingresa a 2 decimales.
                                 - precio_venta: float
                                 - costo_suministros:float
                                 - precopeo: float
+                                - porcentaje_anticipo: float
+                                - porcentaje_indirectos: float
+                                - porcentaje_impuestos: float
                                 - score
                                     - horas_programadas: (en horas)
                                     - costo_hora: float (2 decimales)
@@ -322,7 +325,7 @@ Nota: Todo float se ingresa a 2 decimales.
                         - id_trabajador: nombre
         - nomina (otra versión):
             - nomina
-                - registro (key: aaaass + "/" + trabajador_id. Ya revisé y "/" no es de los caracteres utilizados por firebase para sus keys) 
+                - registro (key: aaaass + "/" + trabajador_id. Ya revisé y "/" no es de los caracteres utilizados por firebase para sus keys)
                     - trabajador_id: string
                     - año_head: int
                     - semana_head: int

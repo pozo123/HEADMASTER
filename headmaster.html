@@ -934,27 +934,22 @@
                                                 </div>
                                                 <hr class="style2">
                                                 <div class="form-row align-items-center">
-                                                    <div class="col-lg-4">
-                                                        <label >Costo de Proyecto</label>
-                                                    </div>
-                                                </div>
-                                                <div class="form-row align-items-center">
-                                                    <div class="col-lg-4">
-                                                        <label for="costoProyectoCalculadora">Horas:</label>
+                                                    <div class="col-lg-6">
+                                                        <label for="costoProyectoCalculadora">Horas SCORE:</label>
                                                         <input type="text" id="horasProyectoCalculadora" class="form-control" placeholder="Cantidad en horas">
                                                     </div>
-                                                    <div class="col-lg-4">
-                                                        <label for="costoProyectoCalculadora">Dinero:</label>
+                                                    <div class="col-lg-6">
+                                                        <label for="costoProyectoCalculadora">Costo SCORE:</label>
                                                         <input type="text" id="costoProyectoCalculadora" class="form-control" placeholder="Cantidad en dinero">
                                                     </div>
                                                 </div>
                                                 <br/>
                                                 <div class="form-row align-items-center">
-                                                    <div class="col-lg-4">
+                                                    <div class="col-lg-6">
                                                         <label for="costoSuministrosCalculadora">Costo de suministros:</label>
                                                         <input type="text" id="costoSuministrosCalculadora" class="form-control" placeholder="Costo de suministros">
                                                     </div>
-                                                    <div class="col-lg-4">
+                                                    <div class="col-lg-6">
                                                         <label for="costoCopeoCalculadora">Costo de copeo:</label>
                                                         <input type="text" disabled="true" id="costoCopeoCalculadora" class="form-control" placeholder="Costo de copeo">
                                                     </div>
@@ -970,16 +965,18 @@
                                                         <input type="text" id="profitPorcentajeCalculadora" class="form-control" placeholder="Profit (%)">
                                                     </div>
                                                     <div class="col-lg-4">
-                                                        <label for="precioVentaCalculadora">Precio de venta:</label>
-                                                        <input type="text" id="precioVentaCalculadora" class="form-control" placeholder="Precio de venta">
+                                                        <label id = "labelProfitNetoCalculadora">Profit Neto:</label>
+                                                        <input type="text" id="profitNetoCalculadora" class="form-control" placeholder="Precio de venta">
                                                     </div>
                                                 </div>
                                                 <br/>
                                                 <div class="form-row align-items-center">
                                                     <div class="col-lg-12">
-                                                        <label id = "labelProfitNetoCalculadora">Profit Neto:</label>
+                                                        <label for="precioVentaCalculadora">Precio de venta:</label>
+                                                        <input type="text" id="precioVentaCalculadora" class="form-control" placeholder="Precio de venta">
                                                     </div>
                                                 </div>
+
                                                 <br/>
                                                 <div class="form-row">
                                                     <div class= "col-lg-6">
@@ -993,26 +990,34 @@
                                                 <div class="form-row align-items-center">
                                                     <div class="col-lg-6">
                                                         <label for="anticipoCalculadora">Porcentaje Anticipo</label>
-                                                        <input type="text" id="anticipoCalculadora" value="50" class="form-control" placeholder="Anticipos">
+                                                        <input type="text" id="anticipoCalculadora" class="form-control" placeholder="Anticipos">
                                                     </div>
                                                     <div class="col-lg-6">
                                                         <label for="estimacionesCalculadora">Porcentaje Estimaciones</label>
-                                                        <input type="text" id="estimacionesCalculadora" value = "50" class="form-control" placeholder="Estimaciones">
+                                                        <input type="text" id="estimacionesCalculadora" class="form-control" placeholder="Estimaciones">
                                                     </div>
                                                 </div>
                                                 <br/>
                                                 <div class="form-row align-items-center">
                                                     <div class="col-lg-6">
-                                                        <label for="costoHoraScoreCalculadora">Precio de Hora SCORE ($):</label>
-                                                        <input type="text" id="costoHoraScoreCalculadora" value="1300" class="form-control" placeholder="Costo por hora">
+                                                        <label for="costoHoraScoreCalculadora">Precio x Hora SCORE:</label>
+                                                        <input type="text" id="costoHoraScoreCalculadora" class="form-control" placeholder="Costo por hora">
                                                     </div>
                                                     <div class="col-lg-6">
                                                         <label for="indirectosCalculadora">Porcentaje Indirectos:</label>
-                                                        <input type="text" id="indirectosCalculadora" value = "20" class="form-control" placeholder="Porcentaje de indirectos">
+                                                        <input type="text" id="indirectosCalculadora" class="form-control" placeholder="Porcentaje de indirectos">
                                                     </div>
+                                                </div>
+                                                <br/>
+                                                <div class="form-row align-items-center">
                                                     <div class="col-lg-6">
                                                         <label for="impuestosCalculadora">Porcentaje impuestos para venta:</label>
-                                                        <input type="text" id="impuestosCalculadora" value = "54" class="form-control" placeholder="Porcentaje de venta">
+                                                        <input type="text" id="impuestosCalculadora" class="form-control" placeholder="Porcentaje de venta">
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class= "col-lg-6">
+                                                        <button type="button" id = "botonDefaultCalculadora"class="btn btn-info btn-block">Valores Default</button>
                                                     </div>
                                                 </div>
                                             </form>
