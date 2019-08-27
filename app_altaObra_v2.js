@@ -50,7 +50,7 @@ $('#' + id_tab_obra).click(function() {
     //Se restringe el numero de digitos para el codigo postal
     $('#' + id_codigo_postal_obra).attr('maxlength',5)
 
-    // Necesita funcionalidad para llenar el ddl de cliente.
+    // Llenado del ddl de cliente.
     $('#' + id_ddl_cliente_obra).empty();
     var select = document.getElementById(id_ddl_cliente_obra);
     var option = document.createElement('option');
@@ -74,7 +74,7 @@ $('#' + id_agregar_obra).click(function() {
   //Validar datos ingresados
   if (validateFormObra()){
     var datos_obra = datosAltaObra();
-    console.log(datos_obra);
+    //console.log(datos_obra);
     //Decidir si editar o dar de alta
     if (existe_obra){ //editar
         firebase.database().ref(rama_bd_obras + "/obras/" + uid_existente).once("value").then(function(snapshot){
@@ -124,7 +124,7 @@ $('#' + id_agregar_obra).click(function() {
             obra_paths["listas/obras_activas/" + regKey + "/nombre"] = datos_obra.nombre;
             obra_paths["listas/fechas_obra_inicio/programada/" + fechas.inicio + "/" + regKey] = true;
             obra_paths["listas/fechas_obra_fin/programada/" + fechas.final + "/" + regKey] = true;
-            console.log(obra_paths);
+            //console.log(obra_paths);
             firebase.database().ref(rama_bd_obras).update(obra_paths);
 
             // PAD
@@ -489,6 +489,7 @@ function actualizarTablaObras(){
             destroy: true,
             data: datos_obras,
             language: idioma_espanol,
+            "autoWidth": false,
             "columnDefs": [
                 { "width": "150px", "targets": 3 },
                 { "width": "100px", "targets": 6 },
@@ -496,7 +497,7 @@ function actualizarTablaObras(){
                     targets: -2,
                     className: 'dt-body-center'
                 },
-                { "visible": false, "targets": 0 },
+                { "visible": false, "targets": 0 }, //campos auxiliares
                 { "visible": false, "targets": 1 },
                 { "visible": false, "targets": 5 },
                 {
@@ -506,7 +507,7 @@ function actualizarTablaObras(){
                 }
               ]
         });
-
+        //Funcion para llenar los campos cuando se quiere editar desde las opciones de la tabla
         $('#' + id_dataTable_obra + ' tbody').on( 'click', '.editar', function () {
             highLightAllObra();
             var data = tabla_obra.row( $(this).parents('tr') ).data();
@@ -553,6 +554,7 @@ function  habilitarObra(habilitada, id){
     });
 }
 
+//Funcion para resaltar todos los campos
 function highLightAllObra(){
     highLight(id_clave_obra);
     highLight(id_nombre_obra);
