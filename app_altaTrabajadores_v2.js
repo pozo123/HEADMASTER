@@ -21,14 +21,13 @@ var id_class_incorrectos_trabajador = "classIncorrectosTrabajador";
 var id_body_modal_correctos_trabajador = "bodyModalCorrectos";
 var id_body_modal_incorrectos_trabajador = "bodyModalIncorrectos"
 
-var id_descargar_formato_button_trabajador = "descargarFormatoButtonTrabajador";
 
 var id_hide_opcionales_button_trabajador = "hideOpcionalesButtonTrabajador";
 var id_hide_opcionales_icon_trabajador = "hideOpcionalesIconTrabajador";
 var id_container_opcionales_trabajador = "opcionalesContainer";
 
 var id_button_reset_file_trabajador = "resetFileButtonTrabajador";
-var id_button_desargar_file_trabajador = "descargarFormatoButtonTrabajador";
+var id_descargar_formato_button_trabajador = "descargarFormatoButtonTrabajador";
 var id_button_importar_file_trabajador = "importarButtonTrabajador";
 
 var id_nombre_trabajador = "nombreTrabajador";
@@ -327,10 +326,10 @@ $('#' + id_button_importar_file_trabajador).click(function(){
             });
 
             destajistas_path[rama_bd_mano_obra + "/listas/no_activos/" + array_destajistas[i][0]] = null;
-            destajistas_path[rama_bd_mano_obra + "/listas/activos/" + array_destajistas[i][0]] = true;
-            destajistas_path[rama_bd_mano_obra + "/listas/destajistas/" + array_destajistas[i][0] + "/" + array_destajistas[i][0]] = true;
-            destajistas_path[rama_bd_mano_obra + "/listas/puesto/" + array_destajistas[i][1]["id_puesto"] + "/" + array_destajistas[i][0]] = true;
-            destajistas_path[rama_bd_mano_obra + "/listas/especialidad/" + array_destajistas[i][1]["id_especialidad"] + "/" + array_destajistas[i][0]] = true;
+            destajistas_path[rama_bd_mano_obra + "/listas/activos/" + array_destajistas[i][0]] = array_destajistas[i][1]["nombre"];
+            destajistas_path[rama_bd_mano_obra + "/listas/destajistas/" + array_destajistas[i][0] + "/" + array_destajistas[i][0]] =array_destajistas[i][1]["nombre"] ;
+            destajistas_path[rama_bd_mano_obra + "/listas/puesto/" + array_destajistas[i][1]["id_puesto"] + "/" + array_destajistas[i][0]] = array_destajistas[i][1]["nombre"];
+            destajistas_path[rama_bd_mano_obra + "/listas/especialidad/" + array_destajistas[i][1]["id_especialidad"] + "/" + array_destajistas[i][0]] = array_destajistas[i][1]["nombre"];
         };
 
         firebase.database().ref().update(destajistas_path).then(function(){
@@ -343,7 +342,7 @@ $('#' + id_button_importar_file_trabajador).click(function(){
                             no_destajistas_path[rama_bd_mano_obra + "/listas/destajistas/" + destSnap.key] = null;
                             destSnap.forEach(function(subDestSnap){
                                 if(subDestSnap.key != array_no_destajistas[k][0]){
-                                    no_destajistas_path[rama_bd_mano_obra + "/listas/destajistas/HEAD/" + subDestSnap.key] = true;
+                                    no_destajistas_path[rama_bd_mano_obra + "/listas/destajistas/HEAD/" + subDestSnap.key] = subDestSnap.val();
                                     firebase.database().ref(rama_bd_mano_obra + "/trabajadores/" + subDestSnap.key).update({id_jefe: "", jefe: "HEAD"});
                                 } 
                             });
@@ -360,16 +359,16 @@ $('#' + id_button_importar_file_trabajador).click(function(){
                     });
 
                     no_destajistas_path[rama_bd_mano_obra + "/listas/no_activos/" + array_no_destajistas[k][0]] = null;
-                    no_destajistas_path[rama_bd_mano_obra + "/listas/activos/" + array_no_destajistas[k][0]] = true;
-                    no_destajistas_path[rama_bd_mano_obra + "/listas/puesto/" + array_no_destajistas[k][1]["id_puesto"] + "/" + array_no_destajistas[k][0]] = true;
-                    no_destajistas_path[rama_bd_mano_obra + "/listas/especialidad/" + array_no_destajistas[k][1]["id_especialidad"] + "/" + array_no_destajistas[k][0]] = true;
+                    no_destajistas_path[rama_bd_mano_obra + "/listas/activos/" + array_no_destajistas[k][0]] = array_no_destajistas[k][1]["nombre"];
+                    no_destajistas_path[rama_bd_mano_obra + "/listas/puesto/" + array_no_destajistas[k][1]["id_puesto"] + "/" + array_no_destajistas[k][0]] = array_no_destajistas[k][1]["nombre"];;
+                    no_destajistas_path[rama_bd_mano_obra + "/listas/especialidad/" + array_no_destajistas[k][1]["id_especialidad"] + "/" + array_no_destajistas[k][0]] = array_no_destajistas[k][1]["nombre"];;
 
                     if(array_no_destajistas[k][1]["id_jefe"] == ""){
-                        no_destajistas_path[rama_bd_mano_obra + "/listas/destajistas/HEAD/" + array_no_destajistas[k][0]] = true;
+                        no_destajistas_path[rama_bd_mano_obra + "/listas/destajistas/HEAD/" + array_no_destajistas[k][0]] = array_no_destajistas[k][1]["nombre"];;
                         no_destajistas_path[rama_bd_mano_obra + "/listas/destajistas/" + array_no_destajistas[k][1]["id_jefe"] + "/" + array_no_destajistas[k][0]] = null;
                     } else {
                         no_destajistas_path[rama_bd_mano_obra + "/listas/destajistas/HEAD/" + array_no_destajistas[k][0]] = null;
-                        no_destajistas_path[rama_bd_mano_obra + "/listas/destajistas/" + array_no_destajistas[k][1]["id_jefe"] + "/" + array_no_destajistas[k][0]] = true;
+                        no_destajistas_path[rama_bd_mano_obra + "/listas/destajistas/" + array_no_destajistas[k][1]["id_jefe"] + "/" + array_no_destajistas[k][0]] = array_no_destajistas[k][1]["nombre"];;
                     }
 
                 }
@@ -911,7 +910,7 @@ $('#' + id_agregar_trabajador).click(function(){
                             listas_path["listas/destajistas/" + id_trabajador_existente] = null;
                             destSnap.forEach(function(subDestSnap){
                                 if(subDestSnap.key != id_trabajador_existente){
-                                    listas_path["listas/destajistas/HEAD/" + subDestSnap.key] = true;
+                                    listas_path["listas/destajistas/HEAD/" + subDestSnap.key] = subDestSnap.val();
                                     firebase.database().ref(rama_bd_mano_obra + "/trabajadores/" + subDestSnap.key).update({id_jefe: "", jefe: "HEAD"});
                                 }
                             });
@@ -927,16 +926,16 @@ $('#' + id_agregar_trabajador).click(function(){
                     snapshot.child("puesto").forEach(function(destSnap){
                         listas_path["listas/puesto/" + destSnap.key + "/" + id_trabajador_existente] = null;
                     });
-                    listas_path["listas/especialidad/" + trabajador.id_especialidad + "/" + id_trabajador_existente] = true;
-                    listas_path["listas/puesto/" + trabajador.id_puesto + "/" + id_trabajador_existente] = true;
+                    listas_path["listas/especialidad/" + trabajador.id_especialidad + "/" + id_trabajador_existente] = trabajador.nombre;
+                    listas_path["listas/puesto/" + trabajador.id_puesto + "/" + id_trabajador_existente] = trabajador.nombre;
     
                     if(trabajador.destajista){
-                        listas_path["listas/destajistas/" + id_trabajador_existente + "/" + id_trabajador_existente] = true;
+                        listas_path["listas/destajistas/" + id_trabajador_existente + "/" + id_trabajador_existente] = trabajador.nombre;
                     } else {
                         if(trabajador.id_jefe == ""){
-                            listas_path["listas/destajistas/HEAD/" + id_trabajador_existente] = true;
+                            listas_path["listas/destajistas/HEAD/" + id_trabajador_existente] = trabajador.nombre;
                         } else {
-                            listas_path["listas/destajistas/" + trabajador.id_jefe + "/" + id_trabajador_existente] = true;
+                            listas_path["listas/destajistas/" + trabajador.id_jefe + "/" + id_trabajador_existente] = trabajador.nombre;
                         }
                     }
                     firebase.database().ref(rama_bd_mano_obra).update(listas_path).then(function(){
@@ -967,17 +966,17 @@ $('#' + id_agregar_trabajador).click(function(){
             firebase.database().ref(rama_bd_mano_obra + "/trabajadores/" + regKey).update({id_jefe: regKey});
 
             var listas_path = {};
-            listas_path["listas/puesto/" + trabajador.id_puesto + "/" + regKey] = true;
-            listas_path["listas/especialidad/" + trabajador.id_especialidad + "/" + regKey] = true;
-            listas_path["listas/activo/" + regKey] = true;
+            listas_path["listas/puesto/" + trabajador.id_puesto + "/" + regKey] = trabajador.nombre;
+            listas_path["listas/especialidad/" + trabajador.id_especialidad + "/" + regKey] = trabajador.nombre;
+            listas_path["listas/activo/" + regKey] = trabajador.nombre;
 
             if(trabajador.destajista){
-                listas_path["listas/destajistas/" + regKey + "/" + regKey] = true;
+                listas_path["listas/destajistas/" + regKey + "/" + regKey] = trabajador.nombre;
             } else {
                 if(trabajador.id_jefe == ""){
-                    listas_path["listas/destajistas/HEAD/" + regKey] = true;
+                    listas_path["listas/destajistas/HEAD/" + regKey] = trabajador.nombre;
                 } else {
-                    listas_path["listas/destajistas/" + trabajador.id_jefe + "/" + regKey] = true;
+                    listas_path["listas/destajistas/" + trabajador.id_jefe + "/" + regKey] = trabajador.nombre;
                 }
             }
 
@@ -1686,9 +1685,9 @@ function  habilitarTrabajador(activo, id){
         // actualizar listas
         if(activo){
             firebase.database().ref(rama_bd_mano_obra + "/listas/activos/" + id).remove();
-            firebase.database().ref(rama_bd_mano_obra + "/listas/no_activos/" + id).set(true);
+            firebase.database().ref(rama_bd_mano_obra + "/listas/no_activos/" + id).set(registro_antiguo.nombre);
         } else {
-            firebase.database().ref(rama_bd_mano_obra + "/listas/activos/" + id).set(true)
+            firebase.database().ref(rama_bd_mano_obra + "/listas/activos/" + id).set(registro_antiguo.nombre)
             firebase.database().ref(rama_bd_mano_obra + "/listas/no_activos/" + id).remove();
         }
         // pda

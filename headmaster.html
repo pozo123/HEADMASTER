@@ -1467,45 +1467,37 @@
                             <p>Página para ingresar asistencias, horas extra y pagos diversos.</p>
                             <div class= "container-fluid">
                                 <div class= "row align-items-center">
-                                    <div class= "col-lg-1"></div>
-                                    <div class= "col-lg-10">
-                                        <form id="formObra" action="#" onsubmit="return false;">
+                                    <div class= "col-lg-2"></div>
+                                    <div class= "col-lg-8">
+                                        <form id="formNomina" action="#" onsubmit="return false;">
                                             <div class="form-row">
                                                 <div class="form-group col-md-6">
-                                                    <label for="clienteObra">Año:</label>
-                                                    <select id ="clienteObra" class="form-control"></select>
+                                                    <label for="yearNomina">Año</label>
+                                                    <select id ="yearNomina" class="form-control"></select>
                                                 </div>
                                                 <div class="form-group col-md-6">
-                                                    <label for="clienteObra">Trabajadores sin registro:</label>
-                                                    <select id ="clienteObra" class="form-control"></select>
+                                                    <label for="trabajadoresSinRegistroNomina">Trabajadores sin registro</label>
+                                                    <select id ="trabajadoresSinRegistroNomina" class="form-control"></select>
                                                 </div>
                                             </div>
                                             <div class="form-row">
                                                 <div class="form-group col-md-6">
-                                                    <label for="clienteObra">Semana:</label>
-                                                    <select id ="clienteObra" class="form-control"></select>
+                                                    <label for="semanaNomina">Semana</label>
+                                                    <select id ="semanaNomina" class="form-control"></select>
                                                 </div>
-                                                <div class="form-group col-md-4">
-                                                    <label for="direccionTrabajador">ID HEAD:</label>
-                                                    <input type="text" name="" id="direccionTrabajador" class="form-control" placeholder="Dirección">
+                                                <div class="form-group col-md-3">
+                                                    <label for="idHeadNomina">ID HEAD</label>
+                                                    <input type="text" name="" id="idHeadNomina" class="form-control" placeholder="ID HEAD">
                                                 </div>
-                                                <div class="form-group col-md-2">
-                                                        <label for="direccionTrabajador">Ingresar datos</label>
-                                                    <button id ="resetFileButtonTrabajador" type='button' class=' btn btn-outline-dark btn-block'>Datos</button>
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <div class= "col-6">
-                                                    <button id="agregarButtonObra" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
-                                                </div>
-                                                <div class= "col-6">
-                                                    <button id="borrarButtonObra" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                <div class="form-group col-md-3">
+                                                        <label for="datosNominaButton">Ingresar datos</label>
+                                                    <button id ="datosNominaButton" type='button' class=' btn btn-outline-success btn-block'>Abrir</button>
                                                 </div>
                                             </div>
                                         </form>
                                         <br/>
                                     </div>
-                                    <div class= "col-lg-1"></div>
+                                    <div class= "col-lg-2"></div>
                                     <div class = "tableWrapper">
                                         <table id="dataTableObra" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
                                             <thead>
@@ -1611,6 +1603,7 @@
         <script src="app_especialidadMO_v2.js"></script>
         <script src="app_altaTrabajadores_v2.js"></script>
         <script src="app_altaProcesos_v2.js"></script>
+        <script src="app_datos_nomina_v2.js"></script>
         <script src="app_calculadora_v2.js"></script>
 
         <!-- Excel to Json-->

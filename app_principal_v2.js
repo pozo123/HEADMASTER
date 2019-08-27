@@ -22,6 +22,7 @@ var rama_bd_clientes = "test/clientes";
 var rama_bd_pda = "test/pda";
 var rama_bd_datos_referencia = "test/datos_referencia";
 var rama_bd_mano_obra= "test/rrhh/mano_obra"
+var rama_bd_nomina = "test/rrhh/nomina"
 var rama_bd_info_web = "info_web";
 
 $(document).ready(function() {    
