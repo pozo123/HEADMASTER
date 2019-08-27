@@ -153,6 +153,7 @@ Nota: Todo float se ingresa a 2 decimales.
 
                                 - precio_venta: float
                                 - costo_suministros:float
+                                - utilidad: float
                                 - precopeo: float
                                 - porcentaje_anticipo: float
                                 - porcentaje_indirectos: float

@@ -112,7 +112,27 @@ $("#" + id_ddl_subprocesoCalculadora).change(function(){
   resetFormCalculadora_subproceso();
   uid_subproceso = $('#'+id_ddl_subprocesoCalculadora+" option:selected").val()
   firebase.database().ref(rama_bd_obras + "/procesos/" + uid_obra + "/procesos/" + uid_proceso + "/subprocesos/" + uid_subproceso).on('value',function(snapshot){
+    var subproceso = snapshot.val();
+    if (subproceso.precio_venta == 0 && subproceso.costo_suministros == 0 && subproceso.precopeo == 0 && subproceso.score.costo_hora== 0 && subproceso.score.horas_programadas == 0){
 
+    } else {
+      var costoScore = subproceso.score.horas_programadas*subproceso.score.costo_hora;
+      var costoOperacion = costoScore + subproceso.costo_suministros + subproceso.precopeo;
+      var utilidad = subproceso.precio_venta - ; 
+      $('#' + id_horas_proyectoCalculadora ).val(subproceso.score.horas_programadas);
+      $('#' + id_costo_proyectoCalculadora ).val(costoScore);
+      $('#' + id_costo_suministrosCalculadora).val(subproceso.costo_suministros);
+      $('#' + id_costo_copeoCalculadora).val(subproceso.precopeo);
+      $('#' + id_profit_cantidadCalculadora).val(subproceso);
+      $('#' + id_profit_porcentajeCalculadora).val("");
+      $('#' + id_precio_ventaCalculadora).val("");
+
+      $('#' + id_anticipoCalculadora).val();
+      $('#' + id_estimacionesCalculadora).val();
+      $('#' + id_costo_horaScoreCalculadora).val();
+      $('#' + id_indirectosCalculadora).val();
+      $('#' + id_impuestosCalculadora).val();
+    }
   });
 });
 
@@ -128,6 +148,7 @@ function resetFormCalculadora (){
 }
 
 function resetFormCalculadora_subproceso(){
+  $('#' + id_horas_proyectoCalculadora ).val("");
   $('#' + id_costo_proyectoCalculadora ).val("");
   $('#' + id_costo_suministrosCalculadora).val("");
   $('#' + id_costo_copeoCalculadora).val("");
