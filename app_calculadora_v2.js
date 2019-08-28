@@ -120,27 +120,27 @@ $("#" + id_ddl_subprocesoCalculadora).change(function(){
       var costoScore = subproceso.score.horas_programadas*subproceso.score.costo_hora;
       var costoOperacion = (costoScore + subproceso.costo_suministros + subproceso.precopeo)*subproceso.porcentaje_indirectos*0.01;
       var costoUtilidad = costoOperacion + subproceso.utilidad;
-      var precioDeVenta = costoUtilidad*subproceso.porcentaje_impuestos*0.01;
+      //var precioDeVenta = costoUtilidad*subproceso.porcentaje_impuestos*0.01;
+      var utilidadPorcentaje = subproceso.utilidad / costoOperacion ;
 
       $('#' + id_horas_proyectoCalculadora ).val(subproceso.score.horas_programadas);
       $('#' + id_costo_proyectoCalculadora ).val(formatMoney(costoScore));
-      $('#' + id_costo_suministrosCalculadora).val(subproceso.costo_suministros);
-      $('#' + id_costo_copeoCalculadora).val(subproceso.precopeo);
-      $('#' + id_profit_cantidadCalculadora).val(subproceso);
-      $('#' + id_profit_porcentajeCalculadora).val("");
-      $('#' + id_profit_netoCalculadora).val("");
-      $('#' + id_precio_ventaCalculadora).val("");
-      $('#' + id_costo_operacionesCalculadora).val("");
+      $('#' + id_costo_suministrosCalculadora).val(formatMoney(subproceso.costo_suministros));
+      $('#' + id_costo_copeoCalculadora).val(formatMoney(subproceso.precopeo));
+      $('#' + id_profit_cantidadCalculadora).val(formatMoney(subproceso.utilidad));
+      $('#' + id_profit_porcentajeCalculadora).val(utilidadPorcentaje);
+      $('#' + id_precio_ventaCalculadora).val(formatMoney(subproceso.precio_venta));
+      $('#' + id_costo_operacionesCalculadora).val(formatMoney(costoOperacion));
+      //$('#' + id_profit_netoCalculadora).val("");
 
-      $('#' + id_anticipoCalculadora).val();
-      $('#' + id_estimacionesCalculadora).val();
-      $('#' + id_costo_horaScoreCalculadora).val();
-      $('#' + id_indirectosCalculadora).val();
-      $('#' + id_impuestosCalculadora).val();
+      $('#' + id_anticipoCalculadora).val(subproceso.porcentaje_anticipo);
+      $('#' + id_estimacionesCalculadora).val(100 - subproceso.porcentaje_anticipo);
+      $('#' + id_costo_horaScoreCalculadora).val(subproceso.score.costo_hora);
+      $('#' + id_indirectosCalculadora).val(subproceso.porcentaje_indirectos);
+      $('#' + id_impuestosCalculadora).val(subproceso.porcentaje_impuestos);
     }
   });
 });
-
 
 
 // ----------------------- FUNCIONES NECESARIAS ----------------------------
