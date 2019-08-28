@@ -16,8 +16,10 @@ function getWeek(dia) {
   
     var y = new Date(d).getFullYear();
     var timestmp = new Date().setFullYear(y, 0, 1);
+    console.log(d);
     var yearFirstDay = Math.floor(timestmp / 86400000);
     var today = Math.floor(d / 86400000);
+    console.log(d * 86400000);
     var offset = new Date(timestmp).getDay() - 4;
     var jueves = yearFirstDay;
     if(offset<0){
@@ -34,6 +36,8 @@ function getWeek(dia) {
     return [week,y];
   }
 
+  function getTimestamps(week, year, day_string){
+  }
 // función para revisar si un string es una preposicion o artículo
 // sirve para ver qué palabaras en un apellido son con letras minúsculas solamente.
 function isPrepOrArt(string){

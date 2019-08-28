@@ -271,3 +271,7 @@ hr.style2 {
 .icono_numero {
   color:rgb(243, 234, 234);
 }
+
+#modalDatos {
+  max-width: 80% !important;
+}

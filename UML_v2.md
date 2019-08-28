@@ -333,7 +333,7 @@ Nota: Todo float se ingresa a 2 decimales.
                     - sueldo_diario: float        
                     - costo_hora: float: float
                     - asistencias:
-                        - registro (firebase_id);
+                        - lu,ma,mi,ju,vi;
                             - fecha: timestamp
                             - obra: obra_id
                             - subproceso: subproceso
