@@ -1,5 +1,6 @@
 var id_tab_datos_nomina = "tabDatosNomina";
 var id_form_datos_nomina = "formNomina";
+var id_modal_datos_datos_nomina = "modalDatosNomina";
 
 var id_button_abrir_datos_nomina = "datosNominaButton";
 
@@ -7,6 +8,8 @@ var id_ddl_year_datos_nomina = "yearNomina";
 var id_ddl_week_datos_nomina = "semanaNomina";
 var id_ddl_faltantes_datos_nomina = "trabajadoresSinRegistroNomina";
 var id_id_head_datos_nomina = "idHeadNomina";
+
+var class_modal_obra_datos_nomina = "obra";
 
 // variables globales
 
@@ -16,8 +19,10 @@ var actual_week = getWeek(new Date())[0];
 var existe_registro = false;
 
 var trabajadores_activos = {};
+var dias = ["lunes", "martes", "miercoles", "jueves", "viernes"];
 
 $('#' + id_tab_datos_nomina).click(function(){
+    console.log(getWeek(new Date(2019, 01, 3).getTime()));
     resetFormDatosNomina(true);
     $('#' + id_ddl_year_datos_nomina).empty();
     var select_year = document.getElementById(id_ddl_year_datos_nomina);
@@ -37,6 +42,24 @@ $('#' + id_tab_datos_nomina).click(function(){
 
     $('#' + id_ddl_faltantes_datos_nomina).empty();
     llenarDdlFaltantes();
+
+    // Llenado del ddl de obra en el modal
+    $('.' + class_modal_obra_datos_nomina).empty();
+    firebase.database().ref(rama_bd_obras + "/listas/obras_activas").on("value", function(snapshot){
+        var obras_ddl = document.getElementsByClassName(class_modal_obra_datos_nomina);
+        for(var i=0;i<obras_ddl.length;i++){
+            var option = document.createElement('option');
+            option.style = "display:none";
+            option.text = option.value = "";
+            obras_ddl[i].appendChild(option);
+            snapshot.forEach(function(obraSnap){
+                option = document.createElement('option');
+                option.value = obraSnap.key;
+                option.text = obraSnap.val().nombre;
+                obras_ddl[i].appendChild(option);
+            });
+        }
+    });
 });
 
 $('#' + id_ddl_year_datos_nomina).change(function(){
@@ -69,7 +92,6 @@ $('#' + id_ddl_faltantes_datos_nomina).change(function(){
     firebase.database().ref(rama_bd_mano_obra + "/trabajadores/" + $('#' + id_ddl_faltantes_datos_nomina + " option:selected").val()).once("value").then(function(snapshot){
         var trabajador = snapshot.val();
         $('#' + id_id_head_datos_nomina).val(trabajador.id_head);
-        console.log($('#' + id_id_head_datos_nomina).val());
     })
 });
 
@@ -79,28 +101,73 @@ $('#' + id_button_abrir_datos_nomina).click(function(){
         return;
     } 
     var id_head = $('#' + id_id_head_datos_nomina).val();
-    firebase.database().ref(rama_bd_mano_obra + "/trabajadores").orderByChild("id_head").equalTo(id_head).once("child_added").then(function(snapshot){
+    firebase.database().ref(rama_bd_mano_obra + "/trabajadores").orderByChild("id_head").equalTo(id_head).once("value").then(function(snapshot){
         // ver si existe el ID HEAD primero
-        if(snapshot.exists()){
-            // Caso si existe registro en este año, semana de este trabajador
-            var year = $('#' + id_ddl_year_datos_nomina + " option:selected").val();
-            var week =  $('#' + id_ddl_week_datos_nomina + " option:selected").val();  
-            firebase.database().ref(rama_bd_nomina + "/listas/"+ year + "/" + week + "/" + snapshot.key).once("child_added").then(function(listaSnap){
-                if(listaSnap.exists()){
-                    firebase.database().ref(rama_bd_nomina + "/nomina/" + listaSnap.key).once("value").then(function(regSnap){
-                        modalDatosNomina(true, regSnap, snapshot)
-                    });
-                } else {
-                    // Caso si no existe ()
-                    modalDatosNomina(false);
-                };
-            });
+        var trabajador = snapshot.val();
+        if(!snapshot.exists() ){
+            alert("El ID HEAD no se encuentra en la base de datos.")
         } else {
-            alert("El ID HEAD no se encuentra en la base de datos");
-            return;
+            if(Object.keys(trabajador).length == 1){
+                // Caso si existe registro en este año, semana de este trabajador
+                var year = $('#' + id_ddl_year_datos_nomina + " option:selected").val();
+                var week =  $('#' + id_ddl_week_datos_nomina + " option:selected").val();  
+                firebase.database().ref(rama_bd_nomina + "/listas/"+ year + "/" + week + "/" + Object.keys(trabajador)[0]).once("value").then(function(listaSnap){
+                    if(listaSnap.exists()){
+                        firebase.database().ref(rama_bd_nomina + "/nomina/" + Object.keys(listaSnap.val())[0]).once("value").then(function(regSnap){
+                            modalDatosNomina(true, regSnap, snapshot)
+                        });
+                    } else {
+                        // Caso si no existe ()
+                        modalDatosNomina(false);
+                    };
+                });
+            } else {
+                alert("Existen 2 o más usuarios con el mismo ID.");
+                return;
+            }
         }
     });
 });
+
+// Funciones para modal
+
+$('.' + class_modal_obra_datos_nomina).change(function(){
+    for(var i=0; i<dias.length;i++){
+        if($(this).hasClass(dias[i])){
+            console.log($("option:selected", this).val());
+            $('#' + dias[i] + "-proceso").empty();
+            var select = document.getElementById(dias[i] + "-proceso");
+            var option = document.createElement('option');
+            option.style = "display:none";
+            option.text = option.value = "";
+            select.appendChild(option);
+
+            var option = document.createElement('option');
+            option.text = option.value = "Falta";
+            select.appendChild(option);
+
+            var option = document.createElement('option');
+            option.text = option.value = "Vacaciones";
+            select.appendChild(option);
+
+            firebase.database().ref(rama_bd_obras + "/procesos/" + $("option:selected", this).val() + "/procesos").once('value').then(function(snapshot){
+                snapshot.forEach(function(procSnap){
+                    console.log(procSnap.key);
+                    if(procSnap.key != "PC00"){
+                        procSnap.child("subprocesos").forEach(function(subprocSnap){
+                            option = document.createElement('option');
+                            option.value = subprocSnap.key;
+                            option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
+                            select.appendChild(option);
+                        });
+                    };
+                });
+                
+            });
+        }
+    };
+});
+// funcion para llenar procesos.
 
 
 // VALIDACIONES
@@ -153,8 +220,12 @@ function llenarDdlFaltantes(){
 
 function modalDatosNomina(existeRegistro, regSnapshot, trabSnapshot){
     // necesito crear el modal shingón
+    // si existe el registro, necesito llenar todos los campos, crear filas, columnas, etc.
+    // si no existe, dejar el modal listo pa pushearlo con el key del trabSnapshot
     if(existeRegistro){
     } else {
-
+        
     }
+    
+    $('#' + id_modal_datos_datos_nomina).modal('show');
 }

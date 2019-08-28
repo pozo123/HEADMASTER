@@ -219,7 +219,84 @@
                 </div>
             </div>
         </div>
-        <!-- Modal Trabajadores Correctos -->
+        <!-- Modal Datos Nomina -->
+        <div class="modal fade" id="modalDatosNomina">
+            <div id= "modalDatos" class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <div class="flex-column">
+                        <h4 class="modal-title">Arturo Bravo Reynaga</h4>
+                        <br>
+                        <h6 class= "pl-2">2019 Semana 35</h6>
+                    </div>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <form onsubmit="return false;">
+                            <div class = "container-fluid">
+                                <h5>ASISTENCIAS</h5>
+                                <div class="form-row">
+                                    <div class="form-group col">
+                                        <label>Jueves</label>
+                                        <select id="juevesObraDatosNomina" class="form-control obra jueves"></select>
+                                        <br>
+                                        <select id="jueves-proceso" class="form-control"></select>
+                                    </div>
+                                    <div class="form-group col">
+                                        <label>Viernes</label>
+                                        <select id="viernesObraDatosNomina" class="form-control obra viernes"></select>
+                                        <br>
+                                        <select id="viernes-proceso" class="form-control"></select>
+                                    </div>
+                                    <div class="form-group col">
+                                        <label>Lunes</label>
+                                        <select id="lunesObraDatosNomina" class="form-control obra lunes"></select>
+                                        <br>
+                                        <select id="lunes-proceso" class="form-control"></select>
+                                    </div>
+                                    <div class="form-group col">
+                                        <label>Martes</label>
+                                        <select id="martesObraDatosNomina" class="form-control obra martes"></select>
+                                        <br>
+                                        <select id="martes-proceso" class="form-control"></select>
+                                    </div>
+                                    <div class="form-group col">
+                                        <label>Miércoles</label>
+                                        <select id="miercolesObraDatosNomina" class="form-control obra miercoles"></select>
+                                        <br>
+                                        <select id="miercoles-proceso" class="form-control"></select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class ="col">
+                                        <button type="button" id ="buttonGuardarAsistencias" class="btn btn-secondary btn-success float-right">Guardar</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class = "container-fluid">
+                                <h5>HORAS EXTRA</h5>
+                                <div class="form-row">
+                                </div>
+                            </div>
+                            <div class = "container-fluid">
+                                <h5>DIVERSOS</h5>
+                                <div class="form-row">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal">Cerrar</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Trabajadores Info opcional -->
         <div class="modal fade" id="modalTrabajador" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -347,7 +424,7 @@
                     <li>
                         <a href="#pageNomina" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Nómina</a>
                         <ul class="collapse list-unstyled" id="pageNomina">
-                            <li class="tab administracion" id="tabDatosNomina"><a href="#" onclick="openTabs('tabDatosNomina','datosNomina')">Nómina, Horas Extra y Diversos</a></li>
+                            <li class="tab administracion" id="tabDatosNomina"><a href="#" onclick="openTabs('tabDatosNomina','datosNomina')">Asistencias, Horas Extra y Diversos</a></li>
                         </ul>
                     </li>
                     <li>
