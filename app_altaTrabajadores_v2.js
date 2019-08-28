@@ -150,6 +150,8 @@ $('#' + id_tab_trabajador).click(function() {
 // ---------------------------  IMPORTAR TRABAJADORES ----------------------------------------------
 
 $('#' + id_file_input_formato_excel_trabajador).on("change", function(event){
+    $('#' + id_class_correctos_trabajador).addClass("hidden");
+    $('#' + id_class_incorrectos_trabajador).addClass("hidden");
     formato_importar_fileSelected = event.target.files[0];
     $('#' + id_file_label_formato_excel_trabajador).text(formato_importar_fileSelected.name);
     $('#' + id_file_label_formato_excel_trabajador).attr("style", "color: #A7C5A1");
@@ -222,32 +224,33 @@ $('#' + id_file_input_formato_excel_trabajador).on("change", function(event){
             // actualizar id_jefe con su firebase_id;
             for(i=0;i<validated_data.length;i++){
                 if(validated_data[i][1]["id_jefe"] != ""){
+                    var is_id_jefe_correct = false;
                     // Reviso en el snapshot de la db
                     snapshot.forEach(function(trabSnap){
                         var trabajador = trabSnap.val();
                         if(validated_data[i][1]["id_jefe"] == trabajador["id_head"] || validated_data[i][1]["id_jefe"] == trabSnap.key){
-                            if(trabajador["destajista"] == true){
-                                validated_data[i][1]["id_jefe"] = trabSnap.key;
-                                validated_data[i][1]["jefe"] = trabajador["nombre"];
-                            } else {
-                            validated_data[i][2] = true;
-                            validated_data[i][3] = "El Id del destajista no es correcto/" + validated_data[i][3];
+                            validated_data[i][1]["id_jefe"] = trabSnap.key;
+                            validated_data[i][1]["jefe"] = trabajador["nombre"];
+                            is_id_jefe_correct = true;
+                        } else {
                             };
-                        }
                     });
                     // Reviso en los datos que vienen del excel ya que tengo el key con el que voy a pushearlos;
                     for(j=0;j<validated_data.length;j++){
                         if(validated_data[i][1]["id_jefe"] == validated_data[j][1]["id_head"] || validated_data[i][1]["id_jefe"] == validated_data[j][0]){
-                            if(validated_data[j][1]["destajista"] == true){
-                                validated_data[i][1]["id_jefe"] = validated_data[j][0];
-                                validated_data[i][1]["jefe"] = validated_data[j][1]["nombre"];
-                            } else {
-                                validated_data[i][2] = true;
-                                validated_data[i][3] = "El Id del destajista no es correcto/" + validated_data[i][3];
-                            };
+                            validated_data[i][1]["id_jefe"] = validated_data[j][0];
+                            validated_data[i][1]["jefe"] = validated_data[j][1]["nombre"];
+                            console.log(j);
+                            is_id_jefe_correct = true;
+                        } else {
                         };
                     };
+                    if(!is_id_jefe_correct){
+                        validated_data[i][2] = true;
+                        validated_data[i][3] = "El Id del destajista no es correcto/" + validated_data[i][3];
+                    }
                 };
+
             };
             // Método para llenar las tablas con info de usuarios correctos e incorrectos
             var corrupted_data = [];
@@ -612,6 +615,7 @@ function validateExcelRow(array){
             id_jefe = id_jefe == undefined ? "" : id_jefe;
             jefe_text = id_jefe == "" ? "HEAD" : id_jefe;
             is_destajista = false;
+
         }
 
         // Validación fecha de antiguedad
@@ -1015,7 +1019,7 @@ $('#' + id_nombre_trabajador).change(function(){
     }
     $('#' + id_nombre_trabajador).val(nombre);
 
-    if(id_trabajador_existente == $('#' + id_ddl_jefe_trabajador + " option:selected").val()){
+    if(id_trabajador_existente == $('#' + id_ddl_jefe_trabajador + " option:selected").val() && id_trabajador_existente != ""){
         $('#' + id_ddl_jefe_trabajador + " [value='Es destajista']").prop('selected', true);
     }
 });
@@ -1231,45 +1235,62 @@ function resetFormTrabajador(){
 }
 
 function validateTrabajador(){
-    if($('#' + id_nombre_trabajador).val() == ""){
-        alert("Escribe el nombre de pila del trabajador.");
-        return false;
-    } else if($('#' + id_paterno_trabajador).val() == ""){
-        alert("Escribe el apellido paterno del trabajador.");
-        return false;
-    } else if($('#' + id_id_head_trabajador).val() == ""){
-        alert("Escribe el ID HEAD del trabajador.");
-        return false;
-    } else if($('#' + id_id_pagadora_trabajador).val() == ""){
-        alert("Escribe el ID de la pagadora del trabajador.");
-        return false;
-    } else if($('#' + id_antiguedad_trabajador).val() == ""){
-        alert("Se necesita indicar la fecha de ingreso del trabajador a HEAD.");
-        return false;
-    } else if($('#' + id_ddl_puesto_trabajador + " option:selected").val() == ""){
-        alert("Se necesita indicar el puesto del trabajador.");
-        return false;
-    } else if($('#' + id_ddl_especialidad_trabajador + " option:selected").val() == ""){
-        alert("Se necesita indicar la especialidad del trabajador.");
-        return false;
-    } else if($('#' + id_sueldo_trabajador).val() == ""){
-        alert("Escribe el sueldo del trabajador.");
-        return false;
-    } else if($('#' + id_ddl_jefe_trabajador + " option:selected").val() == ""){
-        alert("Se necesita indicar si el trabajador es destajista, si es empleado de HEAD o empleado de algún destajista.");
-        return false;
-    } else if($('#' + id_codigo_postal_trabajador).val() != "" && $('#' + id_codigo_postal_trabajador).val().length < 5){
-        alert("El código postal tiene que ser de 5 dígitos.")
-        return false;
-    } else if($('#' + id_ddl_cintura_trabajador + " option:selected").val() != "" && $('#' + id_ddl_largo_trabajador + " option:selected").val().length == ""){
-        alert("Para el pantalón es necesario dar ambas medidas.")
-        return false;
-    } else if($('#' + id_ddl_cintura_trabajador + " option:selected").val() == "" && $('#' + id_ddl_largo_trabajador + " option:selected").val().length != ""){
-        alert("Para el pantalón es necesario dar ambas medidas.")
-        return false;
-    } else {
-        return true;
-    };
+
+    firebase.database().ref(rama_bd_mano_obra + "/trabajadores").once("value").then(function(snapshot){
+        in_system = false;
+        snapshot.forEach(function(trabSnap){
+            var trabajador = trabSnap.val();
+            if(trabajador.id_head == $('#' + id_id_head_trabajador).val()){
+                in_system =  true;
+                return false;
+            };
+        });
+
+        if(in_system){
+            alert("El ID HEAD ya existe en el sistema.");
+            return false;
+        }
+    
+        if($('#' + id_nombre_trabajador).val() == ""){
+            alert("Escribe el nombre de pila del trabajador.");
+            return false;
+        } else if($('#' + id_paterno_trabajador).val() == ""){
+            alert("Escribe el apellido paterno del trabajador.");
+            return false;
+        } else if($('#' + id_id_head_trabajador).val() == ""){
+            alert("Escribe el ID HEAD del trabajador.");
+            return false;
+        } else if($('#' + id_id_pagadora_trabajador).val() == ""){
+            alert("Escribe el ID de la pagadora del trabajador.");
+            return false;
+        } else if($('#' + id_antiguedad_trabajador).val() == ""){
+            alert("Se necesita indicar la fecha de ingreso del trabajador a HEAD.");
+            return false;
+        } else if($('#' + id_ddl_puesto_trabajador + " option:selected").val() == ""){
+            alert("Se necesita indicar el puesto del trabajador.");
+            return false;
+        } else if($('#' + id_ddl_especialidad_trabajador + " option:selected").val() == ""){
+            alert("Se necesita indicar la especialidad del trabajador.");
+            return false;
+        } else if($('#' + id_sueldo_trabajador).val() == ""){
+            alert("Escribe el sueldo del trabajador.");
+            return false;
+        } else if($('#' + id_ddl_jefe_trabajador + " option:selected").val() == ""){
+            alert("Se necesita indicar si el trabajador es destajista, si es empleado de HEAD o empleado de algún destajista.");
+            return false;
+        } else if($('#' + id_codigo_postal_trabajador).val() != "" && $('#' + id_codigo_postal_trabajador).val().length < 5){
+            alert("El código postal tiene que ser de 5 dígitos.")
+            return false;
+        } else if($('#' + id_ddl_cintura_trabajador + " option:selected").val() != "" && $('#' + id_ddl_largo_trabajador + " option:selected").val().length == ""){
+            alert("Para el pantalón es necesario dar ambas medidas.")
+            return false;
+        } else if($('#' + id_ddl_cintura_trabajador + " option:selected").val() == "" && $('#' + id_ddl_largo_trabajador + " option:selected").val().length != ""){
+            alert("Para el pantalón es necesario dar ambas medidas.")
+            return false;
+        } else {
+            return true;
+        };
+    });
 }
 
 function actualizarTablaTrabajador(){
