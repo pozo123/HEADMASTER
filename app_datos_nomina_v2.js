@@ -13,11 +13,12 @@ var id_id_head_datos_nomina = "idHeadNomina";
 var starting_year = 2018;
 var actual_year = new Date().getFullYear();
 var actual_week = getWeek(new Date())[0];
+var existe_registro = false;
 
-var trabajadores_activos_json = {};
+var trabajadores_activos = {};
 
 $('#' + id_tab_datos_nomina).click(function(){
-    resetFormDatosNomina();
+    resetFormDatosNomina(true);
     $('#' + id_ddl_year_datos_nomina).empty();
     var select_year = document.getElementById(id_ddl_year_datos_nomina);
     for(i=actual_year;i>=starting_year;i--){
@@ -35,25 +36,11 @@ $('#' + id_tab_datos_nomina).click(function(){
     }
 
     $('#' + id_ddl_faltantes_datos_nomina).empty();
-    var select_trabajadores_faltantes = document.getElementById(id_ddl_faltantes_datos_nomina);
-    var option = document.createElement('option');
-    option.text = option.value = "";
-    select_trabajadores_faltantes.appendChild(option);
-    firebase.database().ref(rama_bd_mano_obra + "/listas/activos").on("child_added", function(snapshot){
-        firebase.database().ref(rama_bd_nomina + "/nomina").orderByChild("trabajador_id").equalTo(snapshot.key).once("value").then(function(subSnap){
-            if(!subSnap.exists()){
-                var option= document.createElement('option');
-                var nombre = snapshot.val().split("_");
-                option.text = nombre[0] + " " + nombre[1] + " " + nombre[2];
-                option.value = snapshot.key;
-                select_trabajadores_faltantes.appendChild(option);
-            }
-        });
-    })
+    llenarDdlFaltantes();
 });
 
 $('#' + id_ddl_year_datos_nomina).change(function(){
-    resetFormDatosNomina();
+    resetFormDatosNomina(true);
     var select = document.getElementById(id_ddl_week_datos_nomina);
     var year = $('#' + id_ddl_year_datos_nomina + " option:selected").val();
     if(year < new Date().getFullYear()){
@@ -70,11 +57,104 @@ $('#' + id_ddl_year_datos_nomina).change(function(){
             select.appendChild(option);
         }
     }
+    llenarDdlFaltantes();
+});
+
+$('#' + id_ddl_week_datos_nomina).change(function(){
+    resetFormDatosNomina(false);
+    llenarDdlFaltantes();
+});
+
+$('#' + id_ddl_faltantes_datos_nomina).change(function(){
+    firebase.database().ref(rama_bd_mano_obra + "/trabajadores/" + $('#' + id_ddl_faltantes_datos_nomina + " option:selected").val()).once("value").then(function(snapshot){
+        var trabajador = snapshot.val();
+        $('#' + id_id_head_datos_nomina).val(trabajador.id_head);
+        console.log($('#' + id_id_head_datos_nomina).val());
+    })
+});
+
+$('#' + id_button_abrir_datos_nomina).click(function(){
+    if($('#' + id_id_head_datos_nomina).val() == ""){
+        alert("Escribe el ID HEAD o selecciona el trabajador al que deseas actualizar su nómina.")
+        return;
+    } 
+    var id_head = $('#' + id_id_head_datos_nomina).val();
+    firebase.database().ref(rama_bd_mano_obra + "/trabajadores").orderByChild("id_head").equalTo(id_head).once("child_added").then(function(snapshot){
+        // ver si existe el ID HEAD primero
+        if(snapshot.exists()){
+            // Caso si existe registro en este año, semana de este trabajador
+            var year = $('#' + id_ddl_year_datos_nomina + " option:selected").val();
+            var week =  $('#' + id_ddl_week_datos_nomina + " option:selected").val();  
+            firebase.database().ref(rama_bd_nomina + "/listas/"+ year + "/" + week + "/" + snapshot.key).once("child_added").then(function(listaSnap){
+                if(listaSnap.exists()){
+                    firebase.database().ref(rama_bd_nomina + "/nomina/" + listaSnap.key).once("value").then(function(regSnap){
+                        modalDatosNomina(true, regSnap, snapshot)
+                    });
+                } else {
+                    // Caso si no existe ()
+                    modalDatosNomina(false);
+                };
+            });
+        } else {
+            alert("El ID HEAD no se encuentra en la base de datos");
+            return;
+        }
+    });
 });
 
 
+// VALIDACIONES
+
+$('#' + id_id_head_datos_nomina).keypress(function(e){
+    charactersAllowed("1234567890",e);
+});
+
+$('#' + id_id_head_datos_nomina).on("cut copy paste",function(e) {
+    e.preventDefault();
+ });
+
 // Funciones necesarias
 
-function resetFormDatosNomina(){
-    $('#' + id_ddl_week_datos_nomina).empty();
+function resetFormDatosNomina(week){
+    if(week){
+        $('#' + id_ddl_week_datos_nomina).empty();
+    }
+    $('#' + id_ddl_faltantes_datos_nomina).empty();
+    $('#' + id_ddl_faltantes_datos_nomina).prop('disabled', true);
+    $('#' + id_id_head_datos_nomina).val("");
 };
+
+function llenarDdlFaltantes(){
+    var select_trabajadores_faltantes = document.getElementById(id_ddl_faltantes_datos_nomina);
+    var option = document.createElement('option');
+    option.text = option.value = "";
+    select_trabajadores_faltantes.appendChild(option);
+    firebase.database().ref(rama_bd_mano_obra + "/listas/activos").orderByKey().on("value",function(snapshot){
+        if(snapshot.exists()){
+            trabajadores_activos = snapshot.val(); 
+            var year = $('#' + id_ddl_year_datos_nomina + " option:selected").val();
+            var week =  $('#' + id_ddl_week_datos_nomina + " option:selected").val();  
+            firebase.database().ref(rama_bd_nomina + "/listas/" + year + "/" + week).on("value", function(regSnap){
+                regSnap.forEach(function(regSubSnap){
+                    delete trabajadores_activos[regSubSnap.key];
+                });
+                for(key in trabajadores_activos){
+                    var option = document.createElement('option');
+                    var nombre = trabajadores_activos[key].split("_");
+                    option.text = nombre[0] + " " + nombre[1] + " " + nombre[2];
+                    option.value = key;
+                    select_trabajadores_faltantes.appendChild(option);
+                }
+                $('#' + id_ddl_faltantes_datos_nomina).prop('disabled', false);
+            });
+        }
+    });
+}
+
+function modalDatosNomina(existeRegistro, regSnapshot, trabSnapshot){
+    // necesito crear el modal shingón
+    if(existeRegistro){
+    } else {
+
+    }
+}

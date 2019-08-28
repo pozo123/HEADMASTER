@@ -363,7 +363,8 @@ Nota: Todo float se ingresa a 2 decimales.
 
                 - fechas_pagos:
                     - aaaammdd:
-                        - registros_id: true
+                        - id_trabajador:
+                            - registros_id: true
 
             - trabajadores:
                 - id_trabajador:
