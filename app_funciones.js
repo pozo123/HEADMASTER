@@ -366,7 +366,7 @@ function getWeek(dia) {
 
 //regresa un array con dias (ej ["jueves", "viernes"]) pertenecientes a la <semana> ("first" o "last") del año year
 //ej: getWeekDiaria("first",2019) me va a dar los días que entran en la semana 1 del 2019 = ["martes","miercoles"]
-function getWeekDiaria(semana,year){
+function getWeekDia(semana,year){
   var arrayWeek = ["jueves","viernes","sabado","domingo","lunes","martes","miercoles"];
     var resultado = [];
   if(semana == "first"){

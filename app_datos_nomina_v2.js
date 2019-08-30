@@ -3,27 +3,29 @@ var id_form_datos_nomina = "formNomina";
 var id_modal_datos_datos_nomina = "modalDatosNomina";
 
 var id_button_abrir_datos_nomina = "datosNominaButton";
+var id_button_asistencias_datos_nomina = "buttonGuardarAsistencias";
 
 var id_ddl_year_datos_nomina = "yearNomina";
 var id_ddl_week_datos_nomina = "semanaNomina";
 var id_ddl_faltantes_datos_nomina = "trabajadoresSinRegistroNomina";
 var id_id_head_datos_nomina = "idHeadNomina";
 
-var class_modal_obra_datos_nomina = "obra";
+var class_modal_obra_datos_nomina = "obraNomina";
+var class_modal_proceso_datos_nomina = "procesoNomina";
 
 // variables globales
 
 var starting_year = 2018;
-var actual_year = new Date().getFullYear();
 var actual_week = getWeek(new Date())[0];
+var actual_year = getWeek(new Date())[1];
 var existe_registro = false;
 
 var trabajadores_activos = {};
-var dias = ["lunes", "martes", "miercoles", "jueves", "viernes"];
+var dias = ["jueves", "viernes", "lunes", "martes", "miercoles"];
+
+
 
 $('#' + id_tab_datos_nomina).click(function(){
-    console.log(getWeek(new Date(2019, 01, 3).getTime()));
-    resetFormDatosNomina(true);
     $('#' + id_ddl_year_datos_nomina).empty();
     var select_year = document.getElementById(id_ddl_year_datos_nomina);
     for(i=actual_year;i>=starting_year;i--){
@@ -35,8 +37,17 @@ $('#' + id_tab_datos_nomina).click(function(){
     $('#' + id_ddl_week_datos_nomina).empty();
     var select_week = document.getElementById(id_ddl_week_datos_nomina);
     for(i=actual_week;i>0;i--){
+        var ju_mi = getDaysWeek(i,actual_year);
+        var jueves = ju_mi[0];
+        var miercoles = ju_mi[1];
+        var week = ("0" + i).slice(-2)
+
+        jueves = new Date(jueves).toLocaleDateString("es-ES", options_semanas);
+        miercoles = new Date(miercoles).toLocaleDateString("es-ES", options_semanas);
+
         var option_week = document.createElement('option');
-        option_week.text = option_week.value = i;
+        option_week.text = "[SEM " + week + "] - " + jueves + " - " + miercoles;
+        option_week.value = week;
         select_week.appendChild(option_week);
     }
 
@@ -69,14 +80,34 @@ $('#' + id_ddl_year_datos_nomina).change(function(){
     if(year < new Date().getFullYear()){
         var ultima_semana = getWeek(new Date(year,11,31).getTime())[0];
         for(i=ultima_semana;i>0;i--){
+
+            var ju_mi = getDaysWeek(i,year);
+            var jueves = ju_mi[0];
+            var miercoles = ju_mi[1];
+            var week = ("0" + i).slice(-2)
+    
+            jueves = new Date(jueves).toLocaleDateString("es-ES", options_semanas);
+            miercoles = new Date(miercoles).toLocaleDateString("es-ES", options_semanas);
+
             var option = document.createElement('option');
-            option.text = option.value = i;
+            option.text = "[SEM " + week + "] - " + jueves + " - " + miercoles;
+            option.value = week;
             select.appendChild(option);
         }
     } else {
         for(i=getWeek(new Date().getTime())[0];i>0;i--){
+
+            var ju_mi = getDaysWeek(i,year);
+            var jueves = ju_mi[0];
+            var miercoles = ju_mi[1];
+            var week = ("0" + i).slice(-2)
+    
+            jueves = new Date(jueves).toLocaleDateString("es-ES", options_semanas);
+            miercoles = new Date(miercoles).toLocaleDateString("es-ES", options_semanas);
+            
             var option = document.createElement('option');
-            option.text = option.value = i;
+            option.text = "[SEM " + week + "] - " + jueves + " - " + miercoles;
+            option.value = week;
             select.appendChild(option);
         }
     }
@@ -114,11 +145,11 @@ $('#' + id_button_abrir_datos_nomina).click(function(){
                 firebase.database().ref(rama_bd_nomina + "/listas/"+ year + "/" + week + "/" + Object.keys(trabajador)[0]).once("value").then(function(listaSnap){
                     if(listaSnap.exists()){
                         firebase.database().ref(rama_bd_nomina + "/nomina/" + Object.keys(listaSnap.val())[0]).once("value").then(function(regSnap){
-                            modalDatosNomina(true, regSnap, snapshot)
+                            modalDatosNomina(true, snapshot, regSnap)
                         });
                     } else {
                         // Caso si no existe ()
-                        modalDatosNomina(false);
+                        modalDatosNomina(false, snapshot);
                     };
                 });
             } else {
@@ -218,14 +249,17 @@ function llenarDdlFaltantes(){
     });
 }
 
-function modalDatosNomina(existeRegistro, regSnapshot, trabSnapshot){
-    // necesito crear el modal shingón
+function modalDatosNomina(existeRegistro, trabSnapshot, regSnapshot){
+    $('.' + class_modal_obra_datos_nomina).val("");
+    $('.' + class_modal_proceso_datos_nomina).empty();
     // si existe el registro, necesito llenar todos los campos, crear filas, columnas, etc.
     // si no existe, dejar el modal listo pa pushearlo con el key del trabSnapshot
+    var trabajador = trabSnapshot.val();
     if(existeRegistro){
-    } else {
-        
-    }
-    
+    }  
     $('#' + id_modal_datos_datos_nomina).modal('show');
+
+    $('#' + id_button_asistencias_datos_nomina).click(function(){
+        alert("holaaa");
+    });
 }
