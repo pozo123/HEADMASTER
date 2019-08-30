@@ -857,7 +857,7 @@ function loadTablaPresupuestos(){
 				else{
 					fecha_act = new Date(presupuesto.timestamps.activacion).toLocaleDateString("es-ES", options_bibliotecas)
 				}
-				fecha_inicio = new Date(presupuesto.timestamps.startedAt).toLocaleDateString("es-ES", options_bibliotecas)
+				fecha_inicio = new Date(presupuesto.timestamps.startedAt).toLocaleDateString("es-ES", options_bibliotecas);
 			//alert(atn);
 			datos_presupuestos.push([presupuesto.nombre, obr.nombre, clase,cash, presupuesto.clave, contrato, terminado, oculto, presupuesto.horas_programadas, fecha_inicio, fecha_act, atn]);
 			var tabla_presupuestos = $('#'+ id_datatable_presupuestos_bibliotecas).DataTable({

@@ -91,11 +91,9 @@ Nota: Todo float se ingresa a 2 decimales.
                     - pagos
                         - pagos_id: true
             - fechas
-                - aaaa
-                    - mm
-                        - dd
-                            - pagos
-                                -pagos_id: true
+                - aaaammdd
+                    - pagos
+                        - pagos_id: true
             - folios
                 - folio_pago: string (el mismo del pago)
                     - pagos
@@ -333,10 +331,10 @@ Nota: Todo float se ingresa a 2 decimales.
                     - sueldo_diario: float        
                     - costo_hora: float: float
                     - asistencias:
-                        - lu,ma,mi,ju,vi;
+                        - firebase_id;
                             - fecha: timestamp
                             - obra: obra_id
-                            - subproceso: subproceso
+                            - subproceso: subproceso_id
                             - actividad: string (asistencia, falta o vacaciones)
                     - h_extras:
                         - registro (firebase_id):

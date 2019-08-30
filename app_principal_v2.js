@@ -25,6 +25,8 @@ var rama_bd_mano_obra= "test/rrhh/mano_obra"
 var rama_bd_nomina = "test/rrhh/nomina"
 var rama_bd_info_web = "info_web";
 
+var options_semanas = { weekday: 'short', year: 'numeric', month: 'numeric', day: 'numeric'};
+
 $(document).ready(function() {    
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');

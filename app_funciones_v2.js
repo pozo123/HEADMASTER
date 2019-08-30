@@ -11,33 +11,49 @@ function highLight(id){
 //La primera semana del año son todos aquellos dias que queden antes del primer miercoles del año.
 //La primera y ultima semana del año pueden tener menos días si no se empieza en jueves o termina en miercoles
 
-function getWeek(dia) {
-    var d = new Date(dia);
-  
-    var y = new Date(d).getFullYear();
-    var timestmp = new Date().setFullYear(y, 0, 1);
-    console.log(d);
-    var yearFirstDay = Math.floor(timestmp / 86400000);
-    var today = Math.floor(d / 86400000);
-    console.log(d * 86400000);
-    var offset = new Date(timestmp).getDay() - 4;
-    var jueves = yearFirstDay;
-    if(offset<0){
-      jueves = yearFirstDay - offset;
-    } else if(offset>0){
-      jueves = yearFirstDay + (7 - offset);
-    }
-    var daysSinceJueves = today - jueves;
-    var week = Math.floor(daysSinceJueves / 7) + 2;
-    if(offset == 0){
-      week--;
-    }
-    
-    return [week,y];
-  }
+function getWeek(timestamp) {
+    week = 0;
+    jueves_week = 0;
+    miercoles_week = 0;
+    actualDay = new Date(timestamp) // Objeto fecha del timestamp que se está deseando saber su semana.
+    year = new Date(actualDay).getFullYear(); // año actual
+    firstDay = new Date().setFullYear(year, 0, 1); // timestamps del 1ro de enero del año actual
 
-  function getTimestamps(week, year, day_string){
-  }
+    actualDay = Math.floor(actualDay / 86400000); // cuantos dias han pasado desde el 1ene70 hasta el primer dia del año
+    yearFirstDay = Math.floor(firstDay / 86400000); // cuantos dias han pasado desde el 1ro de no se cuando de 1970
+    offset = new Date(firstDay).getDay() - 4 // cuantos dias o menos del jueves es el 1ro de enero del año actual.
+    primer_jueves = yearFirstDay;
+    if(offset<0){
+        primer_jueves = yearFirstDay - offset;
+    } else if(offset>0){
+        primer_jueves = yearFirstDay + (7 - offset);
+    }
+    var dias_desde_primer_jueves = actualDay - primer_jueves;
+
+    if(dias_desde_primer_jueves >= 0) {
+        week = Math.floor(dias_desde_primer_jueves/7) + 1;
+    } else {
+        var lastDayPreviousYear = new Date().setFullYear(year - 1, 11, 31);
+        getWeek(lastDayPreviousYear)
+    }   
+    return [week,year];
+}
+
+function getDaysWeek(week, year){
+    var firstDay = firstDay = new Date().setFullYear(year, 0, 1);
+    var yearFirstDay = Math.floor(firstDay / 86400000); // cuantos dias han pasado desde el 1ro de no se cuando de 1970
+    var offset = new Date(firstDay).getDay() - 4 // cuantos dias o menos del jueves es el 1ro de enero del año actual.
+    var primer_jueves = yearFirstDay;
+    if(offset<0){
+        primer_jueves = yearFirstDay - offset;
+    } else if(offset>0){
+        primer_jueves = yearFirstDay + (7 - offset);
+    }
+
+    var jueves_week = ((week - 1)*7 + primer_jueves)*86400000 + 43200000; // sumo 12 horas para que no haya pex
+    var miercoles_week = jueves_week + (6*86400000) + 43200000; // sumo 12 horas para que no haya pex
+    return[jueves_week, miercoles_week];
+}
 // función para revisar si un string es una preposicion o artículo
 // sirve para ver qué palabaras en un apellido son con letras minúsculas solamente.
 function isPrepOrArt(string){
