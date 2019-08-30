@@ -1011,35 +1011,50 @@
                                                 </div>
                                                 <hr class="style2">
                                                 <div class="form-row align-items-center">
-                                                    <div class="col-lg-6">
+                                                    <div class="col-lg-4">
+                                                        <label for="costoHoraScoreCalculadora">Precio x Hora SCORE:</label>
+                                                        <input type="text" id="costoHoraScoreCalculadora" class="form-control" placeholder="Costo por hora">
+                                                    </div>
+                                                    <div class="col-lg-4">
                                                         <label for="costoProyectoCalculadora">Horas SCORE:</label>
                                                         <input type="text" id="horasProyectoCalculadora" class="form-control" placeholder="Cantidad en horas">
                                                     </div>
-                                                    <div class="col-lg-6">
+                                                    <div class="col-lg-4">
                                                         <label for="costoProyectoCalculadora">Costo SCORE:</label>
                                                         <input type="text" id="costoProyectoCalculadora" class="form-control" placeholder="Cantidad en dinero">
                                                     </div>
                                                 </div>
                                                 <br/>
                                                 <div class="form-row align-items-center">
-                                                    <div class="col-lg-6">
-                                                        <label for="costoSuministrosCalculadora">Costo de suministros:</label>
-                                                        <input type="text" id="costoSuministrosCalculadora" class="form-control" placeholder="Costo de suministros">
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <label for="costoCopeoCalculadora">Costo de copeo:</label>
+                                                    <div class="col-lg-4">
+                                                        <label for="costoCopeoCalculadora">Copeo:</label>
                                                         <input type="text" id="costoCopeoCalculadora" class="form-control" placeholder="Costo de copeo">
                                                     </div>
+                                                    <div class="col-lg-4">
+                                                        <label for="costoCopeoCalculadora">Copeo con carga social:</label>
+                                                        <input type="text" id="costoCopeoCargaCalculadora" class="form-control" placeholder="Copeo con carga social">
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <label for="impuestosCalculadora">Impuestos carga social:</label>
+                                                        <input type="text" id="impuestosCalculadora" class="form-control" placeholder="Porcentaje de impuestos">
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <div class="form-row align-items-center">
+                                                  <div class="col-lg-4">
+                                                      <label for="costoSuministrosCalculadora">Costo de suministros($):</label>
+                                                      <input type="text" id="costoSuministrosCalculadora" class="form-control" placeholder="Costo de suministros">
+                                                  </div>
                                                 </div>
                                                 <br/>
                                                 <div class="form-row align-items-center">
                                                     <div class="col-lg-6">
                                                         <label for="profitCantidadCalculadora">Profit ($):</label>
-                                                        <input type="text" id="profitCantidadCalculadora" class="form-control" placeholder="Profit($)">
+                                                        <input type="text" id="profitCantidadCalculadora" class="form-control" placeholder="Profit en cantidad">
                                                     </div>
                                                     <div class="col-lg-6">
                                                         <label for="profitPorcentajeCalculadora">Profit (%):</label>
-                                                        <input type="text" id="profitPorcentajeCalculadora" class="form-control" placeholder="Profit (%)">
+                                                        <input type="text" id="profitPorcentajeCalculadora" class="form-control" placeholder="Profit en porcentaje">
                                                     </div>
                                                 </div>
                                                 <br/>
@@ -1051,51 +1066,32 @@
                                                 </div>
                                                 <br/>
                                                 <div class="form-row align-items-center">
-                                                    <div class="col-lg-6">
-                                                        <label for="precioVentaCalculadora">Costo de operaciones:</label>
-                                                        <input type="text" disabled="true" id="costoOperacionesCalculadora" class="form-control" placeholder="Precio de venta">
+                                                    <div class="col-lg-4">
+                                                        <label for="indirectosCalculadora">Porcentaje Indirectos:</label>
+                                                        <input type="text" id="indirectosCalculadora" class="form-control" placeholder="Porcentaje de indirectos">
                                                     </div>
-                                                    <div class="col-lg-6">
-                                                        <label id = "labelProfitNetoCalculadora">Profit Neto:</label>
-                                                        <input type="text" disabled="true" id="profitNetoCalculadora" class="form-control" placeholder="Precio de venta">
-                                                    </div>
-                                                </div>
-                                                <br/>
-                                                <div class="form-row">
-                                                    <div class= "col-lg-6">
-                                                        <button type="button" id = "botonGuardarCalculadora"class="btn btn-info btn-block">Guardar</button>
-                                                    </div>
-                                                    <div class= "col-lg-6">
-                                                        <button type="button" id = "botonBorrarCalculadora"class="btn btn-outline-danger btn-block">Resetear Todo</button>
-                                                    </div>
-                                                </div>
-                                                <hr class="style2">
-                                                <div class="form-row align-items-center">
-                                                    <div class="col-lg-6">
-                                                        <label for="anticipoCalculadora">Porcentaje Anticipo</label>
+                                                    <div class="col-lg-4">
+                                                        <label for="anticipoCalculadora">Porcentaje Anticipo:</label>
                                                         <input type="text" id="anticipoCalculadora" class="form-control" placeholder="Anticipos">
                                                     </div>
-                                                    <div class="col-lg-6">
-                                                        <label for="estimacionesCalculadora">Porcentaje Estimaciones</label>
+                                                    <div class="col-lg-4">
+                                                        <label for="estimacionesCalculadora">Porcentaje Estimaciones: </label>
                                                         <input type="text" id="estimacionesCalculadora" class="form-control" placeholder="Estimaciones">
                                                     </div>
                                                 </div>
                                                 <br/>
                                                 <div class="form-row align-items-center">
-                                                    <div class="col-lg-6">
-                                                        <label for="costoHoraScoreCalculadora">Precio x Hora SCORE:</label>
-                                                        <input type="text" id="costoHoraScoreCalculadora" class="form-control" placeholder="Costo por hora">
+                                                    <div class="col-lg-4">
+                                                        <label for="precioVentaCalculadora">Costos indirectos</label>
+                                                        <input type="text" disabled="true" id="costosIndirectosCalculadora" class="form-control" placeholder="Precio de venta">
                                                     </div>
-                                                    <div class="col-lg-6">
-                                                        <label for="indirectosCalculadora">Porcentaje Indirectos:</label>
-                                                        <input type="text" id="indirectosCalculadora" class="form-control" placeholder="Porcentaje de indirectos">
+                                                    <div class="col-lg-4">
+                                                        <label for="precioVentaCalculadora">Costo de operaciones</label>
+                                                        <input type="text" disabled="true" id="costoOperacionesCalculadora" class="form-control" placeholder="Precio de venta">
                                                     </div>
-                                                </div>
-                                                <br/>
-                                                <div class="form-row align-items-center">
-                                                    <div class="col-lg-6">
-                                                        <label for="impuestosCalculadora">Porcentaje impuestos para venta:</label>
-                                                        <input type="text" id="impuestosCalculadora" class="form-control" placeholder="Porcentaje de venta">
+                                                    <div class="col-lg-4">
+                                                        <label id = "labelProfitNetoCalculadora">Profit Neto Estimado</label>
+                                                        <input type="text" disabled="true" id="profitNetoCalculadora" class="form-control" placeholder="Precio de venta">
                                                     </div>
                                                 </div>
                                                 <br/>
@@ -1103,6 +1099,17 @@
                                                     <div class= "col-lg-6">
                                                         <button type="button" id = "botonDefaultCalculadora"class="btn btn-info btn-block">Valores Default</button>
                                                     </div>
+                                                    <div class= "col-lg-6">
+                                                        <button type="button" id = "botonBorrarCalculadora"class="btn btn-outline-danger btn-block">Resetear Todo</button>
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <div class="form-row">
+                                                    <div class= "col-lg-3"></div>
+                                                    <div class= "col-lg-6">
+                                                        <button type="button" id = "botonGuardarCalculadora"class="btn btn-info btn-block">Guardar</button>
+                                                    </div>
+                                                    <div class= "col-lg-3"></div>
                                                 </div>
                                             </form>
                                             <br/>

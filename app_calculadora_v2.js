@@ -19,6 +19,8 @@ var id_costo_horaScoreCalculadora = "costoHoraScoreCalculadora";
 var id_indirectosCalculadora = "indirectosCalculadora";
 var id_impuestosCalculadora = "impuestosCalculadora";
 var id_costo_operacionesCalculadora = "costoOperacionesCalculadora";
+var id_costos_indirectosCalculadora = "costosIndirectosCalculadora";
+var id_costo_copeoCargaCalculadora = "costoCopeoCargaCalculadora";
 
 var id_agregar_calculadora = "botonGuardarCalculadora";
 var id_borrar_calculadora = "botonBorrarCalculadora";
@@ -46,7 +48,7 @@ $('#' + id_tab_calculadora).click(function(){
       option.text = obra.nombre;
       select.appendChild(option);
   });
-  returnToDefaultCalculadora();
+  //returnToDefaultCalculadora();
 });
 
 $('#' + id_borrar_calculadora).click(function(){
@@ -54,7 +56,20 @@ $('#' + id_borrar_calculadora).click(function(){
 });
 
 $('#' + id_agregar_calculadora).click(function(){
-
+	if(validateFormCalculadora()){
+		var subproceso_update = {};
+		//Actualizar los campos de la obra
+		var path_subproceso = "procesos/" + uid_obra + "/procesos/" + uid_proceso + "/subprocesos/" + uid_subproceso;
+		subproceso_update[path_subproceso + "/score/horas_programadas"] = "";
+		subproceso_update[path_subproceso + "/score/costo_hora"] = "";
+		subproceso_update[path_subproceso + "/costo_sumnistros"] = "";
+		subproceso_update[path_subproceso + "/precopeo"] = "";
+		subproceso_update[path_subproceso + "/porcentaje_anticipo"] = "";
+		subproceso_update[path_subproceso + "/porcentaje_indirectos"] = "";
+		subproceso_update[path_subproceso + "/porcentaje_impuestos"] = "";
+		subproceso_update[path_subproceso + "/utilidad"] = "";
+		subproceso_update[path_subproceso + "/precio_venta"] = "";
+	}
 });
 
 $('#' + id_default_calculadora).click(function(){
@@ -406,7 +421,72 @@ $('#'+id_impuestosCalculadora).change(function (){
 		actualizaProfit();
 		actualizaPrecioVenta();
 });
-
+// ----------------------- VALIDACIONES ------------------------------------
+function validateFormCalculadora(){
+	if ($('#' + id_ddl_obraCalculadora).val() == ""){
+			alert("Selecciona la obra");
+			highLightColor(id_ddl_obraCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_ddl_procesoCalculadora).val() == ""){
+			alert("Selecciona un proceso");
+			highLightColor(id_ddl_procesoCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_ddl_subprocesoCalculadora).val() == ""){
+			alert("Selecciona un subproceso");
+			highLightColor(id_ddl_subprocesoCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_horas_proyectoCalculadora).val() == ""){
+			alert("Ingresa las horas esperadas o el costo total para el área de proyectos");
+			highLightColor(id_horas_proyectoCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_costo_proyectoCalculadora).val() == ""){
+			alert("Ingresa las horas esperadas o el costo total para el área de proyectos");
+			highLightColor(id_costo_proyectoCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_costo_suministrosCalculadora).val() == ""){
+			alert("Ingresa el costo de los suministros");
+			highLightColor(id_costo_suministrosCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_costo_copeoCalculadora).val() == ""){
+			alert("Ingresa el costo de mano de obra (precopeo)");
+			highLightColor(id_costo_copeoCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_profit_cantidadCalculadora).val() == ""){
+			alert("Ingresa la utilidad esperada en porcentaje o cantidad");
+			highLightColor(id_profit_cantidadCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_profit_porcentajeCalculadora).val() == ""){
+			alert("Ingresa la utilidad esperada en porcentaje o cantidad");
+			highLightColor(id_profit_porcentajeCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_precio_ventaCalculadora).val() == ""){
+			alert("Ingresa el precio de venta");
+			highLightColor(id_precio_ventaCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_anticipoCalculadora).val() == ""){
+			alert("Ingresa el porcentaje de anticipo o de estimaciones");
+			highLightColor(id_anticipoCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_estimacionesCalculadora).val() == ""){
+			alert("Ingresa el porcentaje de anticipo o de estimaciones");
+			highLightColor(id_estimacionesCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_costo_horaScoreCalculadora).val() == ""){
+			alert("Ingresa costo por hora de proyectos");
+			highLightColor(id_costo_horaScoreCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_indirectosCalculadora).val() == ""){
+			alert("Ingresa porcentaje de costos indirectos");
+			highLightColor(id_indirectosCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_impuestosCalculadora).val() == ""){
+			alert("Ingresa porcentaje de impuestos a la mano de obra");
+			highLightColor(id_impuestosCalculadora,"#FF0000");
+			return false;
+	} else {
+		return true;
+	}
+}
 // ----------------------- FUNCIONES NECESARIAS ----------------------------
 
 function resetFormCalculadora (){
