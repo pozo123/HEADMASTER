@@ -9,6 +9,7 @@ var id_horas_proyectoCalculadora = "horasProyectoCalculadora";
 var id_costo_proyectoCalculadora = "costoProyectoCalculadora";
 var id_costo_suministrosCalculadora = "costoSuministrosCalculadora";
 var id_costo_copeoCalculadora = "costoCopeoCalculadora";
+var id_costo_copeoCargaCalculadora = "costoCopeoCargaCalculadora";
 var id_profit_cantidadCalculadora = "profitCantidadCalculadora";
 var id_profit_porcentajeCalculadora = "profitPorcentajeCalculadora";
 var id_profit_netoCalculadora = "profitNetoCalculadora";
@@ -20,7 +21,7 @@ var id_indirectosCalculadora = "indirectosCalculadora";
 var id_impuestosCalculadora = "impuestosCalculadora";
 var id_costo_operacionesCalculadora = "costoOperacionesCalculadora";
 var id_costos_indirectosCalculadora = "costosIndirectosCalculadora";
-var id_costo_copeoCargaCalculadora = "costoCopeoCargaCalculadora";
+
 
 var id_agregar_calculadora = "botonGuardarCalculadora";
 var id_borrar_calculadora = "botonBorrarCalculadora";
@@ -31,6 +32,7 @@ var uid_proceso;
 var uid_subproceso;
 var cantProfitManda = true;
 var horasScoreManda = true;
+var copeoManda = true
 
 $('#' + id_tab_calculadora).click(function(){
 	resetFormCalculadora();
@@ -168,6 +170,33 @@ $("#" + id_ddl_subprocesoCalculadora).change(function(){
 });
 
 // ----------------------- FUNCIONES DE LOS CAMPOS REGULARES ------------------------
+// ----------------------------------- SCORE  ---------------------------------------
+$('#'+id_costo_horaScoreCalculadora).keypress(function(e){
+    charactersAllowed("0123456789.",e);
+});
+
+$('#'+id_costo_horaScoreCalculadora).change(function (){
+		if($('#'+id_costo_horaScoreCalculadora).val() == ""){
+			$('#'+id_costo_horaScoreCalculadora).val(formatMoney(0));
+		}
+		calculaScore();
+		calculaCostoOperacional();
+		actualizaProfit();
+		actualizaPrecioVenta();
+});
+
+$('#'+id_costo_horaScoreCalculadora).focus(function (){
+	if($('#'+id_costo_horaScoreCalculadora).val() !== ""){
+		$('#'+id_costo_horaScoreCalculadora).val(deformatMoney($('#'+id_costo_horaScoreCalculadora).val()));
+	}
+});
+
+$('#'+id_costo_horaScoreCalculadora).focusout(function (){
+	if($('#'+id_costo_horaScoreCalculadora).val() !== ""){
+		$('#'+id_costo_horaScoreCalculadora).val(formatMoney($('#'+id_costo_horaScoreCalculadora).val()));
+	}
+});
+
 $('#'+id_horas_proyectoCalculadora).keypress(function(e){
     charactersAllowed("0123456789",e);
 });
@@ -212,6 +241,7 @@ $('#'+id_costo_proyectoCalculadora).focusout(function (){
 	}
 });
 
+// ------------------------------ SUMINISTROS  ---------------------------------
 $('#'+id_costo_suministrosCalculadora).keypress(function(e){
     charactersAllowed("0123456789.",e);
 });
@@ -237,14 +267,17 @@ $('#'+id_costo_suministrosCalculadora).focusout(function (){
 	}
 });
 
+// ----------------------------------- COPEO  ---------------------------------------
 $('#'+id_costo_copeoCalculadora).keypress(function(e){
     charactersAllowed("0123456789.",e);
 });
 
 $('#'+id_costo_copeoCalculadora).change(function (){
+	copeoManda = true;
 	if($('#'+id_costo_copeoCalculadora).val() == ""){
 		$('#'+id_costo_copeoCalculadora).val(formatMoney(0));
 	}
+	actualizaCopeo();
 	calculaCostoOperacional();
 	actualizaProfit();
 	actualizaPrecioVenta();
@@ -262,6 +295,50 @@ $('#'+id_costo_copeoCalculadora).focusout(function (){
 	}
 });
 
+$('#'+id_costo_copeoCargaCalculadora).keypress(function(e){
+    charactersAllowed("0123456789.",e);
+});
+
+$('#'+id_costo_copeoCargaCalculadora).change(function (){
+	copeoManda = false;
+	if($('#'+id_costo_copeoCargaCalculadora).val() == ""){
+		$('#'+id_costo_copeoCargaCalculadora).val(formatMoney(0));
+	}
+	actualizaCopeo();
+	calculaCostoOperacional();
+	actualizaProfit();
+	actualizaPrecioVenta();
+});
+
+$('#'+id_costo_copeoCargaCalculadora).focus(function (){
+	if($('#'+id_costo_copeoCargaCalculadora).val() !== ""){
+		$('#'+id_costo_copeoCargaCalculadora).val(deformatMoney($('#'+id_costo_copeoCargaCalculadora).val()));
+	}
+});
+
+$('#'+id_costo_copeoCargaCalculadora).focusout(function (){
+	if($('#'+id_costo_copeoCargaCalculadora).val() !== ""){
+		$('#'+id_costo_copeoCargaCalculadora).val(formatMoney($('#'+id_costo_copeoCargaCalculadora).val()));
+	}
+});
+
+$('#'+id_impuestosCalculadora).keypress(function(e){
+    charactersAllowed("0123456789.",e);
+});
+
+$('#'+id_impuestosCalculadora).change(function (){
+		if($('#'+id_impuestosCalculadora).val() == ""){
+			$('#'+id_impuestosCalculadora).val(0);
+		}else{
+			$('#'+id_impuestosCalculadora ).val(parseFloat($('#'+id_impuestosCalculadora).val()));
+		}
+		actualizaCopeo();
+		calculaCostoOperacional();
+		actualizaProfit();
+		actualizaPrecioVenta();
+});
+
+// ----------------------------------- PROFIT  ---------------------------------------
 $('#'+id_profit_cantidadCalculadora ).keypress(function(e){
     charactersAllowed("0123456789.",e);
 });
@@ -303,6 +380,7 @@ $('#'+id_profit_porcentajeCalculadora  ).change(function (){
 		actualizaPrecioVenta();
 });
 
+// ------------------------------- PRECIO DE VENTA  -----------------------------------
 $('#'+id_precio_ventaCalculadora).keypress(function(e){
     charactersAllowed("0123456789.",e);
 });
@@ -329,12 +407,28 @@ $('#'+id_precio_ventaCalculadora).focusout(function (){
 	}
 });
 
-// ----------------------- FUNCIONES DE LOS CAMPOS REFERENCIA ------------------------
-$('#'+id_anticipoCalculadora ).keypress(function(e){
+// ---------------------------- COSTOS DE OPERACIONES  -------------------------------
+$('#'+id_indirectosCalculadora).keypress(function(e){
     charactersAllowed("0123456789.",e);
 });
 
-$('#'+id_anticipoCalculadora ).change(function (){
+$('#'+id_indirectosCalculadora).change(function (){
+		if($('#'+id_indirectosCalculadora).val() == ""){
+			$('#'+id_indirectosCalculadora).val(0);
+		}else{
+			$('#'+id_indirectosCalculadora).val(parseFloat($('#'+id_indirectosCalculadora).val()));
+		}
+		calculaCostoOperacional();
+		actualizaProfit();
+		actualizaPrecioVenta();
+});
+
+// ----------------------------------- EXTRAS  ---------------------------------------
+$('#'+id_anticipoCalculadora).keypress(function(e){
+    charactersAllowed("0123456789.",e);
+});
+
+$('#'+id_anticipoCalculadora).change(function (){
 		var anticipoCal = parseFloat($('#'+id_anticipoCalculadora).val());
 		if(anticipoCal<=100){
 			$('#'+id_anticipoCalculadora).val(anticipoCal);
@@ -366,61 +460,6 @@ $('#'+id_estimacionesCalculadora).change(function (){
 		}
 });
 
-$('#'+id_costo_horaScoreCalculadora).keypress(function(e){
-    charactersAllowed("0123456789.",e);
-});
-
-$('#'+id_costo_horaScoreCalculadora).change(function (){
-		if($('#'+id_costo_horaScoreCalculadora).val() == ""){
-			$('#'+id_costo_horaScoreCalculadora).val(formatMoney(0));
-		}
-		calculaScore();
-		calculaCostoOperacional();
-		actualizaProfit();
-		actualizaPrecioVenta();
-});
-
-$('#'+id_costo_horaScoreCalculadora).focus(function (){
-	if($('#'+id_costo_horaScoreCalculadora).val() !== ""){
-		$('#'+id_costo_horaScoreCalculadora).val(deformatMoney($('#'+id_costo_horaScoreCalculadora).val()));
-	}
-});
-
-$('#'+id_costo_horaScoreCalculadora).focusout(function (){
-	if($('#'+id_costo_horaScoreCalculadora).val() !== ""){
-		$('#'+id_costo_horaScoreCalculadora).val(formatMoney($('#'+id_costo_horaScoreCalculadora).val()));
-	}
-});
-
-$('#'+id_indirectosCalculadora).keypress(function(e){
-    charactersAllowed("0123456789.",e);
-});
-
-$('#'+id_indirectosCalculadora).change(function (){
-		if($('#'+id_indirectosCalculadora).val() == ""){
-			$('#'+id_indirectosCalculadora).val(0);
-		}else{
-			$('#'+id_indirectosCalculadora).val(parseFloat($('#'+id_indirectosCalculadora).val()));
-		}
-		calculaCostoOperacional();
-		actualizaProfit();
-		actualizaPrecioVenta();
-});
-
-$('#'+id_impuestosCalculadora).keypress(function(e){
-    charactersAllowed("0123456789.",e);
-});
-
-$('#'+id_impuestosCalculadora).change(function (){
-		if($('#'+id_impuestosCalculadora).val() == ""){
-			$('#'+id_impuestosCalculadora).val(0);
-		}else{
-			$('#'+id_impuestosCalculadora ).val(parseFloat($('#'+id_impuestosCalculadora).val()));
-		}
-		calculaCostoOperacional();
-		actualizaProfit();
-		actualizaPrecioVenta();
-});
 // ----------------------- VALIDACIONES ------------------------------------
 function validateFormCalculadora(){
 	if ($('#' + id_ddl_obraCalculadora).val() == ""){
@@ -487,9 +526,9 @@ function validateFormCalculadora(){
 		return true;
 	}
 }
-// ----------------------- FUNCIONES NECESARIAS ----------------------------
 
-function resetFormCalculadora (){
+// ----------------------- FUNCIONES NECESARIAS ----------------------------
+function resetFormCalculadora(){
   $('#' + id_ddl_obraCalculadora).val("");
   $('#' + id_ddl_procesoCalculadora).empty();
   $('#' + id_ddl_subprocesoCalculadora).empty();
@@ -528,8 +567,11 @@ function calculaCostoOperacional(){
 	var porcIndirectos = parseFloat($('#'+id_indirectosCalculadora ).val());
 	var porcImpuestos = parseFloat($('#'+id_impuestosCalculadora ).val());
 	var costoOperacion = (costoScore + costoSuministros + (costoPrecopeo*(1 + porcImpuestos*0.01)))*(1+ porcIndirectos*0.01);
+	var costosIndirectos = (costoScore + costoSuministros + (costoPrecopeo*(1 + porcImpuestos*0.01)))*(porcIndirectos*0.01);
 	$('#' + id_costo_operacionesCalculadora).val(formatMoney(costoOperacion));
+	$('#' + id_costos_indirectosCalculadora).val(formatMoney(costosIndirectos));
 	highLight(id_costo_operacionesCalculadora);
+	highLight(id_costos_indirectosCalculadora);
 }
 
 function calculaScore(){
@@ -542,7 +584,8 @@ function calculaScore(){
 
 function calculaHorasScore(){
 	var horasProyecto = parseFloat(deformatMoney($('#'+id_costo_proyectoCalculadora).val())) / parseFloat(deformatMoney($('#'+id_costo_horaScoreCalculadora).val()));
-	$('#'+id_horas_proyectoCalculadora).val(horasProyecto);
+	var horasFixed = horasProyecto.toFixed(2);
+	$('#'+id_horas_proyectoCalculadora).val(horasFixed);
 	highLight(id_horas_proyectoCalculadora);
 }
 
@@ -572,7 +615,7 @@ function actualizaCantidadProfit(){
 function actualizaPorcentajeProfit(){
 	if($('#'+id_profit_cantidadCalculadora).val() !== "" ){
 		var porcProfit = parseFloat(deformatMoney($('#'+id_profit_cantidadCalculadora).val())) / parseFloat(deformatMoney($('#'+id_costo_operacionesCalculadora).val())) * 100;
-		$('#'+id_profit_porcentajeCalculadora).val(porcProfit);
+		$('#'+id_profit_porcentajeCalculadora).val(porcProfit.toFixed(2));
 		highLight(id_profit_porcentajeCalculadora);
 	}
 }
@@ -589,4 +632,28 @@ function actualizaProfitNeto(){
 	var netoProfit = parseFloat(deformatMoney($('#'+id_profit_cantidadCalculadora).val())) * 0.6;
 	$('#'+id_profit_netoCalculadora).val(formatMoney(netoProfit));
 	highLight(id_profit_netoCalculadora);
+}
+
+function actualizaCopeo(){
+	if(copeoManda){
+		actualizaCopeoCargaSocial();
+	}else {
+		actualizaCopeoBruto();
+	}
+}
+
+function actualizaCopeoBruto(){
+	if($('#'+id_costo_copeoCargaCalculadora).val() !== "" ){
+		var copeoBruto = parseFloat(deformatMoney($('#'+id_costo_copeoCargaCalculadora).val())) / (1 + (parseFloat(deformatMoney($('#'+id_impuestosCalculadora).val())) * 0.01));
+		$('#'+ id_costo_copeoCalculadora).val(formatMoney(copeoBruto));
+		highLight(id_costo_copeoCalculadora);
+	}
+}
+
+function actualizaCopeoCargaSocial(){
+	if($('#'+id_costo_copeoCalculadora).val() !== "" ){
+		var copeoCarga = parseFloat(deformatMoney($('#'+id_costo_copeoCalculadora).val())) * (1 + (parseFloat(deformatMoney($('#'+id_impuestosCalculadora).val())) * 0.01));
+		$('#'+ id_costo_copeoCargaCalculadora).val(formatMoney(copeoCarga));
+		highLight(id_costo_copeoCargaCalculadora);
+	}
 }
