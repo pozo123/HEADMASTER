@@ -33,6 +33,8 @@ var uid_subproceso;
 var cantProfitManda = true;
 var horasScoreManda = true;
 var copeoManda = true
+var horasActualizadas = false;
+var registro_antiguo = {};
 
 // esta madre solo es para poner el mensaje cuando pasas encima del boton
 
@@ -68,22 +70,29 @@ $('#' + id_agregar_calculadora).click(function(){
 		var subproceso_update = {};
 		//Actualizar los campos de la obra
 		var path_subproceso = "procesos/" + uid_obra + "/procesos/" + uid_proceso + "/subprocesos/" + uid_subproceso;
-		subproceso_update[path_subproceso + "/score/horas_programadas"] = "";
-		subproceso_update[path_subproceso + "/score/costo_hora"] = "";
-		subproceso_update[path_subproceso + "/costo_sumnistros"] = "";
-		subproceso_update[path_subproceso + "/precopeo"] = "";
-		subproceso_update[path_subproceso + "/porcentaje_anticipo"] = "";
-		subproceso_update[path_subproceso + "/porcentaje_indirectos"] = "";
-		subproceso_update[path_subproceso + "/porcentaje_impuestos"] = "";
-		subproceso_update[path_subproceso + "/utilidad"] = "";
-		subproceso_update[path_subproceso + "/precio_venta"] = "";
+		subproceso_update[path_subproceso + "/score/horas_programadas"] = deformatMoney($('#'+id_horas_proyectoCalculadora).val());
+		subproceso_update[path_subproceso + "/score/costo_hora"] = deformatMoney($('#'+id_costo_horaScoreCalculadora).val());
+		subproceso_update[path_subproceso + "/costo_suministros"] = deformatMoney($('#'+id_costo_suministrosCalculadora).val());
+		subproceso_update[path_subproceso + "/precopeo"] = deformatMoney($('#'+id_costo_copeoCalculadora).val());
+		subproceso_update[path_subproceso + "/porcentaje_anticipo"] = deformatMoney($('#'+id_anticipoCalculadora).val());
+		subproceso_update[path_subproceso + "/porcentaje_indirectos"] = deformatMoney($('#'+id_indirectosCalculadora).val());
+		subproceso_update[path_subproceso + "/porcentaje_impuestos"] = deformatMoney($('#'+id_impuestosCalculadora).val());
+		subproceso_update[path_subproceso + "/utilidad"] = deformatMoney($('#'+id_profit_cantidadCalculadora).val());
+		subproceso_update[path_subproceso + "/precio_venta"] = deformatMoney($('#'+id_precio_ventaCalculadora).val());
+		//Escribir los cambios en la base de datos
+		console.log(subproceso_update);
+		firebase.database().ref(rama_bd_obras).update(subproceso_update);
+		// PAD
+		pda("modificacion", rama_bd_obras + "/" +path_subproceso, registro_antiguo);
+		alert("¡Edición exitosa!");
+		resetFormCalculadora();
 	}
 });
 
 $('#' + id_default_calculadora).click(function(){
   returnToDefaultCalculadora();
 	if($('#'+id_costo_operacionesCalculadora).val() !== ""){
-		calculaScore();
+		calculaCostoScore();
 		calculaCostoOperacional();
 		actualizaProfit();
 		actualizaPrecioVenta();
@@ -143,32 +152,35 @@ $("#" + id_ddl_procesoCalculadora).change(function(){
 $("#" + id_ddl_subprocesoCalculadora).change(function(){
   resetFormCalculadora_subproceso();
   uid_subproceso = $('#'+id_ddl_subprocesoCalculadora+" option:selected").val()
-  firebase.database().ref(rama_bd_obras + "/procesos/" + uid_obra + "/procesos/" + uid_proceso + "/subprocesos/" + uid_subproceso).on('value',function(snapshot){
+  firebase.database().ref(rama_bd_obras + "/procesos/" + uid_obra + "/procesos/" + uid_proceso + "/subprocesos/" + uid_subproceso).once('value',function(snapshot){
     var subproceso = snapshot.val();
-    if (subproceso.utilidad !== undefined){
+    if (!(subproceso.precio_venta == 0 && subproceso.costo_suministros ==0 && subproceso.utilidad ==0 && subproceso.precopeo == 0 && subproceso.score.horas_programadas == 0)){
+			registro_antiguo = subproceso;
       var costoScore = subproceso.score.horas_programadas*subproceso.score.costo_hora;
       var costoOperacion = (costoScore + subproceso.costo_suministros + (subproceso.precopeo*(1 + subproceso.porcentaje_impuestos*0.01)))*(1+ subproceso.porcentaje_indirectos*0.01);
-      var costoUtilidad = costoOperacion + subproceso.utilidad;
-      var utilidadPorcentaje = subproceso.utilidad / costoOperacion ;
+			var costoOperacionIndirectos = (costoScore + subproceso.costo_suministros + (subproceso.precopeo*(1 + subproceso.porcentaje_impuestos*0.01)))*(subproceso.porcentaje_indirectos*0.01);
+      var utilidadPorcentaje = subproceso.utilidad / costoOperacion * 100 ;
 
       $('#' + id_horas_proyectoCalculadora ).val(subproceso.score.horas_programadas);
+			$('#' + id_costo_horaScoreCalculadora).val(formatMoney(subproceso.score.costo_hora));
+			$('#' + id_costo_proyectoCalculadora).val(formatMoney(costoScore));
       $('#' + id_costo_suministrosCalculadora).val(formatMoney(subproceso.costo_suministros));
       $('#' + id_costo_copeoCalculadora).val(formatMoney(subproceso.precopeo));
       $('#' + id_profit_cantidadCalculadora).val(formatMoney(subproceso.utilidad));
+			$('#' + id_profit_porcentajeCalculadora).val(utilidadPorcentaje.toFixed(2));
       $('#' + id_precio_ventaCalculadora).val(formatMoney(subproceso.precio_venta));
+			$('#' + id_costo_operacionesCalculadora).val(formatMoney(costoOperacion));
+			$('#' + id_costos_indirectosCalculadora).val(formatMoney(costoOperacionIndirectos));
 
       $('#' + id_anticipoCalculadora).val(subproceso.porcentaje_anticipo);
       $('#' + id_estimacionesCalculadora).val(100 - parseFloat(subproceso.porcentaje_anticipo));
-      $('#' + id_costo_horaScoreCalculadora).val(formatMoney(subproceso.score.costo_hora));
       $('#' + id_indirectosCalculadora).val(subproceso.porcentaje_indirectos);
       $('#' + id_impuestosCalculadora).val(subproceso.porcentaje_impuestos);
 
 			horasScoreManda = true;
 			cantProfitManda = true;
-			calculaScore();
-			calculaCostoOperacional();
-			actualizaProfit();
-
+			actualizaCopeoCargaSocial();
+			actualizaProfitNeto();
     } else {
 			resetFormCalculadora_subproceso();
 		}
@@ -185,7 +197,8 @@ $('#'+id_costo_horaScoreCalculadora).change(function (){
 		if($('#'+id_costo_horaScoreCalculadora).val() == ""){
 			$('#'+id_costo_horaScoreCalculadora).val(formatMoney(0));
 		}
-		calculaScore();
+		horasScoreManda = false;
+		calculaCostoScore();
 		calculaCostoOperacional();
 		actualizaProfit();
 		actualizaPrecioVenta();
@@ -211,7 +224,7 @@ $('#'+id_horas_proyectoCalculadora).change(function (){
 	if($('#'+id_horas_proyectoCalculadora).val() == ""){
 		$('#'+id_horas_proyectoCalculadora).val(0);
 	}else{
-		$('#'+id_horas_proyectoCalculadora).val(parseFloat($('#'+id_horas_proyectoCalculadora).val()));
+		$('#'+id_horas_proyectoCalculadora).val(parseFloat($('#'+id_horas_proyectoCalculadora).val()).toFixed(2));
 	}
 	calculaCostoScore();
 	calculaCostoOperacional();
@@ -228,22 +241,24 @@ $('#'+id_costo_proyectoCalculadora).change(function (){
 	if($('#'+id_costo_proyectoCalculadora).val() == ""){
 		$('#'+id_costo_proyectoCalculadora).val(formatMoney(0));
 	}
-	calculaHorasScore();
+	calculaScore();
 	calculaCostoOperacional();
 	actualizaProfit();
 	actualizaPrecioVenta();
-	horasScoreManda = false;
 });
 
 $('#'+id_costo_proyectoCalculadora).focus(function (){
 	if($('#'+id_costo_proyectoCalculadora).val() !== ""){
 		$('#'+id_costo_proyectoCalculadora).val(deformatMoney($('#'+id_costo_proyectoCalculadora).val()));
 	}
+
 });
 
 $('#'+id_costo_proyectoCalculadora).focusout(function (){
-	if($('#'+id_costo_proyectoCalculadora).val() !== ""){
+	if($('#'+id_costo_proyectoCalculadora).val() !== "" && !horasActualizadas){
 		$('#'+id_costo_proyectoCalculadora).val(formatMoney($('#'+id_costo_proyectoCalculadora).val()));
+	}else{
+		horasActualizadas = false;
 	}
 });
 
@@ -336,7 +351,7 @@ $('#'+id_impuestosCalculadora).change(function (){
 		if($('#'+id_impuestosCalculadora).val() == ""){
 			$('#'+id_impuestosCalculadora).val(0);
 		}else{
-			$('#'+id_impuestosCalculadora ).val(parseFloat($('#'+id_impuestosCalculadora).val()));
+			$('#'+id_impuestosCalculadora ).val(parseFloat($('#'+id_impuestosCalculadora).val()).toFixed(2));
 		}
 		actualizaCopeo();
 		calculaCostoOperacional();
@@ -379,7 +394,7 @@ $('#'+id_profit_porcentajeCalculadora  ).change(function (){
 	if($('#'+id_profit_porcentajeCalculadora).val() == ""){
 		$('#'+id_profit_porcentajeCalculadora).val(0);
 	}else{
-		$('#'+id_profit_porcentajeCalculadora).val(parseFloat($('#'+id_profit_porcentajeCalculadora).val()));
+		$('#'+id_profit_porcentajeCalculadora).val(parseFloat($('#'+id_profit_porcentajeCalculadora).val()).toFixed(2));
 	}
 		cantProfitManda = false;
 		actualizaCantidadProfit();
@@ -422,7 +437,7 @@ $('#'+id_indirectosCalculadora).change(function (){
 		if($('#'+id_indirectosCalculadora).val() == ""){
 			$('#'+id_indirectosCalculadora).val(0);
 		}else{
-			$('#'+id_indirectosCalculadora).val(parseFloat($('#'+id_indirectosCalculadora).val()));
+			$('#'+id_indirectosCalculadora).val(parseFloat($('#'+id_indirectosCalculadora).val()).toFixed(2));
 		}
 		calculaCostoOperacional();
 		actualizaProfit();
@@ -435,7 +450,7 @@ $('#'+id_anticipoCalculadora).keypress(function(e){
 });
 
 $('#'+id_anticipoCalculadora).change(function (){
-		var anticipoCal = parseFloat($('#'+id_anticipoCalculadora).val());
+		var anticipoCal = parseFloat($('#'+id_anticipoCalculadora).val()).toFixed(2);
 		if(anticipoCal<=100){
 			$('#'+id_anticipoCalculadora).val(anticipoCal);
 			$('#'+id_estimacionesCalculadora).val(100 - anticipoCal);
@@ -453,7 +468,7 @@ $('#'+id_estimacionesCalculadora).keypress(function(e){
 });
 
 $('#'+id_estimacionesCalculadora).change(function (){
-		var estimacionesCal = parseFloat($('#'+id_estimacionesCalculadora ).val());
+		var estimacionesCal = parseFloat($('#'+id_estimacionesCalculadora ).val()).toFixed(2);
 		if(estimacionesCal<=100){
 			$('#'+id_estimacionesCalculadora).val(estimacionesCal);
 			$('#'+id_anticipoCalculadora).val(100 - estimacionesCal);
@@ -480,33 +495,9 @@ function validateFormCalculadora(){
 			alert("Selecciona un subproceso");
 			highLightColor(id_ddl_subprocesoCalculadora,"#FF0000");
 			return false;
-	} else if ($('#' + id_horas_proyectoCalculadora).val() == ""){
-			alert("Ingresa las horas esperadas o el costo total para el área de proyectos");
-			highLightColor(id_horas_proyectoCalculadora,"#FF0000");
-			return false;
-	} else if ($('#' + id_costo_proyectoCalculadora).val() == ""){
-			alert("Ingresa las horas esperadas o el costo total para el área de proyectos");
-			highLightColor(id_costo_proyectoCalculadora,"#FF0000");
-			return false;
-	} else if ($('#' + id_costo_suministrosCalculadora).val() == ""){
-			alert("Ingresa el costo de los suministros");
-			highLightColor(id_costo_suministrosCalculadora,"#FF0000");
-			return false;
-	} else if ($('#' + id_costo_copeoCalculadora).val() == ""){
-			alert("Ingresa el costo de mano de obra (precopeo)");
-			highLightColor(id_costo_copeoCalculadora,"#FF0000");
-			return false;
-	} else if ($('#' + id_profit_cantidadCalculadora).val() == ""){
-			alert("Ingresa la utilidad esperada en porcentaje o cantidad");
-			highLightColor(id_profit_cantidadCalculadora,"#FF0000");
-			return false;
-	} else if ($('#' + id_profit_porcentajeCalculadora).val() == ""){
-			alert("Ingresa la utilidad esperada en porcentaje o cantidad");
-			highLightColor(id_profit_porcentajeCalculadora,"#FF0000");
-			return false;
-	} else if ($('#' + id_precio_ventaCalculadora).val() == ""){
-			alert("Ingresa el precio de venta");
-			highLightColor(id_precio_ventaCalculadora,"#FF0000");
+	} else if ($('#' + id_indirectosCalculadora).val() == ""){
+			alert("Ingresa porcentaje de costos indirectos");
+			highLightColor(id_indirectosCalculadora,"#FF0000");
 			return false;
 	} else if ($('#' + id_anticipoCalculadora).val() == ""){
 			alert("Ingresa el porcentaje de anticipo o de estimaciones");
@@ -520,13 +511,41 @@ function validateFormCalculadora(){
 			alert("Ingresa costo por hora de proyectos");
 			highLightColor(id_costo_horaScoreCalculadora,"#FF0000");
 			return false;
-	} else if ($('#' + id_indirectosCalculadora).val() == ""){
-			alert("Ingresa porcentaje de costos indirectos");
-			highLightColor(id_indirectosCalculadora,"#FF0000");
+	} else if ($('#' + id_horas_proyectoCalculadora).val() == ""){
+			alert("Ingresa las horas esperadas o el costo total para el área de proyectos");
+			highLightColor(id_horas_proyectoCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_costo_proyectoCalculadora).val() == ""){
+			alert("Ingresa las horas esperadas o el costo total para el área de proyectos");
+			highLightColor(id_costo_proyectoCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_costo_copeoCalculadora).val() == ""){
+			alert("Ingresa el costo de mano de obra (precopeo)");
+			highLightColor(id_costo_copeoCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_costo_copeoCargaCalculadora ).val() == ""){
+			alert("Ingresa el costo de mano de obra (precopeo)");
+			highLightColor(id_costo_copeoCargaCalculadora ,"#FF0000");
 			return false;
 	} else if ($('#' + id_impuestosCalculadora).val() == ""){
 			alert("Ingresa porcentaje de impuestos a la mano de obra");
 			highLightColor(id_impuestosCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_costo_suministrosCalculadora).val() == ""){
+			alert("Ingresa el costo de los suministros");
+			highLightColor(id_costo_suministrosCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_profit_cantidadCalculadora).val() == ""){
+			alert("Ingresa la utilidad esperada en porcentaje o cantidad");
+			highLightColor(id_profit_cantidadCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_profit_porcentajeCalculadora).val() == ""){
+			alert("Ingresa la utilidad esperada en porcentaje o cantidad");
+			highLightColor(id_profit_porcentajeCalculadora,"#FF0000");
+			return false;
+	} else if ($('#' + id_precio_ventaCalculadora).val() == ""){
+			alert("Ingresa el precio de venta");
+			highLightColor(id_precio_ventaCalculadora,"#FF0000");
 			return false;
 	} else {
 		return true;
@@ -551,6 +570,13 @@ function resetFormCalculadora_subproceso(){
   $('#' + id_precio_ventaCalculadora).val("");
 	$('#' + id_costo_operacionesCalculadora).val("");
 	$('#' + id_profit_netoCalculadora).val("");
+	$('#' + id_costo_copeoCargaCalculadora).val("");
+
+	$('#' + id_anticipoCalculadora).val("");
+  $('#' + id_estimacionesCalculadora).val("");
+  $('#' + id_costo_horaScoreCalculadora).val("");
+  $('#' + id_indirectosCalculadora).val("");
+  $('#' + id_impuestosCalculadora).val("");
 }
 
 function returnToDefaultCalculadora(){
@@ -570,9 +596,9 @@ function calculaCostoOperacional(){
 	var costoScore = parseFloat(deformatMoney($('#'+id_costo_proyectoCalculadora).val()));
 	var costoSuministros = parseFloat(deformatMoney($('#'+id_costo_suministrosCalculadora).val()));
 	var costoPrecopeo = parseFloat(deformatMoney($('#'+id_costo_copeoCalculadora).val()));
-	var porcIndirectos = parseFloat($('#'+id_indirectosCalculadora ).val());
-	var porcImpuestos = parseFloat($('#'+id_impuestosCalculadora ).val());
-	var costoOperacion = (costoScore + costoSuministros + (costoPrecopeo*(1 + porcImpuestos*0.01)))*(1+ porcIndirectos*0.01);
+	var porcIndirectos = parseFloat(deformatMoney($('#'+id_indirectosCalculadora ).val()));
+	var porcImpuestos = parseFloat(deformatMoney($('#'+id_impuestosCalculadora ).val()));
+	var costoOperacion = (costoScore + costoSuministros + (costoPrecopeo*(1 + porcImpuestos*0.01)))*(1 + porcIndirectos*0.01);
 	var costosIndirectos = (costoScore + costoSuministros + (costoPrecopeo*(1 + porcImpuestos*0.01)))*(porcIndirectos*0.01);
 	$('#' + id_costo_operacionesCalculadora).val(formatMoney(costoOperacion));
 	$('#' + id_costos_indirectosCalculadora).val(formatMoney(costosIndirectos));
@@ -582,7 +608,7 @@ function calculaCostoOperacional(){
 
 function calculaScore(){
 	if (horasScoreManda){
-		calculaCostoScore();
+		calculaCostoXHoraScore();
 	}else{
 		calculaHorasScore();
 	}
@@ -593,6 +619,18 @@ function calculaHorasScore(){
 	var horasFixed = horasProyecto.toFixed(2);
 	$('#'+id_horas_proyectoCalculadora).val(horasFixed);
 	highLight(id_horas_proyectoCalculadora);
+	if (horasProyecto-horasFixed !== 0){
+		horasActualizadas=true;
+		var costoProyecto = horasFixed * parseFloat(deformatMoney($('#'+id_costo_horaScoreCalculadora).val()));
+		$('#'+id_costo_proyectoCalculadora).val(formatMoney(costoProyecto));
+		highLight(id_costo_proyectoCalculadora);
+	}
+}
+
+function calculaCostoXHoraScore(){
+	var costoHora = parseFloat($('#'+id_costo_proyectoCalculadora).val()) / parseFloat(deformatMoney($('#'+id_horas_proyectoCalculadora).val()));
+	$('#'+id_costo_horaScoreCalculadora).val(formatMoney(costoHora));
+	highLight(id_costo_horaScoreCalculadora);
 }
 
 function calculaCostoScore(){
