@@ -324,14 +324,14 @@ Nota: Todo float se ingresa a 2 decimales.
                         - id_trabajador: nombre
         - nomina (otra versión):
             - nomina
-                - registro (key: aaaass + "/" + trabajador_id. Ya revisé y "/" no es de los caracteres utilizados por firebase para sus keys)
+                - registro firebase_id
                     - trabajador_id: string
                     - año_head: int
                     - semana_head: int
                     - sueldo_diario: float        
                     - costo_hora: float: float
                     - asistencias:
-                        - firebase_id;
+                        - lunes,martes,miercoles, jueves, viernes;
                             - fecha: timestamp
                             - obra: obra_id
                             - subproceso: subproceso_id
