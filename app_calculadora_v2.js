@@ -1,6 +1,7 @@
 // id's de los elementos HTML
 var id_tab_calculadora = "tabCalculadora";
 var id_form_calculadora = "formCalculadora";
+var id_dataTable_calculadora = "dataTableCalculadora";
 
 var id_ddl_obraCalculadora = "obraDdlCalculadora";
 var id_ddl_procesoCalculadora = "procesoDdlCalculadora";
