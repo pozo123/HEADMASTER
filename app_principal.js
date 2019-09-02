@@ -32,20 +32,19 @@ $(document).ready(function() {
 });
 
 $('#botonMagico').click(function(){
-/*     var actualizar_horas = {};
-    firebase.database().ref("rrhh/pagos_nomina/2019/15").once("value").then(function(snapshot){
+var actualizar_horas = {};
+    firebase.database().ref("rrhh/trabajadores").once("value").then(function(snapshot){
         snapshot.forEach(function(childSnap){
-            childSnap.child("trabajadores").forEach(function(trabSnap){
-                actualizar_horas[childSnap.key + "/trabajadores/" + trabSnap.key + "/horas_extra"] = null;
-                actualizar_horas[childSnap.key + "/trabajadores/" + trabSnap.key + "/total_horas_extra"] = null;
-                actualizar_horas[childSnap.key + "/trabajadores/" + trabSnap.key + "/impuestos/impuestos_horas_extra"] = null;
-            });
+            actualizar_horas[childSnap.key + "/nomina/2019/16/horas_extra"] = null;
+            actualizar_horas[childSnap.key + "/nomina/2019/16/total_horas_extra"] = null;
+            actualizar_horas[childSnap.key + "/nomina/2019/16/impuestos/impuestos_horas_extra"] = null;
         });
 
-        firebase.database().ref("rrhh/pagos_nomina/2019/15").update(actualizar_horas).then(function(){
+        console.log(actualizar_horas);
+        firebase.database().ref("rrhh/trabajadores").update(actualizar_horas).then(function(){
             alert("Exito");
         });
-    }); */
+    }); 
 });
 
 firebase.auth().onAuthStateChanged(user => {
