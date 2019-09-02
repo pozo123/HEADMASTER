@@ -432,7 +432,7 @@
                         <ul class="collapse list-unstyled" id="pageObra">
                             <li class="tab administracion" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Alta y Edición - Obras</a></li>
                             <li class="tab administracion" id="tabAltaProcesos"><a href="#" onclick="openTabs('tabAltaProcesos','altaProcesos')">Alta y Edición - Procesos</a></li>
-                            <li class="tab administracion" id="tabCalculadora"><a href="#" onclick="openTabs('tabCalculadora','calculadora')">Calculadora</a></li>
+                            <li class="tab administracion" id="tabCalculadora"><a href="#" onclick="openTabs('tabCalculadora','calculadora')">Calculadora Kaizen</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -990,44 +990,73 @@
                         </div>
                         <!-- Calculadora de precios-->
                         <div id="calculadora" class="tabcontent hidden">
-                                <h1>Generador de Precios</h1>
-                                <p>Página auxiliar que te ayuda a calcular precios de venta de procesos u obras</p>
+                                <h1>Calculadora Kaizen</h1>
+                                <p>Aplicación para calcular precios de venta y dar de alta en el sistema los costos SCORE, de suministros y de mano de obra.</p>
                                 <div class="container-fluid">
                                     <div class="row align-items-center">
-                                        <div class="col-lg-3"></div>
-                                        <div class="col-lg-6">
+                                        <div class="col-lg-1"></div>
+                                        <div class="col-lg-10">
                                             <form action="#" onsubmit="return false;" id = "formCalculadora">
-                                                <div class="form-group">
-                                                    <label for="obraDdlCalculadora">Obra:</label>
-                                                    <select id="obraDdlCalculadora" class="form-control"></select>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-6">
+                                                        <label for="obraDdlCalculadora">Obra:</label>
+                                                        <select id="obraDdlCalculadora" class="form-control"></select>
+                                                    </div>
+                                                    <div class="form-group col-md-6">
+                                                        <label for="procesoDdlCalculadora">Proceso:</label>
+                                                        <select id="procesoDdlCalculadora" class="form-control"></select>
+                                                    </div>
                                                 </div>
-                                                <div class="form-group">
-                                                    <label for="procesoDdlCalculadora">Proceso:</label>
-                                                    <select id="procesoDdlCalculadora" class="form-control"></select>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-6">
+                                                        <label for="procesoDdlCalculadora">Subproceso:</label>
+                                                        <select id="subprocesoDdlCalculadora" class="form-control"></select>
+                                                    </div>
                                                 </div>
-                                                <div class="form-group">
-                                                    <label for="procesoDdlCalculadora">Subproceso:</label>
-                                                    <select id="subprocesoDdlCalculadora" class="form-control"></select>
-                                                </div>
+                                                <br>
                                                 <hr class="style2">
+                                                <br>
+                                                <div class = "form-row">
+                                                    <button type="button" id="botonDefaultCalculadora" class="btn btn-secondary" data-toggle="popover" data-trigger="hover">Valores Default</button>
+                                                </div>
+                                                <br>
                                                 <div class="form-row align-items-center">
                                                     <div class="col-lg-4">
-                                                        <label for="costoHoraScoreCalculadora">Precio x Hora SCORE:</label>
+                                                        <label for="indirectosCalculadora">Porcentaje Indirectos:</label>
+                                                        <input type="text" id="indirectosCalculadora" class="form-control" placeholder="Porcentaje de indirectos">
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <label for="anticipoCalculadora">Porcentaje Anticipo:</label>
+                                                        <input type="text" id="anticipoCalculadora" class="form-control" placeholder="Anticipos">
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <label for="estimacionesCalculadora">Porcentaje Estimaciones:</label>
+                                                        <input type="text" id="estimacionesCalculadora" class="form-control" placeholder="Estimaciones">
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <hr class="style2">
+                                                <br>
+                                                <h5 style ="font-weight: bold;">SCORE</h5>
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-lg-4">
+                                                        <label for="costoHoraScoreCalculadora">Precio por hora:</label>
                                                         <input type="text" id="costoHoraScoreCalculadora" class="form-control" placeholder="Costo por hora">
                                                     </div>
                                                     <div class="col-lg-4">
-                                                        <label for="costoProyectoCalculadora">Horas SCORE:</label>
+                                                        <label for="costoProyectoCalculadora">Horas:</label>
                                                         <input type="text" id="horasProyectoCalculadora" class="form-control" placeholder="Cantidad en horas">
                                                     </div>
                                                     <div class="col-lg-4">
-                                                        <label for="costoProyectoCalculadora">Costo SCORE:</label>
+                                                        <label for="costoProyectoCalculadora">Costo:</label>
                                                         <input type="text" id="costoProyectoCalculadora" class="form-control" placeholder="Cantidad en dinero">
                                                     </div>
                                                 </div>
-                                                <br/>
+                                                <br>
+                                                <h5 style ="font-weight: bold;">Mano de obra</h5>
                                                 <div class="form-row align-items-center">
                                                     <div class="col-lg-4">
-                                                        <label for="costoCopeoCalculadora">Copeo:</label>
+                                                        <label for="costoCopeoCalculadora">Precopeo:</label>
                                                         <input type="text" id="costoCopeoCalculadora" class="form-control" placeholder="Costo de copeo">
                                                     </div>
                                                     <div class="col-lg-4">
@@ -1039,29 +1068,17 @@
                                                         <input type="text" id="impuestosCalculadora" class="form-control" placeholder="Porcentaje de impuestos">
                                                     </div>
                                                 </div>
-                                                <br/>
+                                                <br>
+                                                <h5 style ="font-weight: bold;">Suministros</h5>
                                                 <div class="form-row align-items-center">
                                                   <div class="col-lg-4">
                                                       <label for="costoSuministrosCalculadora">Costo de suministros($):</label>
                                                       <input type="text" id="costoSuministrosCalculadora" class="form-control" placeholder="Costo de suministros">
                                                   </div>
                                                 </div>
-                                                <br/>
-                                                <div class="form-row align-items-center">
-                                                    <div class="col-lg-4">
-                                                        <label for="indirectosCalculadora">Porcentaje Indirectos:</label>
-                                                        <input type="text" id="indirectosCalculadora" class="form-control" placeholder="Porcentaje de indirectos">
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <label for="anticipoCalculadora">Porcentaje Anticipo:</label>
-                                                        <input type="text" id="anticipoCalculadora" class="form-control" placeholder="Anticipos">
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <label for="estimacionesCalculadora">Porcentaje Estimaciones: </label>
-                                                        <input type="text" id="estimacionesCalculadora" class="form-control" placeholder="Estimaciones">
-                                                    </div>
-                                                </div>
-                                                <br/>
+                                                <br>
+                                                <hr class="style2">
+                                                <br>
                                                 <div class="form-row align-items-center">
                                                     <div class="col-lg-4">
                                                         <label for="profitCantidadCalculadora">Profit ($):</label>
@@ -1080,38 +1097,31 @@
                                                 <div class="form-row align-items-center">
                                                     <div class="col-lg-4">
                                                         <label for="precioVentaCalculadora">Costos indirectos</label>
-                                                        <input type="text" disabled="true" id="costosIndirectosCalculadora" class="form-control" placeholder="Precio de venta">
+                                                        <input type="text" disabled="true" id="costosIndirectosCalculadora" class="form-control" placeholder="Costos indirectos">
                                                     </div>
                                                     <div class="col-lg-4">
                                                         <label for="precioVentaCalculadora">Costo de operaciones</label>
-                                                        <input type="text" disabled="true" id="costoOperacionesCalculadora" class="form-control" placeholder="Precio de venta">
+                                                        <input type="text" disabled="true" id="costoOperacionesCalculadora" class="form-control" placeholder="Score + copeo + suministros">
                                                     </div>
                                                     <div class="col-lg-4">
                                                         <label id = "labelProfitNetoCalculadora">Profit Neto Estimado</label>
-                                                        <input type="text" disabled="true" id="profitNetoCalculadora" class="form-control" placeholder="Precio de venta">
+                                                        <input type="text" disabled="true" id="profitNetoCalculadora" class="form-control" placeholder="Profit neto estimado">
                                                     </div>
                                                 </div>
                                                 <br/>
                                                 <div class="form-row">
-                                                    <div class= "col-lg-6">
-                                                        <button type="button" id = "botonDefaultCalculadora"class="btn btn-info btn-block">Valores Default</button>
+                                                    <div class= "col-6">
+                                                        <button type="button" id="botonGuardarCalculadora"class="btn btn-outline-success btn-block">Guardar</button>
                                                     </div>
-                                                    <div class= "col-lg-6">
+                                                    <div class= "col-6">
                                                         <button type="button" id = "botonBorrarCalculadora"class="btn btn-outline-danger btn-block">Resetear Todo</button>
                                                     </div>
                                                 </div>
                                                 <br/>
-                                                <div class="form-row">
-                                                    <div class= "col-lg-3"></div>
-                                                    <div class= "col-lg-6">
-                                                        <button type="button" id = "botonGuardarCalculadora"class="btn btn-info btn-block">Guardar</button>
-                                                    </div>
-                                                    <div class= "col-lg-3"></div>
-                                                </div>
                                             </form>
                                             <br/>
                                         </div>
-                                        <div class= "col-lg-2"></div>
+                                        <div class= "col-lg-10"></div>
                                         <div class = "tableWrapper">
                                             <table id="dataTableCalculadora" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
                                                 <thead>

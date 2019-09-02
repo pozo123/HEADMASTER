@@ -32,21 +32,27 @@ var uid_subproceso;
 var cantProfitManda = true;
 var horasScoreManda = true;
 
+// esta madre solo es para poner el mensaje cuando pasas encima del boton
+
 $('#' + id_tab_calculadora).click(function(){
+
+	// pongo el texto para el on hover
+	var texto_default = "Valores generalmente usados para el calculo de presupuestos como son: precio por hora del área de proyectos, porcentaje de anticipos y estimaciones, impuestos para la mano de obra y el porcentaje de costos indirectos."
+	$('#' + id_default_calculadora).attr("data-content", texto_default);
 	resetFormCalculadora();
 	$('#' + id_ddl_obraCalculadora).empty();
-  var select = document.getElementById(id_ddl_obraCalculadora);
-  var option = document.createElement('option');
-  option.style = "display:none";
-  option.text = option.value = "";
-  select.appendChild(option);
-  var obra;
-  firebase.database().ref(rama_bd_obras + "/listas/obras_activas").orderByChild('nombre').on('child_added',function(snapshot){
-      obra = snapshot.val();
-      option = document.createElement('option');
-      option.value = snapshot.key;
-      option.text = obra.nombre;
-      select.appendChild(option);
+	var select = document.getElementById(id_ddl_obraCalculadora);
+	var option = document.createElement('option');
+	option.style = "display:none";
+	option.text = option.value = "";
+	select.appendChild(option);
+	var obra;
+	firebase.database().ref(rama_bd_obras + "/listas/obras_activas").orderByChild('nombre').on('child_added',function(snapshot){
+		obra = snapshot.val();
+		option = document.createElement('option');
+		option.value = snapshot.key;
+		option.text = obra.nombre;
+		select.appendChild(option);
   });
   //returnToDefaultCalculadora();
 });
