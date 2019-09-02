@@ -258,8 +258,7 @@ function modalDatosNomina(existeRegistro, trabSnapshot, regSnapshot){
     if(existeRegistro){
     }  
     $('#' + id_modal_datos_datos_nomina).modal('show');
-
-    $('#' + id_button_asistencias_datos_nomina).click(function(){
-        alert("holaaa");
-    });
 }
+$('#' + id_button_asistencias_datos_nomina).click(function(){
+    alert("holaaa");
+});
