@@ -33,7 +33,7 @@ $(document).ready(function() {
 
 $('#botonMagico').click(function(){
 var actualizar_horas = {};
-    firebase.database().ref("rrhh/trabajadores").once("value").then(function(snapshot){
+/*     firebase.database().ref("rrhh/trabajadores").once("value").then(function(snapshot){
         snapshot.forEach(function(childSnap){
             actualizar_horas[childSnap.key + "/nomina/2019/16/horas_extra"] = null;
             actualizar_horas[childSnap.key + "/nomina/2019/16/total_horas_extra"] = null;
@@ -44,7 +44,7 @@ var actualizar_horas = {};
         firebase.database().ref("rrhh/trabajadores").update(actualizar_horas).then(function(){
             alert("Exito");
         });
-    }); 
+    });  */
 });
 
 firebase.auth().onAuthStateChanged(user => {

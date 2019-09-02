@@ -225,9 +225,9 @@
                 <div class="modal-content">
                 <div class="modal-header">
                     <div class="flex-column">
-                        <h4 class="modal-title">Arturo Bravo Reynaga</h4>
+                        <h4 class="modal-title" id="nombreModalDatosNomina"></h4>
                         <br>
-                        <h6 class= "pl-2">2019 Semana 35</h6>
+                        <h6 class= "pl-2">Semana <span id="semanaModalDatosNomina"></span> - <span id="yearModalDatosNomina"></span></h6>
                     </div>
 
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -245,30 +245,64 @@
                                         <select id="jueves-obra" class="form-control obraNomina jueves"></select>
                                         <br>
                                         <select id="jueves-proceso" class="form-control procesoNomina jueves"></select>
+                                        <br>
+                                        <select id="jueves-actividad" class="form-control actividadNomina hidden">
+                                            <option value="" style="display:none"></option>
+                                            <option value="Asistencia">Asistencia</option>
+                                            <option value="Falta">Falta</option>
+                                            <option value="Vacaciones">Vacaciones</option>
+                                        </select>
                                     </div>
                                     <div class="form-group col">
                                         <label>Viernes</label>
                                         <select id="viernes-obra" class="form-control obraNomina viernes"></select>
                                         <br>
                                         <select id="viernes-proceso" class="form-control procesoNomina viernes"></select>
+                                        <br>
+                                        <select id="viernes-actividad" class="form-control actividadNomina hidden">
+                                            <option value="" style="display:none"></option>
+                                            <option value="Asistencia">Asistencia</option>
+                                            <option value="Falta">Falta</option>
+                                            <option value="Vacaciones">Vacaciones</option>
+                                        </select>
                                     </div>
                                     <div class="form-group col">
                                         <label>Lunes</label>
                                         <select id="lunes-obra" class="form-control obraNomina lunes"></select>
                                         <br>
                                         <select id="lunes-proceso" class="form-control procesoNomina lunes"></select>
+                                        <br>
+                                        <select id="lunes-actividad" class="form-control actividad hidden">
+                                            <option value="" style="display:none"></option>
+                                            <option value="Asistencia">Asistencia</option>
+                                            <option value="Falta">Falta</option>
+                                            <option value="Vacaciones">Vacaciones</option>
+                                        </select>
                                     </div>
                                     <div class="form-group col">
                                         <label>Martes</label>
                                         <select id="martes-obra" class="form-control obraNomina martes"></select>
                                         <br>
                                         <select id="martes-proceso" class="form-control procesoNomina martes"></select>
+                                        <br>
+                                        <select id="martes-actividad" class="form-control actividadNomina hidden">
+                                            <option value="" style="display:none"></option>
+                                            <option value="Asistencia">Asistencia</option>
+                                            <option value="Falta">Falta</option>
+                                            <option value="Vacaciones">Vacaciones</option>
+                                        </select>
                                     </div>
                                     <div class="form-group col">
                                         <label>Miércoles</label>
                                         <select id="miercoles-obra" class="form-control obraNomina miercoles"></select>
                                         <br>
                                         <select id="miercoles-proceso" class="form-control procesoNomina miercoles"></select>
+                                        <br>
+                                        <select id="miercoles-actividad" class="form-control actividadNomina hidden">
+                                            <option value="Asistencia">Asistencia</option>
+                                            <option value="Falta">Falta</option>
+                                            <option value="Vacaciones">Vacaciones</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-row">
