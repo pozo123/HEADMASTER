@@ -326,9 +326,9 @@ Nota: Todo float se ingresa a 2 decimales.
             - nomina
                 - registro firebase_id
                     - trabajador_id: string
-                    - año_head: int
-                    - semana_head: int
-                    - sueldo_diario: float        
+                    - year_head: int
+                    - week_head: int
+                    - sueldo_semanal: float        
                     - costo_hora: float: float
                     - asistencias:
                         - lunes,martes,miercoles, jueves, viernes;
@@ -359,8 +359,8 @@ Nota: Todo float se ingresa a 2 decimales.
                         - subprocesos:
                             - registros_id: true
                 - fecha_datos:
-                    - año:
-                        - semana_head:
+                    - year:
+                        - week_head:
                             - registros_id: true
 
                 - fechas_pagos:

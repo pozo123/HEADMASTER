@@ -12,6 +12,11 @@ var id_id_head_datos_nomina = "idHeadNomina";
 
 var class_modal_obra_datos_nomina = "obraNomina";
 var class_modal_proceso_datos_nomina = "procesoNomina";
+var class_modal_actividad_datos_nomina = "actividadNomina";
+
+var id_modal_nombre_nomina = "nombreModalDatosNomina";
+var id_modal_sem_nomina = "semanaModalDatosNomina";
+var id_modal_year_nomina = "yearModalDatosNomina"
 
 // variables globales
 
@@ -19,6 +24,8 @@ var starting_year = 2018;
 var actual_week = getWeek(new Date())[0];
 var actual_year = getWeek(new Date())[1];
 var existe_registro = false;
+var datos_registro = {};
+var trabajador = {};
 
 var trabajadores_activos = {};
 var dias = ["jueves", "viernes", "lunes", "martes", "miercoles"];
@@ -26,6 +33,8 @@ var dias = ["jueves", "viernes", "lunes", "martes", "miercoles"];
 
 
 $('#' + id_tab_datos_nomina).click(function(){
+    existe_registro = false;
+    datos_registro = {};
     $('#' + id_ddl_year_datos_nomina).empty();
     var select_year = document.getElementById(id_ddl_year_datos_nomina);
     for(i=actual_year;i>=starting_year;i--){
@@ -131,6 +140,7 @@ $('#' + id_button_abrir_datos_nomina).click(function(){
         alert("Escribe el ID HEAD o selecciona el trabajador al que deseas actualizar su nómina.")
         return;
     } 
+
     var id_head = $('#' + id_id_head_datos_nomina).val();
     firebase.database().ref(rama_bd_mano_obra + "/trabajadores").orderByChild("id_head").equalTo(id_head).once("value").then(function(snapshot){
         // ver si existe el ID HEAD primero
@@ -145,12 +155,14 @@ $('#' + id_button_abrir_datos_nomina).click(function(){
                 firebase.database().ref(rama_bd_nomina + "/listas/"+ year + "/" + week + "/" + Object.keys(trabajador)[0]).once("value").then(function(listaSnap){
                     if(listaSnap.exists()){
                         firebase.database().ref(rama_bd_nomina + "/nomina/" + Object.keys(listaSnap.val())[0]).once("value").then(function(regSnap){
-                            modalDatosNomina(true, snapshot, regSnap)
+                            existe_registro = true;
+                            modalDatosNomina(existe_registro, snapshot, regSnap)
                         });
                     } else {
                         // Caso si no existe ()
-                        modalDatosNomina(false, snapshot);
+                        modalDatosNomina(existe_registro, snapshot);
                     };
+
                 });
             } else {
                 alert("Existen 2 o más usuarios con el mismo ID.");
@@ -162,6 +174,24 @@ $('#' + id_button_abrir_datos_nomina).click(function(){
 
 // Funciones para modal
 
+$('#' + id_button_asistencias_datos_nomina).click(function(){
+    if(!validateModalDatosNomina()){
+        alert("Por favor selecciona el proceso correspondiente.")
+        return;
+    }
+    // aqui poner datos asist, he y diversos
+    var asistencias = datosAsistenciaDatosNomina();
+    
+    var reg = {
+        trabajador_id:rabajador.key,
+        year_head: $('#' + id_ddl_year_datos_nomina + " option:selected").val(),
+        week_head: $('#' + id_ddl_week_datos_nomina + " option:selected").val(),
+        sueldo: trabajador.sueldo_base,
+        costo_hora: trabajador.sueldo_base / 48,
+        asistencias: asistencias
+    } 
+});
+
 $('.' + class_modal_obra_datos_nomina).change(function(){
     for(var i=0; i<dias.length;i++){
         if($(this).hasClass(dias[i])){
@@ -172,18 +202,9 @@ $('.' + class_modal_obra_datos_nomina).change(function(){
             option.style = "display:none";
             option.text = option.value = "";
             select.appendChild(option);
-
-            var option = document.createElement('option');
-            option.text = option.value = "Falta";
-            select.appendChild(option);
-
-            var option = document.createElement('option');
-            option.text = option.value = "Vacaciones";
-            select.appendChild(option);
-
+            
             firebase.database().ref(rama_bd_obras + "/procesos/" + $("option:selected", this).val() + "/procesos").once('value').then(function(snapshot){
                 snapshot.forEach(function(procSnap){
-                    console.log(procSnap.key);
                     if(procSnap.key != "PC00"){
                         procSnap.child("subprocesos").forEach(function(subprocSnap){
                             option = document.createElement('option');
@@ -198,6 +219,80 @@ $('.' + class_modal_obra_datos_nomina).change(function(){
         }
     };
 });
+
+$('.' + class_modal_proceso_datos_nomina).change(function(){
+    for(var i=0; i<dias.length;i++){
+        if($(this).hasClass(dias[i])){
+            $('#' + dias[i] + "-actividad").removeClass("hidden");
+            $('#' + dias[i] + "-actividad").val("Asistencia");
+        }
+    };
+});
+
+
+
+function modalDatosNomina(existeRegistro, trabSnapshot, regSnapshot){
+    $('.' + class_modal_obra_datos_nomina).val("");
+    $('.' + class_modal_proceso_datos_nomina).empty();
+    $('.' + class_modal_actividad_datos_nomina).addClass("hidden");
+    $('.' + class_modal_actividad_datos_nomina).val("");
+
+    // si existe el registro, necesito llenar todos los campos, crear filas, columnas, etc.
+    // si no existe, dejar el modal listo pa pushearlo con el key del trabSnapshot
+    
+    trabajador = trabSnapshot.val();
+    trabajador = trabajador[Object.keys(trabajador)[0]];
+
+    var nombre = trabajador.nombre.split("_")
+    $('#' + id_modal_nombre_nomina).text(nombre[0] + " " + nombre[1] + " " + nombre[2]);
+    $('#' + id_modal_sem_nomina).text($('#' + id_ddl_week_datos_nomina + " option:selected").val());
+    $('#' + id_modal_year_nomina).text($('#' + id_ddl_year_datos_nomina + " option:selected").val());
+
+    if(existeRegistro){
+
+    }  
+
+    $('#' + id_modal_datos_datos_nomina).modal('show');
+}
+
+function datosAsistenciaDatosNomina(){
+    var asistencia = {};
+    for(var i=0; i<dias.length;i++){
+        var obra = $('#' + dias[i] + "-obra").val();
+        var proceso  = $('#' + dias[i] + "-proceso").val();
+        var actividad  = $('#' + dias[i] + "-actividad").val();
+        var sem =  $('#' + id_ddl_week_datos_nomina).val();
+        var year = $('#' + id_ddl_year_datos_nomina).val();
+        var jueves = getDaysWeek(sem,year)[0];
+        var offset = i;
+        if(i > 1){
+            offset = offset + 2;
+        }
+        if(obra != ""){
+            asistencia[dias[i]] = {
+                obra: obra,
+                subproceso: proceso,
+                fecha: jueves + 86400000*offset,
+                actividad: actividad,
+            };
+        };
+    };
+    return asistencia;
+}
+
+// funcion para validar el seleccionar obra y proceso
+
+function validateModalDatosNomina(){
+    var is_validated = true;
+    for(var i=0; i<dias.length;i++){
+        var obra = $('#' + dias[i] + "-obra").val();
+        var proceso  = $('#' + dias[i] + "-proceso").val();
+        if(obra != "" && proceso == ""){
+            return false;
+        };
+    };
+    return is_validated;
+}
 // funcion para llenar procesos.
 
 
@@ -214,6 +309,8 @@ $('#' + id_id_head_datos_nomina).on("cut copy paste",function(e) {
 // Funciones necesarias
 
 function resetFormDatosNomina(week){
+    datos_registro = {};
+    existe_registro = false;
     if(week){
         $('#' + id_ddl_week_datos_nomina).empty();
     }
@@ -249,16 +346,3 @@ function llenarDdlFaltantes(){
     });
 }
 
-function modalDatosNomina(existeRegistro, trabSnapshot, regSnapshot){
-    $('.' + class_modal_obra_datos_nomina).val("");
-    $('.' + class_modal_proceso_datos_nomina).empty();
-    // si existe el registro, necesito llenar todos los campos, crear filas, columnas, etc.
-    // si no existe, dejar el modal listo pa pushearlo con el key del trabSnapshot
-    var trabajador = trabSnapshot.val();
-    if(existeRegistro){
-    }  
-    $('#' + id_modal_datos_datos_nomina).modal('show');
-}
-$('#' + id_button_asistencias_datos_nomina).click(function(){
-    alert("holaaa");
-});
