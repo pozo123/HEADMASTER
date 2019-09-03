@@ -336,7 +336,7 @@ Nota: Todo float se ingresa a 2 decimales.
                             - obra: obra_id
                             - subproceso: subproceso_id
                             - actividad: string (asistencia, falta o vacaciones)
-                    - h_extras:
+                    - horas_extra:
                         - registro (firebase_id):
                             - fecha: timestamp
                             - obra: obra_id
