@@ -360,8 +360,9 @@ Nota: Todo float se ingresa a 2 decimales.
                             - registros_id: true
                 - fecha_datos:
                     - year:
-                        - week_head:
-                            - registros_id: true
+                        - week_head
+                            - id_trabajador:
+                                - registros_id: true
 
                 - fechas_pagos:
                     - aaaammdd:
