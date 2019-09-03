@@ -124,6 +124,7 @@ $("#" + id_ddl_obraCalculadora ).change(function(){
         }
       }
   });
+	actualizarTablaCalculadora();
 });
 
 $("#" + id_ddl_procesoCalculadora).change(function(){
@@ -161,12 +162,15 @@ $("#" + id_ddl_subprocesoCalculadora).change(function(){
       var costoOperacion = (costoScore + subproceso.costo_suministros + (subproceso.precopeo*(1 + subproceso.porcentaje_impuestos*0.01)))*(1+ subproceso.porcentaje_indirectos*0.01);
 			var costoOperacionIndirectos = (costoScore + subproceso.costo_suministros + (subproceso.precopeo*(1 + subproceso.porcentaje_impuestos*0.01)))*(subproceso.porcentaje_indirectos*0.01);
       var utilidadPorcentaje = subproceso.utilidad / costoOperacion * 100 ;
+			var copeoConCarga = subproceso.precopeo * (1+subproceso.porcentaje_impuestos*0.01);
+			var utilidadNeta = subproceso.utilidad * 0.6;
 
       $('#' + id_horas_proyectoCalculadora ).val(subproceso.score.horas_programadas);
 			$('#' + id_costo_horaScoreCalculadora).val(formatMoney(subproceso.score.costo_hora));
 			$('#' + id_costo_proyectoCalculadora).val(formatMoney(costoScore));
       $('#' + id_costo_suministrosCalculadora).val(formatMoney(subproceso.costo_suministros));
       $('#' + id_costo_copeoCalculadora).val(formatMoney(subproceso.precopeo));
+			$('#' + id_costo_copeoCargaCalculadora).val(formatMoney(copeoConCarga));
       $('#' + id_profit_cantidadCalculadora).val(formatMoney(subproceso.utilidad));
 			$('#' + id_profit_porcentajeCalculadora).val(utilidadPorcentaje.toFixed(2));
       $('#' + id_precio_ventaCalculadora).val(formatMoney(subproceso.precio_venta));
@@ -177,11 +181,10 @@ $("#" + id_ddl_subprocesoCalculadora).change(function(){
       $('#' + id_estimacionesCalculadora).val(100 - parseFloat(subproceso.porcentaje_anticipo));
       $('#' + id_indirectosCalculadora).val(subproceso.porcentaje_indirectos);
       $('#' + id_impuestosCalculadora).val(subproceso.porcentaje_impuestos);
+			$('#' + id_profit_netoCalculadora).val(formatMoney(utilidadNeta));
 
 			horasScoreManda = true;
 			cantProfitManda = true;
-			actualizaCopeoCargaSocial();
-			actualizaProfitNeto();
     } else {
 			resetFormCalculadora_subproceso();
 		}
@@ -701,4 +704,152 @@ function actualizaCopeoCargaSocial(){
 		$('#'+ id_costo_copeoCargaCalculadora).val(formatMoney(copeoCarga));
 		highLight(id_costo_copeoCargaCalculadora);
 	}
+}
+
+// ----------------------------- DATATABLE ----------------------------------
+function actualizarTablaCalculadora(){
+    firebase.database().ref(rama_bd_obras + "/procesos/" + uid_obra + "/procesos").on("value",function(snapshot){
+        var datos_obra = [];
+				var index = 0;
+        snapshot.forEach(function(procesoSnap){
+            var clave_proceso = procesoSnap.key;
+            var proceso = procesoSnap.val();
+            var nombre_proceso = proceso.nombre;
+						var num_subp = proceso.num_subprocesos;
+						var cont=1;
+						var costoScore_proceso=0;
+						var precopeoCarga_proceso=0;
+						var suministros_proceso=0;
+						var indirectos_proceso=0;
+						var operacion_proceso=0;
+						var utilidad_proceso=0;
+						var venta_proceso=0;
+						var anticipo_proceso=0;
+						var estimacion_proceso=0;
+            if(clave_proceso !== "ADIC" && clave_proceso !== "MISC" && clave_proceso !== "PC00"){
+                procesoSnap.child("subprocesos").forEach(function(subprocesoSnap){
+									var clave_sub = subprocesoSnap.key;
+	                var subproceso = subprocesoSnap.val();
+									var costoScore = subproceso.score.horas_programadas*subproceso.score.costo_hora;
+						      var costoOperacion = (costoScore + subproceso.costo_suministros + (subproceso.precopeo*(1 + subproceso.porcentaje_impuestos*0.01)))*(1+ subproceso.porcentaje_indirectos*0.01);
+									var costoOperacionIndirectos = (costoScore + subproceso.costo_suministros + (subproceso.precopeo*(1 + subproceso.porcentaje_impuestos*0.01)))*(subproceso.porcentaje_indirectos*0.01);
+									var precopeoCarga = subproceso.precopeo * (1+subproceso.porcentaje_impuestos*0.01);
+									var utilidad_porcentaje = (subproceso.utilidad / costoOperacion * 100).toFixed(2);
+									if (subproceso.precio_venta == 0){
+										var porcentajeEstimacion = 0;
+									}else{
+										var porcentajeEstimacion = 100 - subproceso.porcentaje_anticipo;
+									}
+									costoScore_proceso=costoScore_proceso+costoScore;
+									precopeoCarga_proceso=precopeoCarga_proceso+precopeoCarga;
+									suministros_proceso=suministros_proceso+subproceso.costo_suministros;
+									indirectos_proceso=indirectos_proceso+costoOperacionIndirectos;
+									operacion_proceso=operacion_proceso+costoOperacion;
+									utilidad_proceso=utilidad_proceso+subproceso.utilidad;
+									venta_proceso=venta_proceso+subproceso.precio_venta;
+									anticipo_proceso=anticipo_proceso+subproceso.porcentaje_anticipo*subproceso.precio_venta*0.01;
+									estimacion_proceso=estimacion_proceso+porcentajeEstimacion*subproceso.precio_venta*0.01;
+									if (num_subp+1 == cont){
+										datos_obra[index]=[
+											uid_obra,
+											clave_proceso,
+											clave_proceso,
+											"",
+											"",
+											formatMoney(costoScore_proceso),
+											"",
+											formatMoney(precopeoCarga_proceso),
+											"",
+											formatMoney(suministros_proceso),
+											formatMoney(indirectos_proceso),
+											"",
+											formatMoney(operacion_proceso),
+											formatMoney(utilidad_proceso),
+											"",
+											formatMoney(venta_proceso),
+											formatMoney(anticipo_proceso),
+											formatMoney(estimacion_proceso)
+										];
+									}
+									if (clave_sub !== clave_proceso){
+										datos_obra[index+cont]=[
+											uid_obra,
+											clave_proceso,
+											clave_sub,
+											subproceso.score.horas_programadas,
+											formatMoney(subproceso.score.costo_hora),
+											formatMoney(costoScore),
+											formatMoney(subproceso.precopeo),
+											formatMoney(precopeoCarga),
+											subproceso.porcentaje_impuestos,
+											formatMoney(subproceso.costo_suministros),
+											formatMoney(costoOperacionIndirectos),
+											subproceso.porcentaje_indirectos,
+											formatMoney(costoOperacion),
+											formatMoney(subproceso.utilidad),
+											utilidad_porcentaje,
+											formatMoney(subproceso.precio_venta),
+											subproceso.porcentaje_anticipo,
+											porcentajeEstimacion
+										];
+										cont++;
+									}
+              });
+							index++;
+            }
+        });
+
+        tabla_calculadora = $('#'+ id_dataTable_calculadora).DataTable({
+            destroy: true,
+            data: datos_obra,
+            language: idioma_espanol,
+            "autoWidth": false,
+            "columnDefs": [
+                { "width": "100px", "targets": 5 },
+                { "width": "120px", "targets": 6 },
+                { "width": "150px", "targets": 7 },
+                {
+                    targets: -2,
+                    className: 'dt-body-center'
+                },
+                { "visible": false, "targets": 0 }, //Campos auxiliares
+                { "visible": false, "targets": 1 },
+								{ "visible": false, "targets": 3 },
+								{ "visible": false, "targets": 4 },
+								{ "visible": false, "targets": 6 },
+								{ "visible": false, "targets": 8 },
+								{ "visible": false, "targets": 11 },
+								{ "visible": false, "targets": 14 },
+                {
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>"
+                }
+              ]
+        });
+        //Funcion para llenar los campos cuando se quiere editar desde las opciones de la tabla
+        $('#' + id_dataTable_calculadora + ' tbody').on( 'click', '.editar', function () {
+            var data = tabla_calculadora.row( $(this).parents('tr') ).data();
+            resetFormCalculadorao();
+						$('#' + id_horas_proyectoCalculadora ).val(data[3]);
+						$('#' + id_costo_horaScoreCalculadora).val(data[4]);
+						$('#' + id_costo_proyectoCalculadora).val(data[5]);
+			      $('#' + id_costo_suministrosCalculadora).val(data[9]);
+			      $('#' + id_costo_copeoCalculadora).val(data[6]);
+						$('#' + id_costo_copeoCargaCalculadora).val(data[7]);
+			      $('#' + id_profit_cantidadCalculadora).val(data[13]);
+						$('#' + id_profit_porcentajeCalculadora).val(data[14]);
+			      $('#' + id_precio_ventaCalculadora).val(data[15]);
+						$('#' + id_costo_operacionesCalculadora).val(data[12]);
+						$('#' + id_costos_indirectosCalculadora).val(data[10]);
+
+			      $('#' + id_anticipoCalculadora).val(data[16]);
+			      $('#' + id_estimacionesCalculadora).val(data[17]);
+			      $('#' + id_indirectosCalculadora).val(data[11]);
+			      $('#' + id_impuestosCalculadora).val(data[8]);
+						$('#' + id_profit_netoCalculadora).val((data[13]*0.6).toFixed(2));
+						horasScoreManda = true;
+						cantProfitManda = true;
+        } );
+    });
 }

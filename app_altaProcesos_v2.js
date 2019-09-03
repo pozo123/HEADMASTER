@@ -483,7 +483,11 @@ function datosAltaSubprocesoCopia(){
     fechas: fechasSubproceso(id_fecha_inicio_proceso, id_fecha_final_proceso),
     precio_venta: 0,
     costo_suministros:0,
+    utilidad: 0,
     precopeo: 0,
+    porcentaje_anticipo: 0,
+    porcentaje_indirectos: 0,
+    porcentaje_impuestos: 0,
     score: {
       horas_programadas: 0,
       costo_hora: 0
