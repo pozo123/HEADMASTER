@@ -18,6 +18,8 @@ var id_modal_nombre_nomina = "nombreModalDatosNomina";
 var id_modal_sem_nomina = "semanaModalDatosNomina";
 var id_modal_year_nomina = "yearModalDatosNomina"
 
+var id_he_div_datos_nomina = "heContainerDatosNomina";
+
 // variables globales
 
 var starting_year = 2018;
@@ -386,7 +388,9 @@ function modalDatosNomina(existeRegistro, trabSnapshot, regSnapshot){
     $('.' + class_modal_obra_datos_nomina).val("");
     $('.' + class_modal_proceso_datos_nomina).empty();
     $('.' + class_modal_actividad_datos_nomina).addClass("hidden");
-    $('.' + class_modal_actividad_datos_nomina).val("");
+    $('.' + class_modal_actividad_datos_nomina).val("Falta");
+
+    //$('#' + id_he_div_datos_nomina).empty();
 
     // si existe el registro, necesito llenar todos los campos, crear filas, columnas, etc.
     // si no existe, dejar el modal listo pa pushearlo con el key del trabSnapshot
@@ -404,15 +408,13 @@ function modalDatosNomina(existeRegistro, trabSnapshot, regSnapshot){
     if(existeRegistro){
         id_registro_existente = regSnapshot.key;
         var asistencias = regSnapshot.val().asistencias;
-        
+        var horas_extra = regSnapshot.val().horas_extra;
         // ------
         for(key in asistencias){
             $('#' + key + "-obra [value=" + asistencias[key].obra + "]").prop('selected', true);
             $('#' + key + "-actividad [value=" + asistencias[key].actividad + "]").prop('selected', true);
             $('#' + key + "-actividad").removeClass("hidden");
-            console.log(1);
         }
-        console.log(asistencias);
         // jueves
         if(asistencias["jueves"] != undefined){
             var select_jueves = document.getElementById("jueves-proceso");
@@ -426,7 +428,6 @@ function modalDatosNomina(existeRegistro, trabSnapshot, regSnapshot){
                         procSnap.child("subprocesos").forEach(function(subprocSnap){
                             option = document.createElement('option');
                             option.value = subprocSnap.key;
-                            console.log(option);
                             option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
                             select_jueves.appendChild(option);
                         });
@@ -437,7 +438,6 @@ function modalDatosNomina(existeRegistro, trabSnapshot, regSnapshot){
         };
         // viernes
         if(asistencias["viernes"] != undefined){
-            console.log(3)
             var select_viernes = document.getElementById("viernes-proceso");
             var option = document.createElement('option');
             option.style = "display:none";
@@ -454,7 +454,6 @@ function modalDatosNomina(existeRegistro, trabSnapshot, regSnapshot){
                         });
                     };
                 });
-                console.log($('#viernes-obra option:selected').val())
                 $("#viernes-proceso [value=" + asistencias["viernes"].subproceso + "]").prop('selected', true);
             });
         };
@@ -522,7 +521,14 @@ function modalDatosNomina(existeRegistro, trabSnapshot, regSnapshot){
             });
         };
         
+        // horas extra
+        if(horas_extra != undefined){
+
+        }
+
     };
+    // se crea el campo de horas para generar nuevo registro de he
+    generateNewRowExtras();
 
     $('#' + id_modal_datos_datos_nomina).modal('show');
 }
@@ -555,3 +561,78 @@ function datosAsistenciaDatosNomina(){
 }
 
 // -------------------- HORAS EXTRA -----------------------------------
+
+function generateNewRowExtras(){
+    var key = firebase.database().ref("dummy").push().key;
+     
+    var cantidad = document.createElement('input');
+    cantidad.className = "form-control horasExtraInputVacio";
+    cantidad.type = "text";
+    cantidad.placeholder = "Horas Extra";
+    
+    var col = document.createElement('div');
+    col.className = "form-group col-3";
+    col.appendChild(cantidad);
+    
+    var row = document.createElement('div');
+    row.className = "form-row";
+    row.id = key;
+    row.append(col);
+    
+    var he_div = document.getElementById(id_he_div_datos_nomina);
+    he_div.appendChild(row);
+};
+
+$(document).on('change','.horasExtraInputVacio', function(){//do something})
+    var row = this.parentElement.parentElement;
+    var fecha = document.createElement('input');
+    fecha.className = "form-control dateTimepickerHorasExtra";
+    fecha.type = "text";
+    fecha.readOnly = "readonly"
+    
+    
+    var col_fecha = document.createElement('div');
+    col_fecha.className = "form-group col-3";
+    col_fecha.appendChild(fecha);
+
+    var obra = document.createElement('select');
+    obra.className = "form-control";
+
+    var option = document.createElement('option');
+    option.style = "display:none";
+    option.text = option.value = "";
+    obra.appendChild(option);
+    
+
+    firebase.database().ref(rama_bd_obras + "/listas/obras_activas").orderByChild('nombre').on('child_added',function(snapshot){
+        obra_json = snapshot.val();
+        option = document.createElement('option');
+        option.value = snapshot.key;
+        option.text = obra_json.nombre;
+        obra.appendChild(option);
+    });
+    
+    var col_obra = document.createElement('div');
+    col_obra.className = "form-group col-3";
+    col_obra.appendChild(obra);
+
+    var proceso = document.createElement('select');
+    proceso.className = "form-control";
+
+    var col_proceso = document.createElement('div');
+    col_proceso.className = "form-group col-3";
+    col_proceso.appendChild(proceso);
+
+    row.append(col_fecha);
+    row.append(col_obra);
+    row.append(col_proceso);
+
+    jQuery('.dateTimepickerHorasExtra').datetimepicker(
+        {timepicker:false, weeks:true,format:'d.m.Y'}
+    );
+    
+    $('.horasExtraInputVacio').addClass("horasExtraInputDatos");
+    $('.horasExtraInputVacio').removeClass("horasExtraInputVacio");
+    generateNewRowExtras();
+    
+});
