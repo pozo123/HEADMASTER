@@ -709,6 +709,7 @@ function actualizaCopeoCargaSocial(){
 // ----------------------------- DATATABLE ----------------------------------
 function actualizarTablaCalculadora(){
     firebase.database().ref(rama_bd_obras + "/procesos/" + uid_obra + "/procesos").on("value",function(snapshot){
+			console.log(snapshot.val());
         var datos_obra = [];
 				var index = 0;
         snapshot.forEach(function(procesoSnap){
