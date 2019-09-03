@@ -3,7 +3,7 @@ var id_form_datos_nomina = "formNomina";
 var id_modal_datos_datos_nomina = "modalDatosNomina";
 
 var id_button_abrir_datos_nomina = "datosNominaButton";
-var id_button_asistencias_datos_nomina = "buttonGuardarAsistencias";
+var id_button_guardar_datos_nomina = "buttonGuardarDatosNomina";
 
 var id_ddl_year_datos_nomina = "yearNomina";
 var id_ddl_week_datos_nomina = "semanaNomina";
@@ -146,6 +146,8 @@ $('#' + id_id_head_datos_nomina).change(function(){
 });
 
 $('#' + id_button_abrir_datos_nomina).click(function(){
+    existe_registro = false;
+    id_registro_existente = "";
     if($('#' + id_id_head_datos_nomina).val() == ""){
         alert("Escribe el ID HEAD o selecciona el trabajador al que deseas actualizar su nómina.")
         return;
@@ -181,73 +183,18 @@ $('#' + id_button_abrir_datos_nomina).click(function(){
     });
 });
 
-function llenarDdlFaltantes(){
-    firebase.database().ref(rama_bd_mano_obra + "/listas/activos").orderByKey().on("value",function(snapshot){
-        if(snapshot.exists()){
-            trabajadores_sin_registro = snapshot.val();  
-            firebase.database().ref(rama_bd_nomina + "/listas/fecha_datos/" + $('#' + id_ddl_year_datos_nomina + " option:selected").val() + "/" + $('#' + id_ddl_week_datos_nomina + " option:selected").val()).on("value", function(regSnap){
-                $('#' + id_ddl_faltantes_datos_nomina).empty();
-                
-                var select_trabajadores_faltantes = document.getElementById(id_ddl_faltantes_datos_nomina);
-                var option = document.createElement('option');
-                option.text = option.value = "";
-                select_trabajadores_faltantes.appendChild(option);
-                
-                regSnap.forEach(function(regSubSnap){
-                    delete trabajadores_sin_registro[regSubSnap.key];
-                });
-                for(key in trabajadores_sin_registro){
-                    var option = document.createElement('option');
-                    var nombre = trabajadores_sin_registro[key].split("_");
-                    option.text = nombre[0] + " " + nombre[1] + " " + nombre[2];
-                    option.value = key;
-                    select_trabajadores_faltantes.appendChild(option);
-                }
-                $('#' + id_ddl_faltantes_datos_nomina).prop('disabled', false);
-            });
-        }
-    });
-}
-
-// VALIDACIONES
-
-$('#' + id_id_head_datos_nomina).keypress(function(e){
-    charactersAllowed("1234567890",e);
-});
-
-$('#' + id_id_head_datos_nomina).on("cut copy paste",function(e) {
-    e.preventDefault();
- });
-
-// Funciones necesarias
-
-function resetFormDatosNomina(week){
-    id_registro_existente = "";;
-    trabajadores_sin_registroregistro = false;
-    if(week){
-        $('#' + id_ddl_week_datos_nomina).val("");
-    }
-    $('#' + id_ddl_faltantes_datos_nomina).empty();
-    $('#' + id_ddl_faltantes_datos_nomina).prop('disabled', true);
-    $('#' + id_id_head_datos_nomina).val("");
-};
-
-
-
-
-// ------------------------------ ASISTENCIAS --------------------------------------
-
-$('#' + id_button_asistencias_datos_nomina).click(function(){
+$('#' + id_button_guardar_datos_nomina).click(function(){
     if(!validateModalDatosNomina()){
         alert("Por favor selecciona el proceso correspondiente.")
         return;
     }
     // aqui poner datos asist, he y diversos
-    var asistencias = datosAsistenciaDatosNomina();
+    var datos_asistencia = datosAsistenciaDatosNomina();
+    var asistencias = datos_asistencia[0];
     var week_head = $('#' + id_ddl_week_datos_nomina + " option:selected").val();
     var year_head = $('#' + id_ddl_year_datos_nomina + " option:selected").val();
     if(existe_registro){ 
-        firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/asistencias").once("value").then(function(regSnap){
+        firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente).once("value").then(function(regSnap){
             var registro_antiguo = regSnap.val();
             firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/asistencias").update(asistencias)
             // reset listas anteriores
@@ -258,16 +205,16 @@ $('#' + id_button_asistencias_datos_nomina).click(function(){
                         listas_path["listas/obras/" + obraSnap.key + "/" + procesoSnap.key + "/" + id_registro_existente] = null;
                     });
                 });
-                listas_path["listas/vacaciones/fechas/" + aaaammdd(asistencias[key].fecha) + "/"+ id_registro_existente] = null;
-                listas_path["listas/vacaciones/trabajadores/" + trabajador_json.trabajador_id + "/" + id_registro_existente] = null;
-                listas_path["listas/faltas/fechas/" + aaaammdd(asistencias[key].fecha) + "/"+ id_registro_existente] = null;
-                listas_path["listas/faltas/trabajadores/" + trabajador_json.trabajador_id + "/" + id_registro_existente] = null;
                 
                 // actualizar listas
                 listas_path["listas/fecha_datos/" + year_head + "/" + week_head + "/" + trabajador_json.trabajador_id + "/"+ id_registro_existente] = true;
                 listas_path["listas/trabajadores/" + trabajador_json.trabajador_id + "/"+ id_registro_existente] = true;
                 
                 for(key in asistencias){
+                    listas_path["listas/vacaciones/fechas/" + aaaammdd(asistencias[key].fecha) + "/"+ id_registro_existente] = null;
+                    listas_path["listas/vacaciones/trabajadores/" + trabajador_json.trabajador_id + "/" + id_registro_existente] = null;
+                    listas_path["listas/faltas/fechas/" + aaaammdd(asistencias[key].fecha) + "/"+ id_registro_existente] = null;
+                    listas_path["listas/faltas/trabajadores/" + trabajador_json.trabajador_id + "/" + id_registro_existente] = null;
                     listas_path["listas/obras/" + asistencias[key].obra + "/" + asistencias[key].subproceso + "/" + id_registro_existente] = true;
                     if(asistencias[key].actividad == "Vacaciones"){
                         listas_path["listas/vacaciones/fechas/" + aaaammdd(asistencias[key].fecha) + "/"+ id_registro_existente] = true;
@@ -276,25 +223,26 @@ $('#' + id_button_asistencias_datos_nomina).click(function(){
                         listas_path["listas/faltas/fechas/" + aaaammdd(asistencias[key].fecha) + "/"+ id_registro_existente] = true;
                         listas_path["listas/faltas/trabajadores/" + trabajador_json.trabajador_id + "/" + id_registro_existente] = true;
                     }
-                    console.log(listas_path);
-                    console.log(key);
-                    console.log(asistencias);
                 };
 
                 firebase.database().ref(rama_bd_nomina).update(listas_path);
                 //pista de auditoría
-                pda("modificacion", rama_bd_nomina + "/nomina/" + id_registro_existente + "/asistencias", registro_antiguo);
-                alert("¡Registro actualizado!");            
+                pda("modificacion", rama_bd_nomina + "/nomina/" + id_registro_existente, registro_antiguo);
+                alert("¡Registro actualizado!");    
+                
+                resetFormDatosNomina(false);
+                llenarDdlFaltantes();
             });
         });
         
-    } else {
+    } else if(datos_asistencia[1]){
+        // necesito que no se haga esto si asistencias, no jalo
         var reg = {
             trabajador_id: trabajador_json.trabajador_id,
             year_head: year_head,
             week_head: week_head,
             sueldo: trabajador_json.sueldo_base,
-            costo_hora: trabajador_json.sueldo_base / 48,
+            costo_hora: (trabajador_json.sueldo_base / 48).toFixed(2),
             asistencias: asistencias
         } 
 
@@ -302,8 +250,6 @@ $('#' + id_button_asistencias_datos_nomina).click(function(){
             var regKey = snapshot.key
             
             // actualizar listas
-            
-            // obras
             var listas_path = {}
             for(key in asistencias){
                 listas_path["listas/obras/" + asistencias[key].obra + "/" + asistencias[key].subproceso + "/" + regKey] = true;
@@ -329,12 +275,76 @@ $('#' + id_button_asistencias_datos_nomina).click(function(){
             id_registro_existente = regKey;
             existe_registro = true;
             resetFormDatosNomina(false);
+            llenarDdlFaltantes();
             
         });
     }
 
 
 });
+
+// VALIDACIONES
+
+$('#' + id_id_head_datos_nomina).keypress(function(e){
+    charactersAllowed("1234567890",e);
+});
+
+$('#' + id_id_head_datos_nomina).on("cut copy paste",function(e) {
+    e.preventDefault();
+ });
+
+// Funciones necesarias
+
+function resetFormDatosNomina(week){
+    if(week){
+        $('#' + id_ddl_week_datos_nomina).val("");
+    }
+    $('#' + id_ddl_faltantes_datos_nomina).empty();
+    $('#' + id_ddl_faltantes_datos_nomina).prop('disabled', true);
+    $('#' + id_id_head_datos_nomina).val("");
+};
+
+function llenarDdlFaltantes(){
+    firebase.database().ref(rama_bd_mano_obra + "/listas/activos").orderByKey().on("value",function(snapshot){
+        if(snapshot.exists()){
+            trabajadores_sin_registro = snapshot.val();  
+            firebase.database().ref(rama_bd_nomina + "/listas/fecha_datos/" + $('#' + id_ddl_year_datos_nomina + " option:selected").val() + "/" + $('#' + id_ddl_week_datos_nomina + " option:selected").val()).once("value").then(function(regSnap){
+                $('#' + id_ddl_faltantes_datos_nomina).empty();
+                
+                var select_trabajadores_faltantes = document.getElementById(id_ddl_faltantes_datos_nomina);
+                var option = document.createElement('option');
+                option.text = option.value = "";
+                select_trabajadores_faltantes.appendChild(option);
+                
+                regSnap.forEach(function(regSubSnap){
+                    delete trabajadores_sin_registro[regSubSnap.key];
+                });
+                for(key in trabajadores_sin_registro){
+                    var option = document.createElement('option');
+                    var nombre = trabajadores_sin_registro[key].split("_");
+                    option.text = nombre[0] + " " + nombre[1] + " " + nombre[2];
+                    option.value = key;
+                    select_trabajadores_faltantes.appendChild(option);
+                }
+                $('#' + id_ddl_faltantes_datos_nomina).prop('disabled', false);
+            });
+        }
+    });
+}
+
+function validateModalDatosNomina(){
+    var is_validated = true;
+    for(var i=0; i<dias.length;i++){
+        var obra = $('#' + dias[i] + "-obra").val();
+        var proceso  = $('#' + dias[i] + "-proceso").val();
+        if(obra != "" && proceso == ""){
+            return false;
+        };
+    };
+    return is_validated;
+}
+
+// ------------------------------ ASISTENCIAS --------------------------------------
 
 $('.' + class_modal_obra_datos_nomina).change(function(){
     for(var i=0; i<dias.length;i++){
@@ -395,38 +405,131 @@ function modalDatosNomina(existeRegistro, trabSnapshot, regSnapshot){
         id_registro_existente = regSnapshot.key;
         var asistencias = regSnapshot.val().asistencias;
         
+        // ------
         for(key in asistencias){
-            var select = document.getElementById(key + "-proceso");
+            $('#' + key + "-obra [value=" + asistencias[key].obra + "]").prop('selected', true);
+            $('#' + key + "-actividad [value=" + asistencias[key].actividad + "]").prop('selected', true);
+            $('#' + key + "-actividad").removeClass("hidden");
+            console.log(1);
+        }
+        console.log(asistencias);
+        // jueves
+        if(asistencias["jueves"] != undefined){
+            var select_jueves = document.getElementById("jueves-proceso");
             var option = document.createElement('option');
             option.style = "display:none";
             option.text = option.value = "";
-            select.appendChild(option);
-            
-            firebase.database().ref(rama_bd_obras + "/procesos/" + asistencias[key].obra + "/procesos").once('value').then(function(snapshot){
+            select_jueves.appendChild(option);
+            firebase.database().ref(rama_bd_obras + "/procesos/" + $('#jueves-obra option:selected').val() + "/procesos").once('value').then(function(snapshot){
+                snapshot.forEach(function(procSnap){
+                    if(procSnap.key != "PC00"){
+                        procSnap.child("subprocesos").forEach(function(subprocSnap){
+                            option = document.createElement('option');
+                            option.value = subprocSnap.key;
+                            console.log(option);
+                            option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
+                            select_jueves.appendChild(option);
+                        });
+                    };
+                });
+                $("#jueves-proceso [value=" + asistencias["jueves"].subproceso + "]").prop('selected', true);
+            });
+        };
+        // viernes
+        if(asistencias["viernes"] != undefined){
+            console.log(3)
+            var select_viernes = document.getElementById("viernes-proceso");
+            var option = document.createElement('option');
+            option.style = "display:none";
+            option.text = option.value = "";
+            select_viernes.appendChild(option);
+            firebase.database().ref(rama_bd_obras + "/procesos/" + $('#viernes-obra option:selected').val() + "/procesos").once('value').then(function(snapshot){
                 snapshot.forEach(function(procSnap){
                     if(procSnap.key != "PC00"){
                         procSnap.child("subprocesos").forEach(function(subprocSnap){
                             option = document.createElement('option');
                             option.value = subprocSnap.key;
                             option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
-                            select.appendChild(option);
+                            select_viernes.appendChild(option);
                         });
                     };
-                });   
-                $('#' + key + "-proceso [value=" + asistencias[key].subproceso + "]").prop('selected', true);
-                $('#' + key + "-obra [value=" + asistencias[key].obra + "]").prop('selected', true);
-                $('#' + key + "-actividad [value=" + asistencias[key].actividad + "]").prop('selected', true);
-                $('#' + key + "-actividad").removeClass("hidden");
+                });
+                console.log($('#viernes-obra option:selected').val())
+                $("#viernes-proceso [value=" + asistencias["viernes"].subproceso + "]").prop('selected', true);
             });
-        }
-
-    }  
+        };
+        // lunes
+        if(asistencias["lunes"] != undefined){
+            var select_lunes = document.getElementById("lunes-proceso");
+            var option = document.createElement('option');
+            option.style = "display:none";
+            option.text = option.value = "";
+            select_lunes.appendChild(option);
+            firebase.database().ref(rama_bd_obras + "/procesos/" + $('#lunes-obra option:selected').val() + "/procesos").once('value').then(function(snapshot){
+                snapshot.forEach(function(procSnap){
+                    if(procSnap.key != "PC00"){
+                        procSnap.child("subprocesos").forEach(function(subprocSnap){
+                            option = document.createElement('option');
+                            option.value = subprocSnap.key;
+                            option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
+                            select_lunes.appendChild(option);
+                        });
+                    };
+                });
+                $("#lunes-proceso [value=" + asistencias["lunes"].subproceso + "]").prop('selected', true);
+            });
+        };
+        // martes
+        if(asistencias["martes"] != undefined){
+            var select_martes = document.getElementById("martes-proceso");
+            var option = document.createElement('option');
+            option.style = "display:none";
+            option.text = option.value = "";
+            select_martes.appendChild(option);
+            firebase.database().ref(rama_bd_obras + "/procesos/" + $('#martes-obra option:selected').val() + "/procesos").once('value').then(function(snapshot){
+                snapshot.forEach(function(procSnap){
+                    if(procSnap.key != "PC00"){
+                        procSnap.child("subprocesos").forEach(function(subprocSnap){
+                            option = document.createElement('option');
+                            option.value = subprocSnap.key;
+                            option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
+                            select_martes.appendChild(option);
+                        });
+                    };
+                });
+                $("#martes-proceso [value=" + asistencias["martes"].subproceso + "]").prop('selected', true);
+            });
+        };
+        // miercoles
+        if(asistencias["miercoles"] != undefined){
+            var select_miercoles = document.getElementById("miercoles-proceso");
+            var option = document.createElement('option');
+            option.style = "display:none";
+            option.text = option.value = "";
+            select_miercoles.appendChild(option);
+            firebase.database().ref(rama_bd_obras + "/procesos/" + $('#miercoles-obra option:selected').val() + "/procesos").once('value').then(function(snapshot){
+                snapshot.forEach(function(procSnap){
+                    if(procSnap.key != "PC00"){
+                        procSnap.child("subprocesos").forEach(function(subprocSnap){
+                            option = document.createElement('option');
+                            option.value = subprocSnap.key;
+                            option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
+                            select_miercoles.appendChild(option);
+                        });
+                    };
+                });
+                $("#miercoles-proceso [value=" + asistencias["miercoles"].subproceso + "]").prop('selected', true);
+            });
+        };
+        
+    };
 
     $('#' + id_modal_datos_datos_nomina).modal('show');
 }
 
 function datosAsistenciaDatosNomina(){
     var asistencia = {};
+    var is_data_fill = false;
     for(var i=0; i<dias.length;i++){
         var obra = $('#' + dias[i] + "-obra").val();
         var proceso  = $('#' + dias[i] + "-proceso").val();
@@ -445,21 +548,10 @@ function datosAsistenciaDatosNomina(){
                 fecha: jueves + 86400000*offset,
                 actividad: actividad,
             };
+            is_data_fill = true;
         };
     };
-    return asistencia;
-}
-
-function validateModalDatosNomina(){
-    var is_validated = true;
-    for(var i=0; i<dias.length;i++){
-        var obra = $('#' + dias[i] + "-obra").val();
-        var proceso  = $('#' + dias[i] + "-proceso").val();
-        if(obra != "" && proceso == ""){
-            return false;
-        };
-    };
-    return is_validated;
+    return [asistencia, is_data_fill];
 }
 
 // -------------------- HORAS EXTRA -----------------------------------

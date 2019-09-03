@@ -387,6 +387,20 @@ Nota: Todo float se ingresa a 2 decimales.
                 - trabajadores:
                     - id_trabajador
                         - registros_id: true
+            - horas_extra:
+                - fechas
+                    - aaaammdd
+                        - registros_id: true
+                - trabajadores:
+                    - id_trabajador
+                        - registros_id: true
+            - diversos:
+                - tipo
+                    - tipo_id
+                        - registros_id: true
+                - trabajadores:
+                    - id_trabajador
+                        - registros_id: true
     - pda
         - pistas
             - id_registro:
