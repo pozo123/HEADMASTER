@@ -752,6 +752,7 @@ function actualizarTablaCalculadora(){
     firebase.database().ref(rama_bd_obras + "/procesos/" + uid_obra + "/procesos").on("value",function(snapshot){
 			//console.log(snapshot.val());
         var datos_obra = [];
+				var procesoIndex_array = [];
 				var index = 0;
         snapshot.forEach(function(procesoSnap){
             var clave_proceso = procesoSnap.key;
@@ -829,6 +830,7 @@ function actualizarTablaCalculadora(){
 										}
 									}
 									if (num_subp+1 == cont){
+										procesoIndex_array.push(index);
 										if(validacion_corrupto){
 											datos_obra[index]=[
 												uid_obra,
@@ -879,8 +881,13 @@ function actualizarTablaCalculadora(){
 							index=index + cont;
             }
         });
-				//console.log(datos_obra);
+				console.log(procesoIndex_array);
         tabla_calculadora = $('#'+ id_dataTable_calculadora).DataTable({
+						"fnRowCallback": function (row, data, index_table) {
+									if ( procesoIndex_array.includes(index_table)) {
+											$(row).css('font-weight', 'bold');;
+									}
+						},
             destroy: true,
             data: datos_obra,
             language: idioma_espanol,

@@ -558,6 +558,8 @@ function fechasProgramadasProcesos(){
 function actualizarTablaProcesos(){
     firebase.database().ref(rama_bd_obras + "/procesos/" + $('#' + id_ddl_obraProcesos + " option:selected").val() + "/procesos").on("value",function(snapshot){
         var datos_obra = [];
+        var procesoIndex_array = [];
+        var index = 0;
         snapshot.forEach(function(procesoSnap){
             var clave = procesoSnap.key;
             var proceso = procesoSnap.val();
@@ -565,6 +567,8 @@ function actualizarTablaProcesos(){
             var alcance = proceso.alcance;
             var num_subp = proceso.num_subprocesos;
             if(clave !== "ADIC" && clave !== "MISC" && clave !== "PC00"){
+              procesoIndex_array.push(index);
+              index++;
               var fechas = proceso["subprocesos"][clave]["fechas"];
               var fecha = new Date(fechas.fecha_inicio_teorica);
               var fecha_inicio = fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2);
@@ -600,6 +604,7 @@ function actualizarTablaProcesos(){
                     firebase.database().ref(rama_bd_datos_referencia + "/especialidades/" + categoria_id_sub ).on('value',function(snapshot){
                         categoria = snapshot.val();
                         var categoria_sub = categoria.clave;
+                        index++;
                         datos_obra.push([
                             clave,
                             nombre,
@@ -622,6 +627,11 @@ function actualizarTablaProcesos(){
         });
 
         tabla_procesos = $('#'+ id_dataTable_proceso).DataTable({
+            "fnRowCallback": function (row, data, index_table) {
+                  if ( procesoIndex_array.includes(index_table)) {
+                      $(row).css('font-weight', 'bold');;
+                  }
+            },
             destroy: true,
             data: datos_obra,
             language: idioma_espanol,
