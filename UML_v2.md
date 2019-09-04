@@ -341,14 +341,13 @@ Nota: Todo float se ingresa a 2 decimales.
                             - fecha: timestamp
                             - obra: obra_id
                             - subproceso: subproceso_id
-                            - cantidad_horas: int
+                            - cantidad: int
                     - diversos:
                         - registro (firebase_id)
                             - tipo: string (se obtiene de diversos)
                             - obra: obra_id
                             - subproceso: subproceso_id
-                            - costo_diversos: float
-                            - pago_id: string
+                            - cantidad: float
                     - pagos_nomina:
                         - registro (firebase_id)
                             - fecha: timestamp

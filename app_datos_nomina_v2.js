@@ -19,6 +19,7 @@ var id_modal_sem_nomina = "semanaModalDatosNomina";
 var id_modal_year_nomina = "yearModalDatosNomina"
 
 var id_he_div_datos_nomina = "heContainerDatosNomina";
+var id_diversos_div_datos_nomina = "diversosContainerDatosNomina";
 
 // variables globales
 
@@ -33,10 +34,11 @@ var trabajadores_sin_registro = {};
 var dias = ["jueves", "viernes", "lunes", "martes", "miercoles"];
 
 
-
 $('#' + id_tab_datos_nomina).click(function(){
     existe_registro = false;
     id_registro_existente = "";;
+
+    $('#' + id_id_head_datos_nomina).val("");
     $('#' + id_ddl_year_datos_nomina).empty();
     var select_year = document.getElementById(id_ddl_year_datos_nomina);
     for(i=actual_year;i>=starting_year;i--){
@@ -187,19 +189,26 @@ $('#' + id_button_abrir_datos_nomina).click(function(){
 
 $('#' + id_button_guardar_datos_nomina).click(function(){
     if(!validateModalDatosNomina()){
-        alert("Por favor selecciona el proceso correspondiente.")
+        alert("Por favor llena todos los campos. En caso de querer eliminar un registro de horas extra o diversos basta escribir 0 en su cantidad.")
         return;
     }
     // aqui poner datos asist, he y diversos
     var datos_asistencia = datosAsistenciaDatosNomina();
     var asistencias = datos_asistencia[0];
+
+    var datos_diversos = datosDiversosDatosNomina();
+    var diversos = datos_diversos[0];
+
+    var datos_horas_extra = datosHorasExtraDatosNomina();
+    var horas_extra = datos_horas_extra[0];
+    
     var week_head = $('#' + id_ddl_week_datos_nomina + " option:selected").val();
     var year_head = $('#' + id_ddl_year_datos_nomina + " option:selected").val();
     if(existe_registro){ 
         firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente).once("value").then(function(regSnap){
             var registro_antiguo = regSnap.val();
             firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/asistencias").update(asistencias)
-            // reset listas anteriores
+            // reset listas anteriores y actualizar
             var listas_path = {}
             firebase.database().ref(rama_bd_nomina + "/listas/obras").once("value").then(function(snapshot){
                 snapshot.forEach(function(obraSnap){
@@ -208,7 +217,6 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
                     });
                 });
                 
-                // actualizar listas
                 listas_path["listas/fecha_datos/" + year_head + "/" + week_head + "/" + trabajador_json.trabajador_id + "/"+ id_registro_existente] = true;
                 listas_path["listas/trabajadores/" + trabajador_json.trabajador_id + "/"+ id_registro_existente] = true;
                 
@@ -218,6 +226,7 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
                     listas_path["listas/faltas/fechas/" + aaaammdd(asistencias[key].fecha) + "/"+ id_registro_existente] = null;
                     listas_path["listas/faltas/trabajadores/" + trabajador_json.trabajador_id + "/" + id_registro_existente] = null;
                     listas_path["listas/obras/" + asistencias[key].obra + "/" + asistencias[key].subproceso + "/" + id_registro_existente] = true;
+                    
                     if(asistencias[key].actividad == "Vacaciones"){
                         listas_path["listas/vacaciones/fechas/" + aaaammdd(asistencias[key].fecha) + "/"+ id_registro_existente] = true;
                         listas_path["listas/vacaciones/trabajadores/" + trabajador_json.trabajador_id + "/" + id_registro_existente] = true;
@@ -237,7 +246,7 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
             });
         });
         
-    } else if(datos_asistencia[1]){
+    } else if(datos_asistencia[1] || datos_horas_extra[1] || datos_diversos[1]){
         // necesito que no se haga esto si asistencias, no jalo
         var reg = {
             trabajador_id: trabajador_json.trabajador_id,
@@ -245,18 +254,20 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
             week_head: week_head,
             sueldo: trabajador_json.sueldo_base,
             costo_hora: (trabajador_json.sueldo_base / 48).toFixed(2),
-            asistencias: asistencias
+            asistencias: asistencias,
+            horas_extra: horas_extra,
+            diversos: diversos,
         } 
-
         firebase.database().ref(rama_bd_nomina + "/nomina").push(reg).then(function(snapshot){
-            var regKey = snapshot.key
-            
+            var regKey = snapshot.key        
             // actualizar listas
             var listas_path = {}
+
+            listas_path["listas/fecha_datos/" + reg.year_head + "/" + reg.week_head + "/" + reg.trabajador_id + "/"+ regKey] = true;
+            listas_path["listas/trabajadores/" + reg.trabajador_id + "/"+ regKey] = true;
+
             for(key in asistencias){
                 listas_path["listas/obras/" + asistencias[key].obra + "/" + asistencias[key].subproceso + "/" + regKey] = true;
-                listas_path["listas/fecha_datos/" + reg.year_head + "/" + reg.week_head + "/" + reg.trabajador_id + "/"+ regKey] = true;
-                listas_path["listas/trabajadores/" + reg.trabajador_id + "/"+ regKey] = true;
 
                 if(asistencias[key].actividad == "Vacaciones"){
                     listas_path["listas/vacaciones/fechas/" + aaaammdd(asistencias[key].fecha) + "/"+ regKey] = true;
@@ -264,9 +275,21 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
                 } else if(asistencias[key].actividad == "Falta"){
                     listas_path["listas/faltas/fechas/" + aaaammdd(asistencias[key].fecha) + "/"+ regKey] = true;
                     listas_path["listas/faltas/trabajadores/" + reg.trabajador_id + "/" + regKey] = true;
-                }
+                };
+            };
 
+            for(key in horas_extra){
+                listas_path["listas/obras/" + horas_extra[key].obra + "/" + horas_extra[key].subproceso + "/" + regKey] = true;
+                listas_path["listas/horas_extra/fechas/" + aaaammdd(horas_extra[key].fecha) + "/"+ regKey] = true;
+                listas_path["listas/horas_extra/trabajadores/" + reg.trabajador_id + "/" + regKey] = true;
             }
+
+            for(key in diversos){
+                listas_path["listas/obras/" + diversos[key].obra + "/" + diversos[key].subproceso + "/" + regKey] = true;
+                listas_path["listas/diversos/tipo/" + diversos[key].tipo + "/"+ regKey] = true;
+                listas_path["listas/diversos/trabajadores/" + reg.trabajador_id + "/" + regKey] = true;
+            }
+
             firebase.database().ref(rama_bd_nomina).update(listas_path);
 
             // pista de auditoría
@@ -343,6 +366,50 @@ function validateModalDatosNomina(){
             return false;
         };
     };
+
+    
+    // Revisar si HE y Diversos están completos
+    
+    $( ".horasExtraInputDatos" ).each(function() {
+        var row = this.parentElement.parentElement;
+        
+        var fecha = row.childNodes[1].childNodes[0];
+        var obra = row.childNodes[2].childNodes[0];
+        var proceso = row.childNodes[3].childNodes[0];
+
+        if($(fecha).val() == ""){
+            return is_validated = false;
+        }
+
+        if($("option:selected", obra).val() == ""){
+            return is_validated = false;
+        }
+
+        if($("option:selected", proceso).val() == ""){
+            return is_validated = false;
+        }
+    });
+
+    $( ".diversosInputDatos" ).each(function() {
+        var row = this.parentElement.parentElement;
+        
+        var tipo = row.childNodes[1].childNodes[0];
+        var obra = row.childNodes[2].childNodes[0];
+        var proceso = row.childNodes[3].childNodes[0];
+
+        if($("option:selected", tipo).val() == ""){
+            return is_validated = false;
+        }
+
+        if($("option:selected", obra).val() == ""){
+            return is_validated = false;
+        }
+
+        if($("option:selected", proceso).val() == ""){
+            return is_validated = false;
+        }
+    });
+
     return is_validated;
 }
 
@@ -390,7 +457,8 @@ function modalDatosNomina(existeRegistro, trabSnapshot, regSnapshot){
     $('.' + class_modal_actividad_datos_nomina).addClass("hidden");
     $('.' + class_modal_actividad_datos_nomina).val("Falta");
 
-    //$('#' + id_he_div_datos_nomina).empty();
+    $('#' + id_he_div_datos_nomina).empty();
+    $('#' + id_diversos_div_datos_nomina).empty();
 
     // si existe el registro, necesito llenar todos los campos, crear filas, columnas, etc.
     // si no existe, dejar el modal listo pa pushearlo con el key del trabSnapshot
@@ -409,133 +477,298 @@ function modalDatosNomina(existeRegistro, trabSnapshot, regSnapshot){
         id_registro_existente = regSnapshot.key;
         var asistencias = regSnapshot.val().asistencias;
         var horas_extra = regSnapshot.val().horas_extra;
+        var diversos = regSnapshot.val().diversos;
         // ------
-        for(key in asistencias){
-            $('#' + key + "-obra [value=" + asistencias[key].obra + "]").prop('selected', true);
-            $('#' + key + "-actividad [value=" + asistencias[key].actividad + "]").prop('selected', true);
-            $('#' + key + "-actividad").removeClass("hidden");
+        if(asistencias != undefined){
+            for(key in asistencias){
+                $('#' + key + "-obra [value=" + asistencias[key].obra + "]").prop('selected', true);
+                $('#' + key + "-actividad [value=" + asistencias[key].actividad + "]").prop('selected', true);
+                $('#' + key + "-actividad").removeClass("hidden");
+            }
+            // jueves
+            if(asistencias["jueves"] != undefined){
+                var select_jueves = document.getElementById("jueves-proceso");
+                var option = document.createElement('option');
+                option.style = "display:none";
+                option.text = option.value = "";
+                select_jueves.appendChild(option);
+                firebase.database().ref(rama_bd_obras + "/procesos/" + $('#jueves-obra option:selected').val() + "/procesos").once('value').then(function(snapshot){
+                    snapshot.forEach(function(procSnap){
+                        if(procSnap.key != "PC00"){
+                            procSnap.child("subprocesos").forEach(function(subprocSnap){
+                                option = document.createElement('option');
+                                option.value = subprocSnap.key;
+                                option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
+                                select_jueves.appendChild(option);
+                            });
+                        };
+                    });
+                    $("#jueves-proceso [value=" + asistencias["jueves"].subproceso + "]").prop('selected', true);
+                });
+            };
+            // viernes
+            if(asistencias["viernes"] != undefined){
+                var select_viernes = document.getElementById("viernes-proceso");
+                var option = document.createElement('option');
+                option.style = "display:none";
+                option.text = option.value = "";
+                select_viernes.appendChild(option);
+                firebase.database().ref(rama_bd_obras + "/procesos/" + $('#viernes-obra option:selected').val() + "/procesos").once('value').then(function(snapshot){
+                    snapshot.forEach(function(procSnap){
+                        if(procSnap.key != "PC00"){
+                            procSnap.child("subprocesos").forEach(function(subprocSnap){
+                                option = document.createElement('option');
+                                option.value = subprocSnap.key;
+                                option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
+                                select_viernes.appendChild(option);
+                            });
+                        };
+                    });
+                    $("#viernes-proceso [value=" + asistencias["viernes"].subproceso + "]").prop('selected', true);
+                });
+            };
+            // lunes
+            if(asistencias["lunes"] != undefined){
+                var select_lunes = document.getElementById("lunes-proceso");
+                var option = document.createElement('option');
+                option.style = "display:none";
+                option.text = option.value = "";
+                select_lunes.appendChild(option);
+                firebase.database().ref(rama_bd_obras + "/procesos/" + $('#lunes-obra option:selected').val() + "/procesos").once('value').then(function(snapshot){
+                    snapshot.forEach(function(procSnap){
+                        if(procSnap.key != "PC00"){
+                            procSnap.child("subprocesos").forEach(function(subprocSnap){
+                                option = document.createElement('option');
+                                option.value = subprocSnap.key;
+                                option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
+                                select_lunes.appendChild(option);
+                            });
+                        };
+                    });
+                    $("#lunes-proceso [value=" + asistencias["lunes"].subproceso + "]").prop('selected', true);
+                });
+            };
+            // martes
+            if(asistencias["martes"] != undefined){
+                var select_martes = document.getElementById("martes-proceso");
+                var option = document.createElement('option');
+                option.style = "display:none";
+                option.text = option.value = "";
+                select_martes.appendChild(option);
+                firebase.database().ref(rama_bd_obras + "/procesos/" + $('#martes-obra option:selected').val() + "/procesos").once('value').then(function(snapshot){
+                    snapshot.forEach(function(procSnap){
+                        if(procSnap.key != "PC00"){
+                            procSnap.child("subprocesos").forEach(function(subprocSnap){
+                                option = document.createElement('option');
+                                option.value = subprocSnap.key;
+                                option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
+                                select_martes.appendChild(option);
+                            });
+                        };
+                    });
+                    $("#martes-proceso [value=" + asistencias["martes"].subproceso + "]").prop('selected', true);
+                });
+            };
+            // miercoles
+            if(asistencias["miercoles"] != undefined){
+                var select_miercoles = document.getElementById("miercoles-proceso");
+                var option = document.createElement('option');
+                option.style = "display:none";
+                option.text = option.value = "";
+                select_miercoles.appendChild(option);
+                firebase.database().ref(rama_bd_obras + "/procesos/" + $('#miercoles-obra option:selected').val() + "/procesos").once('value').then(function(snapshot){
+                    snapshot.forEach(function(procSnap){
+                        if(procSnap.key != "PC00"){
+                            procSnap.child("subprocesos").forEach(function(subprocSnap){
+                                option = document.createElement('option');
+                                option.value = subprocSnap.key;
+                                option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
+                                select_miercoles.appendChild(option);
+                            });
+                        };
+                    });
+                    $("#miercoles-proceso [value=" + asistencias["miercoles"].subproceso + "]").prop('selected', true);
+                });
+            };
         }
-        // jueves
-        if(asistencias["jueves"] != undefined){
-            var select_jueves = document.getElementById("jueves-proceso");
-            var option = document.createElement('option');
-            option.style = "display:none";
-            option.text = option.value = "";
-            select_jueves.appendChild(option);
-            firebase.database().ref(rama_bd_obras + "/procesos/" + $('#jueves-obra option:selected').val() + "/procesos").once('value').then(function(snapshot){
-                snapshot.forEach(function(procSnap){
-                    if(procSnap.key != "PC00"){
-                        procSnap.child("subprocesos").forEach(function(subprocSnap){
-                            option = document.createElement('option');
-                            option.value = subprocSnap.key;
-                            option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
-                            select_jueves.appendChild(option);
-                        });
-                    };
-                });
-                $("#jueves-proceso [value=" + asistencias["jueves"].subproceso + "]").prop('selected', true);
-            });
-        };
-        // viernes
-        if(asistencias["viernes"] != undefined){
-            var select_viernes = document.getElementById("viernes-proceso");
-            var option = document.createElement('option');
-            option.style = "display:none";
-            option.text = option.value = "";
-            select_viernes.appendChild(option);
-            firebase.database().ref(rama_bd_obras + "/procesos/" + $('#viernes-obra option:selected').val() + "/procesos").once('value').then(function(snapshot){
-                snapshot.forEach(function(procSnap){
-                    if(procSnap.key != "PC00"){
-                        procSnap.child("subprocesos").forEach(function(subprocSnap){
-                            option = document.createElement('option');
-                            option.value = subprocSnap.key;
-                            option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
-                            select_viernes.appendChild(option);
-                        });
-                    };
-                });
-                $("#viernes-proceso [value=" + asistencias["viernes"].subproceso + "]").prop('selected', true);
-            });
-        };
-        // lunes
-        if(asistencias["lunes"] != undefined){
-            var select_lunes = document.getElementById("lunes-proceso");
-            var option = document.createElement('option');
-            option.style = "display:none";
-            option.text = option.value = "";
-            select_lunes.appendChild(option);
-            firebase.database().ref(rama_bd_obras + "/procesos/" + $('#lunes-obra option:selected').val() + "/procesos").once('value').then(function(snapshot){
-                snapshot.forEach(function(procSnap){
-                    if(procSnap.key != "PC00"){
-                        procSnap.child("subprocesos").forEach(function(subprocSnap){
-                            option = document.createElement('option');
-                            option.value = subprocSnap.key;
-                            option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
-                            select_lunes.appendChild(option);
-                        });
-                    };
-                });
-                $("#lunes-proceso [value=" + asistencias["lunes"].subproceso + "]").prop('selected', true);
-            });
-        };
-        // martes
-        if(asistencias["martes"] != undefined){
-            var select_martes = document.getElementById("martes-proceso");
-            var option = document.createElement('option');
-            option.style = "display:none";
-            option.text = option.value = "";
-            select_martes.appendChild(option);
-            firebase.database().ref(rama_bd_obras + "/procesos/" + $('#martes-obra option:selected').val() + "/procesos").once('value').then(function(snapshot){
-                snapshot.forEach(function(procSnap){
-                    if(procSnap.key != "PC00"){
-                        procSnap.child("subprocesos").forEach(function(subprocSnap){
-                            option = document.createElement('option');
-                            option.value = subprocSnap.key;
-                            option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
-                            select_martes.appendChild(option);
-                        });
-                    };
-                });
-                $("#martes-proceso [value=" + asistencias["martes"].subproceso + "]").prop('selected', true);
-            });
-        };
-        // miercoles
-        if(asistencias["miercoles"] != undefined){
-            var select_miercoles = document.getElementById("miercoles-proceso");
-            var option = document.createElement('option');
-            option.style = "display:none";
-            option.text = option.value = "";
-            select_miercoles.appendChild(option);
-            firebase.database().ref(rama_bd_obras + "/procesos/" + $('#miercoles-obra option:selected').val() + "/procesos").once('value').then(function(snapshot){
-                snapshot.forEach(function(procSnap){
-                    if(procSnap.key != "PC00"){
-                        procSnap.child("subprocesos").forEach(function(subprocSnap){
-                            option = document.createElement('option');
-                            option.value = subprocSnap.key;
-                            option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
-                            select_miercoles.appendChild(option);
-                        });
-                    };
-                });
-                $("#miercoles-proceso [value=" + asistencias["miercoles"].subproceso + "]").prop('selected', true);
-            });
-        };
         
-        // horas extra
-        if(horas_extra != undefined){
+        // horas extra de la db
+        firebase.database().ref(rama_bd_obras + "/procesos").once('value').then(function(snapshot){
+            if(horas_extra != undefined){
+                for(key in horas_extra){
+                    generateNewRowExtras(key);
+    
+                    var row = document.getElementById(key);
+    
+                    var fecha = document.createElement('input');
+                    fecha.className = "form-control dateTimepickerHorasExtra";
+                    fecha.type = "text";
+                    fecha.readOnly = "readonly"
+                    
+                    var col_fecha = document.createElement('div');
+                    col_fecha.className = "form-group col-3";
+                    col_fecha.appendChild(fecha);
+                
+                    var obra = document.createElement('select');
+                    obra.className = "form-control obraHorasExtra";
+                
+                    var option = document.createElement('option');
+                    option.style = "display:none";
+                    option.text = option.value = "";
+                    obra.appendChild(option);
+                    
+                
+                    firebase.database().ref(rama_bd_obras + "/listas/obras_activas").orderByChild('nombre').on('child_added',function(snapshot){
+                        obra_json = snapshot.val();
+                        option = document.createElement('option');
+                        option.value = snapshot.key;
+                        option.text = obra_json.nombre;
+                        obra.appendChild(option);
+                    });
+                    
+                    var col_obra = document.createElement('div');
+                    col_obra.className = "form-group col-3";
+                    col_obra.appendChild(obra);
+                
+                    var proceso = document.createElement('select');
+                    proceso.className = "form-control";
+                
+                    var col_proceso = document.createElement('div');
+                    col_proceso.className = "form-group col-3";
+                    col_proceso.appendChild(proceso);
+                
+                    row.append(col_fecha);
+                    row.append(col_obra);
+                    row.append(col_proceso);
 
-        }
+                    snapshot.child(horas_extra[key].obra).child("procesos").forEach(function(procSnap){
+                        if(procSnap.key != "PC00"){
+                            procSnap.child("subprocesos").forEach(function(subprocSnap){
+                                option = document.createElement('option');
+                                option.value = subprocSnap.key;
+                                option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
+                                proceso.appendChild(option);
+                            });
+                        };
+                    });
+             
+                    jQuery('.dateTimepickerHorasExtra').datetimepicker(
+                        {timepicker:false, weeks:true,format:'Y.m.d'}
+                    );    
+                    $('.horasExtraInputVacio').addClass("horasExtraInputDatos");
+                    $('.horasExtraInputVacio').removeClass("horasExtraInputVacio");
+    
+                    // llenar datos
+                    
+                    var fecha_string = new Date(horas_extra[key].fecha);
+    
+                    $(row.childNodes[0].childNodes[0]).val(horas_extra[key].cantidad);
+                    $(fecha).val(("0" + fecha_string.getDate()).slice(-2) + "/"+ ("0" + (fecha_string.getMonth() + 1)).slice(-2) + "/" + fecha_string.getFullYear());
+                    $(obra).val(horas_extra[key].obra)  
+                    $(proceso).val(horas_extra[key].subproceso); 
+                };
+            };
+            if(diversos != undefined){
+                firebase.database().ref(rama_bd_datos_referencia + "/diversos/").on('value',function(diverSnap){
+                    for(key in diversos){
+                        generateNewRowDiversos(key);
+        
+                        var row = document.getElementById(key);
+                        console.log(row);
+                    
+                        var tipo = document.createElement('select');
+                        tipo.className = "form-control tipoDiverso";
+                    
+                        var option = document.createElement('option');
+                        option.style = "display:none";
+                        option.text = option.value = "";
+                        tipo.appendChild(option);
+                        
+                        
+                        diverSnap.forEach(function(tipoSnap){
+                            option = document.createElement('option');
+                            option.value = tipoSnap.key;
+                            option.text = tipoSnap.val();
+                            tipo.appendChild(option);
+                        });
+                        
+                        
+                        var col_tipo = document.createElement('div');
+                        col_tipo.className = "form-group col-3";
+                        col_tipo.appendChild(tipo);
+                    
+                    
+                        var obra = document.createElement('select');
+                        obra.className = "form-control obraDiversos";
+                    
+                        var option = document.createElement('option');
+                        option.style = "display:none";
+                        option.text = option.value = "";
+                        obra.appendChild(option);
+                        
+                        firebase.database().ref(rama_bd_obras + "/listas/obras_activas").orderByChild('nombre').on('child_added',function(snapshot){
+                            obra_json = snapshot.val();
+                            option = document.createElement('option');
+                            option.value = snapshot.key;
+                            option.text = obra_json.nombre;
+                            obra.appendChild(option);
+                        });
+                        
+                        var col_obra = document.createElement('div');
+                        col_obra.className = "form-group col-3";
+                        col_obra.appendChild(obra);
+                    
+                        var proceso = document.createElement('select');
+                        proceso.className = "form-control";
+                    
+                        var col_proceso = document.createElement('div');
+                        col_proceso.className = "form-group col-3";
+                        col_proceso.appendChild(proceso);
+                    
+                        row.append(col_tipo);
+                        row.append(col_obra);
+                        row.append(col_proceso);
 
+                        snapshot.child(diversos[key].obra).child("procesos").forEach(function(procSnap){
+                            if(procSnap.key != "PC00"){
+                                procSnap.child("subprocesos").forEach(function(subprocSnap){
+                                    option = document.createElement('option');
+                                    option.value = subprocSnap.key;
+                                    option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
+                                    proceso.appendChild(option);
+                                });
+                            };
+                        });
+                    
+                        $('.diversosInputVacio').addClass("diversosInputDatos");
+                        $('.diversosInputVacio').removeClass("diversosInputVacio");
+        
+                        // llenar datos
+        
+                        $(row.childNodes[0].childNodes[0]).val(formatMoney(diversos[key].cantidad));
+                        $(tipo).val(diversos[key].tipo);
+                        $(obra).val(diversos[key].obra)  
+                        $(proceso).val(diversos[key].subproceso); 
+                    };
+                    generateNewRowDiversos();
+                });
+            };
+            // se crea el campo de horas para generar nuevo registro de he
+            generateNewRowExtras();
+        
+            $('#' + id_modal_datos_datos_nomina).modal('show');
+        });
+    } else {
+        generateNewRowExtras();
+        generateNewRowDiversos();
+    
+        $('#' + id_modal_datos_datos_nomina).modal('show');
     };
-    // se crea el campo de horas para generar nuevo registro de he
-    generateNewRowExtras();
-
-    $('#' + id_modal_datos_datos_nomina).modal('show');
 }
 
 function datosAsistenciaDatosNomina(){
     var asistencia = {};
-    var is_data_fill = false;
+    var is_data_filled = false;
     for(var i=0; i<dias.length;i++){
         var obra = $('#' + dias[i] + "-obra").val();
         var proceso  = $('#' + dias[i] + "-proceso").val();
@@ -554,16 +787,18 @@ function datosAsistenciaDatosNomina(){
                 fecha: jueves + 86400000*offset,
                 actividad: actividad,
             };
-            is_data_fill = true;
+            is_data_filled = true;
         };
     };
-    return [asistencia, is_data_fill];
+    return [asistencia, is_data_filled];
 }
 
 // -------------------- HORAS EXTRA -----------------------------------
 
-function generateNewRowExtras(){
-    var key = firebase.database().ref("dummy").push().key;
+function generateNewRowExtras(key){
+    if(key == null){
+        var key = firebase.database().ref("dummy").push().key;
+    }
      
     var cantidad = document.createElement('input');
     cantidad.className = "form-control horasExtraInputVacio";
@@ -583,20 +818,19 @@ function generateNewRowExtras(){
     he_div.appendChild(row);
 };
 
-$(document).on('change','.horasExtraInputVacio', function(){//do something})
+$(document).on('change','.horasExtraInputVacio', function(){
     var row = this.parentElement.parentElement;
     var fecha = document.createElement('input');
     fecha.className = "form-control dateTimepickerHorasExtra";
     fecha.type = "text";
     fecha.readOnly = "readonly"
     
-    
     var col_fecha = document.createElement('div');
     col_fecha.className = "form-group col-3";
     col_fecha.appendChild(fecha);
 
     var obra = document.createElement('select');
-    obra.className = "form-control";
+    obra.className = "form-control obraHorasExtra";
 
     var option = document.createElement('option');
     option.style = "display:none";
@@ -628,7 +862,7 @@ $(document).on('change','.horasExtraInputVacio', function(){//do something})
     row.append(col_proceso);
 
     jQuery('.dateTimepickerHorasExtra').datetimepicker(
-        {timepicker:false, weeks:true,format:'d.m.Y'}
+        {timepicker:false, weeks:true,format:'Y.m.d'}
     );
     
     $('.horasExtraInputVacio').addClass("horasExtraInputDatos");
@@ -636,3 +870,223 @@ $(document).on('change','.horasExtraInputVacio', function(){//do something})
     generateNewRowExtras();
     
 });
+
+$(document).on('change','.horasExtraInputDatos', function(){
+    if(this.value == "" || this.value == 0){
+        $('#' + this.parentElement.parentElement.id).empty();
+    }
+});
+
+$(document).on('keypress','.horasExtraInputVacio', function(e){
+    charactersAllowed("1234567890",e);
+});
+
+$(document).on('keypress','.horasExtraInputDatos', function(e){
+    charactersAllowed("1234567890",e);
+});
+
+$(document).on('change','.obraHorasExtra', function(){
+    var row = this.parentElement.parentElement;
+    var select_proceso = row.childNodes[3].childNodes[0];
+    var option = document.createElement('option');
+    option.style = "display:none";
+    option.text = option.value = "";
+    select_proceso.appendChild(option);
+    
+    firebase.database().ref(rama_bd_obras + "/procesos/" + $("option:selected", this).val() + "/procesos").once('value').then(function(snapshot){
+        snapshot.forEach(function(procSnap){
+            if(procSnap.key != "PC00"){
+                procSnap.child("subprocesos").forEach(function(subprocSnap){
+                    option = document.createElement('option');
+                    option.value = subprocSnap.key;
+                    option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
+                    select_proceso.appendChild(option);
+                });
+            };
+        });      
+    });
+});
+
+function datosHorasExtraDatosNomina(){
+    var horas_extra = {};
+    var is_data_filled = false;
+
+    $( ".horasExtraInputDatos" ).each(function() {
+        var row = this.parentElement.parentElement;
+        var key = row.id;
+        
+        var fecha = row.childNodes[1].childNodes[0];
+        var obra = row.childNodes[2].childNodes[0];
+        var proceso = row.childNodes[3].childNodes[0];
+
+        var fecha_array = $(fecha).val().split(".");
+        fecha = new Date(fecha_array[0], fecha_array[1] - 1, fecha_array[2]).getTime();
+        console.log(fecha_array);
+        console.log(fecha);
+
+        horas_extra[key] = {
+            cantidad: $(this).val(),
+            fecha:fecha, // pasar a timestamp
+            obra: $("option:selected", obra).val(),
+            subproceso: $("option:selected", proceso).val()
+        }
+        is_data_filled = true;
+    });
+
+    return [horas_extra, is_data_filled];
+}
+
+// -------------------- DIVERSOS -----------------------------------
+
+function generateNewRowDiversos(key){
+    if(key == null){
+        var key = firebase.database().ref("dummy").push().key;
+    }
+     
+    var cantidad = document.createElement('input');
+    cantidad.className = "form-control diversosInputVacio";
+    cantidad.type = "text";
+    cantidad.placeholder = "Cantidad ($)";
+    
+    var col = document.createElement('div');
+    col.className = "form-group col-3";
+    col.appendChild(cantidad);
+    
+    var row = document.createElement('div');
+    row.className = "form-row";
+    row.id = key;
+    row.append(col);
+    
+    var he_div = document.getElementById(id_diversos_div_datos_nomina);
+    he_div.appendChild(row);
+};
+
+$(document).on('change','.diversosInputVacio', function(){
+    var row = this.parentElement.parentElement;
+    
+    var tipo = document.createElement('select');
+    tipo.className = "form-control tipoDiverso";
+
+    var option = document.createElement('option');
+    option.style = "display:none";
+    option.text = option.value = "";
+    tipo.appendChild(option);
+    
+
+    firebase.database().ref(rama_bd_datos_referencia + "/diversos/").on('value',function(snapshot){
+        snapshot.forEach(function(tipoSnap){
+            option = document.createElement('option');
+            option.value = tipoSnap.key;
+            option.text = tipoSnap.val();
+            tipo.appendChild(option);
+        });
+    });
+    
+    var col_tipo = document.createElement('div');
+    col_tipo.className = "form-group col-3";
+    col_tipo.appendChild(tipo);
+
+
+    var obra = document.createElement('select');
+    obra.className = "form-control obraDiversos";
+
+    var option = document.createElement('option');
+    option.style = "display:none";
+    option.text = option.value = "";
+    obra.appendChild(option);
+    
+    firebase.database().ref(rama_bd_obras + "/listas/obras_activas").orderByChild('nombre').on('child_added',function(snapshot){
+        obra_json = snapshot.val();
+        option = document.createElement('option');
+        option.value = snapshot.key;
+        option.text = obra_json.nombre;
+        obra.appendChild(option);
+    });
+    
+    var col_obra = document.createElement('div');
+    col_obra.className = "form-group col-3";
+    col_obra.appendChild(obra);
+
+    var proceso = document.createElement('select');
+    proceso.className = "form-control";
+
+    var col_proceso = document.createElement('div');
+    col_proceso.className = "form-group col-3";
+    col_proceso.appendChild(proceso);
+
+    row.append(col_tipo);
+    row.append(col_obra);
+    row.append(col_proceso);
+
+    var deformat_diverso = deformatMoney($(this).val());
+    $(this).val(formatMoney(deformat_diverso));
+
+    $('.diversosInputVacio').addClass("diversosInputDatos");
+    $('.diversosInputVacio').removeClass("diversosInputVacio");
+    generateNewRowDiversos();
+    
+});
+
+$(document).on('change','.diversosInputDatos', function(){
+    console.log(deformatMoney(this.value))
+    if(this.value == "" || isNaN(deformatMoney(this.value)) || deformatMoney(this.value) == 0){
+        $('#' + this.parentElement.parentElement.id).empty();
+    } else {
+        var deformat_diverso = deformatMoney($(this).val());
+        $(this).val(formatMoney(deformat_diverso));
+    }
+});
+
+$(document).on('keypress','.diversosInputVacio', function(e){
+    charactersAllowed("$1234567890,.",e);
+});
+
+$(document).on('keypress','.diversosInputDatos', function(e){
+    charactersAllowed("$1234567890,.",e);
+});
+
+$(document).on('change','.obraDiversos', function(){
+    var row = this.parentElement.parentElement;
+    var select_proceso = row.childNodes[3].childNodes[0];
+    var option = document.createElement('option');
+    option.style = "display:none";
+    option.text = option.value = "";
+    select_proceso.appendChild(option);
+    
+    firebase.database().ref(rama_bd_obras + "/procesos/" + $("option:selected", this).val() + "/procesos").once('value').then(function(snapshot){
+        snapshot.forEach(function(procSnap){
+            if(procSnap.key != "PC00"){
+                procSnap.child("subprocesos").forEach(function(subprocSnap){
+                    option = document.createElement('option');
+                    option.value = subprocSnap.key;
+                    option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
+                    select_proceso.appendChild(option);
+                });
+            };
+        });      
+    });
+});
+
+function datosDiversosDatosNomina(){
+    var diversos = {};
+    var is_data_filled = false;
+
+    $( ".diversosInputDatos" ).each(function() {
+        var row = this.parentElement.parentElement;
+        var key = row.id;
+        
+        var tipo = row.childNodes[1].childNodes[0];
+        var obra = row.childNodes[2].childNodes[0];
+        var proceso = row.childNodes[3].childNodes[0];
+
+        diversos[key] = {
+            cantidad: deformatMoney($(this).val()),
+            tipo: $("option:selected", tipo).val(),
+            obra: $("option:selected", obra).val(),
+            subproceso: $("option:selected", proceso).val()
+        }
+        is_data_filled = true;
+    });
+
+    return [diversos, is_data_filled];
+}
