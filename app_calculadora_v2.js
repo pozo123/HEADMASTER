@@ -22,6 +22,7 @@ var id_indirectosCalculadora = "indirectosCalculadora";
 var id_impuestosCalculadora = "impuestosCalculadora";
 var id_costo_operacionesCalculadora = "costoOperacionesCalculadora";
 var id_costos_indirectosCalculadora = "costosIndirectosCalculadora";
+var id_seccion_subprocesoCalculadora = "div_subprocesoCalculadora";
 
 
 var id_agregar_calculadora = "botonGuardarCalculadora";
@@ -133,7 +134,7 @@ $("#" + id_ddl_obraCalculadora ).change(function(){
 
 $("#" + id_ddl_procesoCalculadora).change(function(){
   uid_proceso = $('#'+id_ddl_procesoCalculadora+" option:selected").val();
-  llenaDdlSubprocesoCalculadora(uid_proceso);
+  llenaDdlSubprocesoCalculadora(uid_obra, uid_proceso);
 });
 
 $("#" + id_ddl_subprocesoCalculadora).change(function(){
@@ -518,6 +519,7 @@ function resetFormCalculadora(){
   $('#' + id_ddl_procesoCalculadora).empty();
   $('#' + id_ddl_subprocesoCalculadora).empty();
   resetFormCalculadora_subproceso();
+	$('#' + id_seccion_subprocesoCalculadora).addClass('hidden');
 }
 
 function resetFormCalculadora_subproceso(){
@@ -711,19 +713,37 @@ function llenaDdlSubprocesoCalculadora(clave_obra, clave_proceso){
   option.style = "display:none";
   option.text = option.value = "";
   select.appendChild(option);
-  var subproceso;
-  firebase.database().ref(rama_bd_obras + "/procesos/" + clave_obra + "/procesos/" + clave_proceso + "/subprocesos").orderByKey().on('child_added',function(snapshot){
-      subproceso = snapshot.val();
-      if (snapshot.exists()){
-        option = document.createElement('option');
-        option.value = snapshot.key;
-        if ($('#'+id_ddl_procesoCalculadora+" option:selected").val() == snapshot.key){
-          option.text = "-SIN SUBPROCESO-";
-        } else {
-          option.text = snapshot.key + " " + subproceso.nombre;
-        }
-        select.appendChild(option);
-      }
+	var proceso;
+	var subproceso;
+	console.log(clave_obra);
+	console.log(clave_proceso);
+  firebase.database().ref(rama_bd_obras + "/procesos/" + clave_obra + "/procesos/" + clave_proceso).on('value',function(snapshot){
+			proceso = snapshot.val();
+			console.log(proceso);
+			snapshot.child("subprocesos").forEach(function(snapchild){
+				subproceso = snapchild.val();
+	      if (snapchild.exists()){
+	        if ($('#'+id_ddl_procesoCalculadora+" option:selected").val() == snapchild.key){
+						if(proceso.num_subprocesos == 0 || subproceso.costo_suministros !== 0 || subproceso.precopeo !== 0 || subproceso.score.horas_programadas !== 0 || subproceso.utilidad !== 0 || subproceso.precio_venta !== 0){
+							option = document.createElement('option');
+			        option.value = snapchild.key;
+		          option.text = "-CORRUPTO-";
+							select.appendChild(option);
+						}
+	        } else {
+						option = document.createElement('option');
+		        option.value = snapchild.key;
+	          option.text = snapchild.key + " " + subproceso.nombre;
+						select.appendChild(option);
+	        }
+	        if (proceso.num_subprocesos == 0 ){
+						$('#' + id_seccion_subprocesoCalculadora).addClass('hidden');
+						$('#' + id_ddl_subprocesoCalculadora).val(snapshot.key);
+					} else {
+						$('#' + id_seccion_subprocesoCalculadora).removeClass('hidden');
+					}
+	      }
+			});
   });
 }
 
@@ -748,9 +768,10 @@ function actualizarTablaCalculadora(){
 						var venta_proceso=0;
 						var anticipo_proceso=0;
 						var estimacion_proceso=0;
+						var validacion_corrupto = false;
             if(clave_proceso !== "ADIC" && clave_proceso !== "MISC" && clave_proceso !== "PC00"){
                 procesoSnap.child("subprocesos").forEach(function(subprocesoSnap){
-									//console.log(subprocesoSnap.val());
+									console.log(subprocesoSnap.val());
 									var clave_sub = subprocesoSnap.key;
 	                var subproceso = subprocesoSnap.val();
 									var costoScore = subproceso.score.horas_programadas*subproceso.score.costo_hora;
@@ -778,31 +799,7 @@ function actualizarTablaCalculadora(){
 									venta_proceso=venta_proceso+subproceso.precio_venta;
 									anticipo_proceso=anticipo_proceso+subproceso.porcentaje_anticipo*subproceso.precio_venta*0.01;
 									estimacion_proceso=estimacion_proceso+porcentajeEstimacion*subproceso.precio_venta*0.01;
-									console.log(clave_sub);
-									console.log(anticipo_proceso);
-									console.log(estimacion_proceso);
-									if (num_subp == cont){
-										datos_obra[index]=[
-											uid_obra,
-											clave_proceso,
-											clave_proceso,
-											"",
-											"",
-											formatMoney(costoScore_proceso),
-											"",
-											formatMoney(precopeoCarga_proceso),
-											"",
-											formatMoney(suministros_proceso),
-											formatMoney(indirectos_proceso),
-											"",
-											formatMoney(operacion_proceso),
-											formatMoney(utilidad_proceso),
-											"",
-											formatMoney(venta_proceso),
-											formatMoney(anticipo_proceso),
-											formatMoney(estimacion_proceso)
-										];
-									}
+
 									if (clave_sub !== clave_proceso){
 										datos_obra[index+cont]=[
 											uid_obra,
@@ -822,15 +819,67 @@ function actualizarTablaCalculadora(){
 											utilidad_porcentaje,
 											formatMoney(subproceso.precio_venta),
 											subproceso.porcentaje_anticipo+"%",
-											porcentajeEstimacion+"%"
+											porcentajeEstimacion+"%",
+											"<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>"
 										];
 										cont++;
+									} else {
+										if( num_subp == 0 || subproceso.costo_suministros !== 0 || subproceso.precopeo !== 0 || subproceso.score.horas_programadas !== 0 || subproceso.utilidad !== 0 || subproceso.precio_venta !== 0){
+											validacion_corrupto = true;
+										}
+									}
+									if (num_subp+1 == cont){
+										if(validacion_corrupto){
+											datos_obra[index]=[
+												uid_obra,
+												clave_proceso,
+												clave_proceso,
+												"",
+												"",
+												formatMoney(costoScore_proceso),
+												"",
+												formatMoney(precopeoCarga_proceso),
+												"",
+												formatMoney(suministros_proceso),
+												formatMoney(indirectos_proceso),
+												"",
+												formatMoney(operacion_proceso),
+												formatMoney(utilidad_proceso),
+												"",
+												formatMoney(venta_proceso),
+												formatMoney(anticipo_proceso),
+												formatMoney(estimacion_proceso),
+												"<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>"
+											];
+										} else {
+											datos_obra[index]=[
+												uid_obra,
+												clave_proceso,
+												clave_proceso,
+												"",
+												"",
+												formatMoney(costoScore_proceso),
+												"",
+												formatMoney(precopeoCarga_proceso),
+												"",
+												formatMoney(suministros_proceso),
+												formatMoney(indirectos_proceso),
+												"",
+												formatMoney(operacion_proceso),
+												formatMoney(utilidad_proceso),
+												"",
+												formatMoney(venta_proceso),
+												formatMoney(anticipo_proceso),
+												formatMoney(estimacion_proceso),
+												""
+											];
+										}
 									}
               });
-							index++;
+							index=index + cont;
             }
         });
-				console.log(datos_obra);
+				//console.log(datos_obra);
         tabla_calculadora = $('#'+ id_dataTable_calculadora).DataTable({
             destroy: true,
             data: datos_obra,
@@ -852,11 +901,6 @@ function actualizarTablaCalculadora(){
 								{ "visible": false, "targets": 8 },
 								{ "visible": false, "targets": 11 },
 								{ "visible": false, "targets": 14 },
-                {
-                    "targets": -1,
-                    "data": null,
-                    "defaultContent": "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>"
-                }
               ]
         });
         //Funcion para llenar los campos cuando se quiere editar desde las opciones de la tabla
