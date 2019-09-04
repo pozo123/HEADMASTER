@@ -237,8 +237,9 @@
                 <div class="modal-body">
                     <div class="container-fluid">
                         <form onsubmit="return false;">
-                            <div class = "container-fluid">
-                                <h5>ASISTENCIAS</h5>
+                            <div class="container-fluid border border-info rounded">
+                                <br/>
+                                <h5 class="text-info">ASISTENCIAS</h5>
                                 <div class="form-row">
                                     <div class="form-group col">
                                         <label>Jueves</label>
@@ -306,14 +307,52 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="container-fluid" id="otrosContainerDatosNomina">
-                                <div class="container-fluid" id=heContainerDatosNomina>
-                                    <h5>HORAS EXTRA</h5>
+                            <br/>
+                            <div class="container-fluid border border-danger rounded">
+                                <br/>
+                                <h5 class="text-danger">HORAS EXTRA</h5>
+                                <br/>
+                                <div class="form-row text-center">
+                                    <div class="form-group col-3">
+                                        <label>Cantidad de horas</label>
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label>Fecha</label>
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label>Obra</label>
+                                    </div> 
+                                    <div class="form-group col-3">
+                                        <label>Proceso</label>
+                                    </div>        
                                 </div>
-                                <div class="container-fluid">
-                                    <h5>DIVERSOS</h5>
+                                <div class="container-fluid" id="heContainerDatosNomina">
                                 </div>
                             </div>
+                            <br/>
+                            <div class="container-fluid border border-dark rounded">
+                                <br/>
+                                <h5 class="text-dark">DIVERSOS</h5>
+                                <br/>
+                                <div class="form-row text-center">
+                                    <div class="form-group col-3">
+                                        <label>Cantidad($)</label>
+                                    </div>        
+                                    <div class="form-group col-3">
+                                        <label>Tipo</label>
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label>Obra</label>
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label>Proceso</label>
+                                    </div> 
+                                </div>
+                                <div class="container-fluid" id="diversosContainerDatosNomina">
+                                <br/>
+                                </div>
+                            </div>
+                            <br/>
                             <div class="container-fluid">
                                 <div class ="col">
                                     <button type="button" id ="buttonGuardarDatosNomina" class="btn btn-secondary btn-success float-right">Guardar</button>
@@ -457,6 +496,7 @@
                         <a href="#pageNomina" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Nómina</a>
                         <ul class="collapse list-unstyled" id="pageNomina">
                             <li class="tab administracion" id="tabDatosNomina"><a href="#" onclick="openTabs('tabDatosNomina','datosNomina')">Asistencias, Horas Extra y Diversos</a></li>
+                            <li class="tab administracion" id="tabDiversos"><a href="#" onclick="openTabs('tabDiversos','diversos')">Definición - Diversos</a></li>
                         </ul>
                     </li>
                     <li>
@@ -1742,6 +1782,62 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Definición de pagos diversos -->
+                        <div id="diversos" class = "tabcontent hidden">
+                            <h1>Definición - Diversos </h1>
+                            <p>Página para definir los posibles pagos diversos que se pueden realizar a los trabajadores del área de producción</p>
+                            <div class= "container-fluid">
+                                <div class= "row">
+                                    <div class="col-lg-1"></div>
+                                    <div class="col-lg-10">
+                                        <div class= "row">
+                                            <div class= "col-md-6">
+                                                <form id="formDiversos" action="#" onsubmit="return false;">
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-12">
+                                                            <label for="diversoDiverso">Diverso:</label>
+                                                            <input type="text" name="" id="diversoDiverso" class="form-control" placeholder="Ej: Cajas chicas">
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                    <div class="form-row">
+                                                        <div class= "col-6">
+                                                            <button id="agregarButtonDiverso" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                                        </div>
+                                                        <div class= "col-6">
+                                                            <button id="borrarButtonDiverso" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <br/>
+                                            </div>
+                                            <div class= "col-md-6">
+                                                <div class = "tableWrapper">
+                                                    <table id="dataTableDiverso" class="display" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID_diverso</th>
+                                                                <th>Diverso</th>
+                                                                <th>Editar</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th>ID_diverso</th>
+                                                                <th>Diverso</th>
+                                                                <th>Editar</th>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-1"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1808,6 +1904,7 @@
         <script src="app_altaProcesos_v2.js"></script>
         <script src="app_datos_nomina_v2.js"></script>
         <script src="app_calculadora_v2.js"></script>
+        <script src="app_diversos_v2.js"></script>
 
         <!-- Excel to Json-->
         <script src="xlsx.full.min.js"></script>
