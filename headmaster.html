@@ -321,10 +321,10 @@
                                     </div>
                                     <div class="form-group col-3">
                                         <label>Obra</label>
-                                    </div> 
+                                    </div>
                                     <div class="form-group col-3">
                                         <label>Proceso</label>
-                                    </div>        
+                                    </div>
                                 </div>
                                 <div class="container-fluid" id="heContainerDatosNomina">
                                 </div>
@@ -337,7 +337,7 @@
                                 <div class="form-row text-center">
                                     <div class="form-group col-3">
                                         <label>Cantidad($)</label>
-                                    </div>        
+                                    </div>
                                     <div class="form-group col-3">
                                         <label>Tipo</label>
                                     </div>
@@ -346,7 +346,7 @@
                                     </div>
                                     <div class="form-group col-3">
                                         <label>Proceso</label>
-                                    </div> 
+                                    </div>
                                 </div>
                                 <div class="container-fluid" id="diversosContainerDatosNomina">
                                 <br/>
@@ -505,6 +505,7 @@
                             <li class="tab administracion" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Alta y Edición - Obras</a></li>
                             <li class="tab administracion" id="tabAltaProcesos"><a href="#" onclick="openTabs('tabAltaProcesos','altaProcesos')">Alta y Edición - Procesos</a></li>
                             <li class="tab administracion" id="tabCalculadora"><a href="#" onclick="openTabs('tabCalculadora','calculadora')">Calculadora Kaizen</a></li>
+                            <li class="tab administracion" id="tabGeneradorAdic"><a href="#" onclick="openTabs('tabGeneradorAdic','generadorAdicionales')">Generador de Adicionales</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -1838,6 +1839,238 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Presupuestos Adicionales -->
+                        <div id="generadorAdicionales" class="tabcontent hidden">
+                             <h1>Generador de Presupuesto Adicional</h1>
+                             <div class="container-fluid">
+                                 <div class="row align-items-center">
+                                     <div class="col-lg-3"></div>
+                                     <div class="col-lg-6">
+                                         <form id="tabGeneradorAdic" action="#" onsubmit="return false;">
+                                            <br/>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="obraDdlCalculadora">Obra:</label>
+                                                    <select id="obraDdlAdicionales" class="form-control"></select>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6" id="div_subprocesoCalculadora">
+                                                    <label for="procesoDdlCalculadora">Adicional:</label>
+                                                    <select id="subprocesoDdlAdicionales" class="form-control"></select>
+                                                </div>
+                                                <div class="form-group col-md-6 ">
+                                                    <label for="claveAdicionales">Clave:</label>
+                                                    <input type="text" id="claveAdicionales"class="form-control" disabled="true" placeholder="Clave">
+                                                </div>
+                                            </div>
+                                            </br>
+                                            <h3>Header</h3>
+                                            <hr class="style2">
+
+                                            <div class="form-group">
+                                                <label for="nombrePptoAdic">Nombre:</label>
+                                                <input type="text" id="nombrePptoAdic"class="form-control" placeholder="Nombre del presupuesto">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="tituloPptoAdic">Titulo:</label>
+                                                <input type="text" id="tituloPptoAdic"class="form-control" placeholder="Titulo del presupuesto">
+                                            </div>
+                                            <div class="form-group">
+                                                <!--<label for="atnDdlCbPptoProy">AT'N:</label>-->
+                                                <div class="myDropdownCheckbox" id="atnDdlCbPptoAdic"></div>
+                                            </div>
+                                            <br>
+                                            <h3>Calculadora Adic</h3>
+                                            <hr class="style2">
+                                            <br>
+                                            <div class = "form-row">
+                                                <button type="button" id="botonDefaultAdicionales" class="btn btn-secondary" data-toggle="popover" data-trigger="hover">Valores Default</button>
+                                            </div>
+                                            <br>
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-4">
+                                                    <label for="indirectosCalculadora">Porcentaje Indirectos:</label>
+                                                    <input type="text" id="indirectosAdicionales" class="form-control" placeholder="Porcentaje de indirectos">
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="anticipoCalculadora">Porcentaje Anticipo:</label>
+                                                    <input type="text" id="anticipoAdicionales" class="form-control" placeholder="Anticipos">
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="estimacionesCalculadora">Porcentaje Estimaciones:</label>
+                                                    <input type="text" id="estimacionesAdicionales" class="form-control" placeholder="Estimaciones">
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <hr class="style2">
+                                            <br>
+                                            <h5 style ="font-weight: bold;">SCORE</h5>
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-4">
+                                                    <label for="costoHoraScoreCalculadora">Precio por hora:</label>
+                                                    <input type="text" id="costoHoraScoreAdicionales" class="form-control" placeholder="Costo por hora">
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="costoProyectoCalculadora">Horas:</label>
+                                                    <input type="text" id="horasProyectoAdicionales" class="form-control" placeholder="Cantidad en horas">
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="costoProyectoCalculadora">Costo:</label>
+                                                    <input type="text" id="costoProyectoAdicionales" class="form-control" placeholder="Cantidad en dinero">
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <h5 style ="font-weight: bold;">Mano de obra</h5>
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-4">
+                                                    <label for="costoCopeoCalculadora">Precopeo:</label>
+                                                    <input type="text" id="costoCopeoAdicionales" class="form-control" placeholder="Costo de copeo">
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="costoCopeoCalculadora">Copeo con carga social:</label>
+                                                    <input type="text" id="costoCopeoCargaAdicionales" class="form-control" placeholder="Copeo con carga social">
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="impuestosCalculadora">Carga social:</label>
+                                                    <input type="text" id="impuestosAdicionales" class="form-control" placeholder="Porcentaje CS">
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <h5 style ="font-weight: bold;">Suministros</h5>
+                                            <div class="form-row align-items-center">
+                                              <div class="col-lg-4">
+                                                  <label for="costoSuministrosCalculadora">Costo de suministros($):</label>
+                                                  <input type="text" id="costoSuministrosAdicionales" class="form-control" placeholder="Costo de suministros">
+                                              </div>
+                                            </div>
+                                            <br>
+                                            <hr class="style2">
+                                            <br>
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-4">
+                                                    <label for="profitCantidadCalculadora">Profit ($):</label>
+                                                    <input type="text" id="profitCantidadAdicionales" class="form-control" placeholder="Profit en cantidad">
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="profitPorcentajeCalculadora">Profit (%):</label>
+                                                    <input type="text" id="profitPorcentajeAdicionales" class="form-control" placeholder="Profit en porcentaje">
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="precioVentaCalculadora">Precio de venta:</label>
+                                                    <input type="text" id="precioVentaAdicionales" class="form-control" placeholder="Precio de venta">
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-4">
+                                                    <label for="precioVentaCalculadora">Costos indirectos</label>
+                                                    <input type="text" disabled="true" id="costosIndirectosAdicionales" class="form-control" placeholder="Costos indirectos">
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="precioVentaCalculadora">Costo de operaciones</label>
+
+                                                    <input type="text" disabled="true" id="costoOperacionesAdicionales" class="form-control" placeholder="Score + copeo + suministros">
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label id = "labelProfitNetoCalculadora">Profit Neto Estimado</label>
+                                                    <input type="text" disabled="true" id="profitNetoAdicionales" class="form-control" placeholder="Profit neto estimado">
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <h3>Body</h3>
+                                            <hr class="style2">
+                                            <div class="form-group">
+                                                <label for="importarPptoAdic">Selecciona archivo de Excel en el formato deseado</label>
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="importarPptoAdic" accept=".xlsx, .xls, .csv">
+                                                    <label class = "custom-file-label" id="importarLabelPptoAdic">Archivo no seleccionado</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <button id="botonImportarAdicionales" type="button" class="btn btn-outline-dark btn-block">Aceptar</button>
+                                            </div>
+                                            <div class="form-row">
+                                                <button id="botonDescargarFormatoAdicionales" type="button" class="btn btn-outline-dark btn-block">Descargar formato</button>
+                                            </div>
+                                            <br/>
+                                            <br/>
+                                            <div class="form-group">
+                                                <label for="fotoAdicInput">Selecciona una imagen</label>
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="fotoAdicInput" accept="image/*"/>
+                                                    <label class = "custom-file-label" id="imagenLabelPptoAdic">Archivo no seleccionado</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <input type="text" id="imagenesAdicionales" class="form-control" placeholder="Imagenes seleccionadas">
+                                            </div>
+                                            <div class="form-row">
+                                                <button id="imagenButtonPptoAdic" type="button" class="btn btn-outline-dark btn-block">Aceptar</button>
+                                            </div>
+                                            <br/>
+                                            <h3>Footer</h3>
+                                            <hr class="style2">
+                                            <div class="form-group">
+                                                <div class="myDropdownCheckbox" id="reqsDdlCbAdicionales"></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="myDropdownCheckbox" id="excDdlCbAdicionales"></div>
+                                            </div>
+                                            <br/>
+                                            <h4>Condiciones Comerciales</h4>
+                                            <br/>
+                                            <div class="form-group">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="anticipoRbPptoAdic" id="anticipo1RbPptoAdic" value="option1">
+                                                    <label class="form-check-label" for="anticipo1RbPptoAdic">100% contra entrega</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="anticipoRbPptoAdic" id="anticipo2RbPptoAdic" value="option2">
+                                                    <label class="form-check-label" for="anticipo2RbPptoAdic">Elige el % de anticipo</label>
+                                                    <input type="text"  for="anticipo2RbPptoAdic" id="anticipoPptoAdic" class="form-control">
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="anticipoRbPptoAdic" id="anticipo3RbPptoAdic" value="option3">
+                                                    <label class="form-check-label" for="anticipo3RbPptoAdic">100% anticipo</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="tiempoEntregaPptoAdic">Tiempo de Entrega:</label>
+                                                <textarea class="form-control" rows="6" id="tiempoEntregaPptoAdic"></textarea>
+                                            </div>
+
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="bancariosCheckPptoAdic">
+                                                <label class="custom-control-label" for="bancariosCheckPptoAdic">Agregar datos bancarios</label>
+                                            </div>
+
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="fiscalesCheckPptoAdic">
+                                                <label class="custom-control-label" for="fiscalesCheckPptoAdic">Agregar datos fiscales</label>
+                                            </div>
+
+                                            <br/>
+                                            <br/>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <button id="registrarPptoAdic" type="button" class="btn btn-outline-success btn-lg btn-block">Generar Ppto</button>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <button id="vistaPreviaPptoAdic" type="button" class="btn btn-outline-warning btn-lg btn-block">Vista Previa</button>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <button id="borrarTodoPptoAdic" type="reset" class="btn btn-outline-danger btn-lg btn-block">Borrar Todo</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                          </form>
+                                      </div>
+                                  </div>
+                              </div>
+                         </div>
                     </div>
                 </div>
             </div>
