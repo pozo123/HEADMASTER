@@ -10,6 +10,8 @@ var id_ddl_week_datos_nomina = "semanaNomina";
 var id_ddl_faltantes_datos_nomina = "trabajadoresSinRegistroNomina";
 var id_id_head_datos_nomina = "idHeadNomina";
 
+var id_ddl_obra_asignada_datos_nomina = "obraAsignadaNomina";
+
 var class_modal_obra_datos_nomina = "obraNomina";
 var class_modal_proceso_datos_nomina = "procesoNomina";
 var class_modal_actividad_datos_nomina = "actividadNomina";
@@ -207,8 +209,12 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
     if(existe_registro){ 
         firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente).once("value").then(function(regSnap){
             var registro_antiguo = regSnap.val();
-            firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/asistencias").update(asistencias)
+            firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/asistencias").set(asistencias);
+            firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/horas_extra").set(horas_extra);
+            firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/diversos").set(diversos);
+
             // reset listas anteriores y actualizar
+
             var listas_path = {}
             firebase.database().ref(rama_bd_nomina + "/listas/obras").once("value").then(function(snapshot){
                 snapshot.forEach(function(obraSnap){
@@ -216,6 +222,22 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
                         listas_path["listas/obras/" + obraSnap.key + "/" + procesoSnap.key + "/" + id_registro_existente] = null;
                     });
                 });
+
+                var horas_extra_antiguo = registro_antiguo.horas_extra;
+
+                for(key in horas_extra_antiguo){
+                    listas_path["listas/obras/" + horas_extra_antiguo[key].obra + "/" + horas_extra_antiguo[key].subproceso + "/" + id_registro_existente] = null;
+                    listas_path["listas/horas_extra/fechas/" + aaaammdd(horas_extra_antiguo[key].fecha) + "/"+ id_registro_existente] = null;
+                    listas_path["listas/horas_extra/trabajadores/" + trabajador_json.trabajador_id + "/" + id_registro_existente] = null;
+                }
+
+                var diversos_antiguo = registro_antiguo.diversos;
+
+                for(key in diversos_antiguo){
+                    listas_path["listas/obras/" + diversos_antiguo[key].obra + "/" + diversos_antiguo[key].subproceso + "/" + id_registro_existente] = null;
+                    listas_path["listas/diversos/tipo/" + diversos_antiguo[key].tipo + "/"+ id_registro_existente] = null;
+                    listas_path["listas/diversos/trabajadores/" + trabajador_json.trabajador_id + "/" + id_registro_existente] = null;
+                }
                 
                 listas_path["listas/fecha_datos/" + year_head + "/" + week_head + "/" + trabajador_json.trabajador_id + "/"+ id_registro_existente] = true;
                 listas_path["listas/trabajadores/" + trabajador_json.trabajador_id + "/"+ id_registro_existente] = true;
@@ -236,6 +258,18 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
                     }
                 };
 
+                for(key in horas_extra){
+                    listas_path["listas/obras/" + horas_extra[key].obra + "/" + horas_extra[key].subproceso + "/" + id_registro_existente] = true;
+                    listas_path["listas/horas_extra/fechas/" + aaaammdd(horas_extra[key].fecha) + "/"+ id_registro_existente] = true;
+                    listas_path["listas/horas_extra/trabajadores/" + trabajador_json.trabajador_id  + "/" + id_registro_existente] = true;
+                }
+    
+                for(key in diversos){
+                    listas_path["listas/obras/" + diversos[key].obra + "/" + diversos[key].subproceso + "/" + id_registro_existente] = true;
+                    listas_path["listas/diversos/tipo/" + diversos[key].tipo + "/"+ id_registro_existente] = true;
+                    listas_path["listas/diversos/trabajadores/" + trabajador_json.trabajador_id  + "/" + id_registro_existente] = true;
+                }
+
                 firebase.database().ref(rama_bd_nomina).update(listas_path);
                 //pista de auditoría
                 pda("modificacion", rama_bd_nomina + "/nomina/" + id_registro_existente, registro_antiguo);
@@ -252,7 +286,7 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
             trabajador_id: trabajador_json.trabajador_id,
             year_head: year_head,
             week_head: week_head,
-            sueldo: trabajador_json.sueldo_base,
+            sueldo_semanal: trabajador_json.sueldo_base,
             costo_hora: (trabajador_json.sueldo_base / 48).toFixed(2),
             asistencias: asistencias,
             horas_extra: horas_extra,
@@ -322,7 +356,7 @@ $('#' + id_id_head_datos_nomina).on("cut copy paste",function(e) {
 
 function resetFormDatosNomina(week){
     if(week){
-        $('#' + id_ddl_week_datos_nomina).val("");
+        $('#' + id_ddl_week_datos_nomina).empty();
     }
     $('#' + id_ddl_faltantes_datos_nomina).empty();
     $('#' + id_ddl_faltantes_datos_nomina).prop('disabled', true);
@@ -332,10 +366,9 @@ function resetFormDatosNomina(week){
 function llenarDdlFaltantes(){
     firebase.database().ref(rama_bd_mano_obra + "/listas/activos").orderByKey().on("value",function(snapshot){
         if(snapshot.exists()){
-            trabajadores_sin_registro = snapshot.val();  
             firebase.database().ref(rama_bd_nomina + "/listas/fecha_datos/" + $('#' + id_ddl_year_datos_nomina + " option:selected").val() + "/" + $('#' + id_ddl_week_datos_nomina + " option:selected").val()).once("value").then(function(regSnap){
-                $('#' + id_ddl_faltantes_datos_nomina).empty();
-                
+                trabajadores_sin_registro = snapshot.val();  
+                $('#' + id_ddl_faltantes_datos_nomina).empty();          
                 var select_trabajadores_faltantes = document.getElementById(id_ddl_faltantes_datos_nomina);
                 var option = document.createElement('option');
                 option.text = option.value = "";
@@ -663,18 +696,17 @@ function modalDatosNomina(existeRegistro, trabSnapshot, regSnapshot){
                     var fecha_string = new Date(horas_extra[key].fecha);
     
                     $(row.childNodes[0].childNodes[0]).val(horas_extra[key].cantidad);
-                    $(fecha).val(("0" + fecha_string.getDate()).slice(-2) + "/"+ ("0" + (fecha_string.getMonth() + 1)).slice(-2) + "/" + fecha_string.getFullYear());
+                    $(fecha).val(fecha_string.getFullYear() + "." + ("0" + (fecha_string.getMonth() + 1)).slice(-2)  + "." + ("0" + fecha_string.getDate()).slice(-2));
                     $(obra).val(horas_extra[key].obra)  
                     $(proceso).val(horas_extra[key].subproceso); 
                 };
             };
-            if(diversos != undefined){
-                firebase.database().ref(rama_bd_datos_referencia + "/diversos/").on('value',function(diverSnap){
+            firebase.database().ref(rama_bd_datos_referencia + "/diversos/").on('value',function(diverSnap){
+                if(diversos != undefined){
                     for(key in diversos){
                         generateNewRowDiversos(key);
         
                         var row = document.getElementById(key);
-                        console.log(row);
                     
                         var tipo = document.createElement('select');
                         tipo.className = "form-control tipoDiverso";
@@ -750,9 +782,9 @@ function modalDatosNomina(existeRegistro, trabSnapshot, regSnapshot){
                         $(obra).val(diversos[key].obra)  
                         $(proceso).val(diversos[key].subproceso); 
                     };
-                    generateNewRowDiversos();
-                });
-            };
+                };
+                generateNewRowDiversos();
+            });
             // se crea el campo de horas para generar nuevo registro de he
             generateNewRowExtras();
         
@@ -921,11 +953,9 @@ function datosHorasExtraDatosNomina(){
 
         var fecha_array = $(fecha).val().split(".");
         fecha = new Date(fecha_array[0], fecha_array[1] - 1, fecha_array[2]).getTime();
-        console.log(fecha_array);
-        console.log(fecha);
 
         horas_extra[key] = {
-            cantidad: $(this).val(),
+            cantidad: parseFloat($(this).val()),
             fecha:fecha, // pasar a timestamp
             obra: $("option:selected", obra).val(),
             subproceso: $("option:selected", proceso).val()
@@ -1028,7 +1058,6 @@ $(document).on('change','.diversosInputVacio', function(){
 });
 
 $(document).on('change','.diversosInputDatos', function(){
-    console.log(deformatMoney(this.value))
     if(this.value == "" || isNaN(deformatMoney(this.value)) || deformatMoney(this.value) == 0){
         $('#' + this.parentElement.parentElement.id).empty();
     } else {
@@ -1089,4 +1118,10 @@ function datosDiversosDatosNomina(){
     });
 
     return [diversos, is_data_filled];
-}
+};
+
+// Actualizar Tabla ----------------------------------
+
+function actualizarTablaDatosNomina(){
+
+};
