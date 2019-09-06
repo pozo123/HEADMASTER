@@ -437,9 +437,9 @@ Nota: Todo float se ingresa a 2 decimales.
                 - precio
                 - fecha_vigencia
         - listas
-            -categorias
+            - categorias
                 - categoria  
-                    -id_producto
+                    - id_producto
             - marca
                 - marca
                     - id_producto
