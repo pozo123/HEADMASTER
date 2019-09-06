@@ -241,6 +241,7 @@ Nota: Todo float se ingresa a 2 decimales.
             - requisito_id: nombre
         - diversos
             - diverso_id: nombre
+
     - proyectos
         - registros
             - registro (firebase_id)
@@ -329,7 +330,7 @@ Nota: Todo float se ingresa a 2 decimales.
                     - trabajador_id_head: string
                     - trabajador_id_pagadora: string
                     - trabajador_nombre: string
-                    - sueldo_semanal: float 
+                    - sueldo_semanal: float
                     - obra_asignada: string       
                     - year_head: int
                     - week_head: int
@@ -372,38 +373,38 @@ Nota: Todo float se ingresa a 2 decimales.
                         - id_trabajador:
                             - registros_id: true
 
-            - trabajadores:
-                - id_trabajador:
-                    - registros_id: true
+                - trabajadores:
+                    - id_trabajador:
+                        - registros_id: true
 
-            - faltas:
-                - fechas
-                    - aaaammdd
-                        - registros_id: true
-                - trabajadores:
-                    - id_trabajador
-                        - registros_id: true
-            - vacaciones:
-                - fechas
-                    - aaaammdd
-                        - registros_id: true
-                - trabajadores:
-                    - id_trabajador
-                        - registros_id: true
-            - horas_extra:
-                - fechas
-                    - aaaammdd
-                        - registros_id: true
-                - trabajadores:
-                    - id_trabajador
-                        - registros_id: true
-            - diversos:
-                - tipo
-                    - tipo_id
-                        - registros_id: true
-                - trabajadores:
-                    - id_trabajador
-                        - registros_id: true
+                - faltas:
+                    - fechas
+                        - aaaammdd
+                            - registros_id: true
+                    - trabajadores:
+                        - id_trabajador
+                            - registros_id: true
+                - vacaciones:
+                    - fechas
+                        - aaaammdd
+                            - registros_id: true
+                    - trabajadores:
+                        - id_trabajador
+                            - registros_id: true
+                - horas_extra:
+                    - fechas
+                        - aaaammdd
+                            - registros_id: true
+                    - trabajadores:
+                        - id_trabajador
+                            - registros_id: true
+                - diversos:
+                    - tipo
+                        - tipo_id
+                            - registros_id: true
+                    - trabajadores:
+                        - id_trabajador
+                            - registros_id: true
     - pda
         - pistas
             - id_registro:
@@ -422,6 +423,29 @@ Nota: Todo float se ingresa a 2 decimales.
             - tipos
                 - tipo
                     - id_registro: true
+
+    - insumos
+        - productos
+            - id_producto
+                - descripcion
+                - catalogo
+                - catfabric
+                - marca
+                - unidad
+                - clasificacion
+                - ramo
+                - precio
+                - fecha_vigencia
+        - listas
+            -categorias
+                - categoria  
+                    -id_producto
+            - marca
+                - marca
+                    - id_producto
+            - clasificacion
+                - clasificacion
+                    - id_producto
 
 DEFINIR DESPUÉS
 
