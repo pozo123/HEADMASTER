@@ -225,18 +225,33 @@
                 <div class="modal-content">
                 <div class="modal-header">
                     <div class="flex-column">
-                        <h4 class="modal-title" id="nombreModalDatosNomina"></h4>
-                        <br>
-                        <h6 class= "pl-2">Semana <span id="semanaModalDatosNomina"></span> - <span id="yearModalDatosNomina"></span></h6>
+                        <div class="form-group">
+                            <h4 class="modal-title" id="nombreModalDatosNomina"></h4>
+                            <br>
+                            <h6 class= "pl-2">Semana <span id="semanaModalDatosNomina"></span> - <span id="yearModalDatosNomina"></span></h6>
+                        </div>
                     </div>
-
+                    
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
                         <form onsubmit="return false;">
+                            <div class = "container-fluid">
+                                <div class="form-row">
+                                    <div class="form-group col-sm-2">
+                                        <label for="obraAsignadaNomina" class="form-label">Obra Asignada:</label>
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <select id="obraAsignadaNomina" class="form-control"></select>
+                                    </div>
+                                    <div class="form-group col-sm-1">
+                                        <button id ="infoObraAsisgnadaNomina" type='button' class='btn btn-dark' data-toggle="popover" data-trigger="hover"><i class='fas fa-info'></i></button>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="container-fluid border border-info rounded">
                                 <br/>
                                 <h5 class="text-info">ASISTENCIAS</h5>

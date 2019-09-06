@@ -7,10 +7,10 @@ var id_button_guardar_datos_nomina = "buttonGuardarDatosNomina";
 
 var id_ddl_year_datos_nomina = "yearNomina";
 var id_ddl_week_datos_nomina = "semanaNomina";
+var id_ddl_obra_asignada_datos_nomina = "obraAsignadaNomina";
 var id_ddl_faltantes_datos_nomina = "trabajadoresSinRegistroNomina";
 var id_id_head_datos_nomina = "idHeadNomina";
 
-var id_ddl_obra_asignada_datos_nomina = "obraAsignadaNomina";
 
 var class_modal_obra_datos_nomina = "obraNomina";
 var class_modal_proceso_datos_nomina = "procesoNomina";
@@ -22,6 +22,8 @@ var id_modal_year_nomina = "yearModalDatosNomina"
 
 var id_he_div_datos_nomina = "heContainerDatosNomina";
 var id_diversos_div_datos_nomina = "diversosContainerDatosNomina";
+
+var id_info_asignada_datos_nomina = "infoObraAsisgnadaNomina";
 
 // variables globales
 
@@ -38,7 +40,10 @@ var dias = ["jueves", "viernes", "lunes", "martes", "miercoles"];
 
 $('#' + id_tab_datos_nomina).click(function(){
     existe_registro = false;
-    id_registro_existente = "";;
+    id_registro_existente = "";
+
+    var texto_info = "La obra a la cual se facturará la mano de obra generada por este registro."
+	$('#' + id_info_asignada_datos_nomina).attr("data-content", texto_info);
 
     $('#' + id_id_head_datos_nomina).val("");
     $('#' + id_ddl_year_datos_nomina).empty();
@@ -86,6 +91,23 @@ $('#' + id_tab_datos_nomina).click(function(){
             });
         }
     });
+
+    $('#' + id_ddl_obra_asignada_datos_nomina).empty();
+    var select_asignada = document.getElementById(id_ddl_obra_asignada_datos_nomina);
+    var option_asignada = document.createElement('option');
+    option_asignada.style = "display:none";
+    option_asignada.text = option_asignada.value = "";
+    select_asignada.appendChild(option_asignada);
+    var obra;
+    firebase.database().ref(rama_bd_obras + "/listas/obras_activas").orderByChild('nombre').on('child_added',function(snapshot){
+        obra = snapshot.val();
+        option_asignada = document.createElement('option');
+        option_asignada.value = snapshot.key;
+        option_asignada.text = obra.nombre;
+        select_asignada.appendChild(option_asignada);
+    });
+
+    actualizarTablaDatosNomina();
 });
 
 $('#' + id_ddl_year_datos_nomina).change(function(){
@@ -191,7 +213,7 @@ $('#' + id_button_abrir_datos_nomina).click(function(){
 
 $('#' + id_button_guardar_datos_nomina).click(function(){
     if(!validateModalDatosNomina()){
-        alert("Por favor llena todos los campos. En caso de querer eliminar un registro de horas extra o diversos basta escribir 0 en su cantidad.")
+        alert("Por favor llena todos los campos incluyendo la obra asignada. En caso de querer eliminar un registro de horas extra o diversos basta escribir 0 en su cantidad.")
         return;
     }
     // aqui poner datos asist, he y diversos
@@ -206,9 +228,15 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
     
     var week_head = $('#' + id_ddl_week_datos_nomina + " option:selected").val();
     var year_head = $('#' + id_ddl_year_datos_nomina + " option:selected").val();
+
+    var obra_asignada = $('#' + id_ddl_obra_asignada_datos_nomina + " option:selected").val();
+
     if(existe_registro){ 
         firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente).once("value").then(function(regSnap){
             var registro_antiguo = regSnap.val();
+
+            firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/obra_asignada").update(obra_asignada);
+
             firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/asistencias").set(asistencias);
             firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/horas_extra").set(horas_extra);
             firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/diversos").set(diversos);
@@ -239,8 +267,11 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
                     listas_path["listas/diversos/trabajadores/" + trabajador_json.trabajador_id + "/" + id_registro_existente] = null;
                 }
                 
+                listas_path["listas/obra_asignada/" + registro_antiguo.obra_asignada + "/" + id_registro_existente] = null;
+
                 listas_path["listas/fecha_datos/" + year_head + "/" + week_head + "/" + trabajador_json.trabajador_id + "/"+ id_registro_existente] = true;
                 listas_path["listas/trabajadores/" + trabajador_json.trabajador_id + "/"+ id_registro_existente] = true;
+                listas_path["listas/obra_asignada/" + obra_asignada + "/" + id_registro_existente] = true;
                 
                 for(key in asistencias){
                     listas_path["listas/vacaciones/fechas/" + aaaammdd(asistencias[key].fecha) + "/"+ id_registro_existente] = null;
@@ -287,10 +318,11 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
             year_head: year_head,
             week_head: week_head,
             sueldo_semanal: trabajador_json.sueldo_base,
-            costo_hora: (trabajador_json.sueldo_base / 48).toFixed(2),
+            costo_hora: parseFloat((trabajador_json.sueldo_base / 48).toFixed(2)),
             asistencias: asistencias,
             horas_extra: horas_extra,
             diversos: diversos,
+            obra_asignada: obra_asignada
         } 
         firebase.database().ref(rama_bd_nomina + "/nomina").push(reg).then(function(snapshot){
             var regKey = snapshot.key        
@@ -299,6 +331,7 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
 
             listas_path["listas/fecha_datos/" + reg.year_head + "/" + reg.week_head + "/" + reg.trabajador_id + "/"+ regKey] = true;
             listas_path["listas/trabajadores/" + reg.trabajador_id + "/"+ regKey] = true;
+            listas_path["listas/obra_asignada/" + obra_asignada + "/" + regKey] = true;
 
             for(key in asistencias){
                 listas_path["listas/obras/" + asistencias[key].obra + "/" + asistencias[key].subproceso + "/" + regKey] = true;
@@ -400,6 +433,10 @@ function validateModalDatosNomina(){
         };
     };
 
+    var obra_asignada = $('#' + id_ddl_obra_asignada_datos_nomina + " option:selected").val();
+    if(obra_asignada == ""){
+        return is_validated = false;
+    }
     
     // Revisar si HE y Diversos están completos
     
@@ -493,6 +530,9 @@ function modalDatosNomina(existeRegistro, trabSnapshot, regSnapshot){
     $('#' + id_he_div_datos_nomina).empty();
     $('#' + id_diversos_div_datos_nomina).empty();
 
+
+    $('#' + id_ddl_obra_asignada_datos_nomina).val("");
+
     // si existe el registro, necesito llenar todos los campos, crear filas, columnas, etc.
     // si no existe, dejar el modal listo pa pushearlo con el key del trabSnapshot
     
@@ -512,6 +552,11 @@ function modalDatosNomina(existeRegistro, trabSnapshot, regSnapshot){
         var horas_extra = regSnapshot.val().horas_extra;
         var diversos = regSnapshot.val().diversos;
         // ------
+
+        $('#' + id_modal_sem_nomina).text(regSnapshot.val().week_head);
+        $('#' + id_modal_year_nomina).text(regSnapshot.val().year_head);
+        $('#' + id_ddl_obra_asignada_datos_nomina).val(regSnapshot.val().obra_asignada);
+        
         if(asistencias != undefined){
             for(key in asistencias){
                 $('#' + key + "-obra [value=" + asistencias[key].obra + "]").prop('selected', true);
@@ -630,7 +675,6 @@ function modalDatosNomina(existeRegistro, trabSnapshot, regSnapshot){
             if(horas_extra != undefined){
                 for(key in horas_extra){
                     generateNewRowExtras(key);
-    
                     var row = document.getElementById(key);
     
                     var fecha = document.createElement('input');
@@ -1123,5 +1167,12 @@ function datosDiversosDatosNomina(){
 // Actualizar Tabla ----------------------------------
 
 function actualizarTablaDatosNomina(){
-
+    var datos = [];
+    firebase.database().ref(rama_bd_nomina + "/listas/fecha_datos/" + $('#' + id_ddl_year_datos_nomina + " option:selected").val() + "/" + $('#' + id_ddl_week_datos_nomina + " option:selected").val()).on("child_added", function(snapshot){
+        firebase.database().ref(rama_bd_nomina + "/nomina/").child(Object.keys(snapshot.val())[0]).once("value").then(function(regSnap){
+            datos.push(regSnap.val());
+            console.log(regSnap.val());
+        });
+        console.log(datos);
+    });
 };

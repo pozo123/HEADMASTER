@@ -329,7 +329,8 @@ Nota: Todo float se ingresa a 2 decimales.
                     - trabajador_id_head: string
                     - trabajador_id_pagadora: string
                     - trabajador_nombre: string
-                    - sueldo_semanal: float        
+                    - sueldo_semanal: float 
+                    - obra_asignada: string       
                     - year_head: int
                     - week_head: int
                     - costo_hora: float: float
