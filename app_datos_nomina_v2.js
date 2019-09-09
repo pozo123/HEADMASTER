@@ -235,7 +235,7 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
         firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente).once("value").then(function(regSnap){
             var registro_antiguo = regSnap.val();
 
-            firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/obra_asignada").update(obra_asignada);
+            firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/obra_asignada").set(obra_asignada);
 
             firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/asistencias").set(asistencias);
             firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/horas_extra").set(horas_extra);
@@ -1156,7 +1156,8 @@ function datosDiversosDatosNomina(){
             cantidad: deformatMoney($(this).val()),
             tipo: $("option:selected", tipo).val(),
             obra: $("option:selected", obra).val(),
-            subproceso: $("option:selected", proceso).val()
+            subproceso: $("option:selected", proceso).val(),
+            nombre: $("option:selected", tipo).text()
         }
         is_data_filled = true;
     });
@@ -1168,11 +1169,24 @@ function datosDiversosDatosNomina(){
 
 function actualizarTablaDatosNomina(){
     var datos = [];
-    firebase.database().ref(rama_bd_nomina + "/listas/fecha_datos/" + $('#' + id_ddl_year_datos_nomina + " option:selected").val() + "/" + $('#' + id_ddl_week_datos_nomina + " option:selected").val()).on("child_added", function(snapshot){
-        firebase.database().ref(rama_bd_nomina + "/nomina/").child(Object.keys(snapshot.val())[0]).once("value").then(function(regSnap){
-            datos.push(regSnap.val());
-            console.log(regSnap.val());
+    firebase.database().ref(rama_bd_nomina + "/listas/fecha_datos/" + $('#' + id_ddl_year_datos_nomina + " option:selected").val() + "/" + $('#' + id_ddl_week_datos_nomina + " option:selected").val()).on("value", function(listaSnap){
+        firebase.database().ref(rama_bd_nomina + "/nomina/").once("value").then(function(regSnap){
+
+            // Generar columnas
+
+
+            // Generar datos
+            var registros = regSnap.val();
+            console.log(registros);
+            listaSnap.forEach(function(snapshot){
+                var reg_key = Object.keys(snapshot.val())[0]
+                var registro = registros[reg_key];
+            })
+
+            // generar tabla
+
+
+            // botones
         });
-        console.log(datos);
     });
 };
