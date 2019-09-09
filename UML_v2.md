@@ -425,19 +425,19 @@ Nota: Todo float se ingresa a 2 decimales.
                     - id_registro: true
 
     - insumos
-        - productos
-            - id_producto
-                - descripcion
-                - catalogo
-                - catfabric
-                - marca
-                - unidad
-                - clasificacion
-                - ramo
-        - proveedores
-          - proveedor
-            - materiales
-              - material
+          - productos
+              - id_producto
+                  - descripcion
+                  - catalogo
+                  - catfabric
+                  - marca
+                  - unidad
+                  - clasificacion
+                  - ramo
+          - proveedores
+              - proveedor
+                  - materiales
+                      - material
         - listas
             - categorias
                 - categoria  
