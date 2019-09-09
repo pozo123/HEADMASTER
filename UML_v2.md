@@ -434,8 +434,10 @@ Nota: Todo float se ingresa a 2 decimales.
                 - unidad
                 - clasificacion
                 - ramo
-                - precio
-                - fecha_vigencia
+        - proveedores
+          - proveedor
+            - materiales
+              - material
         - listas
             - categorias
                 - categoria  

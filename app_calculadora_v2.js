@@ -372,6 +372,7 @@ $('#'+id_precio_ventaCalculadora).change(function (){
 	$('#'+id_profit_cantidadCalculadora).val(formatMoney(cantProfit));
 	highLight(id_profit_cantidadCalculadora);
 	actualizaPorcentajeProfit();
+	actualizaProfitNeto();
 });
 
 $('#'+id_precio_ventaCalculadora).focus(function (){
