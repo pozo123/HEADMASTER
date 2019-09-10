@@ -330,8 +330,10 @@ Nota: Todo float se ingresa a 2 decimales.
                     - trabajador_id_head: string
                     - trabajador_id_pagadora: string
                     - trabajador_nombre: string
+                    - trabajador_jefe: string
                     - sueldo_semanal: float
-                    - obra_asignada: string       
+                    - obra_asignada: string
+                    - obra_asignada_nombre: string      
                     - year_head: int
                     - week_head: int
                     - costo_hora: float: float
@@ -350,6 +352,7 @@ Nota: Todo float se ingresa a 2 decimales.
                     - diversos:
                         - registro (firebase_id)
                             - tipo: string (se obtiene de diversos)
+                            - nombre: string (se obtiene de diversos)
                             - obra: obra_id
                             - subproceso: subproceso_id
                             - cantidad: float

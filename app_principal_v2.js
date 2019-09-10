@@ -26,6 +26,7 @@ var rama_bd_nomina = "test/rrhh/nomina"
 var rama_bd_info_web = "info_web";
 
 var options_semanas = { weekday: 'short', year: 'numeric', month: 'numeric', day: 'numeric'};
+var options_nomina = { weekday: 'short',day: 'numeric'};
 
 $(document).ready(function() {    
     $('#sidebarCollapse').on('click', function () {
