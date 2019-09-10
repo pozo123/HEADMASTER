@@ -13,19 +13,21 @@ var id_nombreCopeo = "nombreCopeo";
 var id_alcanceCopeo = "alcanceCopeo";
 var id_lista_trabajadoresCopeo = "listaTrabajadoresCopeo";
 var id_div_trabajadoresCopeo = "divTrabajadoresCopeo";
+var id_costo_CopeoCopeo = "costoCopeo"
+var id_costo_Copeo_CSCopeo = "costoCSCopeo"
 
 var id_agregar_copeo = "botonAceptarCopeo";
 var id_borrar_copeo = "botonResetCopeo";
 
 var selectTrabajadores;
-var trabajadoresSelectos = [];
-var puestos_json={};
+var puestos_array;
+var puestos_json;
 
 //Variables globales para controlar edición
 
 //Dar formato a los elementos existentes
 $('#' + id_tab_copeo).click(function() {
-  console.log("Inicializando");
+  puestos_array = [];
   // Llenado del ddl de obra.
   $('#' + id_ddl_obraCopeo).empty();
   var select = document.getElementById(id_ddl_obraCopeo);
@@ -42,6 +44,7 @@ $('#' + id_tab_copeo).click(function() {
       select.appendChild(option);
   });
 
+  $('#' + id_lista_trabajadoresCopeo).empty();
   var puesto;
   var select2 = document.getElementById(id_lista_trabajadoresCopeo);
   firebase.database().ref(rama_bd_datos_referencia + "/puestos").on('value',function(snapshot){
@@ -54,12 +57,14 @@ $('#' + id_tab_copeo).click(function() {
         option.text = puesto.puesto;
         select2.appendChild(option);
         agregaCamposPuesto(snapChild.key);
+        puestos_array.push(snapChild.key);
       })
       //Llenado de la lista de puestos
       selectTrabajadores = new SlimSelect({
           select: '#' + id_lista_trabajadoresCopeo,
           placeholder: 'Elige los puestos necesarios',
       });
+      resetFormCopeo();
   });
 });
 
@@ -73,36 +78,54 @@ $('#' + id_borrar_copeo).click(function() {
 
 });
 
+// ----------------------- FUNCIONES DE LOS CAMPOS REGULARES ------------------------
+// -----------------------------------   ---------------------------------------
+
 $('#' + id_lista_trabajadoresCopeo).change(function(){
-    var array_aux = [];
     var array_html = selectTrabajadores.selected();
     var item;
-    for (i = 0; i < array_html.length; i++) {
-      item = array_html[i];
-      if(!trabajadoresSelectos.includes(item)){
+    for (i = 0; i < puestos_array.length; i++) {
+      item = puestos_array[i];
+      if(array_html.includes(item)){
         $('#' + "row-"+item).removeClass('hidden');
-      }
-    }
-    for (i = 0; i < trabajadoresSelectos.length; i++) {
-      item = trabajadoresSelectos.pop();
-      if(!array_html.includes(item)){
+      } else {
         $('#' + "row-"+item).addClass('hidden');
       }
     }
-    trabajadoresSelectos = array_html;
 });
+
+// ----------------------- FUNCIONES DE LOS CAMPOS REGULARES ------------------------
+
+function resetFormCopeo (){
+  $('#'+id_ddl_obraCopeo).val("");
+  $('#'+id_ddl_procesoCopeo).empty();
+  $('#'+id_ddl_subprocesoCopeo).empty();
+  $('#'+id_carga_socialCopeo).val(54);
+  $('#'+id_diasCopeo).val("");
+  $('#'+id_multCopeo).val("");
+  $('#'+id_nombreCopeo).val("");
+  $('#'+id_alcanceCopeo).val("");
+  selectTrabajadores.set(puestos_array);
+  $('#'+id_costo_CopeoCopeo).val("");
+  $('#'+id_costo_Copeo_CSCopeo).val("");
+  for(i = 0; i < puestos_array.length; i++){
+    $('#'+"row-"+puestos_array[i]).removeClass("hidden");
+    $('#'+puestos_array[i]).val("");
+  }
+
+}
 
 function agregaCamposPuesto(puesto){
   console.log(puesto);
   var id_puesto = puesto + "Copeo";
   var cantidad = document.createElement('input');
-  cantidad.className = "form-group";
+  cantidad.className = "form-control";
   cantidad.type = "text";
   cantidad.placeholder = "Cantidad";
   cantidad.id = id_puesto;
 
   var col1 = document.createElement('div');
-  col1.className = "col-md-3";
+  col1.className = "col-md-2";
   col1.appendChild(cantidad);
 
   var label = document.createElement('label');
@@ -113,19 +136,30 @@ function agregaCamposPuesto(puesto){
   col2.className = "col-md-3";
   col2.appendChild(label);
 
+  var cantidad2 = document.createElement('input');
+  cantidad2.className = "form-control";
+  cantidad2.type = "text";
+  cantidad2.disabled = "true";
+  cantidad2.value = formatMoney(puestos_json[puesto]["sueldo"]);
+
+  var col3 = document.createElement('div');
+  col3.className = "col-md-3";
+  col3.appendChild(cantidad2);
+
   var col0= document.createElement('div');
-  col0.className = "col-md-3";
+  col0.className = "col-md-2";
 
   var col4= document.createElement('div');
-  col4.className = "col-md-3";
+  col4.className = "col-md-2";
 
   var row = document.createElement('div');
   row.className = "form-row hidden";
   row.id = "row-"+puesto;
-  row.append(col4);
+  row.append(col0);
   row.append(col2);
   row.append(col1);
-  row.append(col0);
+  row.append(col3);
+  row.append(col4);
   var div_trabajadores = document.getElementById(id_div_trabajadoresCopeo);
   div_trabajadores.appendChild(row);
 }
