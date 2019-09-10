@@ -27,10 +27,6 @@ var id_diversos_div_datos_nomina = "diversosContainerDatosNomina";
 var id_info_asignada_datos_nomina = "infoObraAsisgnadaNomina";
 
 // variables globales
-
-var starting_year = 2018;
-var actual_week = getWeek(new Date())[0];
-var actual_year = getWeek(new Date())[1];
 var id_registro_existente = "";
 var existe_registro = false;
 var trabajador_json = {};

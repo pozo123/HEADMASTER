@@ -357,9 +357,8 @@ Nota: Todo float se ingresa a 2 decimales.
                             - subproceso: subproceso_id
                             - cantidad: float
                     - pagos_nomina:
-                        - registro (firebase_id)
-                            - fecha: timestamp
-                            - monto: float
+                        - fecha: timestamp
+                        - monto: float
             - listas:
                 - obras:
                     - id_obra:
@@ -375,6 +374,8 @@ Nota: Todo float se ingresa a 2 decimales.
                     - aaaammdd:
                         - id_trabajador:
                             - registros_id: true
+                    - year: (para guardar la fecha de pago y no tener que buscarla en 300 trabajadores)
+                        - week_head: timestamp
 
                 - trabajadores:
                     - id_trabajador:

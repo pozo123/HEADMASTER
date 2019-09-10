@@ -28,6 +28,11 @@ var rama_bd_info_web = "info_web";
 var options_semanas = { weekday: 'short', year: 'numeric', month: 'numeric', day: 'numeric'};
 var options_nomina = { weekday: 'short',day: 'numeric'};
 
+
+var starting_year = 2018;
+var actual_week = getWeek(new Date())[0];
+var actual_year = getWeek(new Date())[1];
+
 $(document).ready(function() {    
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
