@@ -2077,31 +2077,22 @@
                                  <h1>COPEO</h1>
                                  <p>Calculador de Costo de Mano de Obra </p>
                                  <div class="row">
-                                     <div class="col-lg-3"></div>
-                                     <div class="col-lg-6">
+                                     <div class="col-lg-1"></div>
+                                     <div class="col-lg-10">
                                          <form action="#" onsubmit="return false;" id="formCopeo">
-                                             <div class="form-group">
-                                                 <label for="ddl_obraCopeo">Obra:</label>
-                                                 <select id="ddl_obraCopeo" class="form-control"></select>
-                                             </div>
-                                             <div class="form-group">
-                                                 <label for="ddl_procesoCopeo">Proceso:</label>
-                                                 <select id="ddl_procesoCopeo" class="form-control"></select>
-                                             </div>
-                                             <div class="form-group">
-                                                 <label for="ddl_subprocesoCopeo">Subproceso:</label>
-                                                 <select id="ddl_subprocesoCopeo" class="form-control"></select>
-                                             </div>
-                                             <br/>
-                                             <div class="form-row">
-                                                 <div class="col-2"></div>
-                                                 <div class="col-4">
-                                                     <label for="cargaSocialCopeo">Porcentaje de Impuestos</label>
+                                             <div class="form-row" >
+                                                 <div class="form-group col-md-6">
+                                                     <label for="ddl_obraCopeo">Obra:</label>
+                                                     <select id="ddl_obraCopeo" class="form-control"></select>
                                                  </div>
-                                                 <div class="col-4">
-                                                     <input type="text" id="cargaSocialCopeo" class="form-control" value="34" placeholder="Carga social">
+                                                 <div class="form-group col-md-6">
+                                                     <label for="ddl_procesoCopeo">Proceso:</label>
+                                                     <select id="ddl_procesoCopeo" class="form-control"></select>
                                                  </div>
-                                                 <div class="col-2"></div>
+                                                 <div class="form-group col-md-6">
+                                                     <label for="ddl_subprocesoCopeo">Subproceso:</label>
+                                                     <select id="ddl_subprocesoCopeo" class="form-control"></select>
+                                                 </div>
                                              </div>
                                              <br/>
                                              <hr class="style2">
@@ -2111,37 +2102,42 @@
                                              <div class="form-row">
                                                  <div class="col-12">
                                                      <div class="form-group row">
-                                                         <label for="diasCopeo" class="col-sm-2 col-form-label">Días</label>
-                                                         <div class="col-sm-4">
-                                                             <input type="text" class="form-control calcCopeoClass" id="diasCopeo" placeholder="días">
-                                                         </div>
-
-                                                         <label for="multCopeo" class="col-sm-2 col-form-label">Mult</label>
-                                                         <div class="col-sm-4">
-                                                             <input type="text" class="form-control calcCopeoClass" id="multCopeo" placeholder="unidades">
-                                                         </div>
-                                                     </div>
-
-                                                     <div class="form-group row">
-                                                         <label for="nombreCopeo" class="col-sm-3 col-form-label">Nombre</label>
-                                                         <div class="col-sm-9">
+                                                         <label for="nombreCopeo" class="col-sm-2 col-form-label">Nombre</label>
+                                                         <div class="col-sm-10">
                                                              <input type="text" class="form-control calcCopeoClass" id="nombreCopeo" placeholder="Nombre">
                                                          </div>
                                                      </div>
                                                      <div class="form-group row">
+                                                         <label for="diasCopeo" class="col-sm-1 col-form-label">Días</label>
+                                                         <div class="col-sm-2">
+                                                             <input type="text" class="form-control calcCopeoClass" id="diasCopeo" placeholder="días">
+                                                         </div>
+                                                         <label for="multCopeo" class="col-sm-1 col-form-label">Mult</label>
+                                                         <div class="col-sm-2">
+                                                             <input type="text" class="form-control calcCopeoClass" id="multCopeo" placeholder="unidades">
+                                                         </div>
+                                                         <div class="col-sm-1"></div>
+                                                         <label for="cargaSocialCopeo" class="col-sm-3 col-form-label">% de Impuestos</label>
+                                                         <div class="col-2">
+                                                             <input type="text" id="cargaSocialCopeo" class="form-control" placeholder="Carga social">
+                                                         </div>
+                                                     </div>
+                                                     <div class="form-group row">
                                                          <div class = "col-sm-12">
+                                                             <label for="cargaSocialCopeo">Alcance</label>
                                                              <textarea class="form-control calcCopeoClass" id="alcanceCopeo" rows="5" placeholder= "Alcance de esta entrada."></textarea>
                                                          </div>
                                                      </div>
                                                  </div>
                                              </div>
                                              <div class="form-row">
-                                               <div class="form-group col-md-3"></div>
-                                               <div class="form-group col-md-6">
+                                               <div class="form-group col-md-3">
+                                                  <label>Trabajadores necesarios</label>
+                                               </div>
+                                               <div class="form-group col-md-9">
                                                    <select id="listaTrabajadoresCopeo" multiple>
                                                    </select>
                                                </div>
-                                               <div class="form-group col-md-3"></div>
                                              </div>
                                              <div class="form-row" id = "divTrabajadoresCopeo">
 
@@ -2158,7 +2154,7 @@
                                          <br/>
                                          <hr class="style2">
                                      </div>
-                                     <div class="col-lg-3"></div>
+                                     <div class="col-lg-1"></div>
                                  </div>
                                  <div class="row">
                                      <div class="container-fluid">
@@ -2235,6 +2231,7 @@
         <script src="app_datos_nomina_v2.js"></script>
         <script src="app_calculadora_v2.js"></script>
         <script src="app_diversos_v2.js"></script>
+        <script src="app_copeo_v2.js"></script>
 
         <!-- Excel to Json-->
         <script src="xlsx.full.min.js"></script>
