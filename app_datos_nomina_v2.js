@@ -1,6 +1,7 @@
 var id_tab_datos_nomina = "tabDatosNomina";
 var id_form_datos_nomina = "formNomina";
 var id_modal_datos_datos_nomina = "modalDatosNomina";
+var id_dataTable_datos_nomina = "dataTableDatosNomina";
 
 var id_button_abrir_datos_nomina = "datosNominaButton";
 var id_button_guardar_datos_nomina = "buttonGuardarDatosNomina";
@@ -26,10 +27,6 @@ var id_diversos_div_datos_nomina = "diversosContainerDatosNomina";
 var id_info_asignada_datos_nomina = "infoObraAsisgnadaNomina";
 
 // variables globales
-
-var starting_year = 2018;
-var actual_week = getWeek(new Date())[0];
-var actual_year = getWeek(new Date())[1];
 var id_registro_existente = "";
 var existe_registro = false;
 var trabajador_json = {};
@@ -230,6 +227,7 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
     var year_head = $('#' + id_ddl_year_datos_nomina + " option:selected").val();
 
     var obra_asignada = $('#' + id_ddl_obra_asignada_datos_nomina + " option:selected").val();
+    var obra_asignada_nombre = $('#' + id_ddl_obra_asignada_datos_nomina + " option:selected").text();
 
     if(existe_registro){ 
         firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente).once("value").then(function(regSnap){
@@ -315,6 +313,10 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
         // necesito que no se haga esto si asistencias, no jalo
         var reg = {
             trabajador_id: trabajador_json.trabajador_id,
+            trabajador_id_head: trabajador_json.id_head,
+            trabajador_id_pagadora: trabajador_json.id_pagadora,
+            trabajador_nombre: trabajador_json.nombre,
+            trabajador_jefe: trabajador_json.jefe,
             year_head: year_head,
             week_head: week_head,
             sueldo_semanal: trabajador_json.sueldo_base,
@@ -322,7 +324,8 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
             asistencias: asistencias,
             horas_extra: horas_extra,
             diversos: diversos,
-            obra_asignada: obra_asignada
+            obra_asignada: obra_asignada,
+            obra_asignada_nombre: obra_asignada_nombre
         } 
         firebase.database().ref(rama_bd_nomina + "/nomina").push(reg).then(function(snapshot){
             var regKey = snapshot.key        
@@ -1111,11 +1114,11 @@ $(document).on('change','.diversosInputDatos', function(){
 });
 
 $(document).on('keypress','.diversosInputVacio', function(e){
-    charactersAllowed("$1234567890,.",e);
+    charactersAllowed("$1234567890,.-",e);
 });
 
 $(document).on('keypress','.diversosInputDatos', function(e){
-    charactersAllowed("$1234567890,.",e);
+    charactersAllowed("$1234567890,.-",e);
 });
 
 $(document).on('change','.obraDiversos', function(){
@@ -1168,25 +1171,158 @@ function datosDiversosDatosNomina(){
 // Actualizar Tabla ----------------------------------
 
 function actualizarTablaDatosNomina(){
-    var datos = [];
+    
     firebase.database().ref(rama_bd_nomina + "/listas/fecha_datos/" + $('#' + id_ddl_year_datos_nomina + " option:selected").val() + "/" + $('#' + id_ddl_week_datos_nomina + " option:selected").val()).on("value", function(listaSnap){
         firebase.database().ref(rama_bd_nomina + "/nomina/").once("value").then(function(regSnap){
+            firebase.database().ref(rama_bd_datos_referencia + "/diversos").once("value").then(function(divSnap){
+                
+                var datos_nominas = [];
+                var columns = [];
+            
+                var year = $('#' + id_ddl_year_datos_nomina + " option:selected").val();
+                var sem = $('#' + id_ddl_week_datos_nomina + " option:selected").val();
+            
+                columns.push({title: "ID_Registro"});
+                columns.push({title: "ID HEAD"});
+                columns.push({title: "ID Pag"});
+                columns.push({title: "Nombre"});
+                columns.push({title: "Obra"});
+                columns.push({title: "Jefe"});
+            
+                columns.push({title: "Sueldo neto"});
+                columns.push({title: new Date(getDaysWeek(sem,year)[0]).toLocaleDateString("es-ES", options_nomina)});
+                columns.push({title: new Date(getDaysWeek(sem,year)[0] + 86400000*1).toLocaleDateString("es-ES", options_nomina)});
+                columns.push({title: new Date(getDaysWeek(sem,year)[0] + 86400000*4).toLocaleDateString("es-ES", options_nomina)});
+                columns.push({title: new Date(getDaysWeek(sem,year)[0] + 86400000*5).toLocaleDateString("es-ES", options_nomina)});
+                columns.push({title: new Date(getDaysWeek(sem,year)[0] + 86400000*6).toLocaleDateString("es-ES", options_nomina)});
+                columns.push({title: "Sueldo a pagar"});
+                columns.push({title: "Horas extra"});
+                columns.push({title: "Importe horas extra"});
+                // Generar columnas
+                divSnap.forEach(function(snapshot){
+                    columns.push({title: snapshot.val()})
+                })
 
-            // Generar columnas
+                columns.push({title: "Total Diversos"});
+                columns.push({title: "Pago Total"});
+                // Generar datos
+                // generar tabla          
+                console.log(columns);
+                var registros = regSnap.val();
+                listaSnap.forEach(function(snapshot){
+                    var datos_reg = [];
+                    // aquí estoy en cada registro del año y semana elegido
 
+                    // necesito generar el array de diversos
+                    var diversos = {}
+                    divSnap.forEach(function(diverso){
+                        diversos[diverso.val()] = 0;
+                    })
 
-            // Generar datos
-            var registros = regSnap.val();
-            console.log(registros);
-            listaSnap.forEach(function(snapshot){
-                var reg_key = Object.keys(snapshot.val())[0]
-                var registro = registros[reg_key];
-            })
+                    // id_ del registro;
+                    var reg_key = Object.keys(snapshot.val())[0]
+                    datos_reg.push(reg_key);
+                    var registro = registros[reg_key];
 
-            // generar tabla
+                    var id_head = registro.trabajador_id_head;
+                    datos_reg.push(id_head);
+                    var id_pagadora = registro.trabajador_id_pagadora;
+                    datos_reg.push(id_pagadora);
+                    // nombre del trabajador
+                    var nombre = registro.trabajador_nombre.split("_");
+                    nombre = nombre[0] + " " + nombre[1] + " " + nombre[2];
+                    datos_reg.push(nombre);
 
+                    var obra = registro.obra_asignada_nombre;
+                    datos_reg.push(obra);
 
-            // botones
+                    var jefe_array = registro.trabajador_jefe.split("_");
+                    var jefe = "";
+                    for(var i=0; i<jefe_array.length;i++){
+                        if(i>0){
+                            jefe += " ";
+                        }
+                        jefe += jefe_array[i];
+                    }
+                    datos_reg.push(jefe);
+                    
+                    var sueldo_neto = registro.sueldo_semanal;
+                    datos_reg.push(formatMoney(sueldo_neto));
+
+                    var jueves, viernes, lunes, martes, miercoles = "";
+                    var jueves_aux, viernes_aux, lunes_aux, martes_aux, miercoles_aux = 0;
+
+                    if(registro.asistencias != undefined) {
+                        jueves = registro.asistencias.jueves == undefined ? "" : registro.asistencias.jueves.actividad;
+                        jueves_aux = jueves == "Falta" || jueves == ""  ? 0 : 0.2;
+                        viernes = registro.asistencias.viernes == undefined ? "" : registro.asistencias.viernes.actividad;
+                        viernes_aux = viernes == "Falta" || viernes == ""  ? 0 : 0.2;
+                        lunes = registro.asistencias.lunes == undefined ? "" : registro.asistencias.lunes.actividad;
+                        lunes_aux = lunes == "Falta" || lunes == ""  ? 0 : 0.2;
+                        martes = registro.asistencias.martes == undefined ? "" : registro.asistencias.martes.actividad;
+                        martes_aux = martes == "Falta" || martes == ""  ? 0 : 0.2;
+                        miercoles = registro.asistencias.miercoles == undefined ? "" : registro.asistencias.miercoles.actividad;
+                        miercoles_aux = miercoles == "Falta" || miercoles == ""  ? 0 : 0.2;
+                    }
+
+                    datos_reg.push(jueves, viernes, lunes, martes, miercoles)
+
+                    var sueldo_a_pagar = sueldo_neto * (jueves_aux + viernes_aux + lunes_aux + martes_aux + miercoles_aux)
+                    datos_reg.push(formatMoney(sueldo_a_pagar));
+        
+                    var horas_extra = 0;
+                    var horas_extra_importe = 0;
+                    if(registro.horas_extra != undefined){
+                        for(key in registro.horas_extra){
+                            horas_extra += registro.horas_extra[key].cantidad;
+                        }
+                        horas_extra_importe = registro.costo_hora * horas_extra * 2;
+                    }  
+                    datos_reg.push(horas_extra);
+                    datos_reg.push(formatMoney(horas_extra_importe));
+                    
+                    var total_diversos = 0;
+                    if(registro.diversos != undefined){
+                        for(key in registro.diversos){
+                            diversos[registro.diversos[key].nombre] += registro.diversos[key].cantidad;
+                            total_diversos += registro.diversos[key].cantidad;
+                        };
+                    };
+
+                    for(key in diversos){
+                        datos_reg.push(formatMoney(diversos[key]));
+                    }
+
+                    datos_reg.push(formatMoney(total_diversos));
+                    datos_reg.push(formatMoney(sueldo_a_pagar + horas_extra_importe +total_diversos));
+                    datos_nominas.push(datos_reg)
+                    
+                })
+                tabla_datos_nomina = $('#'+ id_dataTable_datos_nomina).DataTable({
+                    destroy: true,
+                    data: datos_nominas,
+                    columns: columns,
+                    language: idioma_espanol,
+                    
+                    "autoWidth": false,
+                    dom: 'Bfrtip',
+                    "columnDefs": [
+                        { "visible": false, "targets": 0 },
+                        {
+                            targets: [12,14,-2,-1],
+                            className: 'bolded'
+                        },
+                        { targets: "_all", className: 'dt-body-center'},
+                    ],
+                    buttons: [
+                        {extend: 'excelHtml5',
+                        title: "Nomina_" + year + "_" + sem,
+                        exportOptions: {
+                            columns: [':visible']
+                        }},
+                    ],
+                });
+            });     
         });
     });
 };

@@ -159,7 +159,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Modal Trabajadores Correctos -->
         <div class="modal fade" id="modalCorrectos" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
@@ -512,6 +511,7 @@
                         <ul class="collapse list-unstyled" id="pageNomina">
                             <li class="tab administracion" id="tabDatosNomina"><a href="#" onclick="openTabs('tabDatosNomina','datosNomina')">Asistencias, Horas Extra y Diversos</a></li>
                             <li class="tab administracion" id="tabDiversos"><a href="#" onclick="openTabs('tabDiversos','diversos')">Definición - Diversos</a></li>
+                            <li class="tab administracion" id="tabPagosNomina"><a href="#" onclick="openTabs('tabPagosNomina','pagosNomina')">Pagos Nómina</a></li>
                         </ul>
                     </li>
                     <li>
@@ -521,6 +521,11 @@
                             <li class="tab administracion" id="tabAltaProcesos"><a href="#" onclick="openTabs('tabAltaProcesos','altaProcesos')">Alta y Edición - Procesos</a></li>
                             <li class="tab administracion" id="tabCalculadora"><a href="#" onclick="openTabs('tabCalculadora','calculadora')">Calculadora Kaizen</a></li>
                             <li class="tab administracion" id="tabGeneradorAdic"><a href="#" onclick="openTabs('tabGeneradorAdic','generadorAdicionales')">Generador de Adicionales</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#pageProduccion" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Producción</a>
+                        <ul class="collapse list-unstyled" id="pageProduccion">
                             <li class="tab administracion" id="tabCopeo"><a href="#" onclick="openTabs('tabCopeo','copeo')">Copeo</a></li>
                         </ul>
                     </li>
@@ -1721,7 +1726,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Nómina -->
+                        <!-- Datos Nómina -->
                         <div id="datosNomina" class = "tabcontent hidden">
                             <h1>Asistencias, Horas Extra y Diversos </h1>
                             <p>Página para ingresar asistencias, horas extra y pagos diversos.</p>
@@ -1759,47 +1764,64 @@
                                     </div>
                                     <div class= "col-lg-2"></div>
                                     <div class = "tableWrapper">
-                                        <table id="dataTableObra" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
-                                            <thead>
-                                                <tr>
-                                                    <th>Id_obra</th>
-                                                    <th>Id_cliente</th>
-                                                    <th>Clave</th>
-                                                    <th>Nombre</th>
-                                                    <th>Cliente</th>
-                                                    <th>Dirección</th>
-                                                    <th>Dirección</th>
-                                                    <th>Fondo de Garantía</th>
-                                                    <th>Fecha de inicio programada</th>
-                                                    <th>Fecha de terminación programada</th>
-                                                    <th>Terminada</th>
-                                                    <th>Habilitada</th>
-                                                    <th>Editar</th>
-                                                </tr>
-                                            </thead>
-                                            <tfoot>
-                                                <tr>
-                                                  <th>Id_obra</th>
-                                                  <th>Id_cliente</th>
-                                                  <th>Clave</th>
-                                                  <th>Nombre</th>
-                                                  <th>Cliente</th>
-                                                  <th>Dirección</th>
-                                                  <th>Dirección</th>
-                                                  <th>Fondo de Garantía</th>
-                                                  <th>Fecha de inicio programada</th>
-                                                  <th>Fecha de terminación programada</th>
-                                                  <th>Terminada</th>
-                                                  <th>Habilitada</th>
-                                                  <th>Editar</th>
-                                                </tr>
-                                            </tfoot>
+                                        <table id="dataTableDatosNomina" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
                                         </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
+                        <!-- Pagos Nómina-->
+                        <div id="pagosNomina" class = "tabcontent hidden">
+                            <h1>Pagos Nómina </h1>
+                            <p>Página para ingresar los pagos de nómina realizados semanalmente</p>
+                            <div class= "container-fluid">
+                                <div class= "row align-items-center">
+                                    <div class= "col-lg-2"></div>
+                                    <div class= "col-lg-8">
+                                        <form id="formPagosNomina" action="#" onsubmit="return false;">
+                                            <div class="form-row">
+                                                <div class="form-group col-6">
+                                                    <label for="yearPagosNomina">Año</label>
+                                                    <select id ="yearPagosNomina" class="form-control"></select>
+                                                </div>
+                                                <div class="form-group col-6">
+                                                    <label for="semanaPagosNomina">Semana</label>
+                                                    <select id ="semanaPagosNomina" class="form-control"></select>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-3">
+                                                    <label for="fechaPagosNomina">Fecha de pago</label>
+                                                    <input class="form-control" type="text" id="fechaPagosNomina"  placeholder="" readonly="readonly">
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="totalPagosNominaButton">Gran total</label>
+                                                    <button id ="totalPagosNominaButton" type='button' class=' btn btn-outline-success btn-block'>Abrir</button>
+                                                </div>
+                                            </div>
+                                            <div class="form-row text-center">
+                                                <div class="form-group col-2">
+                                                    <label>ID Pagadora</label>
+                                                </div>
+                                                <div class="form-group col-4">
+                                                    <label>Nombre</label>
+                                                </div>
+                                                <div class="form-group col-3">
+                                                    <label>A pagar (Neto)</label>
+                                                </div>
+                                                <div class="form-group col-3">
+                                                    <label>Pago realizado (con impuestos)</label>
+                                                </div>
+                                            </div>
+                                            <div class="container-fluid" id="divContainerPagosNomina">
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class= "col-lg-2"></div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- Definición de pagos diversos -->
                         <div id="diversos" class = "tabcontent hidden">
                             <h1>Definición - Diversos </h1>
@@ -2218,8 +2240,8 @@
         </script>
 
         <!--My scripts-->
-        <script src="app_principal_v2.js"></script>
         <script src="app_funciones_v2.js"></script>
+        <script src="app_principal_v2.js"></script>
         <script src="numeroLetras.js"></script>
         <script src="app_altaCliente_v2.js"></script>
         <script src="app_altaObra_v2.js"></script>
@@ -2232,6 +2254,7 @@
         <script src="app_calculadora_v2.js"></script>
         <script src="app_diversos_v2.js"></script>
         <script src="app_copeo_v2.js"></script>
+        <script src="app_pagos_nomina_v2.js"></script>
 
         <!-- Excel to Json-->
         <script src="xlsx.full.min.js"></script>
