@@ -49,7 +49,6 @@ $('#' + id_tab_copeo).click(function() {
   var select2 = document.getElementById(id_lista_trabajadoresCopeo);
   firebase.database().ref(rama_bd_datos_referencia + "/puestos").on('value',function(snapshot){
       puestos_json = snapshot.val();
-      console.log(puestos_json);
       snapshot.forEach(function(snapChild){ //Contar todos los subprocesos de la misma categoría para ese proceso
         puesto = snapChild.val();
         option = document.createElement('option');
@@ -79,8 +78,42 @@ $('#' + id_borrar_copeo).click(function() {
 });
 
 // ----------------------- FUNCIONES DE LOS CAMPOS REGULARES ------------------------
-// -----------------------------------   ---------------------------------------
+// -----------------------------------  DDLS  ---------------------------------------
 
+$("#" + id_ddl_obraCopeo ).change(function(){
+  $('#' + id_ddl_procesoCopeo).empty();
+  $('#' + id_ddl_subprocesoCopeo).empty();
+  resetFormCopeo_subproceso();
+  var select = document.getElementById(id_ddl_procesoCopeo);
+  var option = document.createElement('option');
+  option.style = "display:none";
+  option.text = option.value = "";
+  select.appendChild(option);
+  var proceso;
+  firebase.database().ref(rama_bd_obras + "/procesos/" + uid_obra + "/procesos").orderByKey().on('child_added',function(snapshot){
+      proceso = snapshot.val();
+      if (snapshot.exists()){
+        if (snapshot.key !== "ADIC" && snapshot.key !== "MISC" && snapshot.key !== "PC00"){ //descartamos los procesos default
+          option = document.createElement('option');
+          option.value = snapshot.key;
+          option.text = snapshot.key + " " + proceso.nombre;
+          select.appendChild(option);
+        }
+      }
+  });
+});
+
+$("#" + id_ddl_procesoCalculadora).change(function(){
+  llenaDdlSubprocesoCopeo(uid_obra, uid_proceso);
+});
+
+$("#" + id_ddl_subprocesoCalculadora).change(function(){
+  resetFormCalculadora_subproceso();
+  uid_subproceso = $('#'+id_ddl_subprocesoCalculadora+" option:selected").val()
+  cargaCamposCalculadora(uid_obra, uid_proceso, uid_subproceso);
+});
+
+// ----------------------------------------------------------------------------------
 $('#' + id_lista_trabajadoresCopeo).change(function(){
     var array_html = selectTrabajadores.selected();
     var item;
@@ -100,6 +133,10 @@ function resetFormCopeo (){
   $('#'+id_ddl_obraCopeo).val("");
   $('#'+id_ddl_procesoCopeo).empty();
   $('#'+id_ddl_subprocesoCopeo).empty();
+  resetFormCopeo_subproceso();
+}
+
+function resetFormCopeo_subproceso(){
   $('#'+id_carga_socialCopeo).val(54);
   $('#'+id_diasCopeo).val("");
   $('#'+id_multCopeo).val("");
@@ -112,7 +149,44 @@ function resetFormCopeo (){
     $('#'+"row-"+puestos_array[i]).removeClass("hidden");
     $('#'+puestos_array[i]).val("");
   }
+}
 
+function llenaDdlSubprocesoCopeo(clave_obra, clave_proceso){
+	$('#' + id_ddl_subprocesoCopeo).empty();
+  var select = document.getElementById(id_ddl_subprocesoCopeo);
+  var option = document.createElement('option');
+  option.style = "display:none";
+  option.text = option.value = "";
+  select.appendChild(option);
+	var proceso;
+	var subproceso;
+  firebase.database().ref(rama_bd_obras + "/procesos/" + clave_obra + "/procesos/" + clave_proceso).on('value',function(snapshot){
+			proceso = snapshot.val();
+			snapshot.child("subprocesos").forEach(function(snapchild){
+				subproceso = snapchild.val();
+	      if (snapchild.exists()){
+	        if ($('#'+id_ddl_procesoCalculadora+" option:selected").val() == snapchild.key){
+						if(proceso.num_subprocesos == 0 || subproceso.costo_suministros !== 0 || subproceso.precopeo !== 0 || subproceso.score.horas_programadas !== 0 || subproceso.utilidad !== 0 || subproceso.precio_venta !== 0){
+							option = document.createElement('option');
+			        option.value = snapchild.key;
+		          option.text = "-CORRUPTO-";
+							select.appendChild(option);
+						}
+	        } else {
+						option = document.createElement('option');
+		        option.value = snapchild.key;
+	          option.text = snapchild.key + " " + subproceso.nombre;
+						select.appendChild(option);
+	        }
+	        if (proceso.num_subprocesos == 0 ){
+						$('#' + id_seccion_subprocesoCalculadora).addClass('hidden');
+						$('#' + id_ddl_subprocesoCalculadora).val(snapshot.key);
+					} else {
+						$('#' + id_seccion_subprocesoCalculadora).removeClass('hidden');
+					}
+	      }
+			});
+  });
 }
 
 function agregaCamposPuesto(puesto){
@@ -162,10 +236,4 @@ function agregaCamposPuesto(puesto){
   row.append(col4);
   var div_trabajadores = document.getElementById(id_div_trabajadoresCopeo);
   div_trabajadores.appendChild(row);
-}
-
-function removeElement(elementId) {
-    // Removes an element from the document
-    var element = document.getElementById(elementId);
-    element.parentNode.removeChild(element);
 }
