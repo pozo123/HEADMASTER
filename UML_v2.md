@@ -161,33 +161,34 @@ Nota: Todo float se ingresa a 2 decimales.
                                     - costo_hora: float (2 decimales)
         - copeo
             - id_obra
-                - subproceso_clave
-                    - impuestos: float (0 a 1)
-                    - num_entradas: int
-                    - entradas
-                        - entrada (num)
-                            - nombre: string
-                            - alcance: string
-                            - subtotal: float
-                            - cuadrilla:
-                                - ayudante
-                                    - cantidad: int
-                                    - sueldo_diario: float (sin impuestos)
-                                - medio_oficial
-                                    - cantidad: int
-                                    - sueldo_diario: float (sin impuestos)
-                                - oficial
-                                    - cantidad: int
-                                    - sueldo_diario: float (sin impuestos)
-                                - encargado
-                                    - cantidad: int
-                                    - sueldo_diario: float (sin impuestos)
-                                - supervisor
-                                    - cantidad: int
-                                    - sueldo_diario: float (sin impuestos)
-                            - multiplicadores
-                                - dias: float
-                                - unidades: float
+                - id_proceso
+                    - id_subproceso
+                        - impuestos: float (0 a 1)
+                        - num_entradas: int
+                        - entradas
+                            - entrada (num)
+                                - nombre: string
+                                - alcance: string
+                                - subtotal: float
+                                - cuadrilla:
+                                    - ayudante
+                                        - cantidad: int
+                                        - sueldo_diario: float (sin impuestos)
+                                    - medio_oficial
+                                        - cantidad: int
+                                        - sueldo_diario: float (sin impuestos)
+                                    - oficial
+                                        - cantidad: int
+                                        - sueldo_diario: float (sin impuestos)
+                                    - encargado
+                                        - cantidad: int
+                                        - sueldo_diario: float (sin impuestos)
+                                    - supervisor
+                                        - cantidad: int
+                                        - sueldo_diario: float (sin impuestos)
+                                - multiplicadores
+                                    - dias: float
+                                    - unidades: float
         - presupuesto: (adic o pc00. pc00-misc = "") (DEFINIR CON RAY)
             - id_obra
                 - presupuestos (id del subproceso)

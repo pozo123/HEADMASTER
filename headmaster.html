@@ -2111,6 +2111,8 @@
                                                      <label for="ddl_procesoCopeo">Proceso:</label>
                                                      <select id="ddl_procesoCopeo" class="form-control"></select>
                                                  </div>
+                                              </div>
+                                              <div class="form-row" id="div_subprocesoCopeo">
                                                  <div class="form-group col-md-6">
                                                      <label for="ddl_subprocesoCopeo">Subproceso:</label>
                                                      <select id="ddl_subprocesoCopeo" class="form-control"></select>
@@ -2166,9 +2168,16 @@
                                              </div>
                                              <div class="form-group row">
                                                  <div class = "col-lg-3"></div>
+                                                 <label for="costoUnitarioCopeo" class="col-sm-3 col-form-label">Costo unitario</label>
+                                                 <div class="col-sm-3">
+                                                     <input type="text" disabled="true" class="form-control" id="costoUnitarioCopeo" placeholder="Costo unitario">
+                                                 </div>
+                                             </div>
+                                             <div class="form-group row">
+                                                 <div class = "col-lg-3"></div>
                                                  <label for="costoCopeo" class="col-sm-3 col-form-label">Total</label>
                                                  <div class="col-sm-3">
-                                                     <input type="text" disabled="true" class="form-control" id="costoCopeo" placeholder="Costo">
+                                                     <input type="text" disabled="true" class="form-control" id="costoCopeo" placeholder="Costo total">
                                                  </div>
                                              </div>
                                              <div class="form-group row">
@@ -2178,6 +2187,14 @@
                                                      <input type="text" disabled="true" class="form-control" id="costoCSCopeo" placeholder="Costo con CS">
                                                  </div>
                                              </div>
+                                             <div class="form-row">
+                                                 <div class= "col-lg-4"></div>
+                                                 <div class= "col-lg-4">
+                                                     <button id="botonsueldosCopeo" type="button"  class="btn btn-secondary btn-block">Actualizar sueldos</button>
+                                                 </div>
+                                                 <div class= "col-lg-4"></div>
+                                             </div>
+                                           </br>
                                              <div class="form-row">
                                                  <div class= "col-lg-6">
                                                      <button id="botonAceptarCopeo" type="button" class="btn btn-outline-success btn-block">Aceptar</button>

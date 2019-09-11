@@ -13,15 +13,21 @@ var id_nombreCopeo = "nombreCopeo";
 var id_alcanceCopeo = "alcanceCopeo";
 var id_lista_trabajadoresCopeo = "listaTrabajadoresCopeo";
 var id_div_trabajadoresCopeo = "divTrabajadoresCopeo";
-var id_costo_CopeoCopeo = "costoCopeo"
-var id_costo_Copeo_CSCopeo = "costoCSCopeo"
+var id_costo_unitarioCopeo = "costoUnitarioCopeo";
+var id_costo_CopeoCopeo = "costoCopeo";
+var id_costo_Copeo_CSCopeo = "costoCSCopeo";
+var id_seccion_subprocesoCopeo = "div_subprocesoCopeo";
 
 var id_agregar_copeo = "botonAceptarCopeo";
 var id_borrar_copeo = "botonResetCopeo";
+var id_sueldos_copeo = "botonSueldosCopeo";
 
 var selectTrabajadores;
 var puestos_array;
 var puestos_json;
+var uid_obra;
+var uid_proceso;
+var uid_subproceso;
 
 //Variables globales para controlar edición
 
@@ -67,13 +73,18 @@ $('#' + id_tab_copeo).click(function() {
   });
 });
 
-//Funcionalidad del boton 'Registrar/Editar'
+//Funcionalidad del boton 'Aceptar'
 $('#' + id_agregar_copeo).click(function() {
-
+  validateFormCopeo();
 });
 
-//Funcionalidad del boton 'Borrar todo'
+//Funcionalidad del boton 'Borrar'
 $('#' + id_borrar_copeo).click(function() {
+  resetFormCopeo();
+});
+
+//Funcionalidad del boton 'Sueldos default'
+$('#' + id_sueldos_copeo).click(function() {
 
 });
 
@@ -81,6 +92,7 @@ $('#' + id_borrar_copeo).click(function() {
 // -----------------------------------  DDLS  ---------------------------------------
 
 $("#" + id_ddl_obraCopeo ).change(function(){
+  uid_obra=$('#' + id_ddl_obraCopeo + " option:selected").val();
   $('#' + id_ddl_procesoCopeo).empty();
   $('#' + id_ddl_subprocesoCopeo).empty();
   resetFormCopeo_subproceso();
@@ -103,17 +115,20 @@ $("#" + id_ddl_obraCopeo ).change(function(){
   });
 });
 
-$("#" + id_ddl_procesoCalculadora).change(function(){
+$("#" + id_ddl_procesoCopeo).change(function(){
+  uid_proceso = $('#' + id_ddl_procesoCopeo + " option:selected").val();
   llenaDdlSubprocesoCopeo(uid_obra, uid_proceso);
 });
 
-$("#" + id_ddl_subprocesoCalculadora).change(function(){
-  resetFormCalculadora_subproceso();
-  uid_subproceso = $('#'+id_ddl_subprocesoCalculadora+" option:selected").val()
-  cargaCamposCalculadora(uid_obra, uid_proceso, uid_subproceso);
+$("#" + id_ddl_subprocesoCopeo).change(function(){
+  resetFormCopeo_subproceso();
+  uid_subproceso = $('#'+id_ddl_subprocesoCopeo+" option:selected").val()
+  $('.sueldosCopeo').prop('disabled',true);
+  //cargaCamposCopeo(uid_obra, uid_proceso, uid_subproceso);
 });
 
-// ----------------------------------------------------------------------------------
+// -------------------- FUNCIONES DE LOS CAMPOS DE PUESTOS----------------------
+
 $('#' + id_lista_trabajadoresCopeo).change(function(){
     var array_html = selectTrabajadores.selected();
     var item;
@@ -125,15 +140,147 @@ $('#' + id_lista_trabajadoresCopeo).change(function(){
         $('#' + "row-"+item).addClass('hidden');
       }
     }
+    calculaCostoUnitarioCopeo();
+    calculaCostoTotalCopeo();
 });
 
-// ----------------------- FUNCIONES DE LOS CAMPOS REGULARES ------------------------
+// ----------------------- INFORMACION DE LA ENTRADA ---------------------------
+
+$('#'+id_nombreCopeo).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789_-.",e);
+});
+
+$('#'+id_nombreCopeo).change(function (){
+  var nombre = deleteBlankSpaces(id_nombreCopeo);
+  nombre = nombre.charAt(0).toUpperCase() + nombre.slice(1);
+  $('#' + id_nombreCopeo).val(nombre);
+});
+
+$('#'+id_alcanceCopeo ).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789_-.()",e);
+});
+
+$('#'+id_alcanceCopeo ).change(function (){
+  var alcance = deleteBlankSpaces(id_alcanceCopeo );
+  alcance = alcance.charAt(0).toUpperCase() + alcance.slice(1);
+  $('#' + id_alcanceCopeo ).val(alcance);
+});
+
+$('#'+id_carga_socialCopeo  ).keypress(function(e){
+    charactersAllowed("0123456789.",e);
+});
+
+$('#'+id_carga_socialCopeo  ).change(function (){
+  if($('#'+id_carga_socialCopeo).val() == ""){
+    $('#'+id_carga_socialCopeo).val(0);
+  }else{
+    $('#'+id_carga_socialCopeo).val(parseFloat($('#'+id_carga_socialCopeo).val()).toFixed(2));
+  }
+  calculaCostoTotalCopeo();
+});
+
+$('#'+id_diasCopeo).keypress(function(e){
+    charactersAllowed("0123456789.",e);
+});
+
+$('#'+id_diasCopeo).change(function (){
+  if($('#'+id_diasCopeo).val() == ""){
+    $('#'+id_diasCopeo).val(0);
+  }else{
+    $('#'+id_diasCopeo).val(parseFloat($('#'+id_diasCopeo).val()).toFixed(2));
+  }
+  calculaCostoTotalCopeo();
+});
+
+$('#'+id_multCopeo).keypress(function(e){
+    charactersAllowed("0123456789.",e);
+});
+
+$('#'+id_multCopeo).change(function (){
+  if($('#'+id_multCopeo).val() == ""){
+    $('#'+id_multCopeo).val(0);
+  }else{
+    $('#'+id_multCopeo).val(parseFloat($('#'+id_multCopeo).val()).toFixed(2));
+  }
+  calculaCostoTotalCopeo();
+});
+
+// --------------- FUNCIONES PARA CAMPOS CREADOS DINAMICAMENTE -----------------
+$(document).on('keypress','.puestosCopeo', function(e){
+    charactersAllowed("0123456789",e);
+});
+
+$(document).on('change','.puestosCopeo', function(e){
+		if(this.value == ""){
+			this.value = 0;
+		}
+    calculaCostoUnitarioCopeo();
+    calculaCostoTotalCopeo();
+});
+
+// ------------------------------ VALIDACIONES ---------------------------------
+function validateFormCopeo(){
+  if ($('#' + id_ddl_obraCopeo).val() == ""){
+			alert("Selecciona la obra");
+			highLightColor(id_ddl_obraCopeo,"#FF0000");
+			return false;
+	} else if ($('#' + id_ddl_procesoCopeo).val() == ""){
+			alert("Selecciona un proceso");
+			highLightColor(id_ddl_procesoCopeo,"#FF0000");
+			return false;
+	} else if ($('#' + id_ddl_subprocesoCopeo).val() == ""){
+			alert("Selecciona un subproceso");
+			highLightColor(id_ddl_subprocesoCopeo,"#FF0000");
+			return false;
+  } else if ($('#' + id_nombreCopeo).val() == ""){
+			alert("Ingresa el nombre de la entrada");
+			highLightColor(id_nombreCopeo,"#FF0000");
+			return false;
+	} else if ($('#' + id_alcanceCopeo).val() == ""){
+			alert("Ingresa el alcance de la entrada");
+			highLightColor(id_alcanceCopeo,"#FF0000");
+			return false;
+  } else if ($('#' + id_diasCopeo).val() == ""){
+			alert("Ingresa los días que tarda la cuadrilla");
+			highLightColor(id_diasCopeo,"#FF0000");
+			return false;
+	} else if ($('#' + id_multCopeo).val() == ""){
+			alert("Ingresa un multiplicador");
+			highLightColor(id_multCopeo,"#FF0000");
+			return false;
+	} else if ($('#' + id_carga_socialCopeo).val() == ""){
+			alert("Ingresa porcentaje de carga social");
+			highLightColor(id_carga_socialCopeo,"#FF0000");
+			return false;
+	} else {
+    console.log("hasta aqui llego");
+    var aux = selectTrabajadores.selected();
+    console.log(aux);
+    if(aux && aux.length>0){
+      for(i=0;i<aux.length; i++){
+        if ($('#' + aux[i]).val() == ""){
+          alert("Ingresa los integrantes de la cuadrilla");
+    			//highLightColor(aux[i],"#FF0000");
+          return false
+        }
+      }
+    } else {
+      alert("Selecciona los puestos necesarios para el trabajo");
+			highLightColor(id_lista_trabajadoresCopeo,"#FF0000");
+      return false;
+    }
+		return true;
+	}
+}
+
+// --------------------------- FUNCIONES NECESARIAS ----------------------------
 
 function resetFormCopeo (){
   $('#'+id_ddl_obraCopeo).val("");
   $('#'+id_ddl_procesoCopeo).empty();
   $('#'+id_ddl_subprocesoCopeo).empty();
   resetFormCopeo_subproceso();
+  $('#' + id_seccion_subprocesoCopeo).addClass('hidden');
 }
 
 function resetFormCopeo_subproceso(){
@@ -159,41 +306,44 @@ function llenaDdlSubprocesoCopeo(clave_obra, clave_proceso){
   option.text = option.value = "";
   select.appendChild(option);
 	var proceso;
+  var procesoCopeo;
 	var subproceso;
-  firebase.database().ref(rama_bd_obras + "/procesos/" + clave_obra + "/procesos/" + clave_proceso).on('value',function(snapshot){
-			proceso = snapshot.val();
-			snapshot.child("subprocesos").forEach(function(snapchild){
-				subproceso = snapchild.val();
-	      if (snapchild.exists()){
-	        if ($('#'+id_ddl_procesoCalculadora+" option:selected").val() == snapchild.key){
-						if(proceso.num_subprocesos == 0 || subproceso.costo_suministros !== 0 || subproceso.precopeo !== 0 || subproceso.score.horas_programadas !== 0 || subproceso.utilidad !== 0 || subproceso.precio_venta !== 0){
-							option = document.createElement('option');
-			        option.value = snapchild.key;
-		          option.text = "-CORRUPTO-";
-							select.appendChild(option);
-						}
-	        } else {
-						option = document.createElement('option');
-		        option.value = snapchild.key;
-	          option.text = snapchild.key + " " + subproceso.nombre;
-						select.appendChild(option);
-	        }
-	        if (proceso.num_subprocesos == 0 ){
-						$('#' + id_seccion_subprocesoCalculadora).addClass('hidden');
-						$('#' + id_ddl_subprocesoCalculadora).val(snapshot.key);
-					} else {
-						$('#' + id_seccion_subprocesoCalculadora).removeClass('hidden');
-					}
-	      }
-			});
+  firebase.database().ref(rama_bd_obras + "/procesos/" + clave_obra + "/procesos/" + clave_proceso).on('value',function(snapshotProcesos){
+    firebase.database().ref(rama_bd_obras + "/copeo/" + clave_obra +"/"+ clave_proceso).on('value',function(snapshotCopeo){
+      proceso = snapshotProcesos.val();
+      procesoCopeo = snapshotCopeo.val();
+      snapshotProcesos.child("subprocesos").forEach(function(snapchild){
+        subproceso = snapchild.val();
+        if (snapchild.exists()){
+          if ($('#'+id_ddl_procesoCopeo+" option:selected").val() == snapchild.key){
+            if(snapshotCopeo.exists() && procesoCopeo[snapchild.key] !== undefined){
+              option = document.createElement('option');
+              option.value = snapchild.key;
+              option.text = "-CORRUPTO-";
+              select.appendChild(option);
+            }
+          } else {
+            option = document.createElement('option');
+            option.value = snapchild.key;
+            option.text = snapchild.key + " " + subproceso.nombre;
+            select.appendChild(option);
+          }
+          if (proceso.num_subprocesos == 0 ){
+            $('#' + id_seccion_subprocesoCopeo).addClass('hidden');
+            $('#' + id_ddl_subprocesoCopeo).val(snapshotProcesos.key);
+          } else {
+            $('#' + id_seccion_subprocesoCopeo).removeClass('hidden');
+          }
+        }
+      });
+    });
   });
 }
 
 function agregaCamposPuesto(puesto){
-  console.log(puesto);
-  var id_puesto = puesto + "Copeo";
+  var id_puesto = puesto;
   var cantidad = document.createElement('input');
-  cantidad.className = "form-control";
+  cantidad.className = "form-control puestosCopeo";
   cantidad.type = "text";
   cantidad.placeholder = "Cantidad";
   cantidad.id = id_puesto;
@@ -211,10 +361,11 @@ function agregaCamposPuesto(puesto){
   col2.appendChild(label);
 
   var cantidad2 = document.createElement('input');
-  cantidad2.className = "form-control";
+  cantidad2.className = "form-control sueldosCopeo";
   cantidad2.type = "text";
   cantidad2.disabled = "true";
   cantidad2.value = formatMoney(puestos_json[puesto]["sueldo"]);
+  cantidad2.id = "sueldo_"+id_puesto;
 
   var col3 = document.createElement('div');
   col3.className = "col-md-3";
@@ -236,4 +387,75 @@ function agregaCamposPuesto(puesto){
   row.append(col4);
   var div_trabajadores = document.getElementById(id_div_trabajadoresCopeo);
   div_trabajadores.appendChild(row);
+}
+
+function cargaCamposCopeo(claveObra, claveProceso, claveSubproceso){
+  firebase.database().ref(rama_bd_obras + "/procesos/" + claveObra + "/procesos/" + claveProceso + "/subprocesos/" + claveSubproceso).once('value',function(snapshot){
+    var subproceso = snapshot.val();
+    if (snapshot.exists() && ){
+			registro_antiguo = subproceso;
+      var costoScore = subproceso.score.horas_programadas*subproceso.score.costo_hora;
+      var costoOperacion = (costoScore + subproceso.costo_suministros + (subproceso.precopeo*(1 + subproceso.porcentaje_impuestos*0.01)))*(1+ subproceso.porcentaje_indirectos*0.01);
+			var costoOperacionIndirectos = (costoScore + subproceso.costo_suministros + (subproceso.precopeo*(1 + subproceso.porcentaje_impuestos*0.01)))*(subproceso.porcentaje_indirectos*0.01);
+      var utilidadPorcentaje = subproceso.utilidad / costoOperacion * 100 ;
+			var copeoConCarga = subproceso.precopeo * (1+subproceso.porcentaje_impuestos*0.01);
+			var utilidadNeta = subproceso.utilidad * 0.6;
+
+      $('#' + id_horas_proyectoCalculadora ).val(subproceso.score.horas_programadas);
+			$('#' + id_costo_horaScoreCalculadora).val(formatMoney(subproceso.score.costo_hora));
+			$('#' + id_costo_proyectoCalculadora).val(formatMoney(costoScore));
+      $('#' + id_costo_suministrosCalculadora).val(formatMoney(subproceso.costo_suministros));
+      $('#' + id_costo_copeoCalculadora).val(formatMoney(subproceso.precopeo));
+			$('#' + id_costo_copeoCargaCalculadora).val(formatMoney(copeoConCarga));
+      $('#' + id_profit_cantidadCalculadora).val(formatMoney(subproceso.utilidad));
+			$('#' + id_profit_porcentajeCalculadora).val(utilidadPorcentaje.toFixed(2));
+      $('#' + id_precio_ventaCalculadora).val(formatMoney(subproceso.precio_venta));
+			$('#' + id_costo_operacionesCalculadora).val(formatMoney(costoOperacion));
+			$('#' + id_costos_indirectosCalculadora).val(formatMoney(costoOperacionIndirectos));
+
+      $('#' + id_anticipoCalculadora).val(subproceso.porcentaje_anticipo);
+      $('#' + id_estimacionesCalculadora).val(100 - parseFloat(subproceso.porcentaje_anticipo));
+      $('#' + id_indirectosCalculadora).val(subproceso.porcentaje_indirectos);
+      $('#' + id_impuestosCalculadora).val(subproceso.porcentaje_impuestos);
+			$('#' + id_profit_netoCalculadora).val(formatMoney(utilidadNeta));
+
+			horasScoreManda = true;
+			cantProfitManda = true;
+    } else {
+			resetFormCalculadora_subproceso();
+		}
+  });
+}
+
+function calculaCostoUnitarioCopeo(){
+  var aux = selectTrabajadores.selected();
+  var suma = 0;
+  var total = 0;
+  var totalCS = 0;
+  for (i=0; i<aux.length; i++){
+    if($('#'+aux[i]).val() !== ""){
+      suma = suma + parseFloat($('#'+aux[i]).val()) * deformatMoney($('#'+"sueldo_"+aux[i]).val());
+    }
+  }
+  $('#'+ id_costo_unitarioCopeo).val(formatMoney(suma));
+}
+
+function calculaCostoTotalCopeo(){
+  var aux = selectTrabajadores.selected();
+  var suma = deformatMoney($('#'+ id_costo_unitarioCopeo).val());
+  var total = 0;
+  var totalCS = 0;
+  if ($('#'+id_diasCopeo).val() !== "" && $('#'+id_multCopeo).val() !== ""){
+    console.log("calculando total");
+    total = suma * parseFloat($('#'+id_diasCopeo).val()) * parseFloat($('#'+id_multCopeo).val());
+    if($('#'+id_carga_socialCopeo).val() !== ""){
+      totalCS = total * (1 + parseFloat($('#'+id_carga_socialCopeo).val())*0.01)
+      console.log(totalCS);
+    }
+  } else {
+    total = 0;
+    totalCS =0;
+  }
+  $('#'+ id_costo_CopeoCopeo).val(formatMoney(total));
+  $('#'+ id_costo_Copeo_CSCopeo).val(formatMoney(totalCS));
 }
