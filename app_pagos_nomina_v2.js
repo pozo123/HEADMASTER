@@ -40,12 +40,14 @@ $('#' + id_tab_pagos_nomina).click(function(){
         option_week.value = week;
         select_week.appendChild(option_week);
     }
+
+    actualizarListaPagosNomina();
 });
 
 $('#' + id_ddl_year_pagos_nomina).change(function(){
     $('#' + id_ddl_week_pagos_nomina).empty();
     $('#' + id_fecha_pagos_nomina).val("");
-    // maybe resetear cosas
+
     var select = document.getElementById(id_ddl_week_pagos_nomina);
     var year = $('#' + id_ddl_year_pagos_nomina + " option:selected").val();
     if(year < new Date().getFullYear()){
@@ -83,6 +85,106 @@ $('#' + id_ddl_year_pagos_nomina).change(function(){
     }
 });
 
-$('#' + id_ddl_year_pagos_nomina).change(function(){
+$('#' + id_ddl_week_pagos_nomina).change(function(){
     // aquí llamar a la función pro
+    actualizarListaPagosNomina();
 });
+
+function generateRowPagosNomina(registroSnapshot){
+    var key = registroSnapshot.key;
+    var registro = registroSnapshot.val();
+
+    var nomina = 0;
+
+    var id_pagadora = document.createElement('label');
+    id_pagadora.innerText = registro.trabajador_id_pagadora;   
+    var col_pagadora = document.createElement('div');
+    col_pagadora.className = "form-group col-2";
+    col_pagadora.appendChild(id_pagadora);
+
+    var nombre = document.createElement('label');
+    nombre.innerText = registro.trabajador_nombre;   
+    var col_nombre = document.createElement('div');
+    col_nombre.className = "form-group col-4";
+    col_nombre.appendChild(nombre);
+
+    if(registro.asistencias != undefined) {
+        jueves = registro.asistencias.jueves == undefined ? "" : registro.asistencias.jueves.actividad;
+        jueves_aux = jueves == "Falta" || jueves == ""  ? 0 : 0.2;
+        viernes = registro.asistencias.viernes == undefined ? "" : registro.asistencias.viernes.actividad;
+        viernes_aux = viernes == "Falta" || viernes == ""  ? 0 : 0.2;
+        lunes = registro.asistencias.lunes == undefined ? "" : registro.asistencias.lunes.actividad;
+        lunes_aux = lunes == "Falta" || lunes == ""  ? 0 : 0.2;
+        martes = registro.asistencias.martes == undefined ? "" : registro.asistencias.martes.actividad;
+        martes_aux = martes == "Falta" || martes == ""  ? 0 : 0.2;
+        miercoles = registro.asistencias.miercoles == undefined ? "" : registro.asistencias.miercoles.actividad;
+        miercoles_aux = miercoles == "Falta" || miercoles == ""  ? 0 : 0.2;
+    }
+
+    nomina +=  registro.sueldo_semanal * (jueves_aux + viernes_aux + lunes_aux + martes_aux + miercoles_aux)
+
+    var horas_extra = 0;
+    if(registro.horas_extra != undefined){
+        for(key in registro.horas_extra){
+            horas_extra += registro.horas_extra[key].cantidad;
+        }
+        nomina += (registro.sueldo_semanal / 48 ) * horas_extra * 2;
+    }  
+    if(registro.diversos != undefined){
+        for(key in registro.diversos){
+            nomina += registro.diversos[key].cantidad;
+        };
+    };
+
+    var a_pagar_neto = document.createElement('input');
+    a_pagar_neto.className = "form-control";
+    a_pagar_neto.type = "text";
+    // llenar el valor con la suma de todo lo generado;
+    a_pagar_neto.disabled = true;
+    a_pagar_neto.value = formatMoney(nomina);
+
+    var col_a_pagar = document.createElement('div');
+    col_a_pagar.className = "form-group col-3";
+    col_a_pagar.appendChild(a_pagar_neto);
+
+    var pago = document.createElement('input');
+    pago.className = "form-control pago";
+    pago.type = "text";
+    // llenar el valor del pago con lo que esté en el reg.
+    
+    var col_pago = document.createElement('div');
+    col_pago.className = "form-group col-3";
+    col_pago.appendChild(pago);
+
+    var row = document.createElement('div');
+    row.className = "form-row rowPagoNomina";
+    row.id = key;
+
+    row.append(col_pagadora);
+    row.append(col_nombre);
+    row.append(col_a_pagar);
+    row.append(col_pago);
+    
+    var container = document.getElementById(id_container_pagos_nomina);
+    container.appendChild(row);
+
+    // necesito ordenar el puto container (Creo que funcionó y no sé cómo verga)
+    var mylist = $('#' + id_container_pagos_nomina);
+    var rows = mylist.children();
+    
+    rows.sort(function(a, b) {
+       return $(a).text().toUpperCase().localeCompare($(b).text().toUpperCase());
+    });
+    
+    $.each(rows, function(index, item) {
+       mylist.append(item); 
+    });
+};
+
+function actualizarListaPagosNomina(){
+    firebase.database().ref(rama_bd_nomina + "/listas/fecha_datos/" + $('#' + id_ddl_year_pagos_nomina + " option:selected").val() + "/" + $('#' + id_ddl_week_pagos_nomina + " option:selected").val()).on("child_added", function(listaSnap){
+        firebase.database().ref(rama_bd_nomina + "/nomina/").child(Object.keys(listaSnap.val())[0]).once("value").then(function(regSnap){
+            generateRowPagosNomina(regSnap);
+        });
+    });
+}
