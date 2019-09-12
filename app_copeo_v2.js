@@ -6,6 +6,7 @@ var id_form_copeo = "formCopeo";
 var id_ddl_obraCopeo = "ddl_obraCopeo";
 var id_ddl_procesoCopeo = "ddl_procesoCopeo";
 var id_ddl_subprocesoCopeo = "ddl_subprocesoCopeo";
+var id_ddl_entradaCopeo = "ddl_entradaCopeo";
 var id_carga_socialCopeo = "cargaSocialCopeo";
 var id_diasCopeo = "diasCopeo";
 var id_multCopeo = "multCopeo";
@@ -121,9 +122,13 @@ $("#" + id_ddl_procesoCopeo).change(function(){
 });
 
 $("#" + id_ddl_subprocesoCopeo).change(function(){
-  resetFormCopeo_subproceso();
   uid_subproceso = $('#'+id_ddl_subprocesoCopeo+" option:selected").val()
   $('.sueldosCopeo').prop('disabled',true);
+  llenaDdlEntradaCopeo(uid_obra, uid_proceso,uid_subproceso);
+});
+
+$("#" + id_ddl_entradaCopeo).change(function(){
+  resetFormCopeo_subproceso();
   //cargaCamposCopeo(uid_obra, uid_proceso, uid_subproceso);
 });
 
@@ -340,6 +345,32 @@ function llenaDdlSubprocesoCopeo(clave_obra, clave_proceso){
   });
 }
 
+function llenaDdlEntradaCopeo(clave_obra, clave_proceso, clave_subproceso){
+	$('#' + id_ddl_entradaCopeo).empty();
+  var select = document.getElementById(id_ddl_entradaCopeo);
+  var option = document.createElement('option');
+  option.style = "display:none";
+  option.text = option.value = "";
+  select.appendChild(option);
+	var subproceso;
+  var i = 1;
+  firebase.database().ref(rama_bd_obras + "/copeo/" + clave_obra +"/"+ clave_proceso+"/"+clave_subproceso).on('value',function(snapshot){
+    if(snapshot.exists()){
+      subproceso = snapshot.val();
+      for(i=1; i<= subproceso.num_entradas; i++){
+        option = document.createElement('option');
+        option.value = i;
+        option.text = i;
+        select.appendChild(option);
+      }
+    }
+    option = document.createElement('option');
+    option.value = i;
+    option.text = "-NUEVA-";
+    select.appendChild(option);
+  });
+}
+
 function agregaCamposPuesto(puesto){
   var id_puesto = puesto;
   var cantidad = document.createElement('input');
@@ -389,38 +420,21 @@ function agregaCamposPuesto(puesto){
   div_trabajadores.appendChild(row);
 }
 
-function cargaCamposCopeo(claveObra, claveProceso, claveSubproceso){
-  firebase.database().ref(rama_bd_obras + "/procesos/" + claveObra + "/procesos/" + claveProceso + "/subprocesos/" + claveSubproceso).once('value',function(snapshot){
+function cargaCamposCopeo(claveObra, claveProceso, claveSubproceso, claveEntrada){
+  firebase.database().ref(rama_bd_obras + "/copeo/" + claveObra + "/" + claveProceso + "/" + claveSubproceso).once('value',function(snapshot){
     var subproceso = snapshot.val();
-    if (snapshot.exists() && ){
-			registro_antiguo = subproceso;
-      var costoScore = subproceso.score.horas_programadas*subproceso.score.costo_hora;
-      var costoOperacion = (costoScore + subproceso.costo_suministros + (subproceso.precopeo*(1 + subproceso.porcentaje_impuestos*0.01)))*(1+ subproceso.porcentaje_indirectos*0.01);
-			var costoOperacionIndirectos = (costoScore + subproceso.costo_suministros + (subproceso.precopeo*(1 + subproceso.porcentaje_impuestos*0.01)))*(subproceso.porcentaje_indirectos*0.01);
-      var utilidadPorcentaje = subproceso.utilidad / costoOperacion * 100 ;
-			var copeoConCarga = subproceso.precopeo * (1+subproceso.porcentaje_impuestos*0.01);
-			var utilidadNeta = subproceso.utilidad * 0.6;
-
-      $('#' + id_horas_proyectoCalculadora ).val(subproceso.score.horas_programadas);
-			$('#' + id_costo_horaScoreCalculadora).val(formatMoney(subproceso.score.costo_hora));
-			$('#' + id_costo_proyectoCalculadora).val(formatMoney(costoScore));
-      $('#' + id_costo_suministrosCalculadora).val(formatMoney(subproceso.costo_suministros));
-      $('#' + id_costo_copeoCalculadora).val(formatMoney(subproceso.precopeo));
-			$('#' + id_costo_copeoCargaCalculadora).val(formatMoney(copeoConCarga));
-      $('#' + id_profit_cantidadCalculadora).val(formatMoney(subproceso.utilidad));
-			$('#' + id_profit_porcentajeCalculadora).val(utilidadPorcentaje.toFixed(2));
-      $('#' + id_precio_ventaCalculadora).val(formatMoney(subproceso.precio_venta));
-			$('#' + id_costo_operacionesCalculadora).val(formatMoney(costoOperacion));
-			$('#' + id_costos_indirectosCalculadora).val(formatMoney(costoOperacionIndirectos));
-
-      $('#' + id_anticipoCalculadora).val(subproceso.porcentaje_anticipo);
-      $('#' + id_estimacionesCalculadora).val(100 - parseFloat(subproceso.porcentaje_anticipo));
-      $('#' + id_indirectosCalculadora).val(subproceso.porcentaje_indirectos);
-      $('#' + id_impuestosCalculadora).val(subproceso.porcentaje_impuestos);
-			$('#' + id_profit_netoCalculadora).val(formatMoney(utilidadNeta));
-
-			horasScoreManda = true;
-			cantProfitManda = true;
+    if (snapshot.exists()){
+			//registro_antiguo = subproceso;
+      var entrada = subproceso["entradas"][claveEntrada];
+      $('#' + id_carga_socialCopeo  ).val(subproces.impuestos);
+			$('#' + id_diasCopeo ).val(entrada.multiplicadores.dias);
+			$('#' + id_multCopeo ).val(entrada.multiplicadores.unidades);
+      $('#' + id_nombreCopeo ).val(formatMoney(subproceso.costo_suministros));
+      $('#' + id_alcanceCopeo ).val(formatMoney(subproceso.precopeo));
+			$('#' + id_lista_trabajadoresCopeo ).val(formatMoney(copeoConCarga));
+      $('#' + id_div_trabajadoresCopeo ).val(formatMoney(subproceso.utilidad));
+			calculaCostoUnitarioCopeo();
+      calculaCostoTotalCopeo();
     } else {
 			resetFormCalculadora_subproceso();
 		}
