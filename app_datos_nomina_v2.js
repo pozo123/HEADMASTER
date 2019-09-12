@@ -306,6 +306,7 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
                 
                 resetFormDatosNomina(false);
                 llenarDdlFaltantes();
+                actualizarTablaDatosNomina();
             });
         });
         
@@ -320,7 +321,6 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
             year_head: year_head,
             week_head: week_head,
             sueldo_semanal: trabajador_json.sueldo_base,
-            costo_hora: parseFloat((trabajador_json.sueldo_base / 48).toFixed(2)),
             asistencias: asistencias,
             horas_extra: horas_extra,
             diversos: diversos,
@@ -371,6 +371,7 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
             existe_registro = true;
             resetFormDatosNomina(false);
             llenarDdlFaltantes();
+            actualizarTablaDatosNomina();
             
         });
     }
@@ -1171,8 +1172,7 @@ function datosDiversosDatosNomina(){
 // Actualizar Tabla ----------------------------------
 
 function actualizarTablaDatosNomina(){
-    
-    firebase.database().ref(rama_bd_nomina + "/listas/fecha_datos/" + $('#' + id_ddl_year_datos_nomina + " option:selected").val() + "/" + $('#' + id_ddl_week_datos_nomina + " option:selected").val()).on("value", function(listaSnap){
+    firebase.database().ref(rama_bd_nomina + "/listas/fecha_datos/" + $('#' + id_ddl_year_datos_nomina + " option:selected").val() + "/" + $('#' + id_ddl_week_datos_nomina + " option:selected").val()).once("value").then(function(listaSnap){
         firebase.database().ref(rama_bd_nomina + "/nomina/").once("value").then(function(regSnap){
             firebase.database().ref(rama_bd_datos_referencia + "/diversos").once("value").then(function(divSnap){
                 
@@ -1209,6 +1209,7 @@ function actualizarTablaDatosNomina(){
                 // generar tabla          
                 console.log(columns);
                 var registros = regSnap.val();
+                
                 listaSnap.forEach(function(snapshot){
                     var datos_reg = [];
                     // aquí estoy en cada registro del año y semana elegido
@@ -1276,7 +1277,7 @@ function actualizarTablaDatosNomina(){
                         for(key in registro.horas_extra){
                             horas_extra += registro.horas_extra[key].cantidad;
                         }
-                        horas_extra_importe = registro.costo_hora * horas_extra * 2;
+                        horas_extra_importe = (registro.sueldo_semanal / 48 ) * horas_extra * 2;
                     }  
                     datos_reg.push(horas_extra);
                     datos_reg.push(formatMoney(horas_extra_importe));
