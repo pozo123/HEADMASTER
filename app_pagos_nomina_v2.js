@@ -103,7 +103,18 @@ function generateRowPagosNomina(registroSnapshot){
     col_pagadora.appendChild(id_pagadora);
 
     var nombre = document.createElement('label');
-    nombre.innerText = registro.trabajador_nombre;   
+    
+    var nombre_array = registro.trabajador_nombre.split("_");
+
+    var nombre_text = "";
+    for(var i=0; i<nombre_array.length;i++){
+        if(i>0){
+            nombre_text += " ";
+        }
+        nombre_text += nombre_array[i];
+    }
+
+    nombre.innerText = nombre_text;   
     var col_nombre = document.createElement('div');
     col_nombre.className = "form-group col-4";
     col_nombre.appendChild(nombre);
@@ -182,9 +193,19 @@ function generateRowPagosNomina(registroSnapshot){
 };
 
 function actualizarListaPagosNomina(){
+    $('#' + id_container_pagos_nomina).empty();
     firebase.database().ref(rama_bd_nomina + "/listas/fecha_datos/" + $('#' + id_ddl_year_pagos_nomina + " option:selected").val() + "/" + $('#' + id_ddl_week_pagos_nomina + " option:selected").val()).on("child_added", function(listaSnap){
         firebase.database().ref(rama_bd_nomina + "/nomina/").child(Object.keys(listaSnap.val())[0]).once("value").then(function(regSnap){
             generateRowPagosNomina(regSnap);
         });
     });
 }
+
+$(document).on('keypress','.pago', function(e){
+    charactersAllowed("$1234567890,.",e);
+});
+
+$(document).on('change','.pago', function(){
+    var deformat_sueldo = deformatMoney($(this).val());
+    $(this).val(formatMoney(deformat_sueldo));
+});
