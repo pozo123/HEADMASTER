@@ -2,6 +2,7 @@ var id_tab_pagos_nomina = "tabPagosNomina";
 var id_form_pagos_nomina = "formPagosNomina";
 
 var id_button_total_pagos_nomina = "totalPagosNominaButton";
+var id_button_guardar_pagos_nomina = "guardarPagosNominaButton";
 
 var id_ddl_year_pagos_nomina = "yearPagosNomina";
 var id_ddl_week_pagos_nomina = "semanaPagosNomina";
@@ -9,6 +10,8 @@ var id_ddl_week_pagos_nomina = "semanaPagosNomina";
 var id_fecha_pagos_nomina = "fechaPagosNomina";
 
 var id_container_pagos_nomina = "divContainerPagosNomina";
+
+var monto_db = 0;
 
 $('#' + id_tab_pagos_nomina).click(function(){
 
@@ -161,6 +164,7 @@ function generateRowPagosNomina(registroSnapshot){
     var pago = document.createElement('input');
     pago.className = "form-control pago";
     pago.type = "text";
+    pago.value = formatMoney(registro.pagos_nomina.monto);
     // llenar el valor del pago con lo que esté en el reg.
     
     var col_pago = document.createElement('div');
@@ -194,12 +198,66 @@ function generateRowPagosNomina(registroSnapshot){
 
 function actualizarListaPagosNomina(){
     $('#' + id_container_pagos_nomina).empty();
-    firebase.database().ref(rama_bd_nomina + "/listas/fecha_datos/" + $('#' + id_ddl_year_pagos_nomina + " option:selected").val() + "/" + $('#' + id_ddl_week_pagos_nomina + " option:selected").val()).on("child_added", function(listaSnap){
-        firebase.database().ref(rama_bd_nomina + "/nomina/").child(Object.keys(listaSnap.val())[0]).once("value").then(function(regSnap){
-            generateRowPagosNomina(regSnap);
+    monto_db = 0;
+    firebase.database().ref(rama_bd_nomina + "/listas/fecha_datos/" + $('#' + id_ddl_year_pagos_nomina + " option:selected").val() + "/" + $('#' + id_ddl_week_pagos_nomina + " option:selected").val()).once("value").then(function(listaSnap){
+        listaSnap.forEach(function(subSnap){
+            firebase.database().ref(rama_bd_nomina + "/nomina/").child(Object.keys(subSnap.val())[0]).once("value").then(function(regSnap){
+                generateRowPagosNomina(regSnap);
+                monto_db += regSnap.val().pagos_nomina.monto;
+            });
         });
     });
-}
+
+    // llenar campo de fecha;
+    firebase.database().ref(rama_bd_nomina + "/listas/fechas_pago/" + $('#' + id_ddl_year_pagos_nomina + " option:selected").val() + "/" + $('#' + id_ddl_week_pagos_nomina + " option:selected").val()).once("value").then(function(snapshot){
+        var fecha_aaaammdd = Object.keys(snapshot.val())[0];
+        var fecha = fecha_aaaammdd.slice(0,4) + "." + fecha_aaaammdd.slice(4,6) + "." + fecha_aaaammdd.slice(6);
+
+        $('#' + id_fecha_pagos_nomina).val(fecha);
+    });
+};
+
+$('#' + id_button_guardar_pagos_nomina).click(function(){
+    var fecha = $('#' + id_fecha_pagos_nomina).val();
+    if(fecha == ""){
+        alert("Selecciona la fecha de pago.");
+        return;
+    }
+
+    var fecha_array = fecha.split(".");
+    var fecha_json = new Date(fecha_array[0], fecha_array[1] - 1, fecha_array[2]).getTime();
+
+    var json_datos = {};
+    var json_lista = {};
+
+    var year = $('#'+ id_ddl_year_pagos_nomina + " option:selected").val();
+    var week = $('#'+ id_ddl_week_pagos_nomina + " option:selected").val();
+    firebase.database().ref(rama_bd_nomina + "/listas/fechas_pago").once("value").then(function(snapshot){
+        $('.pago').each(function() {
+            var row = this.parentElement.parentElement;
+            if(snapshot.exists()){
+                snapshot.forEach(function(subSnap){
+                    subSnap.forEach(function(subSubSnap){
+                        subSubSnap.forEach(function(regSnap){   
+                            json_lista["fechas_pago/" + subSnap.key + "/" + subSubSnap.key + "/" + regSnap.key + "/" + row.id] = null;
+                        });
+                    });
+                });
+            };
+    
+            json_datos[row.id + "/pagos_nomina/monto"] = deformatMoney($(this).val());
+            json_datos[row.id + "/pagos_nomina/fecha"] = fecha_json;
+    
+            json_lista["fechas_pago/" + year + "/" + week + "/" + aaaammdd(fecha) + "/" + row.id] = true;
+        });
+
+        firebase.database().ref(rama_bd_nomina + "/nomina").update(json_datos);
+        firebase.database().ref(rama_bd_nomina + "/listas").update(json_lista);
+
+        alert("Pagos actualizados en la base de datos");
+        actualizarListaPagosNomina();
+    });
+});
 
 $(document).on('keypress','.pago', function(e){
     charactersAllowed("$1234567890,.",e);
@@ -208,4 +266,18 @@ $(document).on('keypress','.pago', function(e){
 $(document).on('change','.pago', function(){
     var deformat_sueldo = deformatMoney($(this).val());
     $(this).val(formatMoney(deformat_sueldo));
+});
+
+
+$('#' + id_button_total_pagos_nomina).click(function(){
+    var monto_actual = 0;
+    $('.pago').each(function() {
+        monto_actual += deformatMoney($(this).val());
+    });
+
+    var msg = "El monto en la base de datos es: " + formatMoney(monto_db);
+    msg += "\r\n";
+    msg += "El monto actual es: " + formatMoney(monto_actual);
+
+    alert(msg);
 });

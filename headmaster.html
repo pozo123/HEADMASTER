@@ -249,6 +249,8 @@
                                     <div class="form-group col-sm-1">
                                         <button id ="infoObraAsisgnadaNomina" type='button' class='btn btn-dark' data-toggle="popover" data-trigger="hover"><i class='fas fa-info'></i></button>
                                     </div>
+
+                                    
                                 </div>
                             </div>
                             <div class="container-fluid border border-info rounded">
@@ -527,6 +529,12 @@
                         <a href="#pageProduccion" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Producción</a>
                         <ul class="collapse list-unstyled" id="pageProduccion">
                             <li class="tab administracion" id="tabCopeo"><a href="#" onclick="openTabs('tabCopeo','copeo')">Copeo</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#pageReportes" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Reportes</a>
+                        <ul class="collapse list-unstyled" id="pageReportes">
+                            <li class="tab administracion" id="tabReporteNomina"><a href="#" onclick="openTabs('tabReporteNomina','reporteNomina')">Mano de obra</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -1789,14 +1797,18 @@
                                                     <select id ="semanaPagosNomina" class="form-control"></select>
                                                 </div>
                                             </div>
-                                            <div class="form-row">
+                                            <div class="form-row text-center">
                                                 <div class="form-group col-md-3">
                                                     <label for="fechaPagosNomina">Fecha de pago</label>
                                                     <input class="form-control" type="text" id="fechaPagosNomina"  placeholder="" readonly="readonly">
                                                 </div>
                                                 <div class="form-group col-md-3">
                                                     <label for="totalPagosNominaButton">Gran total</label>
-                                                    <button id ="totalPagosNominaButton" type='button' class=' btn btn-outline-success btn-block'>Abrir</button>
+                                                    <button id ="totalPagosNominaButton" type='button' class=' btn btn-outline-info btn-block'>Ver</button>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                        <label for="guardarPagosNominaButton">Guardar cambios</label>
+                                                    <button id ="guardarPagosNominaButton" type='button' class='btn btn-success btn-block'>Guardar</button>
                                                 </div>
                                             </div>
                                             <div class="form-row text-center">
@@ -2221,6 +2233,50 @@
                              </div>
                          </div>
 
+                        <!-- Reporte Nómina -->
+                        <div id="reporteNomina" class = "tabcontent hidden">
+                            <h1>Mano de obra</h1>
+                            <div class= "container-fluid">
+                                <div class = "row">
+                                    <div class = "col">
+                                        <div class = "tableWrapper">
+                                            <table id="dataTableGlobalReporteNomina" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Obra</th>
+                                                        <th>Nómina</th>
+                                                        <th>% Nómina</th>
+                                                        <th>Horas Extra</th>
+                                                        <th>% Horas Extra</th>
+                                                        <th>Pagos Diversos</th>
+                                                        <th>% Diversos</th>
+                                                        <th>Subtotal</th>
+                                                        <th>Impuestos y carga social</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th>Obra</th>
+                                                        <th>Nómina</th>
+                                                        <th>% Nómina</th>
+                                                        <th>Horas Extra</th>
+                                                        <th>% Horas Extra</th>
+                                                        <th>Pagos Diversos</th>
+                                                        <th>% Diversos</th>
+                                                        <th>Subtotal</th>
+                                                        <th>Impuestos y carga social</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class = "row">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2290,6 +2346,7 @@
         <script src="app_diversos_v2.js"></script>
         <script src="app_copeo_v2.js"></script>
         <script src="app_pagos_nomina_v2.js"></script>
+        <script src="app_reportes_nomina_v2.js"></script>
 
         <!-- Excel to Json-->
         <script src="xlsx.full.min.js"></script>
