@@ -29,6 +29,9 @@ var puestos_json;
 var uid_obra;
 var uid_proceso;
 var uid_subproceso;
+var registro_antiguo;
+var num_entradas;
+
 
 //Variables globales para controlar edición
 
@@ -76,7 +79,50 @@ $('#' + id_tab_copeo).click(function() {
 
 //Funcionalidad del boton 'Aceptar'
 $('#' + id_agregar_copeo).click(function() {
-  validateFormCopeo();
+  if(validateFormCopeo()){
+		uid_obra = $("#" + id_ddl_obraCopeo + " option:selected").val();
+		uid_proceso = $("#" + id_ddl_procesoCopeo + " option:selected").val();
+		uid_subproceso = $("#" + id_ddl_subprocesoCopeo + " option:selected").val();
+    var uid_entrada;
+		var entrada_update = {};
+    var path_subproceso = "copeo/" + uid_obra + "/" + uid_proceso + "/" + uid_subproceso;
+    var nueva = false;
+    var uid_entrada;
+    //Determinar si es alta o modificación
+    if($('#'+id_ddl_entradaCopeo+' option:selected').val() == "-NUEVA-"){
+      num_entradas = num_entradas+1;
+      entrada_update[path_subproceso + "/num_entradas"] = num_entradas;
+      if(num_entradas<10){
+        uid_entrada = "EN-0"+num_entradas;
+      }else{
+        uid_entrada = "EN-"+num_entradas;
+      }
+      nueva = true;
+    } else {
+      uid_entrada = $("#" + id_ddl_entradaCopeo + " option:selected").val();
+    }
+		//Actualizar los campos de la entrada
+    if(parseFloat(uid_entrada.slice(3)) == 1){
+      entrada_update[path_subproceso + "/impuestos"] = parseFloat($('#'+id_carga_socialCopeo).val());
+    }
+    //Generar el JSON de la entrada con los datos del formulario
+		entrada_update[path_subproceso + "/entradas/" + uid_entrada] = datosEntradaCopeo();
+    console.log(datosEntradaCopeo());
+		//Escribir los cambios en la base de datos
+		console.log(entrada_update);
+		firebase.database().ref(rama_bd_obras).update(entrada_update);
+		// PAD
+    if (nueva){
+      pda("alta", rama_bd_obras + "/" + path_subproceso + "/entradas/" + uid_entrada, "");
+      alert("¡Alta exitosa!");
+    }else {
+      pda("modificacion", rama_bd_obras + "/" +path_subproceso +"/entradas/" + uid_entrada, registro_antiguo);
+      alert("¡Edición exitosa!");
+      console.log(registro_antiguo);
+    }
+		resetFormCopeo();
+		//actualizarTablaCalculadora();
+	}
 });
 
 //Funcionalidad del boton 'Borrar'
@@ -129,7 +175,7 @@ $("#" + id_ddl_subprocesoCopeo).change(function(){
 
 $("#" + id_ddl_entradaCopeo).change(function(){
   resetFormCopeo_subproceso();
-  //cargaCamposCopeo(uid_obra, uid_proceso, uid_subproceso);
+  cargaCamposCopeo(uid_obra, uid_proceso, uid_subproceso, $("#" + id_ddl_entradaCopeo+" option:selected").val() );
 });
 
 // -------------------- FUNCIONES DE LOS CAMPOS DE PUESTOS----------------------
@@ -286,15 +332,18 @@ function resetFormCopeo (){
   $('#'+id_ddl_subprocesoCopeo).empty();
   resetFormCopeo_subproceso();
   $('#' + id_seccion_subprocesoCopeo).addClass('hidden');
+  registro_antiguo="";
 }
 
 function resetFormCopeo_subproceso(){
-  $('#'+id_carga_socialCopeo).val(54);
+  $('#'+id_carga_socialCopeo).val("");
+  $('#'+id_carga_socialCopeo).prop("disabled", true);
   $('#'+id_diasCopeo).val("");
   $('#'+id_multCopeo).val("");
   $('#'+id_nombreCopeo).val("");
   $('#'+id_alcanceCopeo).val("");
   selectTrabajadores.set(puestos_array);
+  $('#'+id_costo_unitarioCopeo).val("");
   $('#'+id_costo_CopeoCopeo).val("");
   $('#'+id_costo_Copeo_CSCopeo).val("");
   for(i = 0; i < puestos_array.length; i++){
@@ -353,19 +402,21 @@ function llenaDdlEntradaCopeo(clave_obra, clave_proceso, clave_subproceso){
   option.text = option.value = "";
   select.appendChild(option);
 	var subproceso;
-  var i = 1;
   firebase.database().ref(rama_bd_obras + "/copeo/" + clave_obra +"/"+ clave_proceso+"/"+clave_subproceso).on('value',function(snapshot){
     if(snapshot.exists()){
       subproceso = snapshot.val();
-      for(i=1; i<= subproceso.num_entradas; i++){
+      num_entradas=subproceso.num_entradas;
+      for(key in subproceso.entradas){
         option = document.createElement('option');
-        option.value = i;
-        option.text = i;
+        option.value = key;
+        option.text = subproceso.entradas[key]["nombre"];
         select.appendChild(option);
       }
+    }else{
+      num_entradas=0;
     }
     option = document.createElement('option');
-    option.value = i;
+    option.value = "-NUEVA-";
     option.text = "-NUEVA-";
     select.appendChild(option);
   });
@@ -386,6 +437,7 @@ function agregaCamposPuesto(puesto){
   var label = document.createElement('label');
   label.innerHTML = puestos_json[puesto]["puesto"]
   label.for = id_puesto;
+  label.id = "label_"+id_puesto;
 
   var col2 = document.createElement('div');
   col2.className = "col-md-3";
@@ -421,24 +473,48 @@ function agregaCamposPuesto(puesto){
 }
 
 function cargaCamposCopeo(claveObra, claveProceso, claveSubproceso, claveEntrada){
-  firebase.database().ref(rama_bd_obras + "/copeo/" + claveObra + "/" + claveProceso + "/" + claveSubproceso).once('value',function(snapshot){
-    var subproceso = snapshot.val();
-    if (snapshot.exists()){
-			//registro_antiguo = subproceso;
+  if( claveEntrada == "-NUEVA-"){
+    console.log("Sin registro de entrada");
+    resetFormCalculadora_subproceso();
+    if(num_entradas==0){
+      $('#'+id_carga_socialCopeo).prop("disabled", false);
+    } else{
+      firebase.database().ref(rama_bd_obras + "/copeo/" + claveObra + "/" + claveProceso + "/" + claveSubproceso).once('value',function(snapshot){
+        var subproceso = snapshot.val();
+        $('#' + id_carga_socialCopeo).val(subproceso.impuestos);
+      });
+    }
+  }else{
+    firebase.database().ref(rama_bd_obras + "/copeo/" + claveObra + "/" + claveProceso + "/" + claveSubproceso).once('value',function(snapshot){
+      var subproceso = snapshot.val();
+      console.log(subproceso);
       var entrada = subproceso["entradas"][claveEntrada];
-      $('#' + id_carga_socialCopeo  ).val(subproces.impuestos);
+      registro_antiguo = entrada;
+      var cuadrilla = entrada.cuadrilla;
+      var aux_array = [];
+      var i=0;
+      $('#' + id_carga_socialCopeo  ).val(subproceso.impuestos);
 			$('#' + id_diasCopeo ).val(entrada.multiplicadores.dias);
 			$('#' + id_multCopeo ).val(entrada.multiplicadores.unidades);
-      $('#' + id_nombreCopeo ).val(formatMoney(subproceso.costo_suministros));
-      $('#' + id_alcanceCopeo ).val(formatMoney(subproceso.precopeo));
-			$('#' + id_lista_trabajadoresCopeo ).val(formatMoney(copeoConCarga));
-      $('#' + id_div_trabajadoresCopeo ).val(formatMoney(subproceso.utilidad));
+      $('#' + id_nombreCopeo ).val(entrada.nombre);
+      $('#' + id_alcanceCopeo ).val(entrada.alcance);
+      for(key in cuadrilla){
+        aux_array[i] = key;
+        $('#'+key).val(cuadrilla[key]["cantidad"]);
+        $('#'+"sueldo_"+key).val(cuadrilla[key]["sueldo_diario"]);
+        i++;
+      }
+      selectTrabajadores.set(aux_array);
 			calculaCostoUnitarioCopeo();
       calculaCostoTotalCopeo();
-    } else {
-			resetFormCalculadora_subproceso();
-		}
-  });
+      if(parseFloat(claveEntrada.slice(3)) == 1){
+        $('#'+id_carga_socialCopeo).prop("disabled", false);
+      } else {
+        $('#' + id_carga_socialCopeo).val(subproceso.impuestos);
+      }
+    });
+  }
+
 }
 
 function calculaCostoUnitarioCopeo(){
@@ -472,4 +548,28 @@ function calculaCostoTotalCopeo(){
   }
   $('#'+ id_costo_CopeoCopeo).val(formatMoney(total));
   $('#'+ id_costo_Copeo_CSCopeo).val(formatMoney(totalCS));
+}
+
+function datosEntradaCopeo(){
+  var entradaCopeo = {};
+  var cuadrilla={};
+  var aux = selectTrabajadores.selected();
+  var cuadrillaPuesto;
+  for (i=0; i<aux.length; i++){
+    cuadrilla[aux[i]] = {
+    cantidad: parseFloat($('#'+aux[i]).val()),
+    sueldo_diario: deformatMoney($('#'+"sueldo_"+aux[i]).val())
+    };
+  }
+  entradaCopeo = {
+    nombre: $('#'+id_nombreCopeo).val(),
+    alcance: $('#'+id_alcanceCopeo).val(),
+    subtotal: deformatMoney($('#'+id_costo_CopeoCopeo).val()),
+    cuadrilla: cuadrilla,
+    multiplicadores:{
+      dias: parseFloat($('#'+id_diasCopeo).val()),
+      unidades: parseFloat($('#'+id_multCopeo).val())
+    }
+  }
+  return entradaCopeo;
 }
