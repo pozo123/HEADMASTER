@@ -332,6 +332,8 @@ Nota: Todo float se ingresa a 2 decimales.
                     - trabajador_id_pagadora: string
                     - trabajador_nombre: string
                     - trabajador_jefe: string
+                    - trabajador_puesto: string
+                    - trabajador_esp: string
                     - sueldo_semanal: float
                     - obra_asignada: string
                     - obra_asignada_nombre: string      
@@ -371,12 +373,11 @@ Nota: Todo float se ingresa a 2 decimales.
                             - id_trabajador:
                                 - registros_id: true
 
-                - fechas_pagos:
-                    - aaaammdd:
-                        - id_trabajador:
-                            - registros_id: true
+                - fechas_pago:
                     - year: (para guardar la fecha de pago y no tener que buscarla en 300 trabajadores)
-                        - week_head: timestamp
+                        - week_head:
+                            - aaaammdd
+                                - registros_id: true
 
                 - trabajadores:
                     - id_trabajador:

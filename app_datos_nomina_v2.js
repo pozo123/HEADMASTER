@@ -318,6 +318,8 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
             trabajador_id_pagadora: trabajador_json.id_pagadora,
             trabajador_nombre: trabajador_json.nombre,
             trabajador_jefe: trabajador_json.jefe,
+            trabajador_puesto: trabajador_json.id_puesto,
+            trabajador_esp: trabajador_json.id_especialidad,
             year_head: year_head,
             week_head: week_head,
             sueldo_semanal: trabajador_json.sueldo_base,
