@@ -452,6 +452,7 @@ function actualizarTablaCol(){
             destroy: true,
             data: datos_colaborador,
             language: idioma_espanol,
+            "autoWidth": false,
             "columnDefs": [
                 { "width": "150px", "targets": 0 },
                 { "width": "100px", "targets": 5 },
@@ -477,9 +478,7 @@ function actualizarTablaCol(){
             existe_colaborador = true;
             var nombre = data[1].split("_");
             uid_existente = data[2];
-            
-            console.log(data[1]);
-        
+                 
             $('#' + id_nombre_colaborador).val(nombre[0]);
             $('#' + id_paterno_colaborador).val(nombre[1]);
             $('#' + id_materno_colaborador).val(nombre[2]);
@@ -488,7 +487,6 @@ function actualizarTablaCol(){
         
             document.getElementById(id_password_colaborador).disabled = true;
             
-            console.log(data[8]);
             if(data[8] == 2){
                 document.getElementById(id_lider_checkbox_colaborador).checked = true;
                 document.getElementById(id_lider_checkbox_colaborador).disabled = false;

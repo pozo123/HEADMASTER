@@ -16,13 +16,15 @@ var json_personal = {};
 
 var id_div_dropdown_areas = "dropdown_areas";
 
-var rama_bd_personal = "test/personal";
-var rama_bd_obras = "test/obras";
-var rama_bd_clientes = "test/clientes";
-var rama_bd_pda = "test/pda";
-var rama_bd_datos_referencia = "test/datos_referencia";
-var rama_bd_mano_obra= "test/rrhh/mano_obra"
-var rama_bd_nomina = "test/rrhh/nomina"
+var version = "test";
+
+var rama_bd_personal = version + "/personal";
+var rama_bd_obras = version + "/obras";
+var rama_bd_clientes = version + "/clientes";
+var rama_bd_pda = version + "/pda";
+var rama_bd_datos_referencia = version + "/datos_referencia";
+var rama_bd_mano_obra= version + "/rrhh/mano_obra"
+var rama_bd_nomina = version + "/rrhh/nomina"
 var rama_bd_info_web = "info_web";
 
 var options_semanas = { weekday: 'short', year: 'numeric', month: 'numeric', day: 'numeric'};
@@ -47,6 +49,7 @@ $(document).ready(function() {
         version = snapshot.child("version").val();
         verifyVersion();
     });
+
     document.getElementById(id_week_label).innerHTML = "Semana " + getWeek(new Date().getTime())[0];
 });
 
@@ -55,49 +58,28 @@ firebase.auth().onAuthStateChanged(user => {
         $('body').removeClass("hidden");
         uid_usuario_global = user.uid;
         userUID = user.uid;
-        firebase.database().ref(rama_bd_obras).once('value').then(function(snapshot){
-            snapshot.forEach(function(obraSnap){
-                var obra = obraSnap.val();
-                nombre_obras[obraSnap.key] = {
-                    procesos: {},
-                    hojas: {},
-                    num_procesos: obra.num_procesos,
-                    supervisor: obra.supervisor,
-                    terminada: obra.terminada,
-                }
-                obraSnap.child("procesos").forEach(function(procSnap){
-                    var proc = procSnap.val();
-                    nombre_obras[obraSnap.key]["procesos"][procSnap.key] = {nombre: proc.nombre, subprocesos: {}, num_subprocesos: proc.num_subprocesos};
-                    if(procSnap.child("num_subprocesos").val() == 0 && procSnap.key != "ADIC" && procSnap.key != "PC00"){
-                        nombre_obras[obraSnap.key]["hojas"][procSnap.key] = {nombre: proc.nombre};
-                    }
-                    procSnap.child("subprocesos").forEach(function(subpSnap){
-                        var subp = subpSnap.val();
-                        nombre_obras[obraSnap.key]["procesos"][procSnap.key]["subprocesos"][subpSnap.key] = {nombre: subp.nombre};
-                        nombre_obras[obraSnap.key]["hojas"][subpSnap.key] = {nombre: subp.nombre};
-                    });
-                });
-            });
-        });
-        firebase.database().ref("personal").once('value').then(function (snapshot) {
-            snapshot.forEach(function(persSnap){
-                var pers = persSnap.val();
-                json_personal[persSnap.key] = {nombre: pers.nombre, nickname: pers.nickname, areas: pers.areas, activo: pers.activo};
-            });
+        firebase.database().ref(rama_bd_personal + "/colaboradores").on('value', function (snapshot) {
+            console.log(snapshot.val());
             var user_personal = snapshot.child(user.uid).val();
+
             areas_usuario_global = user_personal.areas;
             creden_usuario_global = user_personal.credenciales;
 
-            if(creden_usuario_global == 0){
-                $("#tabReporteInvestime").removeClass('hidden');
-                $('#botonMagicoAdmon').removeClass('hidden');
-            } else {
-                $("#tabReporteInvestime").addClass('hidden');
-                $('#botonMagicoAdmon').addClass('hidden');
-            }
-            if(user_personal.foto){
+            // activar pestañas
+
+            console.log(areas_usuario_global);
+
+            for(key in areas_usuario_global){
+                if(areas_usuario_global[key] == true){
+                    $("." + key).removeClass("hidden");
+                } else {
+                    $("." + key).addClass("hidden");
+                }
+            };
+
+            if(user_personal.foto_url){
                 var imagen = document.getElementById("img_foto");
-                imagen.src = user_personal.foto.url;
+                imagen.src = user_personal.foto_url;
             }
             var usuarioNombre = document.getElementById('usuarioConectado');
             usuarioNombre.innerHTML = user_personal.nickname;
@@ -105,7 +87,6 @@ firebase.auth().onAuthStateChanged(user => {
             $('.loader').removeClass("hidden");
         });
     } else {
-        window.location.reload("index.html");
         window.location.assign("index.html");
     }
 });
