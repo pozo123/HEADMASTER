@@ -28,17 +28,17 @@ function tableReporteGlobalReporteNomina(){
                     }
                     console.log(registros_obra);
 
-                    for(key in registros_obra){
-                        for( asistKey in regSnap.val()[key].asistencias){
-                            
-                        };
-                    };
                     var nomina = 0;
                     var horas_extra = 0;
                     var diversos = 0;
                     // de los 3 de arriba sale el subtotal y del de abajo - subtotal salen impuestos
                     var pagado = 0;
-
+                    
+                    for(key in registros_obra){
+                        for( asistKey in regSnap.val()[key].asistencias){
+                            
+                        };
+                    };
                 });
             });
         });
