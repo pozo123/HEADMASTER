@@ -250,7 +250,7 @@
                                         <button id ="infoObraAsisgnadaNomina" type='button' class='btn btn-dark' data-toggle="popover" data-trigger="hover"><i class='fas fa-info'></i></button>
                                     </div>
 
-                                    
+
                                 </div>
                             </div>
                             <div class="container-fluid border border-info rounded">
@@ -2122,8 +2122,8 @@
                                                      <select id="ddl_procesoCopeo" class="form-control"></select>
                                                  </div>
                                               </div>
-                                              <div class="form-row" id="div_subprocesoCopeo">
-                                                 <div class="form-group col-md-6">
+                                              <div class="form-row">
+                                                 <div class="form-group col-md-6" id="div_subprocesoCopeo">
                                                      <label for="ddl_subprocesoCopeo">Subproceso:</label>
                                                      <select id="ddl_subprocesoCopeo" class="form-control"></select>
                                                  </div>
@@ -2204,7 +2204,7 @@
                                              <div class="form-row">
                                                  <div class= "col-lg-4"></div>
                                                  <div class= "col-lg-4">
-                                                     <button id="botonsueldosCopeo" type="button"  class="btn btn-secondary btn-block">Actualizar sueldos</button>
+                                                     <button id="botonSueldosCopeo" type="button"  class="btn btn-secondary btn-block">Actualizar sueldos</button>
                                                  </div>
                                                  <div class= "col-lg-4"></div>
                                              </div>
@@ -2223,10 +2223,33 @@
                                      </div>
                                      <div class="col-lg-1"></div>
                                  </div>
-                                 <div class="row">
-                                     <div class="container-fluid">
-                                         <table id="dataTableCopeo" class="display" style="width:100%"></table>
-                                     </div>
+                                 <div class = "tableWrapper">
+                                     <table id="dataTableCopeo" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                         <thead>
+                                             <tr>
+                                                 <th>Id_obra</th>
+                                                 <th>Id_proceso</th>
+                                                 <th>Clave</th>
+                                                 <th>Entrada</th>
+                                                 <th>Subtotal</th>
+                                                 <th>Carga social</th>
+                                                 <th>Costo total</th>
+                                                 <th>Editar</th>
+                                             </tr>
+                                         </thead>
+                                         <tfoot>
+                                             <tr>
+                                                 <th>Id_obra</th>
+                                                 <th>Id_proceso</th>
+                                                 <th>Clave</th>
+                                                 <th>Entrada</th>
+                                                 <th>Subtotal</th>
+                                                 <th>Carga social</th>
+                                                 <th>Costo total</th>
+                                                 <th>Editar</th>
+                                             </tr>
+                                         </tfoot>
+                                     </table>
                                  </div>
                              </div>
                          </div>
