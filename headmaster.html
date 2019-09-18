@@ -1892,9 +1892,9 @@
                              <h1>Generador de Presupuesto Adicional</h1>
                              <div class="container-fluid">
                                  <div class="row align-items-center">
-                                     <div class="col-lg-3"></div>
-                                     <div class="col-lg-6">
-                                         <form id="tabGeneradorAdic" action="#" onsubmit="return false;">
+                                     <div class="col-lg-1"></div>
+                                     <div class="col-lg-10">
+                                         <form id="formGeneradorAdic" action="#" onsubmit="return false;">
                                             <br/>
                                             <div class="form-row">
                                                 <div class="form-group col-md-6">
@@ -1903,7 +1903,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-row">
-                                                <div class="form-group col-md-6" id="div_subprocesoCalculadora">
+                                                <div class="form-group col-md-6" id="div_subprocesoAdicionales">
                                                     <label for="ddl_subprocesoAdicionales">Adicional:</label>
                                                     <select id="ddl_subprocesoAdicionales" class="form-control"></select>
                                                 </div>
@@ -1928,7 +1928,148 @@
                                                 <!--<label for="atnDdlCbPptoProy">AT'N:</label>-->
                                                 <div class="myDropdownCheckbox" id="ddl_atnAdicionales"></div>
                                             </div>
-                                            <br>
+                                            <br/>
+                                            <h3>Body</h3>
+                                            <hr class="style2">
+                                            <div class="form-group">
+                                                <label for="fotoInputAdicionales">Selecciona una imagen</label>
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="fotoInputAdicionales" accept="image/*"/>
+                                                    <label class = "custom-file-label" id="imagenLabelAdicionales">Archivo no seleccionado</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <button id="botonImagenAdicionales" type="button" class="btn btn-outline-dark btn-block">Aceptar</button>
+                                            </div>
+                                            <br/>
+                                            <div class="form-row">
+                                              <div class="form-group col-md-3">
+                                                 <label>Imagenes seleccionadas</label>
+                                              </div>
+                                              <div class="form-group col-md-9">
+                                                  <select id="imagenesSeleccionadasAdicionales" multiple>
+                                                  </select>
+                                              </div>
+                                            </div>
+                                            </br>
+                                            <h4>Suministros</h4>
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-4">
+                                                    <label for="buscaCategoriaAdicionales">Categoria</label>
+                                                    <select id="buscaCategoriaAdicionales" class="form-control"></select>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="buscaMarcaAdicionales">Marca</label>
+                                                    <select id="buscaMarcaAdicionales" class="form-control"></select>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="buscaClasificacionAdicionales">Clasificacion</label>
+                                                    <select id="buscaClasificacionAdicionales" class="form-control"></select>
+                                                </div>
+                                            </div>
+                                            </br>
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-4">
+                                                    <label for="buscaCatalogoAdicionales">Catálogo</label>
+                                                    <input type="text" id="buscaCatalogoAdicionales" class="form-control" placeholder="Clave">
+                                                </div>
+                                                <div class="col-lg-8">
+                                                    <label for="buscaProductoAdicionales">Producto</label>
+                                                    <select id="buscaProductoAdicionales" class="form-control"></select>
+                                                </div>
+                                            </div>
+                                            </br>
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-2">
+                                                    <input type="text" id="buscaCatalogoAdicionales" class="form-control" placeholder="Catálogo" disabled="true">
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <input type="text" id="buscaCatalogoAdicionales" class="form-control" placeholder="Marca" disabled="true">
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <input type="text" id="buscaCatalogoAdicionales" class="form-control" placeholder="Clasificación" disabled="true">
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <input type="text" id="buscaCatalogoAdicionales" class="form-control" placeholder="Descripcion" disabled="true">
+                                                </div>
+                                            </div>
+                                            <div class = "tableWrapper">
+                                                <table id="dataTableBusquedaAdicionales" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Id_producto</th>
+                                                            <th>Catalogo</th>
+                                                            <th>Marca</th>
+                                                            <th>Clasificacion</th>
+                                                            <th>Descripcion</th>
+                                                            <th>Unidad</th>
+                                                            <th>Precio</th>
+                                                            <th>Agregar</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                            </br>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                  <div class="col-lg-4"></div>
+                                                    <div class="col-lg-4">
+                                                        <button id="botonAgregarSuministroAdicionales" type="button" class="btn btn-outline-success btn-lg btn-block">Agregar</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                  <div class="col-lg-5"></div>
+                                                    <div class="col-lg-2">
+                                                        <button id="botonLimpiarFiltrosAdicionales" type="reset" class="btn btn-secondary btn-block">Limpiar filtros</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </br>
+                                            <label>Productos seleccionados</label>
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-1">
+                                                    <input type="text" id="agregaCatalogoAdicionales" class="form-control" placeholder="Catálogo" disabled="true">
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <input type="text" id="agregaDescripcionAdicionales" class="form-control" placeholder="Descripcion" disabled="true">
+                                                </div>
+                                                <div class="col-lg-1">
+                                                    <input type="text" id="agregaUnidadAdicionales" class="form-control" placeholder="Unidad" disabled="true">
+                                                </div>
+                                                <div class="col-lg-1">
+                                                    <input type="text" id="agregaPrecioAdicionales" class="form-control" placeholder="Precio" disabled="true">
+                                                </div>
+                                                <div class="col-lg-1">
+                                                    <input type="text" id="agregaCantidadAdicionales" class="form-control" placeholder="Cantidad" disabled="true">
+                                                </div>
+                                                <div class="col-lg-2">
+                                                    <input type="text" id="agregaSubtotalAdicionales" class="form-control" placeholder="Subtotal" disabled="true">
+                                                </div>
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="agregaDesplegableAdicionales">
+                                                    <label class="custom-control-label" for="agregaDesplegableAdicionales">Desplegar</label>
+                                                </div>
+                                            </div>
+                                            <div class = "tableWrapper">
+                                                <table id="dataTableSeleccionadosAdicionales" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Id_producto</th>
+                                                            <th>Catalogo</th>
+                                                            <th>Descripcion</th>
+                                                            <th>Unidad</th>
+                                                            <th>Precio</th>
+                                                            <th>Cantidad</th>
+                                                            <th>Subtotal</th>
+                                                            <th>Desplegar</th>
+                                                            <th>Eliminar</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                            </br>
                                             <h3>Calculadora Adic</h3>
                                             <hr class="style2">
                                             <br>
@@ -2023,39 +2164,6 @@
                                                     <label id = "profitNetoAdicionales">Profit Neto Estimado</label>
                                                     <input type="text" disabled="true" id="profitNetoAdicionales" class="form-control" placeholder="Profit neto estimado">
                                                 </div>
-                                            </div>
-                                            <br/>
-                                            <h3>Body</h3>
-                                            <hr class="style2">
-                                            <div class="form-group">
-                                                <label for="importarSuministrosAdicionales">Selecciona archivo de Excel en el formato deseado</label>
-                                                <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" id="importarSuministrosAdicionales" accept=".xlsx, .xls, .csv">
-                                                    <label class = "custom-file-label" id="importarSuministrosLabelAdicionales">Archivo no seleccionado</label>
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <button id="botonImportarSuministrosAdicionales" type="button" class="btn btn-outline-dark btn-block">Aceptar</button>
-                                            </div>
-                                          </br>
-                                            <div class="form-row">
-                                                <button id="botonDescargarFormatoAdicionales" type="button" class="btn btn-outline-dark btn-block">Descargar formato</button>
-                                            </div>
-                                            <br/>
-                                            <br/>
-                                            <div class="form-group">
-                                                <label for="fotoInputAdicionales">Selecciona una imagen</label>
-                                                <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" id="fotoInputAdicionales" accept="image/*"/>
-                                                    <label class = "custom-file-label" id="imagenLabelAdicionales">Archivo no seleccionado</label>
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <button id="botonImagenAdicionales" type="button" class="btn btn-outline-dark btn-block">Aceptar</button>
-                                            </div>
-                                            <br/>
-                                            <div class="form-row">
-                                                <input type="text" id="imagenesSeleccionadasAdicionales" class="form-control" placeholder="Imagenes seleccionadas">
                                             </div>
                                             <br/>
                                             <h3>Footer</h3>
