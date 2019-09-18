@@ -114,7 +114,7 @@ Nota: Todo float se ingresa a 2 decimales.
                     - cp: int
                     - calle: string
                     - numero: string
-                - retencion_fondo_garantia: float [0 a 1]
+                - retencion_fondo_garantia: float [0 a 100]
                 - fechas:
                     - fecha_inicio_real: timestamp
                     - fecha_inicio_teorica: timestamp (al dar de alta/edicion)
@@ -163,7 +163,7 @@ Nota: Todo float se ingresa a 2 decimales.
             - id_obra
                 - id_proceso
                     - id_subproceso
-                        - impuestos: float (0 a 1)
+                        - impuestos: float (0 a 100)
                         - num_entradas: int
                         - entradas
                             - entrada (num)
