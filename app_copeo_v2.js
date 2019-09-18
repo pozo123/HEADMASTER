@@ -599,19 +599,19 @@ function actualizarTablaCopeo(){
       firebase.database().ref(rama_bd_obras + "/copeo/" + clave_obra).on('value',function(snapshotCopeo){
         var datos_obra = [];
 				var procesoIndex_array = [];
+        var subprocesoIndex_array=[];
 				var index_proceso = 0;
         var index_subproceso = 0;
-        var index_entrada = 0;
+        var index_entrada = 1;
+        var costoTotal_obra = 0;
 
         snapshot.forEach(function(procesoSnap){
             var clave_proceso = procesoSnap.key;
-            var procesoCopeo;
-            var costoTotal_proceso=0;
-            index_proceso = index_entrada;
-            index_subproceso = index_proceso+1;
-            index_entrada = index_subproceso+1;
             if(clave_proceso !== "ADIC" && clave_proceso !== "MISC" && clave_proceso !== "PC00"){
-
+                var costoTotal_proceso=0;
+                index_proceso = index_entrada;
+                index_subproceso = index_proceso+1;
+                index_entrada = index_subproceso+1;
                 procesoSnap.child("subprocesos").forEach(function(subprocesoSnap){
 									var clave_sub = subprocesoSnap.key;
 	                var subproceso = subprocesoSnap.val();
@@ -632,28 +632,34 @@ function actualizarTablaCopeo(){
                           costoTotal = subtotal*(1+cargaSocial*0.01);
                           subtotal_subproceso = subtotal_subproceso+subtotal;
                           costoTotal_subproceso = costoTotal_subproceso+costoTotal;
-                          datos_obra[index_entrada]=[
-                            clave_obra,
-      											clave_proceso,
-      											clave_sub,
-                            entradaSnap.key,
-                            subtotal,
-                            cargaSocial,
-                            costoTotal,
-                            "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>"
-                          ];
-                          index_entrada++;
+                          if(clave_proceso !== clave_sub || subtotal !== 0){
+                            datos_obra[index_entrada]=[
+                              clave_obra,
+        											clave_proceso,
+        											clave_sub,
+                              entradaSnap.key,
+                              formatMoney(subtotal),
+                              cargaSocial+"%",
+                              formatMoney(costoTotal),
+                              "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>"
+                            ];
+                            index_entrada++;
+                          }
                         });
-                        datos_obra[index_subproceso]=[
-                          clave_obra,
-                          clave_proceso,
-                          clave_sub,
-                          "",
-                          subtotal_subproceso,
-                          cargaSocial,
-                          costoTotal_subproceso,
-                          ""
-                        ];
+                        if(clave_proceso !== clave_sub || index_entrada > index_subproceso+1){
+                          datos_obra[index_subproceso]=[
+                            clave_obra,
+                            clave_proceso,
+                            clave_sub,
+                            "",
+                            formatMoney(subtotal_subproceso),
+                            cargaSocial+"%",
+                            formatMoney(costoTotal_subproceso),
+                            ""
+                          ];
+                          costoTotal_proceso = costoTotal_proceso+costoTotal_subproceso;
+                          subprocesoIndex_array.push(index_subproceso);
+                        }
                       }
                     }
                   }
@@ -661,42 +667,68 @@ function actualizarTablaCopeo(){
               datos_obra[index_proceso]=[
                 clave_obra,
                 clave_proceso,
+                clave_proceso,
                 "",
                 "",
                 "",
-                "",
-                costoTotal_proceso,
+                formatMoney(costoTotal_proceso),
                 ""
               ];
+              costoTotal_obra = costoTotal_obra + costoTotal_proceso;
               procesoIndex_array.push(index_proceso);
             }
         });
-
+        datos_obra[0]=[
+          clave_obra,
+          "",
+          $('#'+id_ddl_obraCopeo+' option:selected').text(),
+          "",
+          "",
+          "",
+          formatMoney(costoTotal_obra),
+          ""
+        ];
+        console.log(datos_obra);
         tabla_copeo = $('#'+ id_dataTable_copeo).DataTable({
 						"fnRowCallback": function (row, data, index_table) {
-									if ( procesoIndex_array.includes(index_table)) {
-											$(row).css('font-weight', 'bold');;
+									if ( index_table==0) {
+											$(row).css('font-weight', 'bold');
+                      $(row).css('font-style', 'italic');
+									}
+                  if ( procesoIndex_array.includes(index_table)) {
+											$(row).css('font-weight', 'bold');
+                      //$(row).css('font-style', 'italic');
+									}
+                  if ( subprocesoIndex_array.includes(index_table)) {
+											$(row).css('font-style', 'italic');
 									}
 						},
+
             destroy: true,
             data: datos_obra,
             language: idioma_espanol,
             "autoWidth": false,
             "columnDefs": [
-                { "width": "80px", "targets": 1 },
-                { "width": "80px", "targets": 2 },
+                { "width": "120px", "targets": 2 },
                 { "width": "80px", "targets": 3 },
+                { "width": "80px", "targets": 5 },
                 {
                     targets: -2,
                     className: 'dt-body-center'
                 },
                 { "visible": false, "targets": 0 }, //Campos auxiliares
+                { "visible": false, "targets": 1 },
               ]
         });
         //Funcion para llenar los campos cuando se quiere editar desde las opciones de la tabla
         $('#' + id_dataTable_copeo + ' tbody').on( 'click', '.editar', function () {
             var data = tabla_copeo.row( $(this).parents('tr') ).data();
             resetFormCopeo_entrada();
+            $('#'+id_ddl_procesoCopeo).val(data[1]);
+            llenaDdlSubprocesoCopeo(data[0], data[1]);
+            $('#'+id_ddl_subprocesoCopeo).val(data[2]);
+            llenaDdlEntradaCopeo(data[0], data[1], data[2]);
+            $('#'+id_ddl_entradaCopeo).val(data[3]);
 						cargaCamposCopeo(data[0], data[1], data[2], data[3]);
         });
       });
