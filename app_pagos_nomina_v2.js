@@ -14,7 +14,6 @@ var id_container_pagos_nomina = "divContainerPagosNomina";
 var monto_db = 0;
 
 $('#' + id_tab_pagos_nomina).click(function(){
-
     jQuery('#' + id_fecha_pagos_nomina).datetimepicker(
         {timepicker:false, weeks:true,format:'Y.m.d'}
     );
@@ -95,6 +94,7 @@ $('#' + id_ddl_week_pagos_nomina).change(function(){
 
 function generateRowPagosNomina(registroSnapshot){
     var key = registroSnapshot.key;
+    console.log(key);
     var registro = registroSnapshot.val();
 
     var nomina = 0;
@@ -139,14 +139,14 @@ function generateRowPagosNomina(registroSnapshot){
 
     var horas_extra = 0;
     if(registro.horas_extra != undefined){
-        for(key in registro.horas_extra){
-            horas_extra += registro.horas_extra[key].cantidad;
+        for(keyHE in registro.horas_extra){
+            horas_extra += registro.horas_extra[keyHE].cantidad;
         }
         nomina += (registro.sueldo_semanal / 48 ) * horas_extra * 2;
     }  
     if(registro.diversos != undefined){
-        for(key in registro.diversos){
-            nomina += registro.diversos[key].cantidad;
+        for(keyDIV in registro.diversos){
+            nomina += registro.diversos[keyDIV].cantidad;
         };
     };
 
@@ -174,7 +174,7 @@ function generateRowPagosNomina(registroSnapshot){
     var row = document.createElement('div');
     row.className = "form-row rowPagoNomina";
     row.id = key;
-
+    console.log(row.id);
     row.append(col_pagadora);
     row.append(col_nombre);
     row.append(col_a_pagar);
@@ -235,6 +235,7 @@ $('#' + id_button_guardar_pagos_nomina).click(function(){
     firebase.database().ref(rama_bd_nomina + "/listas/fechas_pago").once("value").then(function(snapshot){
         $('.pago').each(function() {
             var row = this.parentElement.parentElement;
+            console.log(row.id);
             if(snapshot.exists()){
                 snapshot.forEach(function(subSnap){
                     subSnap.forEach(function(subSubSnap){
@@ -250,7 +251,7 @@ $('#' + id_button_guardar_pagos_nomina).click(function(){
     
             json_lista["fechas_pago/" + year + "/" + week + "/" + aaaammdd(fecha) + "/" + row.id] = true;
         });
-
+        console.log(json_datos);
         firebase.database().ref(rama_bd_nomina + "/nomina").update(json_datos);
         firebase.database().ref(rama_bd_nomina + "/listas").update(json_lista);
 
