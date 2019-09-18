@@ -289,3 +289,7 @@ $("#cerrarSesion").click((function () {
     });
     alert("Inicia sesión para entrar a comunidad");
 }));
+
+$("#headmasterHTML").click((function () {
+    window.location.assign("headmaster.html");
+}));

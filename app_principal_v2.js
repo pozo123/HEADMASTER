@@ -59,15 +59,12 @@ firebase.auth().onAuthStateChanged(user => {
         uid_usuario_global = user.uid;
         userUID = user.uid;
         firebase.database().ref(rama_bd_personal + "/colaboradores").on('value', function (snapshot) {
-            console.log(snapshot.val());
             var user_personal = snapshot.child(user.uid).val();
 
             areas_usuario_global = user_personal.areas;
             creden_usuario_global = user_personal.credenciales;
 
             // activar pestañas
-
-            console.log(areas_usuario_global);
 
             for(key in areas_usuario_global){
                 if(areas_usuario_global[key] == true){
