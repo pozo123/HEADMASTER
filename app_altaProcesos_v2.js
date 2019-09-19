@@ -317,15 +317,17 @@ $('#' + id_alcance_subproceso).keypress(function(e){
 //Funcionalidad del ddl de categoria: Generar la clave de un subproceso nuevo
 $('#' + id_ddl_categoriaSubproceso).change(function(e){
   if($('#'+id_clave_proceso).val() !== "" && $('#'+id_ddl_subproceso+" option:selected").val() !== "" && !existe_subproceso){ //Generar clave si hay un proceso seleccionado y un nuevo subproceso
-    firebase.database().ref(rama_bd_obras + "/procesos/" + $('#'+id_ddl_obraProcesos+" option:selected").val() + "/procesos/"+ uid_proceso + "/subprocesos").orderByChild('categoria').on('value',function(snapshot){
+    firebase.database().ref(rama_bd_obras + "/procesos/" + $('#'+id_ddl_obraProcesos+" option:selected").val() + "/procesos/").on('value',function(snapshot){
         var cont = 1;
         var clave;
         if(snapshot.exists() ){
-          snapshot.forEach(function(snapChild){ //Contar todos los subprocesos de la misma categoría para ese proceso
-            if (snapChild.val().categoria == $('#'+id_ddl_categoriaSubproceso+" option:selected").val()){
-              cont ++;
-            }
-          })
+          snapshot.forEach(function(snapProceso){
+            snapProceso.child('subprocesos').forEach(function(snapChild){ //Contar todos los subprocesos de la misma categoría para ese proceso
+              if (snapChild.val().categoria == $('#'+id_ddl_categoriaSubproceso+" option:selected").val()){
+                cont ++;
+              }
+            })
+          });
         }
         if(cont<10){ //Dar formato correcto a la clave
           clave = $('#'+id_clave_proceso).val() + "-" + $('#'+id_ddl_categoriaSubproceso+" option:selected").text() + "0" + cont;
