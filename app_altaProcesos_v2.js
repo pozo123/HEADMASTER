@@ -627,9 +627,10 @@ function actualizarTablaProcesos(){
               }
             }
         });
-
+        
         tabla_procesos = $('#'+ id_dataTable_proceso).DataTable({
             "fnRowCallback": function (row, data, index_table) {
+                  //if ( procesoIndex_array.includes(index_table+tabla_procesos.page() * 10)) {
                   if ( procesoIndex_array.includes(index_table)) {
                       $(row).css('font-weight', 'bold');;
                   }
@@ -637,6 +638,7 @@ function actualizarTablaProcesos(){
             destroy: true,
             data: datos_obra,
             language: idioma_espanol,
+            "paging":false,
             "autoWidth": false,
             "columnDefs": [
                 { "width": "100px", "targets": 5 },
