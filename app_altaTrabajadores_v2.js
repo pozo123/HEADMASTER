@@ -1047,7 +1047,6 @@ $('#' + id_paterno_trabajador).change(function(){
         }
     }
     $('#' + id_paterno_trabajador).val(paterno);
-    $('#' + id_ddl_jefe_trabajador + " [value='']").prop('selected', true);
 });
 
 $('#' + id_materno_trabajador).change(function(){
@@ -1064,7 +1063,6 @@ $('#' + id_materno_trabajador).change(function(){
         }
     }
     $('#' + id_materno_trabajador).val(materno);
-    $('#' + id_ddl_jefe_trabajador + " [value='']").prop('selected', true);
 });
 
 // CLAVES
@@ -1470,7 +1468,10 @@ function actualizarTablaTrabajador(){
                 $('#' + id_ddl_jefe_trabajador + " [value='" + data[15] + "']").prop('selected', true);
             }
             var nacimiento = data[16].split("/")
-            $('#' + id_nacimiento_trabajador).val(nacimiento[2] + "." + nacimiento[1] + "." + nacimiento[0]);
+            console.log(nacimiento);
+            if(nacimiento != ""){
+                $('#' + id_nacimiento_trabajador).val(nacimiento[2] + "." + nacimiento[1] + "." + nacimiento[0]);
+            };
             $('#' + id_estado_civil_trabajador).val(data[17]);
             $('#' + id_ddl_sexo_trabajador + " [value='" + data[18] + "']").prop('selected', true);
             $('#' + id_direccion_trabajador).val(data[19]);
