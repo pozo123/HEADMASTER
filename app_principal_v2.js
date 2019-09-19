@@ -16,7 +16,7 @@ var json_personal = {};
 
 var id_div_dropdown_areas = "dropdown_areas";
 
-var version = "version2";
+var version = "test";
 
 var rama_bd_personal = version + "/personal";
 var rama_bd_obras = version + "/obras";
@@ -35,7 +35,7 @@ var starting_year = 2018;
 var actual_week = getWeek(new Date())[0];
 var actual_year = getWeek(new Date())[1];
 
-$(document).ready(function() {    
+$(document).ready(function() {
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
         $(this).toggleClass('active');
@@ -44,7 +44,7 @@ $(document).ready(function() {
     $(function () {
         $('[data-toggle="popover"]').popover()
     });
-    
+
     firebase.database().ref("info_web").once('value',function(snapshot){
         version = snapshot.child("version").val();
         verifyVersion();
@@ -80,7 +80,7 @@ firebase.auth().onAuthStateChanged(user => {
             }
             var usuarioNombre = document.getElementById('usuarioConectado');
             usuarioNombre.innerHTML = user_personal.nickname;
-            
+
             $('.loader').removeClass("hidden");
         });
     } else {
@@ -103,17 +103,17 @@ function openTabs(tabLink, tabName) {
     var tabContent;
     var tabLinks;
     tabContent = document.getElementsByClassName("tabcontent");
-    
+
     for (i = 0; i < tabContent.length; i++) {
         $(tabContent[i]).addClass('hidden');
     }
-    
+
     tabLinks = document.getElementsByClassName("tab");
-    
+
     for (i = 0; i < tabLinks.length; i++) {
         $(tabLinks[i]).removeClass('active');
     }
-    
+
     $("#"+tabName).removeClass('hidden');
     $("#"+tabLink).addClass('active');
 };
@@ -127,9 +127,9 @@ $('#fotoPersonal_input').on("change", function(event){
 function subirFotoPersonal(){
     var fileName = fotoSeleccionada.name;
     var storageRef = firebase.storage().ref(rama_storage_personal + "/" + userUID + "/" + fileName);
-    
+
     var uploadTask = storageRef.put(fotoSeleccionada);
-    
+
     uploadTask.on('state_changed', function(snapshot){
         // Observe state change events such as progress, pause, and resume
         // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
@@ -156,7 +156,7 @@ function subirFotoPersonal(){
             }
             updates["/" + rama_bd_personal + "/" + userUID + "/foto"] = data;
             firebase.database().ref().update(updates);
-            
+
             setTimeout(() => {
                 location.reload();
             }, 3000);
