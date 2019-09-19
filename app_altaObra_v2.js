@@ -144,8 +144,8 @@ $('#' + id_borrar_obra).click(function() {
 // ----------------------- VALIDACIÓN DE FORMULARIO ------------------------
 $('#' + id_clave_obra).change(function(){
     $('#' + id_clave_obra).val($('#' + id_clave_obra).val().toUpperCase());
-    existe_obra=false;
-    llenaCamposObra($('#' + id_clave_obra).val());
+    //existe_obra=false;
+    //llenaCamposObra($('#' + id_clave_obra).val());
 });
 
 $('#' + id_clave_obra).keypress(function(e){
@@ -227,6 +227,7 @@ function resetFormObra (){
   $('#' + id_ddl_cliente_obra).val("")
   $('#' + id_fecha_inicio_obra).val("");
   $('#' + id_fecha_final_obra).val("");
+  existe_obra=false;
 }
 //Dar formato de mayusculas y minúsculas
 //Ejemplo: ciudad de    mexico -> Ciudad de Mexico
