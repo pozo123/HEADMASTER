@@ -41,8 +41,7 @@ $('#' + id_tab_pagos_nomina).click(function(){
         option_week.text = "[SEM " + week + "] - " + jueves + " - " + miercoles;
         option_week.value = week;
         select_week.appendChild(option_week);
-    }
-
+    };
     actualizarListaPagosNomina();
 });
 
@@ -85,10 +84,13 @@ $('#' + id_ddl_year_pagos_nomina).change(function(){
             select.appendChild(option);
         }
     }
+
+    actualizarListaPagosNomina();
 });
 
 $('#' + id_ddl_week_pagos_nomina).change(function(){
     // aquí llamar a la función pro
+    $('#' + id_fecha_pagos_nomina).val("");
     actualizarListaPagosNomina();
 });
 
@@ -164,7 +166,9 @@ function generateRowPagosNomina(registroSnapshot){
     var pago = document.createElement('input');
     pago.className = "form-control pago";
     pago.type = "text";
-    pago.value = formatMoney(registro.pagos_nomina.monto);
+    if(registro.pagos_nomina){
+        pago.value = formatMoney(registro.pagos_nomina.monto);
+    }
     // llenar el valor del pago con lo que esté en el reg.
     
     var col_pago = document.createElement('div');
@@ -203,17 +207,21 @@ function actualizarListaPagosNomina(){
         listaSnap.forEach(function(subSnap){
             firebase.database().ref(rama_bd_nomina + "/nomina/").child(Object.keys(subSnap.val())[0]).once("value").then(function(regSnap){
                 generateRowPagosNomina(regSnap);
-                monto_db += regSnap.val().pagos_nomina.monto;
+                if(regSnap.val().pagos_nomina){
+                    monto_db += regSnap.val().pagos_nomina.monto;
+                }
             });
         });
     });
 
     // llenar campo de fecha;
     firebase.database().ref(rama_bd_nomina + "/listas/fechas_pago/" + $('#' + id_ddl_year_pagos_nomina + " option:selected").val() + "/" + $('#' + id_ddl_week_pagos_nomina + " option:selected").val()).once("value").then(function(snapshot){
-        var fecha_aaaammdd = Object.keys(snapshot.val())[0];
-        var fecha = fecha_aaaammdd.slice(0,4) + "." + fecha_aaaammdd.slice(4,6) + "." + fecha_aaaammdd.slice(6);
-
-        $('#' + id_fecha_pagos_nomina).val(fecha);
+        if(snapshot.exists()){
+            var fecha_aaaammdd = Object.keys(snapshot.val())[0];
+            var fecha = fecha_aaaammdd.slice(0,4) + "." + fecha_aaaammdd.slice(4,6) + "." + fecha_aaaammdd.slice(6);
+    
+            $('#' + id_fecha_pagos_nomina).val(fecha);
+        }
     });
 };
 

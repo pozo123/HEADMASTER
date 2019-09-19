@@ -86,7 +86,6 @@
             </div>
         </div>
         <!-- Modal InvestTime-->
-
         <div class="modal fade" id="modalInvestTime" tabindex="-1" role="dialog" aria-labelledby="modalInvestTime" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -2363,9 +2362,9 @@
                          </div>
 
                         <!-- Reporte Nómina -->
-                        <div id="reporteNomina" class = "tabcontent hidden">
-                            <h1>Mano de obra</h1>
+                        <div id="reporteNomina" class = "tabcontent hidden">                         
                             <div class= "container-fluid">
+                                <h3>Resumen global</h3>
                                 <div class = "row">
                                     <div class = "col">
                                         <div class = "tableWrapper">
@@ -2380,13 +2379,65 @@
                                                         <th>Pagos Diversos</th>
                                                         <th>% Diversos</th>
                                                         <th>Subtotal</th>
-                                                        <th>Impuestos y carga social</th>
+                                                        <th>IVA</th>
+                                                        <th>Carga social</th>
                                                         <th>Total</th>
                                                     </tr>
                                                 </thead>
-                                                <tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <h3>Resumen semanal</h3>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="yearDdlReporteNomina">Año:</label>
+                                        <select id="yearDdlReporteNomina" class="form-control"></select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="weekDdlReporteNomina">Semana:</label>
+                                        <select id="weekDdlReporteNomina" class="form-control"></select>
+                                    </div>
+                                </div>
+                                <div class = "row">
+                                    <div class= "col-lg-6 container_reporte_nomina">
+                                        <div class = "tableWrapper">
+                                            <table id="dataTableSemanalReporteNomina" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                                <thead>
                                                     <tr>
                                                         <th>Obra</th>
+                                                        <th>Nómina</th>
+                                                        <th>Horas Extra</th>
+                                                        <th>Pagos Diversos</th>
+                                                        <th>Subtotal</th>
+                                                        <th>Impuestos laborales</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class= "col-lg-6" id = "pieSemanalReporteNomina">
+                                            <canvas id="" style = "min-height: 350px; min-width: 350;"></canvas>
+                                    </div>
+                                </div>
+                                <br/>
+                                <h3>Resumen por obra</h3>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="obraDdlReporteNomina">Obra:</label>
+                                        <select id="obraDdlReporteNomina" class="form-control"></select>
+                                    </div>
+                                </div>
+                                <div class = "row">
+                                    <div class = "col">
+                                        <div class = "tableWrapper">
+                                            <table id="dataTableObraReporteNomina" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Año</th>
+                                                        <th>Semana</th>
                                                         <th>Nómina</th>
                                                         <th>% Nómina</th>
                                                         <th>Horas Extra</th>
@@ -2394,15 +2445,14 @@
                                                         <th>Pagos Diversos</th>
                                                         <th>% Diversos</th>
                                                         <th>Subtotal</th>
-                                                        <th>Impuestos y carga social</th>
+                                                        <th>IVA</th>
+                                                        <th>Carga social</th>
                                                         <th>Total</th>
                                                     </tr>
-                                                </tfoot>
+                                                </thead>
                                             </table>
                                         </div>
                                     </div>
-                                </div>
-                                <div class = "row">
                                 </div>
                             </div>
                         </div>

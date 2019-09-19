@@ -286,3 +286,8 @@ hr {
 .bolded {
   font-weight:bold;
 }
+
+.container_reporte_nomina {
+  overflow-x: auto;
+  white-space: nowrap;
+}

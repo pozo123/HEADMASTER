@@ -146,11 +146,13 @@ $('#' + id_ddl_year_datos_nomina).change(function(){
         }
     }
     llenarDdlFaltantes();
+    actualizarTablaDatosNomina();
 });
 
 $('#' + id_ddl_week_datos_nomina).change(function(){
     resetFormDatosNomina(false);
     llenarDdlFaltantes();
+    actualizarTablaDatosNomina();
 });
 
 $('#' + id_ddl_faltantes_datos_nomina).change(function(){
@@ -1174,6 +1176,8 @@ function datosDiversosDatosNomina(){
 // Actualizar Tabla ----------------------------------
 
 function actualizarTablaDatosNomina(){
+    $('#' + id_dataTable_datos_nomina).html("");
+    console.log(1);
     firebase.database().ref(rama_bd_nomina + "/listas/fecha_datos/" + $('#' + id_ddl_year_datos_nomina + " option:selected").val() + "/" + $('#' + id_ddl_week_datos_nomina + " option:selected").val()).once("value").then(function(listaSnap){
         firebase.database().ref(rama_bd_nomina + "/nomina/").once("value").then(function(regSnap){
             firebase.database().ref(rama_bd_datos_referencia + "/diversos").once("value").then(function(divSnap){
