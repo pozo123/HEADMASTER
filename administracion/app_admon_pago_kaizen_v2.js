@@ -511,6 +511,7 @@ function tablaResumen(){
         var tabla_pagos = $('#'+ id_dataTable_pago_kaizen).DataTable({
             destroy: true,
             data: datos,
+            "order": [[ 0, "desc" ]],
             dom: 'Bfrtip',
             buttons: [
                 {extend: 'excelHtml5',
