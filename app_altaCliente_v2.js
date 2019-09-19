@@ -129,7 +129,7 @@ $('#' + id_telefono_cliente).focus(function(){
 });
 
 $('#' + id_estado_cliente).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZáéíóú",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZáéíóú´",e);
 });
 $('#' + id_estado_cliente).change(function(){
     var estado_array = deleteBlankSpaces(id_estado_cliente).split(" ");
