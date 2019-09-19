@@ -305,6 +305,7 @@ function actualizarTablaCliente(){
             destroy: true,
             data: datosCliente,
             language: idioma_espanol,
+            "autoWidth": false,
             "columnDefs": [
                 {
                     "targets": 0,
