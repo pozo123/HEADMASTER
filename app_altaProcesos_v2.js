@@ -332,7 +332,7 @@ $('#' + id_ddl_categoriaSubproceso).change(function(e){
         if(cont<10){ //Dar formato correcto a la clave
           clave = $('#'+id_clave_proceso).val() + "-" + $('#'+id_ddl_categoriaSubproceso+" option:selected").text() + "0" + cont;
         }else {
-          clave = $('#'+id_clave_proceso).val() + "-" + + $('#'+id_ddl_categoriaSubproceso+" option:selected").text() + cont;
+          clave = $('#'+id_clave_proceso).val() + "-" + $('#'+id_ddl_categoriaSubproceso+" option:selected").text() + cont;
         }
         $('#' + id_clave_subproceso).val(clave);
     });
