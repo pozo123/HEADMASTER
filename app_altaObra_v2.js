@@ -504,7 +504,8 @@ function actualizarTablaObras(){
                     "targets": -1,
                     "data": null,
                     "defaultContent": "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>"
-                }
+                },
+                { targets: [2,7,8,9,10], className: 'dt-body-center'},
               ]
         });
         //Funcion para llenar los campos cuando se quiere editar desde las opciones de la tabla
