@@ -1005,7 +1005,7 @@ $('#' + id_agregar_trabajador).click(function(){
 // ----------------- Nombre
 
 $('#' + id_nombre_trabajador).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZáéíóú",e);
 });
 
 $('#' + id_nombre_trabajador).change(function(){
@@ -1026,11 +1026,11 @@ $('#' + id_nombre_trabajador).change(function(){
 
 // ----------- Apellidos
 $('#' + id_paterno_trabajador).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZáéíóú",e);
 });
 
 $('#' + id_materno_trabajador).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZáéíóú",e);
 });
 
 $('#' + id_paterno_trabajador).change(function(){
@@ -1096,7 +1096,7 @@ $('#' + id_sueldo_trabajador).change(function(){
 // EDO CIVIL
 
 $('#' + id_estado_civil_trabajador).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZáéíóú",e);
 });
 
 $('#' + id_estado_civil_trabajador).change(function(){
@@ -1138,15 +1138,15 @@ $('#' + id_codigo_postal_trabajador).change(function(){
 // Claves
 
 $('#' + id_rfc_trabajador).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ1234567890",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ1234567890áéíóú",e);
 });
 
 $('#' + id_imss_trabajador).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ1234567890",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ1234567890áéíóú",e);
 });
 
 $('#' + id_curp_trabajador).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ1234567890",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ1234567890áéíóú",e);
 });
 
 $('#' + id_rfc_trabajador).change(function(){
@@ -1167,7 +1167,7 @@ $('#' + id_imss_trabajador).change(function(){
 // Banco
 
 $('#' + id_banco_trabajador).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ1234567890",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ1234567890áéíóú",e);
 });
 
 $('#' + id_cuenta_trabajador).keypress(function(e){

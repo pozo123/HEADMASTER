@@ -206,14 +206,14 @@ $('#' + id_email_colaborador).keypress(function(e){
 });
 
 $('#' + id_nickname_colaborador).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZáéíóú",e);
 });
 $('#' + id_nickname_colaborador).change(function(){
     $('#' + id_nickname_colaborador).val($('#' + id_nickname_colaborador).val().toUpperCase());
 });
 
 $('#' + id_nombre_colaborador).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZáéíóú",e);
 });
 
 $('#' + id_nombre_colaborador).change(function(){
@@ -229,7 +229,7 @@ $('#' + id_nombre_colaborador).change(function(){
 });
 
 $('#' + id_paterno_colaborador).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZáéíóú",e);
 });
 $('#' + id_paterno_colaborador).change(function(){
     var paterno_array = deleteBlankSpaces(id_paterno_colaborador).split(" ");
@@ -248,7 +248,7 @@ $('#' + id_paterno_colaborador).change(function(){
 });
 
 $('#' + id_materno_colaborador).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZáéíóú",e);
 });
 $('#' + id_materno_colaborador).change(function(){
     var materno_array = deleteBlankSpaces(id_materno_colaborador).split(" ");

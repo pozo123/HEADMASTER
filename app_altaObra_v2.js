@@ -149,7 +149,7 @@ $('#' + id_clave_obra).change(function(){
 });
 
 $('#' + id_clave_obra).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_0123456789",e)
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_0123456789áéíóú",e)
 });
 
 $('#' + id_nombre_obra).change(function(){
@@ -157,7 +157,7 @@ $('#' + id_nombre_obra).change(function(){
 });
 
 $('#' + id_nombre_obra).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_0123456789",e)
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_0123456789áéíóú",e)
 });
 
 $('#' + id_garantia_obra).keypress(function(e){
@@ -165,7 +165,7 @@ $('#' + id_garantia_obra).keypress(function(e){
 });
 
 $('#' + id_estado_obra).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZáéíóú",e);
 });
 
 $('#' + id_estado_obra).change(function(){
@@ -173,7 +173,7 @@ $('#' + id_estado_obra).change(function(){
 });
 
 $('#' + id_ciudad_obra).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZáéíóú",e);
 });
 
 $('#' + id_ciudad_obra).change(function(){
@@ -181,7 +181,7 @@ $('#' + id_ciudad_obra).change(function(){
 });
 
 $('#' + id_colonia_obra).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789áéíóú",e);
 });
 
 $('#' + id_colonia_obra).change(function(){
@@ -191,7 +191,7 @@ $('#' + id_colonia_obra).change(function(){
 });
 
 $('#' + id_calle_obra).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789áéíóú",e);
 });
 
 $('#' + id_calle_obra).change(function(){
