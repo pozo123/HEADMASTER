@@ -26,6 +26,7 @@ var rama_bd_datos_referencia = version + "/datos_referencia";
 var rama_bd_mano_obra= version + "/rrhh/mano_obra"
 var rama_bd_nomina = version + "/rrhh/nomina"
 var rama_bd_info_web = "info_web";
+var rama_bd_insumos = version + "/insumos";
 
 var options_semanas = { weekday: 'short', year: 'numeric', month: 'numeric', day: 'numeric'};
 var options_nomina = { weekday: 'short',day: 'numeric'};
