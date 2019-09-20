@@ -160,7 +160,23 @@ $('#' + id_agregar_proceso).click(function() {
         }
       }
       alert(cadena_alert); //retroalimentacion al usuario
+
+      var auxiliar = false;
+      if ($('#' + id_checkbox_supbroceso ).prop("checked")){
+        auxiliar = true;
+      }
       resetFormProceso(); //limpiar el formulario
+      $('#'+id_ddl_obraProcesos).val(uid_obra);
+      llenaDdlProcesoProcesos();
+      if (auxiliar){
+        existe_proceso=true;
+        $('#'+id_ddl_procesoProcesos).val(uid_proceso);
+        cargaCamposProcesoProcesos();
+        $('#' + id_checkbox_supbroceso ).prop('checked', true);
+        $('#' + id_seccion_subproceso ).removeClass('hidden');
+        llenaDdlSubprocesoProcesos(uid_proceso);
+      }
+      actualizarTablaProcesos();
     });
   };
 });
@@ -177,29 +193,7 @@ $('#' + id_borrar_proceso).click(function() {
 $('#' + id_ddl_obraProcesos).change(function(){
   resetFormProceso_proceso(true);
   resetFormProceso_subproceso(true);
-  $('#' + id_ddl_procesoProcesos).empty();
-  var select = document.getElementById(id_ddl_procesoProcesos);
-  var option = document.createElement('option');
-  option.style = "display:none";
-  option.text = option.value = "";
-  select.appendChild(option);
-  var proceso;
-  firebase.database().ref(rama_bd_obras + "/procesos/" + $('#' + id_ddl_obraProcesos + " option:selected").val() + "/procesos").orderByKey().on('child_added',function(snapshot){
-      proceso = snapshot.val();
-      if (snapshot.exists()){
-        if (snapshot.key !== "ADIC" && snapshot.key !== "MISC" && snapshot.key !== "PC00"){ //descartamos los procesos default
-          option = document.createElement('option');
-          option.value = snapshot.key;
-          option.text = snapshot.key + " " + proceso.nombre;
-          select.appendChild(option);
-        }
-      }
-  });
-  //Agregar opcion de agregar nuevo proceso
-  option = document.createElement('option');
-  option.value = "NUEVO";
-  option.text = "-CREAR NUEVO-";
-  select.appendChild(option);
+  llenaDdlProcesoProcesos();
   actualizarTablaProcesos();
 });
 
@@ -212,21 +206,7 @@ $('#' + id_ddl_procesoProcesos).change(function(){
     uid_proceso = $('#' + id_ddl_procesoProcesos + " option:selected").val();
     $('#' + id_clave_proceso).val(uid_proceso);
     var proceso;
-    firebase.database().ref(rama_bd_obras + "/procesos/" + $('#' + id_ddl_obraProcesos + " option:selected").val() + "/procesos/"+ uid_proceso).on('value',function(snapshot){
-        proceso = snapshot.val();
-        var fechas = proceso["subprocesos"][snapshot.key]["fechas"];
-        //Llenar de campos
-        $('#' + id_clave_proceso).val(snapshot.key);
-        $('#' + id_nombre_proceso ).val(proceso.nombre);
-        $('#' + id_alcance_proceso ).val(proceso.alcance);
-        var fecha = new Date(fechas.fecha_inicio_teorica);
-        $('#' + id_fecha_inicio_proceso ).val(fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2));
-        fecha = new Date(fechas.fecha_final_teorica);
-        $('#' + id_fecha_final_proceso ).val(fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2));
-        if ($('#' + id_checkbox_supbroceso).prop("checked")){ //llenar los campos de subproceso en caso de estar habilitados
-          llenaDdlSubproceso(snapshot.key);
-        }
-    });
+    cargaCamposProcesoProcesos();
   } else { //Proceso nuevo
     existe_proceso = false;
     firebase.database().ref(rama_bd_obras + "/procesos/" + $('#' + id_ddl_obraProcesos + " option:selected").val() + "/num_procesos").on('value',function(snapshot){
@@ -240,7 +220,7 @@ $('#' + id_ddl_procesoProcesos).change(function(){
         $('#'+id_clave_proceso).val(clave);
     });
     if ($('#' + id_checkbox_supbroceso).prop("checked")){ //llenar los campos de subproceso en caso de estar habilitados
-      llenaDdlSubproceso("");
+      llenaDdlSubprocesoProcesos("");
     }
   }
 });
@@ -261,12 +241,13 @@ $('#' + id_checkbox_supbroceso ).change(function(){
     if ($('#' + id_checkbox_supbroceso ).prop("checked")){
       $('#' + id_seccion_subproceso ).removeClass('hidden');
       if ($('#' + id_ddl_procesoProcesos + " option:selected").val() !== "" &&  $('#' + id_ddl_procesoProcesos + " option:selected").val() !== 0){
-        llenaDdlSubproceso($('#' + id_ddl_procesoProcesos + " option:selected").val()); //Llenado del ddl
+        llenaDdlSubprocesoProcesos($('#' + id_ddl_procesoProcesos + " option:selected").val()); //Llenado del ddl
       }
     } else {
       $('#' + id_seccion_subproceso ).addClass('hidden');
     }
 });
+
 //Funcionalidad del ddl de subprocesos: llenar los campos correspondientes en caso de existir el subproceso
 $('#' + id_ddl_subproceso ).change(function(){
   resetFormProceso_subproceso(false); //Limpiar campos
@@ -277,19 +258,7 @@ $('#' + id_ddl_subproceso ).change(function(){
     uid_subproceso = $('#' + id_ddl_subproceso + " option:selected").val();
     var subproceso;
     var fecha;
-    firebase.database().ref(rama_bd_obras + "/procesos/" + $('#'+id_ddl_obraProcesos+" option:selected").val() + "/procesos/"+ $('#'+id_ddl_procesoProcesos +" option:selected").val() + "/subprocesos/" + uid_subproceso).on('value',function(snapshot){
-        subproceso = snapshot.val();
-        var fechas = subproceso.fechas;
-        //Llenar campos
-        $('#' + id_clave_subproceso).val(snapshot.key);
-        $('#' + id_nombre_subproceso).val(subproceso.nombre);
-        $('#' + id_alcance_subproceso).val(subproceso.alcance);
-        $('#' + id_ddl_categoriaSubproceso).val(subproceso.categoria);
-        fecha = new Date(fechas.fecha_inicio_teorica);
-        $('#' + id_fecha_inicio_subproceso ).val(fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2));
-        fecha = new Date(fechas.fecha_final_teorica);
-        $('#' + id_fecha_final_subproceso ).val(fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2));
-    });
+    cargaCamposSubprocesoProcesos();
   } else { //subproceso nuevo
     $('#' + id_ddl_categoriaSubproceso).prop('disabled',false); //Habiliar el ddl categoria
   }
@@ -497,8 +466,36 @@ function datosAltaSubprocesoCopia(){
   }
   return subproceso;
 }
+
+//Llenar el ddl de procesos con las opciones correspondientes
+function llenaDdlProcesoProcesos(){
+  $('#' + id_ddl_procesoProcesos).empty();
+  var select = document.getElementById(id_ddl_procesoProcesos);
+  var option = document.createElement('option');
+  option.style = "display:none";
+  option.text = option.value = "";
+  select.appendChild(option);
+  var proceso;
+  firebase.database().ref(rama_bd_obras + "/procesos/" + $('#' + id_ddl_obraProcesos + " option:selected").val() + "/procesos").orderByKey().on('child_added',function(snapshot){
+      proceso = snapshot.val();
+      if (snapshot.exists()){
+        if (snapshot.key !== "ADIC" && snapshot.key !== "MISC" && snapshot.key !== "PC00"){ //descartamos los procesos default
+          option = document.createElement('option');
+          option.value = snapshot.key;
+          option.text = snapshot.key + " " + proceso.nombre;
+          select.appendChild(option);
+        }
+      }
+  });
+  //Agregar opcion de agregar nuevo proceso
+  option = document.createElement('option');
+  option.value = "NUEVO";
+  option.text = "-CREAR NUEVO-";
+  select.appendChild(option);
+}
+
 //Llenar el ddl de subprocesos con las opciones correspondientes
-function llenaDdlSubproceso(clave){
+function llenaDdlSubprocesoProcesos(clave){
     $('#' + id_ddl_subproceso).empty();
     var select = document.getElementById(id_ddl_subproceso);
     var option = document.createElement('option');
@@ -552,6 +549,41 @@ function fechasProgramadasProcesos(){
     final: lista_obra_final
   }
   return fechas;
+}
+
+//
+function cargaCamposProcesoProcesos(){
+  firebase.database().ref(rama_bd_obras + "/procesos/" + $('#' + id_ddl_obraProcesos + " option:selected").val() + "/procesos/"+ uid_proceso).on('value',function(snapshot){
+      proceso = snapshot.val();
+      var fechas = proceso["subprocesos"][snapshot.key]["fechas"];
+      //Llenar de campos
+      $('#' + id_clave_proceso).val(snapshot.key);
+      $('#' + id_nombre_proceso ).val(proceso.nombre);
+      $('#' + id_alcance_proceso ).val(proceso.alcance);
+      var fecha = new Date(fechas.fecha_inicio_teorica);
+      $('#' + id_fecha_inicio_proceso ).val(fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2));
+      fecha = new Date(fechas.fecha_final_teorica);
+      $('#' + id_fecha_final_proceso ).val(fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2));
+      if ($('#' + id_checkbox_supbroceso).prop("checked")){ //llenar los campos de subproceso en caso de estar habilitados
+        llenaDdlSubprocesoProcesos(snapshot.key);
+      }
+  });
+}
+
+function cargaCamposSubprocesoProcesos(){
+  firebase.database().ref(rama_bd_obras + "/procesos/" + $('#'+id_ddl_obraProcesos+" option:selected").val() + "/procesos/"+ $('#'+id_ddl_procesoProcesos +" option:selected").val() + "/subprocesos/" + uid_subproceso).on('value',function(snapshot){
+      subproceso = snapshot.val();
+      var fechas = subproceso.fechas;
+      //Llenar campos
+      $('#' + id_clave_subproceso).val(snapshot.key);
+      $('#' + id_nombre_subproceso).val(subproceso.nombre);
+      $('#' + id_alcance_subproceso).val(subproceso.alcance);
+      $('#' + id_ddl_categoriaSubproceso).val(subproceso.categoria);
+      fecha = new Date(fechas.fecha_inicio_teorica);
+      $('#' + id_fecha_inicio_subproceso ).val(fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2));
+      fecha = new Date(fechas.fecha_final_teorica);
+      $('#' + id_fecha_final_subproceso ).val(fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2));
+  });
 }
 
 // función que actualiza la tabla (revisar librería DataTable para ver funcionalidad)
@@ -627,7 +659,7 @@ function actualizarTablaProcesos(){
               }
             }
         });
-        
+
         tabla_procesos = $('#'+ id_dataTable_proceso).DataTable({
             "fnRowCallback": function (row, data, index_table) {
                   //if ( procesoIndex_array.includes(index_table+tabla_procesos.page() * 10)) {
@@ -681,7 +713,7 @@ function actualizarTablaProcesos(){
             } else {
               existe_subproceso = true;
               uid_subproceso = data[5];
-              llenaDdlSubproceso(data[0]);
+              llenaDdlSubprocesoProcesos(data[0]);
               $('#' + id_ddl_subproceso).val(data[5]);
               $('#' + id_clave_subproceso).val(data[5]);
               $('#' + id_nombre_subproceso).val(data[6]);

@@ -107,6 +107,7 @@ Nota: Todo float se ingresa a 2 decimales.
                 - id_cliente: string
                 - terminada: true (true cuando todos los "terminado" de procesos son true)
                 - habilitada: true (para ddls)
+                - procesos_completos: true
                 - direccion
                     - estado: string
                     - ciudad: string
