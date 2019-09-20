@@ -1312,6 +1312,7 @@ function actualizarTablaDatosNomina(){
                     language: idioma_espanol,
                     
                     "autoWidth": false,
+                    "order": [[ 1, "asc" ]],
                     dom: 'Bfrtip',
                     "columnDefs": [
                         { "visible": false, "targets": 0 },

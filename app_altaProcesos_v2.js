@@ -304,7 +304,7 @@ $('#' + id_clave_subproceso).change(function(){
 });
 
 $('#' + id_nombre_subproceso).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-0123456789áéíóú",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-0123456789áéíóú´",e);
 });
 
 $('#' + id_nombre_subproceso).change(function(e){
@@ -312,7 +312,7 @@ $('#' + id_nombre_subproceso).change(function(e){
 });
 
 $('#' + id_alcance_subproceso).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_0123456789()áéíóú",e)
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_0123456789()áéíóú´",e)
 });
 //Funcionalidad del ddl de categoria: Generar la clave de un subproceso nuevo
 $('#' + id_ddl_categoriaSubproceso).change(function(e){
