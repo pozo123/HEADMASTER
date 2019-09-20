@@ -235,7 +235,7 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
         firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente).once("value").then(function(regSnap){
             var registro_antiguo = regSnap.val();
 
-            firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/obra_asignada_nombre").set(obra_asignada);
+            firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/obra_asignada_nombre").set(obra_asignada_nombre);
             firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/obra_asignada").set(obra_asignada);
 
             firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/asistencias").set(asistencias);
@@ -1192,8 +1192,8 @@ function actualizarTablaDatosNomina(){
                 columns.push({title: "ID_Registro"});
                 columns.push({title: "ID HEAD"});
                 columns.push({title: "ID Pag"});
-                columns.push({title: "Nombre"});
-                columns.push({title: "Obra"});
+                columns.push({title: "Nombre completo"});
+                columns.push({title: "Obra asignada (obra de facturación"});
                 columns.push({title: "Jefe"});
             
                 columns.push({title: "Sueldo neto"});
@@ -1309,12 +1309,12 @@ function actualizarTablaDatosNomina(){
                     destroy: true,
                     data: datos_nominas,
                     columns: columns,
-                    language: idioma_espanol,
-                    
+                    language: idioma_espanol,               
                     "autoWidth": false,
                     "order": [[ 1, "asc" ]],
                     dom: 'Bfrtip',
                     "columnDefs": [
+                        { "width": "300px", "targets": 4 },
                         { "visible": false, "targets": 0 },
                         {
                             targets: [12,14,-2,-1],

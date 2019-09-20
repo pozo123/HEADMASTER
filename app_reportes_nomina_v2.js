@@ -271,7 +271,7 @@ function reporteSemanalReporteNomina(){
                         var diverso_reg = 0;
                         var he_reg = 0;
                         var iva_reg = 0;
-
+                        console.log(reg_key);
                         if(regSnap.val()[reg_key].pagos_nomina != null){
                             pago_reg = regSnap.val()[reg_key].pagos_nomina.monto;
                        
@@ -476,6 +476,7 @@ function reporteObraReporteNomina(){
             "autoWidth": false,
             dom: 'Bfrtip',
             "columnDefs": [
+                { "width": "20%", "targets": 3 },
                 {
                     targets: [-1],
                     className: 'bolded'
