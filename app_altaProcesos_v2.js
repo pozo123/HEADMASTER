@@ -363,6 +363,12 @@ function validateFormProceso(){
         alert("Escribe el nombre del proceso");
         highLightColor(id_nombre_proceso,"#FF0000");
         return false;
+    } else if($('#' + id_fecha_inicio_proceso  ).val() == ""){
+        alert("Selecciona la fecha esperada de inicio de la obra");
+        return false;
+    } else if($('#' + id_fecha_final_proceso ).val() == ""){
+        alert("Selecciona la fecha esperada de fin de la obra");
+        return false;
     } else if($('#' + id_alcance_proceso ).val() == ""){
         alert("Escribe el alcance del proceso");
         highLightColor(id_alcance_proceso ,"#FF0000");
