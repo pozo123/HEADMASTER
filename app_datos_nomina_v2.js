@@ -235,6 +235,7 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
         firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente).once("value").then(function(regSnap){
             var registro_antiguo = regSnap.val();
 
+            firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/obra_asignada_nombre").set(obra_asignada);
             firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/obra_asignada").set(obra_asignada);
 
             firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/asistencias").set(asistencias);
@@ -1213,9 +1214,8 @@ function actualizarTablaDatosNomina(){
                 columns.push({title: "Pago Total"});
                 // Generar datos
                 // generar tabla          
-                console.log(columns);
                 var registros = regSnap.val();
-                
+                console.log(listaSnap.val());
                 listaSnap.forEach(function(snapshot){
                     var datos_reg = [];
                     // aquí estoy en cada registro del año y semana elegido

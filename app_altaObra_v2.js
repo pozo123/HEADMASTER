@@ -86,6 +86,16 @@ $('#' + id_agregar_obra).click(function() {
             obra_update["obras/" + uid_existente + "/id_cliente"] = datos_obra.id_cliente;
             obra_update["obras/" + uid_existente + "/direccion"] = datos_obra.direccion;
             obra_update["obras/" + uid_existente + "/retencion_fondo_garantia"] =datos_obra.retencion_fondo_garantia;
+            if(datos_obra.terminada){
+              obra_update["listas/obras_terminadas/" + uid_existente + "/nombre"] =datos_obra.nombre;
+            } else {
+              obra_update["listas/obras_no_terminadas/" + uid_existente + "/nombre"] =datos_obra.nombre;
+            };
+            if(!datos_obra.habilitada){
+              obra_update["listas/obras_no_activas/" + uid_existente + "/nombre"] =datos_obra.nombre;
+            } else {
+              obra_update["listas/obras_activas/" + uid_existente + "/nombre"] =datos_obra.nombre;
+            }
 
             //Actualizar fechas en obra y MISC
             if (registro_antiguo.fechas.fecha_inicio_teorica !== datos_obra.fechas.fecha_inicio_teorica){
