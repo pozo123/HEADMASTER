@@ -1215,7 +1215,6 @@ function actualizarTablaDatosNomina(){
                 // Generar datos
                 // generar tabla          
                 var registros = regSnap.val();
-                console.log(listaSnap.val());
                 listaSnap.forEach(function(snapshot){
                     var datos_reg = [];
                     // aquí estoy en cada registro del año y semana elegido

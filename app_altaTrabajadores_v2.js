@@ -930,6 +930,14 @@ $('#' + id_agregar_trabajador).click(function(){
                     snapshot.child("puesto").forEach(function(destSnap){
                         listas_path["listas/puesto/" + destSnap.key + "/" + id_trabajador_existente] = null;
                     });
+                    console.log(trabajador);
+                    if(trabajador.activo){
+                        console.log(trabajador.nombre)
+                        listas_path["listas/activos/" + id_trabajador_existente] = trabajador.nombre;
+                    } else {
+                        listas_path["listas/no_activos/" + id_trabajador_existente] = trabajador.nombre;
+                    }
+
                     listas_path["listas/especialidad/" + trabajador.id_especialidad + "/" + id_trabajador_existente] = trabajador.nombre;
                     listas_path["listas/puesto/" + trabajador.id_puesto + "/" + id_trabajador_existente] = trabajador.nombre;
     

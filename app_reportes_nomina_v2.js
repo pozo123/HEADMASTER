@@ -475,6 +475,7 @@ function reporteObraReporteNomina(){
             language: idioma_espanol,                    
             "autoWidth": false,
             dom: 'Bfrtip',
+            "order": [[ 0, "desc" ]],
             "columnDefs": [
                 { "width": "20%", "targets": 3 },
                 {
