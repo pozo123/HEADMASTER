@@ -6,7 +6,7 @@ var id_dataTable_busquedaModalSuministros = "dataTableBusquedaModalSuministros";
 var id_ddl_buscaMarcaModalSuministros = "ddl_buscaMarcaModalSuministros";
 var id_ddl_buscaClasificacionModalSuministros = "ddl_buscaClasificacionModalSuministros";
 var id_ddl_buscaCategoriaModalSuministros = "ddl_buscaCategoriaModalSuministros";
-var id_buscaCategoriaModalSuministros = "buscaCatalogoModalSuministros";
+var id_buscaCatalogoModalSuministros = "buscaCatalogoModalSuministros";
 
 var id_boton_limpiarModalSuministros = "botonLimpiarFiltrosModalSuministros";
 var id_boton_guardarModalSuministros = "botonGuardarModalSuministros";
@@ -15,7 +15,9 @@ var datos_insumos;
 var tabla_busqueda;
 var tabla_selectos;
 
+// --------------------- Método de inicialización -----------------------------
 function modalSuministros(){
+  resetModalSuministros();
   firebase.database().ref(rama_bd_insumos).on('value',function(snapshot){
     datos_insumos = snapshot;
     var listas = datos_insumos.child('listas');
@@ -33,21 +35,26 @@ function modalSuministros(){
       option.text = marca.nombre;
       select.appendChild(option);
     });
-
   });
+  creaTablaSelectosSuministros();
+  actualizarTablaSuministros([]);
+  $('#' + id_modalSuministros).modal('show');
 }
 
+// ----------------------Funciones necesarias ----------------------------------
 function resetModalSuministros(){
-  $('#'+id_buscaMarcaModalSuministros).empty();
-  $('#'+id_buscaClasificacionModalSuministros).empty();
-  $('#'+id_buscaCatalogoModalSuministros).empty();
+  $('#'+id_ddl_buscaMarcaModalSuministros).empty();
+  $('#'+id_ddl_buscaClasificacionModalSuministros).empty();
+  $('#'+id_ddl_buscaCategoriaModalSuministros).empty();
 }
 
 function limpiaBusquedaModalSuministros(){
-  $('#'+id_buscaMarcaModalSuministros).val("");
-  $('#'+id_buscaClasificacionModalSuministros).val("");
-  $('#'+id_buscaCatalogoModalSuministros).val("");
+  $('#'+id_ddl_buscaMarcaModalSuministros).val("");
+  $('#'+id_ddl_buscaClasificacionModalSuministros).val("");
+  $('#'+id_ddl_buscaCategoriaModalSuministros).val("");
 }
+
+//------------------------------- DataTables -----------------------------------
 
 function actualizarTablaSuministros(datos){
   var datos_suministros = [];
@@ -67,7 +74,7 @@ function actualizarTablaSuministros(datos){
       destroy: true,
       data: datos_suministros,
       language: idioma_espanol,
-      "autoWidth": false,
+      //"autoWidth": false,
       "columnDefs": [
           { "width": "120px", "targets": 4 },
           {
@@ -86,7 +93,7 @@ function actualizarTablaSuministros(datos){
       tabla_selectos.row.add([
         data[0],
         data[1],
-        data[2]+"-"data[3]+"-"data[4],
+        data[2]+"-"+data[3]+"-"+data[4],
         data[5],
         data[5],
         0,
@@ -98,13 +105,12 @@ function actualizarTablaSuministros(datos){
   });
 }
 
-function creaTablaSalectos(){
-  var datos_selectos=[];
-  tabla_selectos = = $('#'+ id_dataTable_selectModalSuministros).DataTable({
+function creaTablaSelectosSuministros(){
+  var datos_suministros = [];
+  tabla_selectos = $('#'+ id_dataTable_selectModalSuministros).DataTable({
       destroy: true,
-      data: datos_selectos,
+      data: datos_suministros,
       language: idioma_espanol,
-      "autoWidth": false,
       "columnDefs": [
           { "width": "120px", "targets": 2 },
           {
@@ -115,22 +121,23 @@ function creaTablaSalectos(){
           { "visible": false, "targets": 9 }
         ]
   });
+
+  $('#' + id_dataTable_selectModalSuministros + ' tbody').on( 'click', '.desplegar', function () {
+      var data = tabla_selectos.row( $(this).parents('tr')).data();
+      var icon_class = "";
+      if(data[9]) {
+          icon_class = "'icono_rojo fas fa-times-circle'"
+          data[9]=false;
+      } else {
+        icon_class = "'icono_verde fas fa-check-circle'";
+        data[9]=true;
+      }
+      data[7] = "<button type='button' class='desplegar btn btn-transparente'><i class=" + icon_class + "></i></button>";
+      tabla_selectos.row( $(this).parents('tr')).data(data).draw();
+  });
+
+  $('#' + id_dataTable_selectModalSuministros + ' tbody').on( 'click', '.eliminar', function () {
+      tabla_selectos.row( $(this).parents('tr') ).remove().draw();
+  });
+
 }
-
-$('#' + id_dataTable_selectModalSuministros + ' tbody').on( 'click', '.desplegar', function () {
-    var data = tabla_selectos.row( $(this).parents('tr')).data();
-    var icon_class = "";
-    if(data[9]) {
-        icon_class = "'icono_rojo fas fa-times-circle'"
-        data[9]=false;
-    } else {
-      icon_class = "'icono_verde fas fa-check-circle'";
-      data[9]=true;
-    }
-    data[7] = "<button type='button' class='desplegar btn btn-transparente'><i class=" + icon_class + "></i></button>";
-    tabla_selectos.row( $(this).parents('tr')).data(data).draw();
-});
-
-$('#' + id_dataTable_selectModalSuministros + ' tbody').on( 'click', '.eliminar', function () {
-    tabla_selectos.row( $(this).parents('tr') ).remove().draw();
-});

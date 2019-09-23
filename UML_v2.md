@@ -69,6 +69,7 @@ Nota: Todo float se ingresa a 2 decimales.
                 - clientes (id): true
             - deshabilitados
                 - clientes (id): true
+
     - administracion:
         - flujos
             - pagos
@@ -433,16 +434,22 @@ Nota: Todo float se ingresa a 2 decimales.
               - proveedor
                   - materiales
                       - material
-        - listas
-            - categorias
-                - categoria  
-                    - id_producto
-            - marca
-                - marca
-                    - id_producto
-            - clasificacion
-                - clasificacion
-                    - id_producto
+          - marcas
+              - id_marca
+                  - nombre: string
+          - clasificacion
+              - id_clasificacion
+                  - nombre: string 
+          - listas
+              - categorias
+                  - categoria  
+                      - id_producto
+              - marca
+                  - marca
+                      - id_producto
+              - clasificacion
+                  - clasificacion
+                      - id_producto
 
 DEFINIR DESPUÉS
 
