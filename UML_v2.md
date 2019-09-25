@@ -429,27 +429,48 @@ Nota: Todo float se ingresa a 2 decimales.
                   - marca
                   - unidad
                   - clasificacion
-                  - ramo
+                  - categoria
           - proveedores
               - proveedor
-                  - materiales
-                      - material
+                  - razon_social: string
+                  - dirección: string
+                  - RFC: string
+                  - contacto
+                      -id_contacto
+                        - nombre: string
+                        - telefono: string
+                        - correo: string
           - marcas
               - id_marca
                   - nombre: string
           - clasificacion
               - id_clasificacion
-                  - nombre: string 
+                  - nombre: string
+          - unidades
+              - id_unidad
+                  - nombre: string
+          - categoria
+              - id_categoria
+                  - nombre: string
+
           - listas
+              - proveedores
+                  - proveedor
+                      - id_producto
+                          - precio: float
+                          - fecha: timestamp
               - categorias
                   - categoria  
-                      - id_producto
+                      - id_producto: true
               - marca
                   - marca
-                      - id_producto
+                      - id_producto: true
               - clasificacion
                   - clasificacion
-                      - id_producto
+                      - id_producto: true
+              - ramo
+                  - ramos
+                      - id_producto: true
 
 DEFINIR DESPUÉS
 

@@ -3,11 +3,16 @@ var id_form_adicionales = "formGeneradorAdic";
 var id_dataTable_selectAdicionales = "dataTableSeleccionadosAdicionales";
 
 var id_ddl_obraAdicionales = "ddl_obraAdicionales";
+var id_info_atencionAdicionales = "info_atencionAdicionales";
 var id_ddl_subprocesoAdicionales = "ddl_subprocesoAdicionales";
 var id_claveAdicionales = "claveAdicionales";
 var id_nombreAdicionales = "nombreAdicionales";
 var id_tituloAdicionales = "tituloAdicionales";
 var id_ddl_atnAdicionales = "ddl_atnAdicionales";
+var id_cb_altaSinSupervisorAdicionales = "cb_altaSinSupervisorAdicionales";
+var id_div_sinSupervisorAdicionales = "div_sinSupervisorAdicionales";
+var id_div_conSupervisorAdicionales = "div_conSupervisorAdicionales";
+var id_ddl_peticionAdicionales = "ddl_peticionAdicionales";
 var id_foto_inputAdicionales = "fotoInputAdicionales";
 var id_imagen_labelAdicionales = "imagenLabelAdicionales";
 var id_boton_imagenAdicionales = "botonImagenAdicionales";
@@ -45,6 +50,7 @@ var selectImagenes;
 var tabla_selectosAdicionales;
 
 $('#' + id_tab_adicionales).click(function() {
+  //document.getElementById(id_info_atencionAdicionales).style.background = "#FF0000";
   $('#' + id_imagenes_selecAdicionales).empty();
   selectImagenes = new SlimSelect({
       select: '#' + id_imagenes_selecAdicionales,
@@ -56,6 +62,17 @@ $('#' + id_tab_adicionales).click(function() {
 $('#' + id_boton_agregar_suministrosAdicionales).click(function() {
   modalSuministros();
 });
+
+$('#' + id_cb_altaSinSupervisorAdicionales ).change(function(){
+    if ($('#' + id_cb_altaSinSupervisorAdicionales ).prop("checked")){
+      $('#' + id_div_conSupervisorAdicionales ).addClass('hidden');
+      $('#' + id_div_sinSupervisorAdicionales ).removeClass('hidden');
+    } else {
+      $('#' + id_div_sinSupervisorAdicionales ).addClass('hidden');
+      $('#' + id_div_conSupervisorAdicionales ).removeClass('hidden');
+    }
+});
+
 
 function creaTablaSelectosAdicionales(){
   var datos_suministros = [];

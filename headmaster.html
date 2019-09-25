@@ -1997,6 +1997,10 @@
                                                     <label for="ddl_obraAdicionales">Obra:</label>
                                                     <select id="ddl_obraAdicionales" class="form-control"></select>
                                                 </div>
+                                                <div class="form-group col-md-2">
+                                                    <label for="info_atencionAdicionales">Verificación</label>
+                                                    <input type="text" id="info_atencionAdicionales"class="form-control" disabled="true" placeholder="Info. Atención">
+                                                </div>
                                             </div>
                                             <div class="form-row">
                                                 <div class="form-group col-md-6" id="div_subprocesoAdicionales">
@@ -2027,26 +2031,44 @@
                                             <br/>
                                             <h3>Body</h3>
                                             <hr class="style2">
-                                            <div class="form-group">
-                                                <label for="fotoInputAdicionales">Selecciona una imagen</label>
-                                                <div class="custom-file">
-                                                    <input type="file" class="custom-file-input" id="fotoInputAdicionales" accept="image/*"/>
-                                                    <label class = "custom-file-label" id="imagenLabelAdicionales">Archivo no seleccionado</label>
+                                            <div class="form-row align-items-center">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="" id="cb_altaSinSupervisorAdicionales">
+                                                    <label class="form-check-label" for="cb_altaSinSupervisorAdicionales">Dar de alta sin solicitud de un supervisor</label>
                                                 </div>
                                             </div>
-                                            <div class="form-row">
-                                                <button id="botonImagenAdicionales" type="button" class="btn btn-outline-dark btn-block">Aceptar</button>
+                                          </br>
+                                            <div class="hidden" id="div_sinSupervisorAdicionales">
+                                                <div class="form-group">
+                                                    <label for="fotoInputAdicionales">Selecciona una imagen</label>
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input" id="fotoInputAdicionales" accept="image/*"/>
+                                                        <label class = "custom-file-label" id="imagenLabelAdicionales">Archivo no seleccionado</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <button id="botonImagenAdicionales" type="button" class="btn btn-outline-dark btn-block">Aceptar</button>
+                                                </div>
+                                                <br/>
+                                                <div class="form-row">
+                                                  <div class="form-group col-md-3">
+                                                     <label>Imagenes seleccionadas</label>
+                                                  </div>
+                                                  <div class="form-group col-md-9">
+                                                      <select id="imagenesSeleccionadasAdicionales" multiple>
+                                                      </select>
+                                                  </div>
+                                                </div>
                                             </div>
-                                            <br/>
-                                            <div class="form-row">
-                                              <div class="form-group col-md-3">
-                                                 <label>Imagenes seleccionadas</label>
-                                              </div>
-                                              <div class="form-group col-md-9">
-                                                  <select id="imagenesSeleccionadasAdicionales" multiple>
-                                                  </select>
-                                              </div>
+                                            <div id="div_conSupervisorAdicionales">
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-12">
+                                                        <label for="ddl_peticionAdicionales">Petición de supervisor:</label>
+                                                        <select id="ddl_peticionAdicionales" class="form-control"></select>
+                                                    </div>
+                                                </div>
                                             </div>
+
                                             </br>
                                             <h4>Suministros</h4>
                                             <div class="form-group">
