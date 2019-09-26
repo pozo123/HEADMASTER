@@ -240,8 +240,8 @@ function reporteSemanalReporteNomina(){
     firebase.database().ref(rama_bd_nomina + "/nomina").on("value", function(regSnap){
         firebase.database().ref(rama_bd_obras + "/listas/obras_activas").once("value").then(function(obraSnap){
             firebase.database().ref(rama_bd_nomina + "/listas/fecha_datos/" + $('#' + id_ddl_year_reporte_nomina + " option:selected").val() + "/" + $('#' + id_ddl_week_reporte_nomina + " option:selected").val()).once("value").then(function(listaSnap){
+                console.log(1);
                 var datos = [];
-                console.log(listaSnap.val());
                 obraSnap.forEach(function(obraSubSnap){
                     obra_nombre = obraSubSnap.val().nombre;
                     var nomina = 0;
@@ -259,6 +259,7 @@ function reporteSemanalReporteNomina(){
                     // el caso donde hay faltas, no solo es sumar de 0.2 en 0.2 para obtener la prop;
                     
                     listaSnap.forEach(function(subSnap){
+                        console.log(subSnap.key);
                         var aux = 0;
                         var aux_proporcion = 0;
 
@@ -271,7 +272,6 @@ function reporteSemanalReporteNomina(){
                         var diverso_reg = 0;
                         var he_reg = 0;
                         var iva_reg = 0;
-                        console.log(reg_key);
                         if(regSnap.val()[reg_key].pagos_nomina != null){
                             pago_reg = regSnap.val()[reg_key].pagos_nomina.monto;
                        
@@ -304,19 +304,13 @@ function reporteSemanalReporteNomina(){
                                     aux_proporcion += 0.2;
                                 }  
                             };
-                            console.log(pago_reg);
-                            console.log(aux);
                             carga_social_reg = (pago_reg - aux) * (proporcion_reg / aux_proporcion);
                             
                             nomina += parseFloat(nomina_reg.toFixed(2));
                             iva += parseFloat(iva_reg.toFixed(2));
-                            console.log(carga_social_reg);
                             carga_social += parseFloat(carga_social_reg.toFixed(2));
                         };     
                     });
-
-                    console.log(iva);
-                    console.log(carga_social);
 
                     if(nomina + horas_extra + diversos > 0){
                         datos.push([
@@ -358,6 +352,8 @@ function reporteSemanalReporteNomina(){
                     nombres_obras[i] = datos[i][0];
                     total_obras[i] = deformatMoney(datos[i][6]);
                 };
+
+                console.log(2);
                 // pie
                 var canvas = document.createElement('canvas');
                 canvas.style = "min-height: 350px; min-width: 350;"
@@ -449,7 +445,6 @@ function reporteObraReporteNomina(){
 
         };
 
-        console.log(json_datos);
         var datos = [];
         for(key in json_datos){
             datos.push([
@@ -467,8 +462,6 @@ function reporteObraReporteNomina(){
                 formatMoney(json_datos[key].total),
             ]);
         };
-
-
         tabla_reporte_obra_nomina = $('#'+ id_dataTable_reporte_obra_reporte_nomina).DataTable({
             destroy: true,
             data: datos,

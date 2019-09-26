@@ -73,7 +73,7 @@ $('#' + id_tab_datos_nomina).click(function(){
 
     // Llenado del ddl de obra en el modal
     $('.' + class_modal_obra_datos_nomina).empty();
-    firebase.database().ref(rama_bd_obras + "/listas/obras_activas").on("value", function(snapshot){
+    firebase.database().ref(rama_bd_obras + "/listas/obras_activas").orderByChild("nombre").on("value", function(snapshot){
         var obras_ddl = document.getElementsByClassName(class_modal_obra_datos_nomina);
         for(var i=0;i<obras_ddl.length;i++){
             var option = document.createElement('option');
@@ -973,6 +973,7 @@ $(document).on('keypress','.horasExtraInputDatos', function(e){
 $(document).on('change','.obraHorasExtra', function(){
     var row = this.parentElement.parentElement;
     var select_proceso = row.childNodes[3].childNodes[0];
+    select_proceso.innerHTML = '';
     var option = document.createElement('option');
     option.style = "display:none";
     option.text = option.value = "";
@@ -1130,6 +1131,7 @@ $(document).on('keypress','.diversosInputDatos', function(e){
 $(document).on('change','.obraDiversos', function(){
     var row = this.parentElement.parentElement;
     var select_proceso = row.childNodes[3].childNodes[0];
+    select_proceso.innerHTML = "";
     var option = document.createElement('option');
     option.style = "display:none";
     option.text = option.value = "";
