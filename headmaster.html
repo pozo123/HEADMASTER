@@ -627,6 +627,12 @@
                             <li class="tab" id="tabCopeo"><a href="#" onclick="openTabs('tabCopeo','copeo')">Copeo</a></li>
                         </ul>
                     </li>
+                    <li class = "administracion compras hidden">
+                        <a href="#pageSuministros" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Suministros</a>
+                        <ul class="collapse list-unstyled" id="pageSuministros">
+                            <li class="tab" id="tabDefinicionesSuministros"><a href="#" onclick="openTabs('tabDefinicionesSuministros','definicionesSuministros')">Marcas, Categorias, Clasificaciones y Unidades</a></li>
+                        </ul>
+                    </li>
                     <li>
                         <a href="#pageReportes" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Reportes</a>
                         <ul class="collapse list-unstyled" id="pageReportes">
@@ -2240,6 +2246,198 @@
                                       </div>
                                   </div>
                               </div>
+                         </div>
+                         <!-- Definición de suministros -->
+                         <div id="definicionesSuministros" class = "tabcontent hidden">
+                             <h1>Definición de datos relacionados a suministros </h1>
+                             <p>Página para definir los datos relevantes para los suministros</p>
+                             <div class= "container-fluid">
+                                 <div class= "row">
+                                     <div class="col-lg-1"></div>
+                                     <div class="col-lg-10">
+                                         <h3> Marcas </h3>
+                                         </br>
+                                         <div class= "row">
+                                             <div class= "col-md-6">
+                                                 <form id="formMarcasSuminsitros" action="#" onsubmit="return false;">
+                                                     <div class="form-row">
+                                                         <div class="form-group col-md-12">
+                                                             <label for="nombreMarcaSuministros">Marca:</label>
+                                                             <input type="text" name="" id="nombreMarcaSuministros" class="form-control" placeholder="Ejemplo: Medio Oficial">
+                                                         </div>
+                                                     </div>
+                                                     <br/>
+                                                     <div class="form-row">
+                                                         <div class= "col-6">
+                                                             <button id="boton_agregarMarcaSuministros" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                                         </div>
+                                                         <div class= "col-6">
+                                                             <button id="boton_borrarMarcaSuministros" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                         </div>
+                                                     </div>
+                                                 </form>
+                                                 <br/>
+                                             </div>
+                                             <div class= "col-md-6">
+                                                 <div class = "tableWrapper">
+                                                     <table id="dataTableMarcasSuministros" class="display" style="width:100%">
+                                                         <thead>
+                                                             <tr>
+                                                                 <th>ID_marca</th>
+                                                                 <th>Marca</th>
+                                                                 <th>Editar</th>
+                                                             </tr>
+                                                         </thead>
+                                                         <tfoot>
+                                                             <tr>
+                                                                 <th>ID_marca</th>
+                                                                 <th>Marca</th>
+                                                                 <th>Editar</th>
+                                                             </tr>
+                                                         </tfoot>
+                                                     </table>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                         </br>
+                                         <h3> Categorías </h3>
+                                         </br>
+                                         <div class= "row">
+                                             <div class= "col-md-6">
+                                                 <form id="formCategoriasSuminsitros" action="#" onsubmit="return false;">
+                                                     <div class="form-row">
+                                                         <div class="form-group col-md-12">
+                                                             <label for="nombreCategoriaSuministros">Categoría:</label>
+                                                             <input type="text" name="" id="nombreCategoriaSuministros" class="form-control" placeholder="Ejemplo: Medio Oficial">
+                                                         </div>
+                                                     </div>
+                                                     <br/>
+                                                     <div class="form-row">
+                                                         <div class= "col-6">
+                                                             <button id="boton_agregarCategoriaSuministros" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                                         </div>
+                                                         <div class= "col-6">
+                                                             <button id="boton_borrarCategoriaSuministros" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                         </div>
+                                                     </div>
+                                                 </form>
+                                                 <br/>
+                                             </div>
+                                             <div class= "col-md-6">
+                                                 <div class = "tableWrapper">
+                                                     <table id="dataTableCategoriaSuministros" class="display" style="width:100%">
+                                                         <thead>
+                                                             <tr>
+                                                                 <th>ID_marca</th>
+                                                                 <th>Categoría</th>
+                                                                 <th>Editar</th>
+                                                             </tr>
+                                                         </thead>
+                                                         <tfoot>
+                                                             <tr>
+                                                                 <th>ID_marca</th>
+                                                                 <th>Categoría</th>
+                                                                 <th>Editar</th>
+                                                             </tr>
+                                                         </tfoot>
+                                                     </table>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                         </br>
+                                         <h3> Clasificaciones </h3>
+                                         </br>
+                                         <div class= "row">
+                                             <div class= "col-md-6">
+                                                 <form id="formClasificacionesSuminsitros" action="#" onsubmit="return false;">
+                                                     <div class="form-row">
+                                                         <div class="form-group col-md-12">
+                                                             <label for="nombreClasificacionSuministros">Clasificación:</label>
+                                                             <input type="text" name="" id="nombreClasificacionSuministros" class="form-control" placeholder="Ejemplo: Medio Oficial">
+                                                         </div>
+                                                     </div>
+                                                     <br/>
+                                                     <div class="form-row">
+                                                         <div class= "col-6">
+                                                             <button id="boton_agregarClasificacionSuministros" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                                         </div>
+                                                         <div class= "col-6">
+                                                             <button id="boton_borrarClasificacionSuministros" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                         </div>
+                                                     </div>
+                                                 </form>
+                                                 <br/>
+                                             </div>
+                                             <div class= "col-md-6">
+                                                 <div class = "tableWrapper">
+                                                     <table id="dataTableClasificacionSuministros" class="display" style="width:100%">
+                                                         <thead>
+                                                             <tr>
+                                                                 <th>ID_marca</th>
+                                                                 <th>Clasificación</th>
+                                                                 <th>Editar</th>
+                                                             </tr>
+                                                         </thead>
+                                                         <tfoot>
+                                                             <tr>
+                                                                 <th>ID_marca</th>
+                                                                 <th>Clasificación</th>
+                                                                 <th>Editar</th>
+                                                             </tr>
+                                                         </tfoot>
+                                                     </table>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                         </br>
+                                         <h3> Unidades </h3>
+                                         </br>
+                                         <div class= "row">
+                                             <div class= "col-md-6">
+                                                 <form id="formUnidadesSuminsitros" action="#" onsubmit="return false;">
+                                                     <div class="form-row">
+                                                         <div class="form-group col-md-12">
+                                                             <label for="nombreUnidadSuministros">Unidad:</label>
+                                                             <input type="text" name="" id="nombreUnidadSuministros" class="form-control" placeholder="Ejemplo: Medio Oficial">
+                                                         </div>
+                                                     </div>
+                                                     <br/>
+                                                     <div class="form-row">
+                                                         <div class= "col-6">
+                                                             <button id="boton_agregarUnidadSuministros" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                                         </div>
+                                                         <div class= "col-6">
+                                                             <button id="boton_borrarUnidadSuministros" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                         </div>
+                                                     </div>
+                                                 </form>
+                                                 <br/>
+                                             </div>
+                                             <div class= "col-md-6">
+                                                 <div class = "tableWrapper">
+                                                     <table id="dataTableUnidadSuministros" class="display" style="width:100%">
+                                                         <thead>
+                                                             <tr>
+                                                                 <th>ID_marca</th>
+                                                                 <th>Unidad</th>
+                                                                 <th>Editar</th>
+                                                             </tr>
+                                                         </thead>
+                                                         <tfoot>
+                                                             <tr>
+                                                                 <th>ID_marca</th>
+                                                                 <th>Unidad</th>
+                                                                 <th>Editar</th>
+                                                             </tr>
+                                                         </tfoot>
+                                                     </table>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <div class="col-lg-1"></div>
+                                 </div>
+                             </div>
                          </div>
                          <!-- Copeo -->
                          <div id= "copeo" class="tabcontent hidden">

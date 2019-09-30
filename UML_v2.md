@@ -538,15 +538,16 @@ Nota: Todo float se ingresa a 2 decimales.
           - marcas
               - id_marca
                   - nombre: string
+          - categoria
+              - id_categoria
+                  - nombre: string
           - clasificacion
               - id_clasificacion
                   - nombre: string
           - unidades
               - id_unidad
                   - nombre: string
-          - categoria
-              - id_categoria
-                  - nombre: string
+
 
           - listas
               - proveedores
