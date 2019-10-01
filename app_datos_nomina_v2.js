@@ -1180,7 +1180,6 @@ function datosDiversosDatosNomina(){
 
 function actualizarTablaDatosNomina(){
     $('#' + id_dataTable_datos_nomina).html("");
-    console.log(1);
     firebase.database().ref(rama_bd_nomina + "/listas/fecha_datos/" + $('#' + id_ddl_year_datos_nomina + " option:selected").val() + "/" + $('#' + id_ddl_week_datos_nomina + " option:selected").val()).once("value").then(function(listaSnap){
         firebase.database().ref(rama_bd_nomina + "/nomina/").once("value").then(function(regSnap){
             firebase.database().ref(rama_bd_datos_referencia + "/diversos").once("value").then(function(divSnap){
@@ -1257,8 +1256,17 @@ function actualizarTablaDatosNomina(){
                     var sueldo_neto = registro.sueldo_semanal;
                     datos_reg.push(formatMoney(sueldo_neto));
 
-                    var jueves, viernes, lunes, martes, miercoles = "";
-                    var jueves_aux, viernes_aux, lunes_aux, martes_aux, miercoles_aux = 0;
+                    var jueves = "";
+                    var viernes = "";
+                    var lunes = "";
+                    var martes = "";
+                    var miercoles = "";
+
+                    var jueves_aux = 0;
+                    var viernes_aux = 0;
+                    var lunes_aux = 0;
+                    var martes_aux = 0;
+                    var miercoles_aux = 0;
 
                     if(registro.asistencias != undefined) {
                         jueves = registro.asistencias.jueves == undefined ? "" : registro.asistencias.jueves.actividad;
@@ -1302,7 +1310,7 @@ function actualizarTablaDatosNomina(){
                     }
 
                     datos_reg.push(formatMoney(total_diversos));
-                    datos_reg.push(formatMoney(sueldo_a_pagar + horas_extra_importe +total_diversos));
+                    datos_reg.push(formatMoney(sueldo_a_pagar + horas_extra_importe + total_diversos));
                     datos_nominas.push(datos_reg)
                     
                 })

@@ -16,7 +16,7 @@ var json_personal = {};
 
 var id_div_dropdown_areas = "dropdown_areas";
 
-var version = "test";
+var version = "version2";
 
 var rama_bd_personal = version + "/personal";
 var rama_bd_obras = version + "/obras";
@@ -52,6 +52,315 @@ $(document).ready(function() {
     });
 
     document.getElementById(id_week_label).innerHTML = "Semana " + getWeek(new Date().getTime())[0];
+
+
+    firebase.database().ref("rrhh/trabajadores").once("value").then(function(snapshot){
+
+        var datos = {
+            "ACANTO": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "AVERANDA T-A": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "AVERANDA T-ByC": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "CENTRAL PARK BOSQUE REAL": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "COSMOCRAT INTERLOMAS": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "ENTTORNO T-F": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "EPIC COYOACAN": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "FANTASMA REFORMA 4107": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "FOR US": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "HAUS LEON": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "ICON": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "IQONO MEXICO": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "LA CITÉ TORRE D": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "LAS VENTANAS": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "MINAS 71": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "NEO": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "PROYECTO ZENTRAL ": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "SAN ANTONIO 88": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "SAN ANTONIO 95": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "UNICO": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "VIA515": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "WEST PARK T-C": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "NA": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            
+        };
+        var pago_ejemplo = 0;
+        snapshot.forEach(function(subSnap){
+            var semana = subSnap.child("nomina/2019/30").val();
+            if(semana != null){
+                if(semana.total){
+                    pago_ejemplo += parseFloat(semana.total);
+                };
+            };
+            if(semana){
+                var proporcion = 0;
+                if(semana.jueves != undefined){
+                    if(semana.jueves.asistencia){
+                        proporcion += 0.2;
+                    };
+                }
+                if(semana.viernes != undefined){
+                    if(semana.viernes.asistencia){
+                        proporcion += 0.2;
+                    };
+                }
+
+                if(semana.lunes != undefined){
+                    if(semana.lunes.asistencia){
+                        proporcion += 0.2;
+                    };
+                }
+                if(semana.martes != undefined){
+                    if(semana.martes.asistencia){
+                        proporcion += 0.2;
+                    };
+                }
+                if(semana.miercoles != undefined){
+                    if(semana.miercoles.asistencia){
+                        proporcion += 0.2;
+                    };
+                    
+                }
+                var sueldo = parseFloat( parseFloat(semana.total_asistencia) / proporcion );
+
+                // Asistencias y pagos totales;
+
+                var aux = proporcion * 5;
+                if(aux == 0 && semana.total != undefined){
+                    console.log(aux);
+                    console.log(semana);
+                }
+                aux = 1 / aux;
+                //console.log(subSnap.key);
+                if(semana.jueves != undefined){
+                    if(semana.jueves.asistencia){
+                        datos[semana.jueves.obra].total_asistencias += parseFloat(sueldo * 0.2);
+                        datos[semana.jueves.obra].total_pago += parseFloat(semana.total * aux);
+                    };
+                }
+                if(semana.viernes != undefined){
+                    if(semana.viernes.asistencia){
+                        datos[semana.viernes.obra].total_asistencias += parseFloat(sueldo * 0.2)
+                        datos[semana.viernes.obra].total_pago += parseFloat(semana.total * aux);
+                    };
+                }
+                if(semana.lunes != undefined){
+                    if(semana.lunes.asistencia){
+                        datos[semana.lunes.obra].total_asistencias += parseFloat(sueldo * 0.2)
+                        datos[semana.lunes.obra].total_pago += parseFloat(semana.total * aux);
+                    };
+                }
+                if(semana.martes != undefined){
+                    if(semana.martes.asistencia){
+                        datos[semana.martes.obra].total_asistencias += parseFloat(sueldo * 0.2)
+                        datos[semana.martes.obra].total_pago += parseFloat(semana.total * aux);
+                    };
+                }
+                if(semana.miercoles != undefined){
+                    if(semana.miercoles.asistencia){
+                        datos[semana.miercoles.obra].total_asistencias += parseFloat(sueldo * 0.2)
+                        datos[semana.miercoles.obra].total_pago += parseFloat(semana.total * aux);
+                    };
+                }
+                
+                // horas extra
+                if(semana.horas_extra != undefined){
+                    for(key in semana.horas_extra){
+                        datos[semana.horas_extra[key].obra].horas_extra += parseFloat(semana.horas_extra[key].horas);
+                        datos[semana.horas_extra[key].obra].total_horas_extra += parseFloat(parseFloat(semana.horas_extra[key].horas) * (sueldo / 24 ).toFixed(2));
+                    };
+                };
+
+                // Diversos
+                //console.log(subSnap.key);
+                if(semana.diversos != undefined){
+                    for(key in semana.diversos){
+                        datos[semana.diversos[key].obra].diversos += parseFloat(semana.diversos[key].cantidad);
+                    };
+                };
+            };
+        });
+
+        console.log(datos);
+        console.log(pago_ejemplo);
+
+        var datos_tabla = [];
+
+        for(key in datos){
+            datos_tabla.push([
+                key,
+                datos[key].total_asistencias,
+                0,
+                datos[key].horas_extra,
+                datos[key].total_horas_extra,
+                0,
+                datos[key].diversos,
+                0,
+                0,
+                0,
+                0,
+                datos[key].total_pago
+            ]);
+        }
+
+        tabla_reporte_global_nomina = $('#dataTableNomina').DataTable({
+            destroy: true,
+            data: datos_tabla,
+            language: idioma_espanol,                    
+            "autoWidth": false,
+            dom: 'Bfrtip',
+            "columnDefs": [
+                {
+                    targets: [-1],
+                    className: 'bolded'
+                },
+                { targets: "_all", className: 'dt-body-center'},
+            ],
+            buttons: [
+                {extend: 'excelHtml5',
+                title: "Reporte_global_nomina",
+                exportOptions: {
+                    columns: [':visible']
+                }},
+            ],
+        });
+    });
 });
 
 firebase.auth().onAuthStateChanged(user => {
