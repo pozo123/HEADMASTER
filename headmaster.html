@@ -631,6 +631,8 @@
                         <a href="#pageSuministros" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Suministros</a>
                         <ul class="collapse list-unstyled" id="pageSuministros">
                             <li class="tab" id="tabDefinicionesSuministros"><a href="#" onclick="openTabs('tabDefinicionesSuministros','definicionesSuministros')">Marcas, Categorias, Clasificaciones y Unidades</a></li>
+                            <li class="tab" id="tabAltaInsumos"><a href="#" onclick="openTabs('tabAltaInsumos','altaInsumos')">Alta Insumos</a></li>
+                            <li class="tab" id="tabAltaProveedores"><a href="#" onclick="openTabs('tabAltaProveedores','altaProveedores')">Alta Proveedores</a></li>
                         </ul>
                     </li>
                     <li>
@@ -2609,7 +2611,168 @@
                                  </div>
                              </div>
                          </div>
-
+                         <!-- alta Insumos -->
+                         <div id="altaInsumos" class = "tabcontent hidden">
+                             <h1>Alta o edición de Insumos </h1>
+                             <p>Página para dar de alta o modificar insumos existentes en el sistema.</p>
+                             <div class= "container-fluid">
+                                 <div class= "row align-items-center">
+                                     <div class= "col-lg-2"></div>
+                                     <div class= "col-lg-8">
+                                         <form id="formInsumos" action="#" onsubmit="return false;">
+                                             <br/>
+                                             <div class="form-row">
+                                                 <div class="form-group col-md-2">
+                                                     <label for="catalogoInsumos">Catálogo:</label>
+                                                     <input type="text" name="" id="catalogoInsumos" class="form-control" placeholder="Catálogo" readonly="readonly">
+                                                 </div>
+                                                 <div class="form-group col-md-10">
+                                                     <label for="descripcionInsumos">Descripción:</label>
+                                                     <input type="text" name="" id="descripcionInsumos" class="form-control" placeholder="Descripción">
+                                                 </div>
+                                             </div>
+                                             <div class="form-row">
+                                               <div class="form-group col-md-4">
+                                                   <label for="catfabricInsumos">Catfabric:</label>
+                                                   <input type="text" name="" id="catfabricInsumos" class="form-control" placeholder="Catfabric">
+                                               </div>
+                                               <div class="form-group col-md-4">
+                                                   <label for="ddl_marcaInsumos">Marca:</label>
+                                                   <select id ="ddl_marcaInsumos" class="form-control"></select>
+                                               </div>
+                                               <div class="form-group col-md-4">
+                                                   <label for="ddl_unidadInsumos">Unidad:</label>
+                                                   <select id ="ddl_unidadInsumos" class="form-control"></select>
+                                               </div>
+                                             </div>
+                                             <br/>
+                                             <div class="form-row">
+                                               <div class="form-group col-md-2"></div>
+                                               <div class="form-group col-md-4">
+                                                   <label for="clasificacionInsumos">Clasificación:</label>
+                                                   <input type="text" name="" id="clasificacionInsumos" class="form-control" placeholder="Catfabric">
+                                               </div>
+                                               <div class="form-group col-md-4">
+                                                   <label for="ddl_categoriaInsumos">Categoría:</label>
+                                                   <select id ="ddl_categoriaInsumos" class="form-control"></select>
+                                               </div>
+                                             </div>
+                                             </br>
+                                             <div class="form-row">
+                                                 <div class= "col-6">
+                                                     <button id="botonAgregarInsumos" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                                 </div>
+                                                 <div class= "col-6">
+                                                     <button id="botonBorrarInsumos" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                 </div>
+                                             </div>
+                                         </form>
+                                         <br/>
+                                     </div>
+                                     <div class= "col-lg-2"></div>
+                                     <div class = "tableWrapper">
+                                         <table id="dataTableInsumos" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                             <thead>
+                                                 <tr>
+                                                     <th>Id_insumo</th>
+                                                     <th>Catálogo</th>
+                                                     <th>Descripción</th>
+                                                     <th>Catfabric</th>
+                                                     <th>Marca</th>
+                                                     <th>Unidad</th>
+                                                     <th>Clasificación</th>
+                                                     <th>Categoría</th>
+                                                     <th>Proveedores</th>
+                                                     <th>Editar</th>
+                                                 </tr>
+                                             </thead>
+                                             <tfoot>
+                                                 <tr>
+                                                     <th>Id_insumo</th>
+                                                     <th>Catálogo</th>
+                                                     <th>Descripción</th>
+                                                     <th>Catfabric</th>
+                                                     <th>Marca</th>
+                                                     <th>Unidad</th>
+                                                     <th>Clasificación</th>
+                                                     <th>Categoría</th>
+                                                     <th>Proveedores</th>
+                                                     <th>Editar</th>
+                                                 </tr>
+                                             </tfoot>
+                                         </table>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                         <!-- alta proveedores -->
+                         <div id="altaProveedores" class = "tabcontent hidden">
+                             <h1>Alta o edición de Proveedores </h1>
+                             <p>Página para dar de alta o modificar la información de los proveedores existentes en el sistema.</p>
+                             <div class= "container-fluid">
+                                 <div class= "row align-items-center">
+                                     <div class= "col-lg-2"></div>
+                                     <div class= "col-lg-8">
+                                         <form id="formProveedores" action="#" onsubmit="return false;">
+                                             <br/>
+                                             <div class="form-row">
+                                               <div class="form-group col-md-3">
+                                                   <label for="rfcProveedores">RFC:</label>
+                                                   <input type="text" name="" id="rfcProveedores" class="form-control" placeholder="RFC">
+                                               </div>
+                                                 <div class="form-group col-md-9">
+                                                     <label for="razonSocialProveedores">Razón Social:</label>
+                                                     <input type="text" name="" id="razonSocialProveedores" class="form-control" placeholder="Razón Social">
+                                                 </div>
+                                             </div>
+                                             <div class="form-row">
+                                               <div class="form-group col-md-12">
+                                                   <label for="direccionProveedores">Dirección:</label>
+                                                   <input type="text" name="" id="direccionProveedores" class="form-control" placeholder="Dirección">
+                                               </div>
+                                             </div>
+                                             </br>
+                                             <div class="form-row">
+                                                 <div class= "col-6">
+                                                     <button id="botonAgregarInsumos" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                                 </div>
+                                                 <div class= "col-6">
+                                                     <button id="botonBorrarInsumos" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                 </div>
+                                             </div>
+                                         </form>
+                                         <br/>
+                                     </div>
+                                     <div class= "col-lg-2"></div>
+                                     <div class = "tableWrapper">
+                                         <table id="dataTableProveedores" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                             <thead>
+                                                 <tr>
+                                                     <th>Id_proveedor</th>
+                                                     <th>RFC</th>
+                                                     <th>Razón Social</th>
+                                                     <th>Dirección</th>
+                                                     <th>Atención</th>
+                                                     <th>Insumos</th>
+                                                     <th>Editar</th>
+                                                 </tr>
+                                             </thead>
+                                             <tfoot>
+                                                 <tr>
+                                                     <th>Id_proveedor</th>
+                                                     <th>RFC</th>
+                                                     <th>Razón Social</th>
+                                                     <th>Dirección</th>
+                                                     <th>Atención</th>
+                                                     <th>Insumos</th>
+                                                     <th>Editar</th>
+                                                 </tr>
+                                             </tfoot>
+                                         </table>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
                         <!-- Reporte Nómina -->
                         <div id="reporteNomina" class = "tabcontent hidden">
                             <div class= "container-fluid">

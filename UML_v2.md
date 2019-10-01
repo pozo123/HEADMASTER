@@ -555,6 +555,11 @@ Nota: Todo float se ingresa a 2 decimales.
                       - id_producto
                           - precio: float
                           - fecha: timestamp
+              - productos
+                  - id_producto
+                      - id_proveedores
+                          - precio: float
+                          - fecha: timestamp
               - categorias
                   - categoria  
                       - id_producto: true
