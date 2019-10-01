@@ -179,6 +179,101 @@ Nota: Todo float se ingresa a 2 decimales.
                                 - multiplicadores
                                     - dias: float
                                     - unidades: float
+        - cuantificacion
+            - id_obra
+                - id_proceso
+                    - id_subproceso
+                        - porcentaje_indirecto: float
+                        - desplegar_indirecto: boolean
+                        - materiales
+                            - id_material
+                                - descripcion: string
+                                - unidad: string
+                                - precio: float
+                                - cantidad: integer
+                                - desplegar: boolean
+
+        - adicionales
+            - solicitudes
+                - obra
+                    - id_solicitud
+                        - info (por definir)
+                        - terminada: boolean
+                        - url_evidencia: string
+                        - copeo:
+                            - num_entradas: int
+                            - entradas
+                                - entrada (num)
+                                    - nombre: string
+                                    - alcance: string
+                                    - subtotal: float
+                                    - cuadrilla:
+                                        - id_puesto
+                                            - cantidad: int
+                                            - sueldo_diario: float (sin impuestos)
+                                    - multiplicadores
+                                        - dias: float
+                                        - unidades: float
+                        - cuantificacion:
+                            - materiales
+                                - id_material:
+                                    - descripcion: string
+                                    - unidad: string
+                                    - precio: float
+                                    - cantidad: integer
+                                    - desplegar: boolean
+            - propuestas
+                - obra
+                    - id_subproceso
+                        - id_solicitud
+                        - nombre: string
+                        - titulo: string
+                        - requisitos:
+                            - id_requisito
+                                - info: string
+                        - exlusiones:
+                            - id_exlusion  
+                                - info: string
+                        - tiempo_entrega: string
+                        - datos_bancarios: boolean
+                        - datos_fiscales: boolean
+                        - aprobada: boolean
+                        - url_evidencia: string
+                        - precio_venta_aprobado: float
+                        - copeo:
+                            - num_entradas: int
+                            - entradas
+                                - entrada (num)
+                                    - nombre: string
+                                    - alcance: string
+                                    - subtotal: float
+                                    - cuadrilla:
+                                        - id_puesto
+                                            - cantidad: int
+                                            - sueldo_diario: float (sin impuestos)
+                                    - multiplicadores
+                                        - dias: float
+                                        - unidades: float
+                        - cuantificacion:
+                            - materiales
+                                - id_material:
+                                    - descripcion: string
+                                    - unidad: string
+                                    - precio: float
+                                    - cantidad: integer
+                                    - desplegar: boolean
+                        - calculadora:
+                            - precio_venta: float
+                            - costo_suministros:float
+                            - utilidad: float
+                            - precopeo: float
+                            - porcentaje_anticipo: float
+                            - porcentaje_indirectos: float
+                            - porcentaje_impuestos: float
+                            - score
+                                - horas_programadas: (en horas)
+                                - costo_hora: float (2 decimales)
+
         - presupuesto: (adic o pc00. pc00-misc = "") (DEFINIR CON RAY)
             - id_obra
                 - presupuestos (id del subproceso)
@@ -443,15 +538,16 @@ Nota: Todo float se ingresa a 2 decimales.
           - marcas
               - id_marca
                   - nombre: string
+          - categoria
+              - id_categoria
+                  - nombre: string
           - clasificacion
               - id_clasificacion
                   - nombre: string
           - unidades
               - id_unidad
                   - nombre: string
-          - categoria
-              - id_categoria
-                  - nombre: string
+
 
           - listas
               - proveedores
