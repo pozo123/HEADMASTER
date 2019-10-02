@@ -112,13 +112,12 @@ function creaTablaSelectosSuministros(){
       data: datos_suministros,
       language: idioma_espanol,
       "columnDefs": [
-          { "width": "120px", "targets": 2 },
+          { "width": "120px", "targets": 4 },
           {
               targets: -2,
               className: 'dt-body-center'
           },
           { "visible": false, "targets": 0 }, //Campos auxiliares
-          { "visible": false, "targets": 9 }
         ]
   });
 

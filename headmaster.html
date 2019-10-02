@@ -505,6 +505,265 @@
                 </div>
             </div>
         </div>
+        <!-- Modal Calculadora-->
+        <div class="modal fade" id="modalCalculadora" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Calculadora</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                          <hr class="style2">
+                          <div class = "form-row">
+                              <button type="button" id="botonDefaultModalCalculadora" class="btn btn-secondary" data-toggle="popover" data-trigger="hover">Valores Default</button>
+                          </div>
+                          <br>
+                          <div class="form-row align-items-center">
+                              <div class="col-lg-4">
+                                  <label for="indirectosModalCalculadora">Porcentaje Indirectos:</label>
+                                  <input type="text" id="indirectosModalCalculadora" class="form-control" placeholder="Porcentaje de indirectos">
+                              </div>
+                              <div class="col-lg-4">
+                                  <label for="anticipoModalCalculadora">Porcentaje Anticipo:</label>
+                                  <input type="text" id="anticipoModalCalculadora" class="form-control" placeholder="Anticipos">
+                              </div>
+                              <div class="col-lg-4">
+                                  <label for="estimacionesModalCalculadora">Porcentaje Estimaciones:</label>
+                                  <input type="text" id="estimacionesModalCalculadora" class="form-control" placeholder="Estimaciones">
+                              </div>
+                          </div>
+                          <br>
+                          <hr class="style2">
+                          <br>
+                          <h5 style ="font-weight: bold;">SCORE</h5>
+                          <div class="form-row align-items-center">
+                              <div class="col-lg-4">
+                                  <label for="costoHoraScoreModalCalculadora">Precio por hora:</label>
+                                  <input type="text" id="costoHoraScoreModalCalculadora" class="form-control" placeholder="Costo por hora">
+                              </div>
+                              <div class="col-lg-4">
+                                  <label for="horasProyectoModalCalculadora">Horas:</label>
+                                  <input type="text" id="horasProyectoModalCalculadora" class="form-control" placeholder="Cantidad en horas">
+                              </div>
+                              <div class="col-lg-4">
+                                  <label for="costoProyectoModalCalculadora">Costo:</label>
+                                  <input type="text" id="costoProyectoModalCalculadora" class="form-control" placeholder="Cantidad en dinero">
+                              </div>
+                          </div>
+                          <br>
+                          <h5 style ="font-weight: bold;">Mano de obra</h5>
+                          <div class="form-row align-items-center">
+                              <div class="col-lg-4">
+                                  <label for="costoCopeoModalCalculadora">Precopeo:</label>
+                                  <input type="text" id="costoCopeoModalCalculadora" class="form-control" placeholder="Costo de copeo">
+                              </div>
+                              <div class="col-lg-4">
+                                  <label for="costoCopeoCargaModalCalculadora">Copeo con carga social:</label>
+                                  <input type="text" id="costoCopeoCargaModalCalculadora" class="form-control" placeholder="Copeo con carga social">
+                              </div>
+                              <div class="col-lg-4">
+                                  <label for="impuestosModalCalculadora">Carga social:</label>
+                                  <input type="text" id="impuestosModalCalculadora" class="form-control" placeholder="Porcentaje CS">
+                              </div>
+                          </div>
+                          <br>
+                          <h5 style ="font-weight: bold;">Suministros</h5>
+                          <div class="form-row align-items-center">
+                            <div class="col-lg-4">
+                                <label for="costoSuministrosModalCalculadora">Costo de suministros($):</label>
+                                <input type="text" id="costoSuministrosModalCalculadora" class="form-control" placeholder="Costo de suministros">
+                            </div>
+                          </div>
+                          <br>
+                          <hr class="style2">
+                          <br>
+                          <div class="form-row align-items-center">
+                              <div class="col-lg-4">
+                                  <label for="profitCantidadModalCalculadora">Profit ($):</label>
+                                  <input type="text" id="profitCantidadModalCalculadora" class="form-control" placeholder="Profit en cantidad">
+                              </div>
+                              <div class="col-lg-4">
+                                  <label for="profitPorcentajeModalCalculadora">Profit (%):</label>
+                                  <input type="text" id="profitPorcentajeModalCalculadora" class="form-control" placeholder="Profit en porcentaje">
+                              </div>
+                              <div class="col-lg-4">
+                                  <label for="precioVentaModalCalculadora">Precio de venta:</label>
+                                  <input type="text" id="precioVentaModalCalculadora" class="form-control" placeholder="Precio de venta">
+                              </div>
+                          </div>
+                          <br/>
+                          <div class="form-row align-items-center">
+                              <div class="col-lg-4">
+                                  <label for="costosIndirectosModalCalculadora">Costos indirectos</label>
+                                  <input type="text" disabled="true" id="costosIndirectosModalCalculadora" class="form-control" placeholder="Costos indirectos">
+                              </div>
+                              <div class="col-lg-4">
+                                  <label for="costoOperacionesModalCalculadora">Costo de operaciones</label>
+                                  <input type="text" disabled="true" id="costoOperacionesModalCalculadora" class="form-control" placeholder="Score + copeo + suministros">
+                              </div>
+                              <div class="col-lg-4">
+                                  <label id = "profitNetoModalCalculadora">Profit Neto Estimado</label>
+                                  <input type="text" disabled="true" id="profitNetoModalCalculadora" class="form-control" placeholder="Profit neto estimado">
+                              </div>
+                          </div>
+                          <br/>
+                          <br/>
+                          <div class="form-row">
+                              <div class= "col-6">
+                                  <button type="button" id="botonGuardarModalCalculadora"class="btn btn-outline-success btn-block">Guardar</button>
+                              </div>
+                              <div class= "col-6">
+                                  <button type="button" id = "botonBorrarModalCalculadora"class="btn btn-outline-danger btn-block">Resetear Todo</button>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-dark" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Copeo-->
+        <div class="modal fade" id="modalCopeo" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Copeo</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                           <p>Calculador de Costo de Mano de Obra </p>
+                           <div class="row">
+                               <div class="col-lg-1"></div>
+                               <div class="col-lg-10">
+                                   <form action="#" onsubmit="return false;" id="formModalCopeo">
+                                       <div class="form-row" >
+                                           <div class="form-group col-md-6">
+                                               <label for="ddl_obraModalCopeo">Obra:</label>
+                                               <select id="ddl_obraModalCopeo" class="form-control"></select>
+                                           </div>
+                                           <div class="form-group col-md-6">
+                                               <label for="ddl_procesoModalCopeo">Proceso:</label>
+                                               <select id="ddl_procesoModalCopeo" class="form-control"></select>
+                                           </div>
+                                        </div>
+                                        <div class="form-row">
+                                           <div class="form-group col-md-6" id="div_subprocesoModalCopeo">
+                                               <label for="ddl_subprocesoModalCopeo">Subproceso:</label>
+                                               <select id="ddl_subprocesoModalCopeo" class="form-control"></select>
+                                           </div>
+                                           <div class="form-group col-md-6">
+                                               <label for="ddl_entradaModalCopeo">Entrada:</label>
+                                               <select id="ddl_entradaModalCopeo" class="form-control"></select>
+                                           </div>
+                                       </div>
+                                       <br/>
+                                       <hr class="style2">
+                                       <h1 id="numEntradaModalCopeo"></h1>
+                                       <br/>
+                                       <div class="form-row">
+                                           <div class="col-12">
+                                               <div class="form-group row">
+                                                   <label for="nombreModalCopeo" class="col-sm-2 col-form-label">Nombre</label>
+                                                   <div class="col-sm-10">
+                                                       <input type="text" class="form-control calcModalCopeoClass" id="nombreModalCopeo" placeholder="Nombre">
+                                                   </div>
+                                               </div>
+                                               <div class="form-group row">
+                                                   <div class = "col-sm-12">
+                                                       <label for="cargaSocialModalCopeo">Alcance</label>
+                                                       <textarea class="form-control calcModalCopeoClass" id="alcanceModalCopeo" rows="5" placeholder= "Alcance de esta entrada."></textarea>
+                                                   </div>
+                                               </div>
+                                               <small><p><b>Mult.</b> Hace referencia al multiplicador deseado. Ej. número de departamentos.</p></small>
+                                               <div class="form-group row">
+                                                   <label for="diasModalCopeo" class="col-sm-1 col-form-label">Días</label>
+                                                   <div class="col-sm-2">
+                                                       <input type="text" class="form-control" id="diasModalCopeo" placeholder="días">
+                                                   </div>
+                                                   <label for="multModalCopeo" class="col-sm-1 col-form-label">Mult</label>
+                                                   <div class="col-sm-2">
+                                                       <input type="text" class="form-control" id="multModalCopeo" placeholder="unidades">
+                                                   </div>
+                                                   <div class="col-sm-1"></div>
+                                                   <label for="cargaSocialModalCopeo" class="col-sm-3 col-form-label">% de Impuestos</label>
+                                                   <div class="col-2">
+                                                       <input type="text" id="cargaSocialModalCopeo" class="form-control" placeholder="Carga social">
+                                                   </div>
+                                               </div>
+                                           </div>
+                                       </div>
+                                       <div class="form-row">
+                                         <div class="form-group col-md-3">
+                                            <label>Trabajadores necesarios</label>
+                                         </div>
+                                         <div class="form-group col-md-9">
+                                             <select id="listaTrabajadoresModalCopeo" multiple>
+                                             </select>
+                                         </div>
+                                       </div>
+                                       <div class="form-group" id = "divTrabajadoresModalCopeo">
+
+                                       </div>
+                                       <div class="form-group row">
+                                           <div class = "col-lg-3"></div>
+                                           <label for="costoUnitarioModalCopeo" class="col-sm-3 col-form-label">Costo unitario</label>
+                                           <div class="col-sm-3">
+                                               <input type="text" disabled="true" class="form-control" id="costoUnitarioModalCopeo" placeholder="Costo unitario">
+                                           </div>
+                                       </div>
+                                       <div class="form-group row">
+                                           <div class = "col-lg-3"></div>
+                                           <label for="costoModalCopeo" class="col-sm-3 col-form-label">Total</label>
+                                           <div class="col-sm-3">
+                                               <input type="text" disabled="true" class="form-control" id="costoModalCopeo" placeholder="Costo total">
+                                           </div>
+                                       </div>
+                                       <div class="form-group row">
+                                           <div class = "col-lg-3"></div>
+                                           <label for="costoCSModalCopeo" class="col-sm-3 col-form-label">Total con carga social</label>
+                                           <div class="col-sm-3">
+                                               <input type="text" disabled="true" class="form-control" id="costoCSModalCopeo" placeholder="Costo con CS">
+                                           </div>
+                                       </div>
+                                       <div class="form-row">
+                                           <div class= "col-lg-4"></div>
+                                           <div class= "col-lg-4">
+                                               <button id="botonSueldosModalCopeo" type="button"  class="btn btn-secondary btn-block">Actualizar sueldos</button>
+                                           </div>
+                                           <div class= "col-lg-4"></div>
+                                       </div>
+                                     </br>
+                                       <div class="form-row">
+                                           <div class= "col-lg-6">
+                                               <button id="botonAceptarModalCopeo" type="button" class="btn btn-outline-success btn-block">Guardar</button>
+                                           </div>
+                                           <div class= "col-lg-6">
+                                               <button id="botonResetModalCopeo" type="reset"  class="btn btn-outline-danger btn-block">Borrar</button>
+                                           </div>
+                                       </div>
+                                   </form>
+                                   <br/>
+                                   <hr class="style2">
+                               </div>
+                               <div class="col-lg-1"></div>
+                           </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-dark" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="wrapper">
             <!-- Sidebar -->
             <nav id="sidebar" class = "loader hidden">
@@ -2126,99 +2385,23 @@
                                                 </table>
                                             </div>
                                             </br>
-                                            <h3>Calculadora Adic</h3>
-                                            <hr class="style2">
-                                            <br>
-                                            <div class = "form-row">
-                                                <button type="button" id="botonDefaultAdicionales" class="btn btn-secondary" data-toggle="popover" data-trigger="hover">Valores Default</button>
-                                            </div>
-                                            <br>
-                                            <div class="form-row align-items-center">
-                                                <div class="col-lg-4">
-                                                    <label for="indirectosAdicionales">Porcentaje Indirectos:</label>
-                                                    <input type="text" id="indirectosAdicionales" class="form-control" placeholder="Porcentaje de indirectos">
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <label for="anticipoAdicionales">Porcentaje Anticipo:</label>
-                                                    <input type="text" id="anticipoAdicionales" class="form-control" placeholder="Anticipos">
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <label for="estimacionesAdicionales">Porcentaje Estimaciones:</label>
-                                                    <input type="text" id="estimacionesAdicionales" class="form-control" placeholder="Estimaciones">
-                                                </div>
-                                            </div>
-                                            <br>
-                                            <hr class="style2">
-                                            <br>
-                                            <h5 style ="font-weight: bold;">SCORE</h5>
-                                            <div class="form-row align-items-center">
-                                                <div class="col-lg-4">
-                                                    <label for="costoHoraScoreAdicionales">Precio por hora:</label>
-                                                    <input type="text" id="costoHoraScoreAdicionales" class="form-control" placeholder="Costo por hora">
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <label for="horasProyectoAdicionales">Horas:</label>
-                                                    <input type="text" id="horasProyectoAdicionales" class="form-control" placeholder="Cantidad en horas">
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <label for="costoProyectoAdicionales">Costo:</label>
-                                                    <input type="text" id="costoProyectoAdicionales" class="form-control" placeholder="Cantidad en dinero">
-                                                </div>
-                                            </div>
-                                            <br>
-                                            <h5 style ="font-weight: bold;">Mano de obra</h5>
-                                            <div class="form-row align-items-center">
-                                                <div class="col-lg-4">
-                                                    <label for="costoCopeoAdicionales">Precopeo:</label>
-                                                    <input type="text" id="costoCopeoAdicionales" class="form-control" placeholder="Costo de copeo">
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <label for="costoCopeoCargaAdicionales">Copeo con carga social:</label>
-                                                    <input type="text" id="costoCopeoCargaAdicionales" class="form-control" placeholder="Copeo con carga social">
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <label for="impuestosAdicionales">Carga social:</label>
-                                                    <input type="text" id="impuestosAdicionales" class="form-control" placeholder="Porcentaje CS">
-                                                </div>
-                                            </div>
-                                            <br>
-                                            <h5 style ="font-weight: bold;">Suministros</h5>
-                                            <div class="form-row align-items-center">
-                                              <div class="col-lg-4">
-                                                  <label for="costoSuministrosAdicionales">Costo de suministros($):</label>
-                                                  <input type="text" id="costoSuministrosAdicionales" class="form-control" placeholder="Costo de suministros">
-                                              </div>
-                                            </div>
-                                            <br>
-                                            <hr class="style2">
-                                            <br>
-                                            <div class="form-row align-items-center">
-                                                <div class="col-lg-4">
-                                                    <label for="profitCantidadAdicionales">Profit ($):</label>
-                                                    <input type="text" id="profitCantidadAdicionales" class="form-control" placeholder="Profit en cantidad">
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <label for="profitPorcentajeAdicionales">Profit (%):</label>
-                                                    <input type="text" id="profitPorcentajeAdicionales" class="form-control" placeholder="Profit en porcentaje">
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <label for="precioVentaAdicionales">Precio de venta:</label>
-                                                    <input type="text" id="precioVentaAdicionales" class="form-control" placeholder="Precio de venta">
+                                            <h4>Copeo</h4>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                  <div class="col-lg-4"></div>
+                                                    <div class="col-lg-4">
+                                                        <button id="botonCopeoAdicionales" type="button" class="btn btn-outline-success btn-lg btn-block">Copeo</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <br/>
-                                            <div class="form-row align-items-center">
-                                                <div class="col-lg-4">
-                                                    <label for="costosIndirectosAdicionales">Costos indirectos</label>
-                                                    <input type="text" disabled="true" id="costosIndirectosAdicionales" class="form-control" placeholder="Costos indirectos">
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <label for="costoOperacionesAdicionales">Costo de operaciones</label>
-                                                    <input type="text" disabled="true" id="costoOperacionesAdicionales" class="form-control" placeholder="Score + copeo + suministros">
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <label id = "profitNetoAdicionales">Profit Neto Estimado</label>
-                                                    <input type="text" disabled="true" id="profitNetoAdicionales" class="form-control" placeholder="Profit neto estimado">
+                                            <h4>Calculadora</h4>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                  <div class="col-lg-4"></div>
+                                                    <div class="col-lg-4">
+                                                        <button id="botonCalculadoraAdicionales" type="button" class="btn btn-outline-success btn-lg btn-block">Calculadora</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <br/>
@@ -2686,8 +2869,9 @@
                                                      <button id="botonAgregarProveedorInsumos" type="button" class="btn btn-outline-info btn-block">Registrar Proveedor</button>
                                                  </div>
                                              </div>
+                                             </br>
                                              <div class = "tableWrapper">
-                                                 <table id="dataTableInsumos" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                                 <table id="dataTableProveedoresInsumos" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
                                                      <thead>
                                                          <tr>
                                                              <th>Id_proveedor</th>
@@ -2786,12 +2970,60 @@
                                                </div>
                                              </div>
                                              </br>
+                                             <h3>Atención</h3>
+                                             <div class="form-row">
+                                               <div class="form-group col-md-5">
+                                                   <label for="contactoProveedores">Contacto:</label>
+                                                   <input type="text" name="" id="contactoProveedores" class="form-control" placeholder="Nombre">
+                                               </div>
+                                               <div class="form-group col-md-3">
+                                                   <label for="telefonoProveedores">Teléfono:</label>
+                                                   <input type="text" name="" id="telefonoProveedores" class="form-control" placeholder="Teléfono">
+                                               </div>
+                                               <div class="form-group col-md-4">
+                                                   <label for="correoProveedores">Correo electrónico:</label>
+                                                   <input type="text" name="" id="correoProveedores" class="form-control" placeholder="Correo electrónico">
+                                               </div>
+                                             </div>
+                                             </br>
+                                             <div class="form-row">
+                                                 <div class= "col-4"></div>
+                                                 <div class= "col-4">
+                                                     <button id="botonAgregarContactoProveedores" type="button" class="btn btn-outline-info btn-block">Registrar Contacto</button>
+                                                 </div>
+                                             </div>
+                                             </br>
+                                             <div class = "tableWrapper">
+                                                 <table id="dataTableContactosProveedores" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                                     <thead>
+                                                         <tr>
+                                                             <th>Id_contacto</th>
+                                                             <th>Nombre</th>
+                                                             <th>Telefono</th>
+                                                             <th>Correo</th>
+                                                             <th>Editar</th>
+                                                             <th>Eliminar</th>
+                                                         </tr>
+                                                     </thead>
+                                                     <tfoot>
+                                                         <tr>
+                                                             <th>Id_contacto</th>
+                                                             <th>Nombre</th>
+                                                             <th>Telefono</th>
+                                                             <th>Correo</th>
+                                                             <th>Editar</th>
+                                                             <th>Eliminar</th>
+                                                         </tr>
+                                                     </tfoot>
+                                                 </table>
+                                             </div>
+                                             </br>
                                              <div class="form-row">
                                                  <div class= "col-6">
-                                                     <button id="botonAgregarInsumos" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                                     <button id="botonAgregarProveedores" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
                                                  </div>
                                                  <div class= "col-6">
-                                                     <button id="botonBorrarInsumos" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                     <button id="botonBorrarProveedores" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
                                                  </div>
                                              </div>
                                          </form>
@@ -2994,6 +3226,8 @@
         <script src="app_reportes_nomina_v2.js"></script>
         <script src="app_generadorAdicionales_v2.js"></script>
         <script src="app_modal_suministros_v2.js"></script>
+        <script src="app_modal_calculadora_v2.js"></script>
+        <script src="app_modal_copeo_v2.js"></script>
         <script src="app_definicionesSuministros_v2.js"></script>
 
         <!-- Excel to Json-->
