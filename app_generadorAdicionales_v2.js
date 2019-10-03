@@ -50,7 +50,9 @@ $('#' + id_boton_agregar_suministrosAdicionales).click(function() {
 });
 
 $('#' + id_boton_calculadoraAdicionales).click(function() {
-  modalCalculadora();
+  var obra = "obra";
+  var subproceso = "subproceso";
+  modalCalculadora(rama_bd_obras + "/adicionales/propuestas/" + obra + "/" + subproceso + "/calculadora");
 });
 
 $('#' + id_boton_copeoAdicionales).click(function() {
