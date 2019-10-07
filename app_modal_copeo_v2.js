@@ -24,7 +24,7 @@ var id_sueldos_modalCopeo = "botonSueldosModalCopeo";
 var selectTrabajadores;
 var puestos_array;
 var puestos_json;
-var registro_antiguo;
+var registro_antiguo_modalCopeo;
 var num_entradas;
 
 var ruta_modalCopeo;
@@ -34,6 +34,7 @@ var return_modalCopeo;
 function modalCopeo(ruta){
   puestos_array = [];
   ruta_modalCopeo = ruta;
+  registro_antiguo_modalCopeo = {};
   $('#' + id_lista_trabajadoresModalCopeo).empty();
   var puesto;
   var select2 = document.getElementById(id_lista_trabajadoresModalCopeo);
@@ -87,18 +88,19 @@ $('#' + id_agregar_modalCopeo).click(function() {
     }
     //Generar el JSON de la entrada con los datos del formulario
 		entrada_update[path_subproceso + "/entradas/" + uid_entrada] = datosEntradaModalCopeo();
-    console.log(datosEntradaModalCopeo());
+    //console.log(datosEntradaModalCopeo());
 		//Escribir los cambios en la base de datos
-		console.log(entrada_update);
+		//console.log(entrada_update);
 		//firebase.database().ref(rama_bd_obras).update(entrada_update);
+    return_modalCopeo = entrada_update;
 		// PAD
     if (nueva){
       //pda("alta", rama_bd_obras + "/" + path_subproceso + "/entradas/" + uid_entrada, "");
       alert("¡Alta exitosa!");
     }else {
-      //pda("modificacion", rama_bd_obras + "/" +path_subproceso +"/entradas/" + uid_entrada, registro_antiguo);
+      //pda("modificacion", rama_bd_obras + "/" +path_subproceso +"/entradas/" + uid_entrada, registro_antiguo_modalCopeo);
       alert("¡Edición exitosa!");
-      //console.log(registro_antiguo);
+      //console.log(registro_antiguo_modalCopeo);
     }
 		resetFormModalCopeo();
 		//actualizarTablaCalculadora();
@@ -375,7 +377,7 @@ function cargaCamposModalCopeo(claveEntrada){
       var subproceso = snapshot.val();
       //console.log(subproceso);
       var entrada = subproceso["entradas"][claveEntrada];
-      registro_antiguo = entrada;
+      registro_antiguo_modalCopeo = entrada;
       var cuadrilla = entrada.cuadrilla;
       var aux_array = [];
       var i=0;

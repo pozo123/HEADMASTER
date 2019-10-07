@@ -32,7 +32,7 @@ var cantProfitManda;
 var horasScoreManda;
 var copeoManda;
 var horasActualizadas;
-var registro_antiguo;
+var registro_antiguo_modalCalculadora;
 var ruta_modalCalculadora;
 var return_modalCalculadora;
 
@@ -44,7 +44,7 @@ function modalCalculadora(ruta){
   horasScoreManda = true;
   copeoManda = true
   horasActualizadas = false;
-  registro_antiguo = {};
+  registro_antiguo_modalCalculadora = {};
   // pongo el texto para el on hover
 	var texto_default = "Valores generalmente usados para el calculo de presupuestos como son: precio por hora del área de proyectos, porcentaje de anticipos y estimaciones, impuestos para la mano de obra y el porcentaje de costos indirectos."
 	$('#' + id_default_modalCalculadora).attr("data-content", texto_default);
@@ -60,7 +60,7 @@ $('#' + id_borrar_modalCalculadora).click(function(){
 
 $('#' + id_agregar_modalCalculadora).click(function(){
 	if(validateFormModalCalculadora()){
-		var return_modalCalculadora = {};
+		return_modalCalculadora = {};
 		//Actualizar los campos de la obra
 		var path_subproceso = ruta_modalCalculadora;
 		return_modalCalculadora[path_subproceso + "/score/horas_programadas"] = deformatMoney($('#'+id_horas_proyectoModalCalculadora).val());
@@ -76,7 +76,7 @@ $('#' + id_agregar_modalCalculadora).click(function(){
 		console.log(return_modalCalculadora);
 		//firebase.database().ref(rama_bd_obras).update(return_modalCalculadora);
 		// PAD
-		//pda("modificacion", rama_bd_obras + "/" +path_subproceso, registro_antiguo);
+		//pda("modificacion", rama_bd_obras + "/" +path_subproceso, registro_antiguo_modalCalculadora);
 		alert("¡Edición exitosa!");
 		//resetFormModalCalculadora();
 		//actualizarTablaModalCalculadora();
@@ -588,7 +588,7 @@ function cargaCamposModalCalculadora(){
 	firebase.database().ref(ruta_modalCalculadora).once('value',function(snapshot){
     var subproceso = snapshot.val();
     if (snapshot.exists() && !(subproceso.precio_venta == 0 && subproceso.costo_suministros ==0 && subproceso.utilidad ==0 && subproceso.precopeo == 0 && subproceso.score.horas_programadas == 0)){
-			registro_antiguo = subproceso;
+			registro_antiguo_modalCalculadora = subproceso;
       var costoScore = subproceso.score.horas_programadas*subproceso.score.costo_hora;
       var costoOperacion = (costoScore + subproceso.costo_suministros + (subproceso.precopeo*(1 + subproceso.porcentaje_impuestos*0.01)))*(1+ subproceso.porcentaje_indirectos*0.01);
 			var costoOperacionIndirectos = (costoScore + subproceso.costo_suministros + (subproceso.precopeo*(1 + subproceso.porcentaje_impuestos*0.01)))*(subproceso.porcentaje_indirectos*0.01);
