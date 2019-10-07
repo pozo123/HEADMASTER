@@ -537,6 +537,7 @@ function calculaCostoUnitarioCopeo(){
       suma = suma + parseFloat($('#'+aux[i]).val()) * deformatMoney($('#'+"sueldo_"+aux[i]).val());
     }
   }
+  suma = suma /5;
   $('#'+ id_costo_unitarioCopeo).val(formatMoney(suma));
 }
 

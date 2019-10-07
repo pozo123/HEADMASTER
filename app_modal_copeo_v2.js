@@ -45,7 +45,7 @@ function modalCopeo(ruta){
         option.value = snapChild.key;
         option.text = puesto.puesto;
         select2.appendChild(option);
-        agregaCamposPuesto(snapChild.key);
+        agregaCamposPuestoModalCopeo(snapChild.key);
         puestos_array.push(snapChild.key);
       })
       //Llenado de la lista de puestos
@@ -55,6 +55,7 @@ function modalCopeo(ruta){
       });
       resetFormModalCopeo();
   });
+  llenaDdlEntradaModalCopeo();
   $('#' + id_modalCopeo).modal('show');
 }
 
@@ -120,7 +121,7 @@ $('#' + id_sueldos_modalCopeo).click(function() {
 // -----------------------------------  DDLS  ---------------------------------------
 $("#" + id_ddl_entradaModalCopeo).change(function(){
   resetFormModalCopeo();
-  cargaCamposModalCopeo(uid_obra, uid_proceso, uid_subproceso, $("#" + id_ddl_entradaModalCopeo+" option:selected").val() );
+  cargaCamposModalCopeo($("#" + id_ddl_entradaModalCopeo+" option:selected").val() );
 });
 
 // -------------------- FUNCIONES DE LOS CAMPOS DE PUESTOS----------------------
@@ -202,11 +203,11 @@ $('#'+id_multModalCopeo).change(function (){
 });
 
 // --------------- FUNCIONES PARA CAMPOS CREADOS DINAMICAMENTE -----------------
-$(document).on('keypress','.puestosCopeo', function(e){
+$(document).on('keypress','.puestosModalCopeo', function(e){
     charactersAllowed("0123456789",e);
 });
 
-$(document).on('change','.puestosCopeo', function(e){
+$(document).on('change','.puestosModalCopeo', function(e){
 		if(this.value == ""){
 			this.value = 0;
 		}
@@ -307,10 +308,10 @@ function llenaDdlEntradaModalCopeo(){
   });
 }
 
-function agregaCamposPuesto(puesto){
+function agregaCamposPuestoModalCopeo(puesto){
   var id_puesto = puesto;
   var cantidad = document.createElement('input');
-  cantidad.className = "form-control puestosCopeo";
+  cantidad.className = "form-control puestosModalCopeo";
   cantidad.type = "text";
   cantidad.placeholder = "Cantidad";
   cantidad.id = id_puesto;
@@ -357,7 +358,7 @@ function agregaCamposPuesto(puesto){
   div_trabajadores.appendChild(row);
 }
 
-function cargaCamposModalCopeo(){
+function cargaCamposModalCopeo(claveEntrada){
   if( claveEntrada == "-NUEVA-"){
     console.log("Sin registro de entrada");
     resetFormModalCopeo();
@@ -412,6 +413,7 @@ function calculaCostoUnitarioModalCopeo(){
       suma = suma + parseFloat($('#'+aux[i]).val()) * deformatMoney($('#'+"sueldo_"+aux[i]).val());
     }
   }
+  suma = suma /5;
   $('#'+ id_costo_unitarioModalCopeo).val(formatMoney(suma));
 }
 
@@ -457,16 +459,4 @@ function datosEntradaModalCopeo(){
     }
   }
   return entradaModalCopeo;
-}
-
-function verificaEntradas(json_subproceso){
-  var suma = 0;
-  for (key in json_subproceso.entradas){
-      suma = suma + json_subproceso.entradas[key]["subtotal"];
-  }
-  if (suma !== 0){
-    return true;
-  } else {
-    return false;
-  }
 }
