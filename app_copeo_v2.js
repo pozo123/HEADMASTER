@@ -679,6 +679,9 @@ function actualizarTablaCopeo(){
               ];
               costoTotal_obra = costoTotal_obra + costoTotal_proceso;
               procesoIndex_array.push(index_proceso);
+              if(index_entrada == index_subproceso+1){
+                index_entrada = index_subproceso;
+              }
             }
         });
         datos_obra[0]=[
@@ -710,6 +713,7 @@ function actualizarTablaCopeo(){
             destroy: true,
             data: datos_obra,
             language: idioma_espanol,
+            "paging":false,
             "autoWidth": false,
             "columnDefs": [
                 { "width": "120px", "targets": 2 },

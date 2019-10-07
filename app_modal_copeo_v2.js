@@ -1,5 +1,5 @@
 // ------------------ Campos Modal Suministros --------------------------------
-var id_modalcopeo = "modalCopeo";
+var id_modalCopeo = "modalCopeo";
 
 var id_ddl_obraModalCopeo = "ddl_obraModalCopeo";
 var id_ddl_procesoModalCopeo = "ddl_procesoModalCopeo";
@@ -431,8 +431,8 @@ function calculaCostoTotalModalCopeo(){
     total = 0;
     totalCS =0;
   }
-  $('#'+ id_costo_CopeoModalCopeo).val(formatMoney(total));
-  $('#'+ id_costo_Copeo_CSModalCopeo).val(formatMoney(totalCS));
+  $('#'+ id_costo_copeoModalCopeo).val(formatMoney(total));
+  $('#'+ id_costo_copeo_CSModalCopeo).val(formatMoney(totalCS));
 }
 
 function datosEntradaModalCopeo(){

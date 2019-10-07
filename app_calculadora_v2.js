@@ -892,6 +892,7 @@ function actualizarTablaCalculadora(){
             destroy: true,
             data: datos_obra,
             language: idioma_espanol,
+						"paging":false,
             "autoWidth": false,
             "columnDefs": [
                 { "width": "100px", "targets": 5 },
