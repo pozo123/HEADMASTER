@@ -154,11 +154,11 @@ $('#' + id_precioInsumos).keypress(function(e){
     charactersAllowed("0123456789.",e);
 });
 
-('#' + id_precioInsumos).focus(function(){
+$('#' + id_precioInsumos).focus(function(){
   $('#' + id_precioInsumos).val(deformatMoney($('#' + id_precioInsumos).val()));
 });
 
-('#' + id_precioInsumos).focusout(function(){
+$('#' + id_precioInsumos).focusout(function(){
   $('#' + id_precioInsumos).val(formatMoney($('#' + id_precioInsumos).val()));
 });
 

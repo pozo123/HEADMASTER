@@ -15,8 +15,6 @@ var id_profit_cantidadCalculadora = "profitCantidadCalculadora";
 var id_profit_porcentajeCalculadora = "profitPorcentajeCalculadora";
 var id_profit_netoCalculadora = "profitNetoCalculadora";
 var id_precio_ventaCalculadora = "precioVentaCalculadora";
-var id_anticipoCalculadora = "anticipoCalculadora";
-var id_estimacionesCalculadora = "estimacionesCalculadora";
 var id_costo_horaScoreCalculadora = "costoHoraScoreCalculadora";
 var id_indirectosCalculadora = "indirectosCalculadora";
 var id_impuestosCalculadora = "impuestosCalculadora";
@@ -43,7 +41,7 @@ var registro_antiguo = {};
 $('#' + id_tab_calculadora).click(function(){
 
 	// pongo el texto para el on hover
-	var texto_default = "Valores generalmente usados para el calculo de presupuestos como son: precio por hora del área de proyectos, porcentaje de anticipos y estimaciones, impuestos para la mano de obra y el porcentaje de costos indirectos."
+	var texto_default = "Valores generalmente usados para el calculo de presupuestos como son: precio por hora del área de proyectos, impuestos para la mano de obra y el porcentaje de costos indirectos."
 	$('#' + id_default_calculadora).attr("data-content", texto_default);
 	resetFormCalculadora();
 	$('#' + id_ddl_obraCalculadora).empty();
@@ -79,7 +77,6 @@ $('#' + id_agregar_calculadora).click(function(){
 		subproceso_update[path_subproceso + "/score/costo_hora"] = deformatMoney($('#'+id_costo_horaScoreCalculadora).val());
 		subproceso_update[path_subproceso + "/costo_suministros"] = deformatMoney($('#'+id_costo_suministrosCalculadora).val());
 		subproceso_update[path_subproceso + "/precopeo"] = deformatMoney($('#'+id_costo_copeoCalculadora).val());
-		subproceso_update[path_subproceso + "/porcentaje_anticipo"] = deformatMoney($('#'+id_anticipoCalculadora).val());
 		subproceso_update[path_subproceso + "/porcentaje_indirectos"] = deformatMoney($('#'+id_indirectosCalculadora).val());
 		subproceso_update[path_subproceso + "/porcentaje_impuestos"] = deformatMoney($('#'+id_impuestosCalculadora).val());
 		subproceso_update[path_subproceso + "/utilidad"] = deformatMoney($('#'+id_profit_cantidadCalculadora).val());
@@ -403,43 +400,6 @@ $('#'+id_indirectosCalculadora).change(function (){
 		actualizaPrecioVenta();
 });
 
-// ----------------------------------- EXTRAS  ---------------------------------------
-$('#'+id_anticipoCalculadora).keypress(function(e){
-    charactersAllowed("0123456789.",e);
-});
-
-$('#'+id_anticipoCalculadora).change(function (){
-		var anticipoCal = parseFloat($('#'+id_anticipoCalculadora).val()).toFixed(2);
-		if(anticipoCal<=100){
-			$('#'+id_anticipoCalculadora).val(anticipoCal);
-			$('#'+id_estimacionesCalculadora).val(100 - anticipoCal);
-			highLight(id_estimacionesCalculadora);
-		} else {
-			$('#'+id_anticipoCalculadora).val(50);
-			$('#'+id_estimacionesCalculadora).val(50);
-			highLightColor(id_anticipoCalculadora, "#FF0000");
-			highLightColor(id_estimacionesCalculadora, "#FF0000");
-		}
-});
-
-$('#'+id_estimacionesCalculadora).keypress(function(e){
-    charactersAllowed("0123456789.",e);
-});
-
-$('#'+id_estimacionesCalculadora).change(function (){
-		var estimacionesCal = parseFloat($('#'+id_estimacionesCalculadora ).val()).toFixed(2);
-		if(estimacionesCal<=100){
-			$('#'+id_estimacionesCalculadora).val(estimacionesCal);
-			$('#'+id_anticipoCalculadora).val(100 - estimacionesCal);
-			highLight(id_anticipoCalculadora);
-		} else {
-			$('#'+id_estimacionesCalculadora).val(50);
-			$('#'+id_anticipoCalculadora).val(50);
-			highLightColor(id_estimacionesCalculadora, "#FF0000");
-			highLightColor(id_anticipoCalculadora,"#FF0000");
-		}
-});
-
 // ----------------------- VALIDACIONES ------------------------------------
 function validateFormCalculadora(){
 	if ($('#' + id_ddl_obraCalculadora).val() == ""){
@@ -457,14 +417,6 @@ function validateFormCalculadora(){
 	} else if ($('#' + id_indirectosCalculadora).val() == ""){
 			alert("Ingresa porcentaje de costos indirectos");
 			highLightColor(id_indirectosCalculadora,"#FF0000");
-			return false;
-	} else if ($('#' + id_anticipoCalculadora).val() == ""){
-			alert("Ingresa el porcentaje de anticipo o de estimaciones");
-			highLightColor(id_anticipoCalculadora,"#FF0000");
-			return false;
-	} else if ($('#' + id_estimacionesCalculadora).val() == ""){
-			alert("Ingresa el porcentaje de anticipo o de estimaciones");
-			highLightColor(id_estimacionesCalculadora,"#FF0000");
 			return false;
 	} else if ($('#' + id_costo_horaScoreCalculadora).val() == ""){
 			alert("Ingresa costo por hora de proyectos");
@@ -535,21 +487,15 @@ function resetFormCalculadora_subproceso(){
 	$('#' + id_profit_netoCalculadora).val("");
 	$('#' + id_costo_copeoCargaCalculadora).val("");
 
-	$('#' + id_anticipoCalculadora).val("");
-  $('#' + id_estimacionesCalculadora).val("");
   $('#' + id_costo_horaScoreCalculadora).val("");
   $('#' + id_indirectosCalculadora).val("");
   $('#' + id_impuestosCalculadora).val("");
 }
 
 function returnToDefaultCalculadora(){
-  $('#' + id_anticipoCalculadora).val(50);
-  $('#' + id_estimacionesCalculadora).val(50);
   $('#' + id_costo_horaScoreCalculadora).val(formatMoney(1300));
   $('#' + id_indirectosCalculadora).val(20);
   $('#' + id_impuestosCalculadora).val(54);
-	highLight(id_anticipoCalculadora);
-	highLight(id_estimacionesCalculadora);
 	highLight(id_costo_horaScoreCalculadora);
 	highLight(id_indirectosCalculadora);
 	highLight(id_impuestosCalculadora);
@@ -693,8 +639,6 @@ function cargaCamposCalculadora(claveObra, claveProceso, claveSubproceso){
 			$('#' + id_costo_operacionesCalculadora).val(formatMoney(costoOperacion));
 			$('#' + id_costos_indirectosCalculadora).val(formatMoney(costoOperacionIndirectos));
 
-      $('#' + id_anticipoCalculadora).val(subproceso.porcentaje_anticipo);
-      $('#' + id_estimacionesCalculadora).val(100 - parseFloat(subproceso.porcentaje_anticipo));
       $('#' + id_indirectosCalculadora).val(subproceso.porcentaje_indirectos);
       $('#' + id_impuestosCalculadora).val(subproceso.porcentaje_impuestos);
 			$('#' + id_profit_netoCalculadora).val(formatMoney(utilidadNeta));
@@ -768,8 +712,6 @@ function actualizarTablaCalculadora(){
 						var operacion_proceso=0;
 						var utilidad_proceso=0;
 						var venta_proceso=0;
-						var anticipo_proceso=0;
-						var estimacion_proceso=0;
 						var validacion_corrupto = false;
             if(clave_proceso !== "ADIC" && clave_proceso !== "MISC" && clave_proceso !== "PC00"){
                 procesoSnap.child("subprocesos").forEach(function(subprocesoSnap){
@@ -786,12 +728,7 @@ function actualizarTablaCalculadora(){
 									} else {
 										utilidad_porcentaje = (subproceso.utilidad / costoOperacion * 100).toFixed(2);
 									}
-									var porcentajeEstimacion;
-									if (subproceso.precio_venta == 0){
-										porcentajeEstimacion = 0;
-									}else{
-										porcentajeEstimacion = 100 - subproceso.porcentaje_anticipo;
-									}
+
 									costoScore_proceso=costoScore_proceso+costoScore;
 									precopeoCarga_proceso=precopeoCarga_proceso+precopeoCarga;
 									suministros_proceso=suministros_proceso+subproceso.costo_suministros;
@@ -799,8 +736,6 @@ function actualizarTablaCalculadora(){
 									operacion_proceso=operacion_proceso+costoOperacion;
 									utilidad_proceso=utilidad_proceso+subproceso.utilidad;
 									venta_proceso=venta_proceso+subproceso.precio_venta;
-									anticipo_proceso=anticipo_proceso+subproceso.porcentaje_anticipo*subproceso.precio_venta*0.01;
-									estimacion_proceso=estimacion_proceso+porcentajeEstimacion*subproceso.precio_venta*0.01;
 
 									if (clave_sub !== clave_proceso){
 										datos_obra[index+cont]=[
@@ -820,8 +755,6 @@ function actualizarTablaCalculadora(){
 											formatMoney(subproceso.utilidad),
 											utilidad_porcentaje,
 											formatMoney(subproceso.precio_venta),
-											subproceso.porcentaje_anticipo+"%",
-											porcentajeEstimacion+"%",
 											"<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>"
 										];
 										cont++;
@@ -850,8 +783,6 @@ function actualizarTablaCalculadora(){
 												formatMoney(utilidad_proceso),
 												"",
 												formatMoney(venta_proceso),
-												formatMoney(anticipo_proceso),
-												formatMoney(estimacion_proceso),
 												"<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>"
 											];
 										} else {
@@ -872,8 +803,6 @@ function actualizarTablaCalculadora(){
 												formatMoney(utilidad_proceso),
 												"",
 												formatMoney(venta_proceso),
-												formatMoney(anticipo_proceso),
-												formatMoney(estimacion_proceso),
 												""
 											];
 										}
@@ -931,8 +860,6 @@ function actualizarTablaCalculadora(){
 							$('#' + id_costo_operacionesCalculadora).val(data[12]);
 							$('#' + id_costos_indirectosCalculadora).val(data[10]);
 
-				      $('#' + id_anticipoCalculadora).val(data[16].replace("%",""));
-				      $('#' + id_estimacionesCalculadora).val(data[17].replace("%",""));
 				      $('#' + id_indirectosCalculadora).val(data[11]);
 				      $('#' + id_impuestosCalculadora).val(data[8]);
 							if(deformatMoney(data[13])<0){

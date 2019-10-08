@@ -15,8 +15,6 @@ var id_costo_copeoCargaModalCalculadora = "costoCopeoCargaModalCalculadora";
 var id_profit_cantidadModalCalculadora = "profitCantidadModalCalculadora";
 var id_profit_porcentajeModalCalculadora = "profitPorcentajeModalCalculadora";
 var id_precio_ventaModalCalculadora = "precioVentaModalCalculadora";
-var id_anticipoModalCalculadora = "anticipoModalCalculadora";
-var id_estimacionesModalCalculadora = "estimacionesModalCalculadora";
 var id_costo_horaScoreModalCalculadora = "costoHoraScoreModalCalculadora";
 var id_indirectosModalCalculadora = "indirectosModalCalculadora";
 var id_impuestosModalCalculadora = "impuestosModalCalculadora";
@@ -46,7 +44,7 @@ function modalCalculadora(ruta){
   horasActualizadas = false;
   registro_antiguo_modalCalculadora = {};
   // pongo el texto para el on hover
-	var texto_default = "Valores generalmente usados para el calculo de presupuestos como son: precio por hora del área de proyectos, porcentaje de anticipos y estimaciones, impuestos para la mano de obra y el porcentaje de costos indirectos."
+	var texto_default = "Valores generalmente usados para el calculo de presupuestos como son: precio por hora del área de proyectos, impuestos para la mano de obra y el porcentaje de costos indirectos."
 	$('#' + id_default_modalCalculadora).attr("data-content", texto_default);
 	resetFormModalCalculadora();
   cargaCamposModalCalculadora();
@@ -67,7 +65,6 @@ $('#' + id_agregar_modalCalculadora).click(function(){
 		return_modalCalculadora[path_subproceso + "/score/costo_hora"] = deformatMoney($('#'+id_costo_horaScoreModalCalculadora).val());
 		return_modalCalculadora[path_subproceso + "/costo_suministros"] = deformatMoney($('#'+id_costo_suministrosModalCalculadora).val());
 		return_modalCalculadora[path_subproceso + "/precopeo"] = deformatMoney($('#'+id_costo_copeoModalCalculadora).val());
-		return_modalCalculadora[path_subproceso + "/porcentaje_anticipo"] = deformatMoney($('#'+id_anticipoModalCalculadora).val());
 		return_modalCalculadora[path_subproceso + "/porcentaje_indirectos"] = deformatMoney($('#'+id_indirectosModalCalculadora).val());
 		return_modalCalculadora[path_subproceso + "/porcentaje_impuestos"] = deformatMoney($('#'+id_impuestosModalCalculadora).val());
 		return_modalCalculadora[path_subproceso + "/utilidad"] = deformatMoney($('#'+id_profit_cantidadModalCalculadora).val());
@@ -349,56 +346,11 @@ $('#'+id_indirectosModalCalculadora).change(function (){
 		actualizaPrecioVentaModalCalculadora();
 });
 
-// ----------------------------------- EXTRAS  ---------------------------------------
-$('#'+id_anticipoModalCalculadora).keypress(function(e){
-    charactersAllowed("0123456789.",e);
-});
-
-$('#'+id_anticipoModalCalculadora).change(function (){
-		var anticipoCal = parseFloat($('#'+id_anticipoModalCalculadora).val()).toFixed(2);
-		if(anticipoCal<=100){
-			$('#'+id_anticipoModalCalculadora).val(anticipoCal);
-			$('#'+id_estimacionesModalCalculadora).val(100 - anticipoCal);
-			highLight(id_estimacionesModalCalculadora);
-		} else {
-			$('#'+id_anticipoModalCalculadora).val(50);
-			$('#'+id_estimacionesModalCalculadora).val(50);
-			highLightColor(id_anticipoModalCalculadora, "#FF0000");
-			highLightColor(id_estimacionesModalCalculadora, "#FF0000");
-		}
-});
-
-$('#'+id_estimacionesModalCalculadora).keypress(function(e){
-    charactersAllowed("0123456789.",e);
-});
-
-$('#'+id_estimacionesModalCalculadora).change(function (){
-		var estimacionesCal = parseFloat($('#'+id_estimacionesModalCalculadora ).val()).toFixed(2);
-		if(estimacionesCal<=100){
-			$('#'+id_estimacionesModalCalculadora).val(estimacionesCal);
-			$('#'+id_anticipoModalCalculadora).val(100 - estimacionesCal);
-			highLight(id_anticipoModalCalculadora);
-		} else {
-			$('#'+id_estimacionesModalCalculadora).val(50);
-			$('#'+id_anticipoModalCalculadora).val(50);
-			highLightColor(id_estimacionesModalCalculadora, "#FF0000");
-			highLightColor(id_anticipoModalCalculadora,"#FF0000");
-		}
-});
-
 // ----------------------- VALIDACIONES ------------------------------------
 function validateFormModalCalculadora(){
 	if ($('#' + id_indirectosModalCalculadora).val() == ""){
 			alert("Ingresa porcentaje de costos indirectos");
 			highLightColor(id_indirectosModalCalculadora,"#FF0000");
-			return false;
-	} else if ($('#' + id_anticipoModalCalculadora).val() == ""){
-			alert("Ingresa el porcentaje de anticipo o de estimaciones");
-			highLightColor(id_anticipoModalCalculadora,"#FF0000");
-			return false;
-	} else if ($('#' + id_estimacionesModalCalculadora).val() == ""){
-			alert("Ingresa el porcentaje de anticipo o de estimaciones");
-			highLightColor(id_estimacionesModalCalculadora,"#FF0000");
 			return false;
 	} else if ($('#' + id_costo_horaScoreModalCalculadora).val() == ""){
 			alert("Ingresa costo por hora de proyectos");
@@ -457,21 +409,15 @@ function resetFormModalCalculadora(){
 	$('#' + id_costo_operacionesModalCalculadora).val("");
 	$('#' + id_costo_copeoCargaModalCalculadora).val("");
 
-	$('#' + id_anticipoModalCalculadora).val("");
-  $('#' + id_estimacionesModalCalculadora).val("");
   $('#' + id_costo_horaScoreModalCalculadora).val("");
   $('#' + id_indirectosModalCalculadora).val("");
   $('#' + id_impuestosModalCalculadora).val("");
 }
 
 function returnToDefaultModalCalculadora(){
-  $('#' + id_anticipoModalCalculadora).val(50);
-  $('#' + id_estimacionesModalCalculadora).val(50);
   $('#' + id_costo_horaScoreModalCalculadora).val(formatMoney(1300));
   $('#' + id_indirectosModalCalculadora).val(20);
   $('#' + id_impuestosModalCalculadora).val(54);
-	highLight(id_anticipoModalCalculadora);
-	highLight(id_estimacionesModalCalculadora);
 	highLight(id_costo_horaScoreModalCalculadora);
 	highLight(id_indirectosModalCalculadora);
 	highLight(id_impuestosModalCalculadora);
@@ -607,8 +553,6 @@ function cargaCamposModalCalculadora(){
 			$('#' + id_costo_operacionesModalCalculadora).val(formatMoney(costoOperacion));
 			$('#' + id_costos_indirectosModalCalculadora).val(formatMoney(costoOperacionIndirectos));
 
-      $('#' + id_anticipoModalCalculadora).val(subproceso.porcentaje_anticipo);
-      $('#' + id_estimacionesModalCalculadora).val(100 - parseFloat(subproceso.porcentaje_anticipo));
       $('#' + id_indirectosModalCalculadora).val(subproceso.porcentaje_indirectos);
       $('#' + id_impuestosModalCalculadora).val(subproceso.porcentaje_impuestos);
 
