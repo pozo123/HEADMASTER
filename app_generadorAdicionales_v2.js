@@ -20,22 +20,8 @@ var id_imagenes_selecAdicionales = "imagenesSeleccionadasAdicionales";
 var id_boton_agregar_suministrosAdicionales = "botonAgregarSuministroAdicionales";
 
 // ------------------------ Campos Calculadora --------------------------------
-var id_boton_defaultCalculadoraAdicionales = "botonDefaultAdicionales";
-var id_indirectosCalculadoraAdicionales = "indirectosAdicionales";
-var id_anticipoCalculadoraAdicionales = "anticipoAdicionales";
-var id_estimacionesCalculadoraAdicionales = "estimacionesAdicionales";
-var id_costo_horas_scoreCalculadoraAdicionales = "costoHoraScoreAdicionales";
-var id_horas_scoreCalculadoraAdicionales = "horasProyectoAdicionales";
-var id_costo_scoreCalculadoraAdicionales = "costoProyectoAdicionales";
-var id__costo_copeoCalculadoraAdicionales = "costoCopeoAdicionales";
-var id__costo_copeo_CSCalculadoraAdicionales = "costoCopeoCargaAdicionales";
-var id_impuestosCalculadoraAdicionales = "impuestosAdicionales";
-var id_costo_suministrosCalculadoraAdicionales = "costoSuministrosAdicionales";
-var id_profit_cantidadCalculadoraAdicionales = "profitCantidadAdicionales";
-var id_profit_porcentajeCalculadoraAdicionales = "profitPorcentajeAdicionales";
-var id_precioVentaCalculadoraAdicionales = "precioVentaAdicionales";
-var id_costos_indirectosCalculadoraAdicionales = "costosIndirectosAdicionales";
-var id_costo_operacionesCalculadoraAdicionales = "costoOperacionesAdicionales";
+var id_boton_calculadoraAdicionales = "botonCalculadoraAdicionales";
+var id_boton_copeoAdicionales = "botonCopeoAdicionales";
 
 var id_ddlCb_requisitosAdicionales = "ddlCb_requisitosAdicionales";
 var id_ddlCb_exclusionesAdicionales = "ddlCb_exclusionesAdicionales";
@@ -61,6 +47,16 @@ $('#' + id_tab_adicionales).click(function() {
 
 $('#' + id_boton_agregar_suministrosAdicionales).click(function() {
   modalSuministros();
+});
+
+$('#' + id_boton_calculadoraAdicionales).click(function() {
+  var obra = "obra";
+  var subproceso = "subproceso";
+  modalCalculadora(rama_bd_obras + "/adicionales/propuestas/" + obra + "/" + subproceso + "/calculadora");
+});
+
+$('#' + id_boton_copeoAdicionales).click(function() {
+  modalCopeo();
 });
 
 $('#' + id_cb_altaSinSupervisorAdicionales ).change(function(){

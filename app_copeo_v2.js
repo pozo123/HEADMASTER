@@ -286,6 +286,10 @@ function validateFormCopeo(){
 			alert("Selecciona un subproceso");
 			highLightColor(id_ddl_subprocesoCopeo,"#FF0000");
 			return false;
+  } else if ($('#' + id_ddl_entradaCopeo).val() == ""){
+			alert("Selecciona una entrada");
+			highLightColor(id_ddl_entradaCopeo,"#FF0000");
+			return false;
   } else if ($('#' + id_nombreCopeo).val() == ""){
 			alert("Ingresa el nombre de la entrada");
 			highLightColor(id_nombreCopeo,"#FF0000");
@@ -307,7 +311,6 @@ function validateFormCopeo(){
 			highLightColor(id_carga_socialCopeo,"#FF0000");
 			return false;
 	} else {
-    console.log("hasta aqui llego");
     var aux = selectTrabajadores.selected();
     console.log(aux);
     if(aux && aux.length>0){
@@ -482,7 +485,7 @@ function agregaCamposPuesto(puesto){
 function cargaCamposCopeo(claveObra, claveProceso, claveSubproceso, claveEntrada){
   if( claveEntrada == "-NUEVA-"){
     console.log("Sin registro de entrada");
-    resetFormCalculadora_subproceso();
+    resetFormCopeo_entrada();
     if(num_entradas==0){
       $('#'+id_carga_socialCopeo).prop("disabled", false);
     } else{
@@ -534,6 +537,7 @@ function calculaCostoUnitarioCopeo(){
       suma = suma + parseFloat($('#'+aux[i]).val()) * deformatMoney($('#'+"sueldo_"+aux[i]).val());
     }
   }
+  suma = suma /5;
   $('#'+ id_costo_unitarioCopeo).val(formatMoney(suma));
 }
 
@@ -676,6 +680,9 @@ function actualizarTablaCopeo(){
               ];
               costoTotal_obra = costoTotal_obra + costoTotal_proceso;
               procesoIndex_array.push(index_proceso);
+              if(index_entrada == index_subproceso+1){
+                index_entrada = index_subproceso;
+              }
             }
         });
         datos_obra[0]=[
@@ -707,6 +714,7 @@ function actualizarTablaCopeo(){
             destroy: true,
             data: datos_obra,
             language: idioma_espanol,
+            "paging":false,
             "autoWidth": false,
             "columnDefs": [
                 { "width": "120px", "targets": 2 },

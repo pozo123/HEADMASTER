@@ -16,7 +16,7 @@ var json_personal = {};
 
 var id_div_dropdown_areas = "dropdown_areas";
 
-var version = "version2";
+var version = "test";
 
 var rama_bd_personal = version + "/personal";
 var rama_bd_obras = version + "/obras";
@@ -218,7 +218,7 @@ $(document).ready(function() {
                 total_asistencias: 0,
                 total_pago: 0,
             },
-            
+
         };
         var pago_ejemplo = 0;
         snapshot.forEach(function(subSnap){
@@ -255,7 +255,7 @@ $(document).ready(function() {
                     if(semana.miercoles.asistencia){
                         proporcion += 0.2;
                     };
-                    
+
                 }
                 var sueldo = parseFloat( parseFloat(semana.total_asistencia) / proporcion );
 
@@ -297,7 +297,7 @@ $(document).ready(function() {
                         datos[semana.miercoles.obra].total_pago += parseFloat(semana.total * aux);
                     };
                 }
-                
+
                 // horas extra
                 if(semana.horas_extra != undefined){
                     for(key in semana.horas_extra){
@@ -338,7 +338,7 @@ $(document).ready(function() {
         tabla_reporte_global_nomina = $('#dataTableNomina').DataTable({
             destroy: true,
             data: datos_tabla,
-            language: idioma_espanol,                    
+            language: idioma_espanol,
             "autoWidth": false,
             dom: 'Bfrtip',
             "columnDefs": [
