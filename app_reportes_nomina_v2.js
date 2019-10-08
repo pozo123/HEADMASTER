@@ -53,7 +53,7 @@ $('#' + id_tab_reporte_nomina).click(function(){
         select_asignada.appendChild(option_asignada);
     });
 
-    //tableReporteGlobalReporteNomina();
+    tableReporteGlobalReporteNomina();
     reporteSemanalReporteNomina();
     reporteObraReporteNomina();
 });
@@ -106,132 +106,112 @@ $('#' + id_ddl_week_reporte_nomina).change(function(){
 // tabla para el reporte más general.
 
 function tableReporteGlobalReporteNomina(){
+
     firebase.database().ref(rama_bd_nomina + "/nomina").on("value", function(regSnap){
         firebase.database().ref(rama_bd_obras + "/listas/obras_activas").once("value").then(function(obraSnap){
-            firebase.database().ref(rama_bd_nomina + "/listas/obras").once("value").then(function(listaSnap){
-                var datos = [];
-                listaSnap.forEach(function(listaSubsnap){
-                    // obtengo el id de la obra que irá en cada renglón ya que listaSnap es todas las obras donde hay registros
-                    var obra_key = listaSubsnap.key;
-                    var obra_nombre = obraSnap.val()[obra_key].nombre;
-                    
-                    var registros_obra = {};
+            var json_datos = {};
+            var registros = regSnap.val();
 
-                    for(key in listaSubsnap.val()){
-                        // aquí recorro los procesos de cada una de las obras que hay;
-                        for(var i=0;i < Object.keys(listaSubsnap.val()[key]).length;i++){
-                            registros_obra[Object.keys(listaSubsnap.val()[key])[i]] = true;
-                        }
-                    }
-                    var nomina = 0;
-                    var horas_extra = 0;
-                    var diversos = 0;
-                    // de los 3 de arriba sale el subtotal y del de abajo - subtotal salen impuestos
-                    var carga_social = 0;
-                    var pagado = 0;
-                    var iva = 0;
+            obraSnap.forEach(function(obraSubSnap){
+                json_datos[obraSubSnap.key] = {
+                    nombre: obraSubSnap.val().nombre,
+                    nomina: 0,
+                    horas_extra:0,
+                    diversos: 0,
+                    carga_social: 0,
+                };
+            });
 
-                    for(key in registros_obra){ 
-                        var nomina_reg = 0;
-                        var pago_reg = 0; 
-                        var proporcion_reg = 0;
-                        var carga_social_reg = 0;
-                        var diverso_reg = 0;
-                        var he_reg = 0;
-                        var iva_reg = 0;
+            for(key in registros){
+                // subSnap.key es el ID del trabajador del registro, reg_key es el ID del registro a buscar;
+                var reg_key = key;
 
-                        // aux es el total de NOM + DIV + HE + IVA de todo el registro, servirá para obtener la carga social
-                        // ya que CS = (Pago_Total - aux )
-                        // y CS_reg = CS * proporcion
-                        var aux = 0;
-                        
-                        // el caso donde hay faltas, no solo es sumar de 0.2 en 0.2 para obtener la prop;
-                        var aux_proporcion = 0;
+                // aux es el total de NOM + DIV + HE + IVA de todo el registro, servirá para obtener la carga social
+                // ya que CS = (Pago_Total - aux )
+                // y CS_reg = CS * proporcion
+                if(registros[reg_key].pagos_nomina != null){
 
-                        if(regSnap.val()[key].pagos_nomina != null){
-                            pago_reg = regSnap.val()[key].pagos_nomina.monto;
-                       
-                            for(heKey in regSnap.val()[key].horas_extra){
-                                if(regSnap.val()[key].horas_extra[heKey].obra == obra_key){
-                                    he_reg += regSnap.val()[key].horas_extra[heKey].cantidad * (regSnap.val()[key].sueldo_semanal / 24);
-                                    iva_reg += regSnap.val()[key].horas_extra[heKey].cantidad * (regSnap.val()[key].sueldo_semanal / 24) * 0.16;
-                                };
-                                aux += regSnap.val()[key].horas_extra[heKey].cantidad * (regSnap.val()[key].sueldo_semanal / 24) * 1.16;
-                            };
-                            horas_extra += parseFloat(he_reg.toFixed(2));
-                            
-                            for(divKey in regSnap.val()[key].diversos){
-                                if(regSnap.val()[key].diversos[divKey].obra == obra_key){
-                                    diverso_reg += regSnap.val()[key].diversos[divKey].cantidad;
-                                    iva_reg += regSnap.val()[key].diversos[divKey].cantidad * 0.16;
-                                };
-                                aux += regSnap.val()[key].diversos[divKey].cantidad * 1.16;
-                            };
-                            diversos += parseFloat(diverso_reg.toFixed(2));
+                    // aux proporcion es la cantidad de asistencias que se tiene;
+                    var aux_proporcion = 0;
+                    var aux = 0;
 
-                            for( asistKey in regSnap.val()[key].asistencias){
-                                if(regSnap.val()[key].asistencias[asistKey].obra == obra_key && regSnap.val()[key].asistencias[asistKey].actividad != "Falta"){
-                                    nomina_reg += regSnap.val()[key].sueldo_semanal * 0.2;
-                                    iva_reg += (regSnap.val()[key].sueldo_semanal*0.2) * 0.16;
-                                    proporcion_reg += 0.2;
-                                };
-                                if(regSnap.val()[key].asistencias[asistKey].actividad != "Falta"){
-                                    aux += (regSnap.val()[key].sueldo_semanal*0.2) * 1.16;
-                                    aux_proporcion += 0.2;
-                                }  
-                            };
-
-                            carga_social_reg = (pago_reg - aux) * (proporcion_reg / aux_proporcion);
-                            
-
-
-                            nomina += parseFloat(nomina_reg.toFixed(2));
-                            iva += parseFloat(iva_reg.toFixed(2));
-                            carga_social += parseFloat(carga_social_reg.toFixed(2));
-                        };                   
+                    var pago_registro = registros[reg_key].pagos_nomina.monto;
+                    for(asistKey in registros[reg_key].asistencias){
+                        if(registros[reg_key].asistencias[asistKey].actividad != "Falta"){
+                            aux_proporcion += 0.2;
+                            aux += (0.2 * registros[reg_key].sueldo_semanal) * 1.16;
+                        };
                     };
-                    
-                    if(nomina + horas_extra + diversos > 0){
-                        datos.push([
-                            obra_nombre,
-                            formatMoney(nomina),
-                            "" + ((nomina / (nomina + horas_extra + diversos)) * 100).toFixed(2) +"%", 
-                            formatMoney(horas_extra),
-                            "" + ((horas_extra / (nomina + horas_extra + diversos)) * 100).toFixed(2) +"%", 
-                            formatMoney(diversos),
-                            "" + ((diversos / (nomina + horas_extra + diversos)) * 100).toFixed(2) +"%", 
-                            formatMoney(nomina + horas_extra + diversos),
-                            formatMoney(iva),
-                            formatMoney(carga_social),
-                            formatMoney(nomina + horas_extra + diversos + iva + carga_social),
-                        ]);
-                    };
-                });
 
-                tabla_reporte_global_nomina = $('#'+ id_dataTable_reporte_global_reporte_nomina).DataTable({
-                    destroy: true,
-                    data: datos,
-                    language: idioma_espanol,                    
-                    "autoWidth": false,
-                    dom: 'Bfrtip',
-                    "columnDefs": [
-                        {
-                            targets: [-1],
-                            className: 'bolded'
-                        },
-                        { targets: "_all", className: 'dt-body-center'},
-                    ],
-                    buttons: [
-                        {extend: 'excelHtml5',
-                        title: "Reporte_global_nomina",
-                        exportOptions: {
-                            columns: [':visible']
-                        }},
-                    ],
-                });
+                    for(heKey in registros[reg_key].horas_extra){
+                        obra = registros[reg_key].horas_extra[heKey].obra;
+                        json_datos[obra].horas_extra += registros[reg_key].horas_extra[heKey].cantidad * (registros[reg_key].sueldo_semanal / 24)
+                        aux += registros[reg_key].horas_extra[heKey].cantidad * (registros[reg_key].sueldo_semanal / 24) * 1.16;
+                    };
+
+                    for(divKey in registros[reg_key].diversos){
+                        obra = registros[reg_key].diversos[divKey].obra;
+                        json_datos[obra].diversos += registros[reg_key].diversos[divKey].cantidad;
+                        aux += registros[reg_key].diversos[divKey].cantidad * 1.16;
+                    };
+
+                    for(asistKey in registros[reg_key].asistencias){
+                        if(registros[reg_key].asistencias[asistKey].actividad != "Falta"){
+                            obra = registros[reg_key].asistencias[asistKey].obra;
+                            json_datos[obra].nomina += 0.2 * registros[reg_key].sueldo_semanal;
+
+                            if(aux_proporcion > 0 && pago_registro - aux > 0) {
+                                json_datos[obra].carga_social += ((pago_registro - aux) * 0.2) / aux_proporcion;
+                            }
+                        };
+                    };
+                };
+            };
+
+            var datos = [];
+            for(key in json_datos){
+                if(json_datos[key].nomina + json_datos[key].horas_extra + json_datos[key].diversos > 0){
+                    var subtotal = json_datos[key].nomina + json_datos[key].horas_extra + json_datos[key].diversos;
+                    var iva = subtotal * 0.16;
+                    datos.push([
+                        json_datos[key].nombre,
+                        formatMoney(json_datos[key].nomina),
+                        "" + ((json_datos[key].nomina / subtotal) * 100).toFixed(2) +"%",
+                        formatMoney(json_datos[key].horas_extra),
+                        "" + ((json_datos[key].horas_extra / subtotal) * 100).toFixed(2) +"%",
+                        formatMoney(json_datos[key].diversos),
+                        "" + ((json_datos[key].diversos / subtotal) * 100).toFixed(2) +"%",
+                        formatMoney(subtotal),
+                        formatMoney(iva),
+                        formatMoney(json_datos[key].carga_social),
+                        formatMoney(subtotal + iva + json_datos[key].carga_social)
+                    ]);
+                };
+            };
+            tabla_reporte_global_nomina = $('#'+ id_dataTable_reporte_global_reporte_nomina).DataTable({
+                destroy: true,
+                data: datos,
+                language: idioma_espanol,                    
+                "autoWidth": false,
+                dom: 'Bfrtip',
+                "columnDefs": [
+                    {
+                        targets: [-1],
+                        className: 'bolded'
+                    },
+                    { targets: "_all", className: 'dt-body-center'},
+                ],
+                buttons: [
+                    {extend: 'excelHtml5',
+                    title: "Reporte_global_nomina",
+                    exportOptions: {
+                        columns: [':visible']
+                    }},
+                ],
             });
         });
     });
+
 };
 
 function reporteSemanalReporteNomina(){
@@ -268,7 +248,6 @@ function reporteSemanalReporteNomina(){
                         var aux = 0;
 
                         var pago_registro = registros[reg_key].pagos_nomina.monto;
-                        console.log(pago_registro);
                         for(asistKey in registros[reg_key].asistencias){
                             if(registros[reg_key].asistencias[asistKey].actividad != "Falta"){
                                 aux_proporcion += 0.2;
@@ -315,90 +294,8 @@ function reporteSemanalReporteNomina(){
                             formatMoney(json_datos[key].nomina + json_datos[key].horas_extra + json_datos[key].diversos + iva + json_datos[key].carga_social),
                         ]);
                     };
-                }
-/*                 var datos = [];
-                obraSnap.forEach(function(obraSubSnap){
-                    obra_nombre = obraSubSnap.val().nombre;
-                    var nomina = 0;
-                    var horas_extra = 0;
-                    var diversos = 0;
-                    // de los 3 de arriba sale el subtotal y del de abajo - subtotal salen impuestos
-                    var carga_social = 0;
-                    var pagado = 0;
-                    var iva = 0;
+                };
 
-                    // aux es el total de NOM + DIV + HE + IVA de todo el registro, servirá para obtener la carga social
-                    // ya que CS = (Pago_Total - aux )
-                    // y CS_reg = CS * proporcion
-                    
-                    // el caso donde hay faltas, no solo es sumar de 0.2 en 0.2 para obtener la prop;
-                    
-                    listaSnap.forEach(function(subSnap){
-                        var aux = 0;
-                        var aux_proporcion = 0;
-
-                        var reg_key = Object.keys(subSnap.val())[0];
-                        var nomina_reg = 0;
-                        var pago_reg = 0; 
-                        var proporcion_reg = 0;
-                        var carga_social_reg = 0;
-                        var diverso_reg = 0;
-                        var he_reg = 0;
-                        var iva_reg = 0;
-
-                        if(regSnap.val()[reg_key].pagos_nomina != null){
-                            pago_reg = regSnap.val()[reg_key].pagos_nomina.monto;
-                       
-                            for(heKey in regSnap.val()[reg_key].horas_extra){
-                                if(regSnap.val()[reg_key].horas_extra[heKey].obra == obraSubSnap.key){
-                                    he_reg += regSnap.val()[reg_key].horas_extra[heKey].cantidad * (regSnap.val()[reg_key].sueldo_semanal / 24);
-                                    iva_reg += regSnap.val()[reg_key].horas_extra[heKey].cantidad * (regSnap.val()[reg_key].sueldo_semanal / 24) * 0.16;
-                                };
-                                aux += regSnap.val()[reg_key].horas_extra[heKey].cantidad * (regSnap.val()[reg_key].sueldo_semanal / 24) * 1.16;
-                            };
-                            horas_extra += parseFloat(he_reg.toFixed(2));
-                            
-                            for(divKey in regSnap.val()[reg_key].diversos){
-                                if(regSnap.val()[reg_key].diversos[divKey].obra == obraSubSnap.key){
-                                    diverso_reg += regSnap.val()[reg_key].diversos[divKey].cantidad;
-                                    iva_reg += regSnap.val()[reg_key].diversos[divKey].cantidad * 0.16;
-                                };
-                                aux += regSnap.val()[reg_key].diversos[divKey].cantidad * 1.16;
-                            };
-                            diversos += parseFloat(diverso_reg.toFixed(2));
-
-                            for( asistKey in regSnap.val()[reg_key].asistencias){
-                                if(regSnap.val()[reg_key].asistencias[asistKey].obra == obraSubSnap.key && regSnap.val()[reg_key].asistencias[asistKey].actividad != "Falta"){
-                                    nomina_reg += regSnap.val()[reg_key].sueldo_semanal * 0.2;
-                                    iva_reg += (regSnap.val()[reg_key].sueldo_semanal*0.2) * 0.16;
-                                    proporcion_reg += 0.2;
-                                };
-                                if(regSnap.val()[reg_key].asistencias[asistKey].actividad != "Falta"){
-                                    aux += (regSnap.val()[reg_key].sueldo_semanal*0.2) * 1.16;
-                                    aux_proporcion += 0.2;
-                                }  
-                            };
-
-                            carga_social_reg = (pago_reg - aux) * (proporcion_reg / aux_proporcion);
-                            
-                            nomina += parseFloat(nomina_reg.toFixed(2));
-                            iva += parseFloat(iva_reg.toFixed(2));
-                            carga_social += parseFloat(carga_social_reg.toFixed(2));
-                        };     
-                    });
-
-                    if(nomina + horas_extra + diversos > 0){
-                        datos.push([
-                            obra_nombre,
-                            formatMoney(nomina),
-                            formatMoney(horas_extra),
-                            formatMoney(diversos),
-                            formatMoney(nomina + horas_extra + diversos),
-                            formatMoney(iva + carga_social),
-                            formatMoney(nomina + horas_extra + diversos + iva + carga_social),
-                        ]);
-                    };
-                }); */
 
                 tabla_reporte_semanal_nomina = $('#'+ id_dataTable_reporte_semanal_reporte_nomina).DataTable({
                     destroy: true,
@@ -441,13 +338,9 @@ function reporteSemanalReporteNomina(){
                     data: {
                         datasets: [{
                             data: total_obras,
-                            backgroundColor: [
-                                window.chartColors.red,
-                                window.chartColors.orange,
-                                window.chartColors.yellow,
-                                window.chartColors.green,
-                                window.chartColors.blue,
-                            ],
+                            backgroundColor: palette('mpn65', total_obras.length).map(function(hex) {
+                                return '#' + hex;
+                              })
                         }],
                         labels: nombres_obras
                     },
