@@ -147,7 +147,7 @@ $('#' + id_catfabricInsumos).change(function(){
 });
 
 $('#' + id_catfabricInsumos).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-/",e)
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-/0123456789",e)
 });
 
 $('#' + id_precioInsumos).keypress(function(e){
@@ -521,24 +521,6 @@ function llenaDdlCategoria(){
   });
 }
 
-function llenaDdlProveedor(){
-  // Llenado del ddl de proveedor
-  $('#' + id_ddl_proveedorInsumos).empty();
-  var select = document.getElementById(id_ddl_proveedorInsumos);
-  var option = document.createElement('option');
-  option.style = "display:none";
-  option.text = option.value = "";
-  select.appendChild(option);
-  var proveedor;
-  firebase.database().ref(rama_bd_insumos + "/categorias").orderByChild('nombre').on('child_added',function(snapshot){
-      proveedor = snapshot.val();
-      option = document.createElement('option');
-      option.value = snapshot.key;
-      option.text = proveedor.nombre;
-      select.appendChild(option);
-  });
-}
-
 function llenaDdlClasificacion(){
   // Llenado del ddl de proveedor
   $('#' + id_ddl_clasificacionInsumos).empty();
@@ -548,11 +530,29 @@ function llenaDdlClasificacion(){
   option.text = option.value = "";
   select.appendChild(option);
   var clasificacion;
-  firebase.database().ref(rama_bd_insumos + "/categorias").orderByChild('nombre').on('child_added',function(snapshot){
+  firebase.database().ref(rama_bd_insumos + "/clasificaciones").orderByChild('nombre').on('child_added',function(snapshot){
       clasificacion = snapshot.val();
       option = document.createElement('option');
       option.value = snapshot.key;
       option.text = clasificacion.nombre;
+      select.appendChild(option);
+  });
+}
+
+function llenaDdlProveedor(){
+  // Llenado del ddl de proveedor
+  $('#' + id_ddl_proveedorInsumos).empty();
+  var select = document.getElementById(id_ddl_proveedorInsumos);
+  var option = document.createElement('option');
+  option.style = "display:none";
+  option.text = option.value = "";
+  select.appendChild(option);
+  var proveedor;
+  firebase.database().ref(rama_bd_insumos + "/proveedores").orderByChild('razon_social').on('child_added',function(snapshot){
+      proveedor = snapshot.val();
+      option = document.createElement('option');
+      option.value = snapshot.key;
+      option.text = proveedor.razon_social;
       select.appendChild(option);
   });
 }
