@@ -222,7 +222,7 @@ $(document).ready(function() {
         };
         var pago_ejemplo = 0;
         snapshot.forEach(function(subSnap){
-            var semana = subSnap.child("nomina/2019/30").val();
+            var semana = subSnap.child("nomina/2019/39").val();
             if(semana != null){
                 if(semana.total){
                     pago_ejemplo += parseFloat(semana.total);
@@ -263,7 +263,6 @@ $(document).ready(function() {
 
                 var aux = proporcion * 5;
                 if(aux == 0 && semana.total != undefined){
-                    console.log(aux);
                     console.log(semana);
                 }
                 aux = 1 / aux;
@@ -316,9 +315,6 @@ $(document).ready(function() {
                 };
             };
         });
-
-        console.log(datos);
-        console.log(pago_ejemplo);
 
         var datos_tabla = [];
 
