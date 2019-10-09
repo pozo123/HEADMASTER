@@ -66,73 +66,44 @@ $('#' + id_tab_insumo).click(function() {
 //Funcionalidad del boton 'Registrar/Editar'
 $('#' + id_boton_AgregarInsumos).click(function() {
   //Validar datos ingresados
-  if (validateFormObra()){
-    var datos_obra = datosAltaObra();
-    //console.log(datos_obra);
+  if (validateFormInsumo()){
+    var datos_insumo = altaProductoInsumo();
+    console.log(datos_insumo);
     //Decidir si editar o dar de alta
-    if (existe_obra){ //editar
-        firebase.database().ref(rama_bd_obras + "/obras/" + uid_existente).once("value").then(function(snapshot){
+    if (existe_insumo){ //editar
+        firebase.database().ref(rama_bd_insumos + "/productos/" + uid_existente).once("value").then(function(snapshot){
             var registro_antiguo = snapshot.val();
-            var obra_update = {};
+            var insumo_update = {};
             //Actualizar los campos de la obra
-            obra_update["obras/" + uid_existente + "/clave_obra"] = datos_obra.clave_obra;
-            obra_update["obras/" + uid_existente + "/nombre"] = datos_obra.nombre;
-            obra_update["obras/" + uid_existente + "/id_cliente"] = datos_obra.id_cliente;
-            obra_update["obras/" + uid_existente + "/direccion"] = datos_obra.direccion;
-            obra_update["obras/" + uid_existente + "/retencion_fondo_garantia"] =datos_obra.retencion_fondo_garantia;
-            if(datos_obra.terminada){
-              obra_update["listas/obras_terminadas/" + uid_existente + "/nombre"] =datos_obra.nombre;
-            } else {
-              obra_update["listas/obras_no_terminadas/" + uid_existente + "/nombre"] =datos_obra.nombre;
-            };
-            if(!datos_obra.habilitada){
-              obra_update["listas/obras_no_activas/" + uid_existente + "/nombre"] =datos_obra.nombre;
-            } else {
-              obra_update["listas/obras_activas/" + uid_existente + "/nombre"] =datos_obra.nombre;
-            }
+            var path_insumo = "productos/" + uid_existente;
+            insumo_update[path_insumo + "/clave_obra"] = datos_insumo;
 
-            //Actualizar fechas en obra y MISC
-            if (registro_antiguo.fechas.fecha_inicio_teorica !== datos_obra.fechas.fecha_inicio_teorica){
-              obra_update["obras/" + uid_existente + "/fechas/fecha_inicio_teorica"] = datos_obra.fechas.fecha_inicio_teorica;
-              obra_update["procesos/" + uid_existente + "/procesos/MISC/subprocesos/MISC/fechas/fecha_inicio_teorica"] = datos_obra.fechas.fecha_inicio_teorica;
-              obra_update["listas/fechas_obra_inicio/programada/" + datos_obra.fechas.fecha_inicio_teorica + "/" + uid_existente] = true;
-              obra_update["listas/fechas_obra_inicio/programada/" + registro_antiguo.fechas.fecha_inicio_teorica + "/" + uid_existente] = null;
-            }
-            if (registro_antiguo.fechas.fecha_final_teorica !== datos_obra.fechas.fecha_final_teorica){
-              obra_update["obras/" + uid_existente + "/fechas/fecha_final_teorica"] = datos_obra.fechas.fecha_final_teorica;
-              obra_update["procesos/" + uid_existente + "/procesos/MISC/subprocesos/MISC/fechas/fecha_final_teorica"] = datos_obra.fechas.fecha_final_teorica;
-              obra_update["listas/fechas_obra_fin/programada/" + datos_obra.fechas.fecha_final_teorica + "/" + uid_existente] = true;
-              obra_update["listas/fechas_obra_fin/programada/" + registro_antiguo.fechas.fecha_final_teorica + "/" + uid_existente] = null;
-            }
-            //firebase.database().ref(rama_bd_obras).update(obra_update);
+            firebase.database().ref(rama_bd_insumos).update(insumo_update);
 
             // PAD
-            //pda("modificacion", rama_bd_obras + "/obras/" + uid_existente, registro_antiguo);
+            pda("modificacion", rama_bd_insumos + "/" path_insumo, registro_antiguo);
             alert("¡Edición exitosa!");
-            resetFormObra();
+            resetFormInsumo();
         });
     } else { //dar de alta
-        firebase.database().ref(rama_bd_obras + "/obras").push(datos_obra).then(function(snapshot){
+        firebase.database().ref(rama_bd_insumos + "/productos").push(datos_insumo).then(function(snapshot){
             var regKey = snapshot.key;
-            var obra_paths = {};
-            var fechas = fechasAltaObra();
-            //Dar de alta los 3 procesos default
-            obra_paths["procesos/" + regKey + "/procesos/PC00"]=datosPC00();
-            obra_paths["procesos/" + regKey + "/procesos/MISC"]=datosMISC(fechas);
-            obra_paths["procesos/" + regKey + "/procesos/ADIC"]=datosADIC();
-            obra_paths["procesos/" + regKey + "/num_procesos"]=0;
-
+            var insumo_paths = {};
+            var marca = $('#' + id_ddl_marcaInsumos + ' option:selected').val();
+            var unidad = $('#' + id_ddl_unidadInsumos + ' option:selected').val();
+            var clasificacion: $('#' + id_ddl_clasificacionInsumos + ' option:selected').val();
+            var categoria: $('#' + id_ddl_categoriaInsumos + ' option: selected').val();
             // Actualizar listas
-            var fechas = fechasProgramadasObra();
-            obra_paths["listas/obras_no_terminadas/" + regKey + "/nombre"] = datos_obra.nombre;
-            obra_paths["listas/obras_activas/" + regKey + "/nombre"] = datos_obra.nombre;
-            obra_paths["listas/fechas_obra_inicio/programada/" + fechas.inicio + "/" + regKey] = true;
-            obra_paths["listas/fechas_obra_fin/programada/" + fechas.final + "/" + regKey] = true;
-            //console.log(obra_paths);
-            //firebase.database().ref(rama_bd_obras).update(obra_paths);
+            insumo_paths["listas/categorias/" + categoria + regKey] = true;
+            insumo_paths["listas/marcas/" + marca + regKey] = true;
+            insumo_paths["listas/clasificaciones/" + clasificacion + regKey] = true;
+            insumo_paths["listas/categorias/" + categoria + regKey] = true;
+
+            console.log(insumo_paths);
+            firebase.database().ref(rama_bd_insumos).update(insumo_paths);
 
             // PAD
-            //pda("alta", rama_bd_obras + "/obras/" + regKey, "");
+            pda("alta", rama_bd_insumos + "/productos/" + regKey, "");
             alert("¡Alta exitosa!");
             resetFormObra();
         });
