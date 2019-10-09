@@ -13,7 +13,7 @@ var id_ddl_clasificacionInsumos = "ddl_clasificacionInsumos";
 var id_ddl_categoriaInsumos = "ddl_categoriaInsumos";
 var id_ddl_proveedorInsumos = "ddl_proveedorInsumos";
 var id_precioInsumos = "precioInsumos";
-var id_fechaCotizacionInsumos = "fechaCotizacionInsumos";
+var id_fecha_cotizacionInsumos = "fechaCotizacionInsumos";
 var id_botonAgregarProveedorInsumos = "botonAgregarProveedorInsumos";
 var id_dataTableProveedoresInsumos = "dataTableProveedoresInsumos";
 
@@ -22,25 +22,45 @@ var id_boton_BorrarInsumos = "botonBorrarInsumos";
 
 //Variables globales para controlar edición
 var existe_insumo = false;
-var uid_insumo = "";
+var uid_existente;
+
+var marcas;
+var categorias;
+var clasificaciones;
+var unidades;
+var proveedores;
 
 jQuery.datetimepicker.setLocale('es');
 
 //Dar formato a los elementos existentes
 $('#' + id_tab_insumo).click(function() {
+    uid_existente="";
     resetFormInsumo();
     // Con las líneas siguiente se genera el cuadro para las fechas en el HTML
-    jQuery('#' + id_fechaCotizacionInsumos).datetimepicker(
+    jQuery('#' + id_fecha_cotizacionInsumos).datetimepicker(
         {timepicker:false, weeks:true,format:'Y.m.d'}
     );
-    llenaDdlMarca();
-    llenaDdlUnidad();
-    llenaDdlCategoria();
-    llenaDdlProveedor();
-    llenaDdlClasificacion();
-
+    firebase.database().ref(rama_bd_insumos + "/marcas").orderByChild('nombre').on('value',function(snapshot){
+      marcas = snapshot;
+      llenaDdlMarcaInsumo();
+    });
+    firebase.database().ref(rama_bd_insumos + "/unidades").orderByChild('nombre').on('value',function(snapshot){
+      unidades = snapshot;
+      llenaDdlUnidadInsumo();
+    });
+    firebase.database().ref(rama_bd_insumos + "/categorias").orderByChild('nombre').on('value',function(snapshot){
+      categorias = snapshot;
+      llenaDdlCategoriaInsumo();
+    });
+    firebase.database().ref(rama_bd_insumos + "/clasificaciones").orderByChild('nombre').on('value',function(snapshot){
+      clasificaciones = snapshot;
+      llenaDdlClasificacionInsumo();
+    });
+    firebase.database().ref(rama_bd_insumos + "/proveedores").orderByChild('razon_social').on('value',function(snapshot){
+      proveedores = snapshot;
+      llenaDdlProveedorInsumo();
+    });
     actualizarTablaInsumos();
-
 });
 
 //Funcionalidad del boton 'Registrar/Editar'
@@ -155,11 +175,16 @@ $('#' + id_precioInsumos).keypress(function(e){
 });
 
 $('#' + id_precioInsumos).focus(function(){
-  $('#' + id_precioInsumos).val(deformatMoney($('#' + id_precioInsumos).val()));
+  if($('#'+id_precioInsumos).val() !== ""){
+		$('#' + id_precioInsumos).val(deformatMoney($('#' + id_precioInsumos).val()));
+	}
+
 });
 
 $('#' + id_precioInsumos).focusout(function(){
-  $('#' + id_precioInsumos).val(formatMoney($('#' + id_precioInsumos).val()));
+  if($('#'+id_precioInsumos).val() !== ""){
+		$('#' + id_precioInsumos).val(formatMoney($('#' + id_precioInsumos).val()));
+	}
 });
 
 
@@ -175,7 +200,7 @@ function resetFormInsumo(){
   $('#' + id_ddl_categoriaInsumos).val("");
   $('#' + id_ddl_proveedorInsumos).val("");
   $('#' + id_precioInsumos).val("");
-  $('#' + id_fechaCotizacionInsumos).val("")
+  $('#' + id_fecha_cotizacionInsumos).val("")
   existe_insumo=false;
 }
 
@@ -223,9 +248,9 @@ function validateProveedorInsumo(){
       alert("Escribe el precio del proveedor para este producto");
       highLightColor(id_precioInsumos,"#FF0000");
       return false;
-  } else if($('#' + id_fechaCotizacionInsumos).val() == ""){
+  } else if($('#' + id_fecha_cotizacionInsumos).val() == ""){
       alert("Escribe una fecha de vigencia para el precio");
-      highLightColor(id_fechaCotizacionInsumos,"#FF0000");
+      highLightColor(id_fecha_cotizacionInsumos,"#FF0000");
       return false;
   } else {
       return true;
@@ -233,241 +258,133 @@ function validateProveedorInsumo(){
 }
 
 //Construir el JSON de direccion para la obra
-function direccionAltaObra(){
-  var direccion = {};
-  direccion = {
-      estado: $('#' + id_estado_obra).val(),
-      ciudad: $('#' + id_ciudad_obra).val(),
-      colonia: $('#' + id_colonia_obra).val(),
-      cp: $('#' + id_codigo_postal_obra).val(),
-      calle: $('#' + id_calle_obra).val(),
-      numero: $('#' + id_numero_obra).val()
+function altaProductoInsumo(){
+  var insumo = {};
+  insumo = {
+      descripcion: $('#' + id_descripcionInsumos).val(),
+      catalogo: $('#' + id_catalogoInsumos).val(),
+      catfabric: $('#' + id_catfabricInsumos).val(),
+      marca: $('#' + id_ddl_marcaInsumos + ' option:selected').val(),
+      unidad: $('#' + id_ddl_unidadInsumos + ' option:selected').val(),
+      clasificacion: $('#' + id_ddl_clasificacionInsumos + ' option:selected').val(),
+      categoria: $('#' + id_ddl_categoriaInsumos + ' option: selected').val()
   }
-  return direccion;
+  return insumo;
 };
 //Construir el JSON de fechas para la obra
-function fechasAltaObra(){
-  var fechas = {};
-  var f_inicio = $('#' + id_fecha_inicio_obra).val().split('.');
-  var f_final = $('#' + id_fecha_final_obra).val().split('.');
-  fechas = {
-      fecha_inicio_teorica: new Date(f_inicio[0], f_inicio[1] - 1, f_inicio[2]).getTime(),
-      fecha_final_teorica: new Date(f_final[0], f_final[1] - 1, f_final[2]).getTime()
-  }
-  return fechas;
+function arrayProveedorInsumo(){
+  var proveedor=[];
+  var f_cotizacion = $('#' + id_fecha_cotizacionInsumos).val().split('.');
+  proveedor.push([
+    $('#' + id_ddl_proveedorInsumos + ' option: selected').val(),
+    $('#' + id_precioInsumos).val(),
+    new Date(f_cotizacion[0], f_cotizacion[1] - 1, f_cotizacion[2]).getTime()
+  ]);
+  return proveedor;
 }
-//Construir el JSON de la obra
-function datosAltaObra(){
-  var obra = {};
-  obra = {
-    clave_obra : $('#' + id_clave_obra).val(),
-    nombre: $('#' + id_nombre_obra).val(),
-    id_cliente: $('#' + id_ddl_cliente_obra + ' option:selected').val(),
-    habilitada: true,
-    direccion: direccionAltaObra(),
-    retencion_fondo_garantia: parseFloat($('#' + id_garantia_obra).val()),
-    fechas: fechasAltaObra()
-  }
-  return obra;
-}
-//Construir el JSON del proceso PC00
-function datosPC00(){
-  var pc00 = {};
-  pc00 = {
-    nombre: "PREPROYECTO",
-    alcance:"Trabajo previo a firmar contrato",
-    num_subprocesos: 0,
-    subprocesos:{
-      PC00:{
-        nombre: "PREPROYECTO",
-        alcance: "Trabajo previo a firmar contrato"
-      }
-    }
-  }
-  return pc00;
-}
-//Construir el JSON del proceso MISC
-function datosMISC(fechas){
-  var misc = {};
-  misc = {
-    nombre: "MISCELANEOS",
-    alcance:"Miscelaneos",
-    num_subprocesos: 0,
-    subprocesos:{
-      MISC:{
-        nombre: "MISCELANEOS",
-        alcance: "",
-        fechas: fechas,
-      }
-    }
-  }
-  return misc
-}
-//Construir el JSON del proceso ADIC
-function datosADIC(){
-  var adic = {};
-  adic = {
-    nombre: "ADICIONALES",
-    alcance:"Adicionales",
-    num_subprocesos: 0
-  }
-  return adic;
-}
+
 //Llenar los campos en caso de existir la clave de la obra
-function llenaCamposObra(clave){
-  firebase.database().ref(rama_bd_obras + "/obras").orderByChild('clave_obra').equalTo(clave).limitToFirst(1).once("value").then(function(snapshot){
+function llenaCamposInsumo(clave){
+  firebase.database().ref(rama_bd_insumos + "/productos").orderByChild('clave_obra').equalTo(clave).limitToFirst(1).once("value").then(function(snapshot){
       snapshot.forEach(function(child_snap){
           var value = child_snap.val();
           if (value){
-              existe_obra = true;
+              existe_insumo = true;
               uid_existente = child_snap.key;
-              var direccion = value.direccion;
-              var fechas = value.fechas;
-              var fecha;
-              $('#' + id_nombre_obra).val(value.nombre);
-              $('#' + id_ddl_cliente_obra).val(value.id_cliente);
-              $('#' + id_garantia_obra).val(value.retencion_fondo_garantia);
-              $('#' + id_estado_obra).val(direccion.estado);
-              $('#' + id_ciudad_obra).val(direccion.ciudad);
-              $('#' + id_colonia_obra).val(direccion.colonia);
-              $('#' + id_calle_obra).val(direccion.calle);
-              $('#' + id_codigo_postal_obra).val(direccion.cp);
-              $('#' + id_numero_obra).val(direccion.numero);
-              fecha = new Date(fechas.fecha_inicio_teorica);
-              $('#' + id_fecha_inicio_obra).val(fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2));
-              fecha = new Date(fechas.fecha_final_teorica);
-              $('#' + id_fecha_final_obra).val(fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2));
-              highLightAllObra();
+              $('#' + id_descripcionInsumos).val(value.descripcion),
+              $('#' + id_catalogoInsumos).val(value.catalogo),
+              $('#' + id_catfabricInsumos).val(value.catfabric),
+              $('#' + id_ddl_marcaInsumos).val(value.marca),
+              $('#' + id_ddl_unidadInsumos).val(value.unidad),
+              $('#' + id_ddl_clasificacionInsumos).val(value.clasificacion),
+              $('#' + id_ddl_categoriaInsumos).val(value.categoria)
+
+              highLightProductoInsumo();
           } else {
-              existe_obra = false;
+              existe_insumo = false;
           }
       });
   });
-}
-
-//Dar formato AAAAMMDD a las fechas
-function fechasProgramadasObra(){
-  var f_inicio = $('#' + id_fecha_inicio_obra).val().split('.');
-  var f_final = $('#' + id_fecha_final_obra).val().split('.');
-  var lista_obra_inicio = f_inicio[0] + ("0" + f_inicio[1]).slice(-2) + ("0" + f_inicio[2]).slice(-2);
-  var lista_obra_final = f_final[0] + ("0" + f_final[1]).slice(-2) + ("0" + f_final[2]).slice(-2);
-  var fechas = {
-    inicio: lista_obra_inicio,
-    final: lista_obra_final
-  }
-  return fechas;
 }
 
 // función que actualiza la tabla (revisar librería DataTable para ver funcionalidad)
 // se utiliza on "value" para que en cada movimiento en la base de datos "colaboradores", la tabla se actualize
 // automáticamente.
 function actualizarTablaInsumos(){
-    firebase.database().ref(rama_bd_obras + "/obras").on("value",function(snapshot){
-        var datos_obras = [];
-        snapshot.forEach(function(obraSnap){
-            var uid = obraSnap.key;
-            var obra = obraSnap.val();
-            var clave = obra.clave_obra;
-            var nombre = obra.nombre;
-            var habilitada = obra.habilitada;
-            var fondo_garantia = obra.retencion_fondo_garantia;
-            var direccion_json = obra.direccion;
-            var fechas = obra.fechas;
-            var id_cliente = obra.id_cliente;
-            var terminada = obra.terminada;
-            var cliente;
-            firebase.database().ref(rama_bd_clientes + "/despachos/" + id_cliente + "/nombre").on("value", function(snapcliente){
-              cliente = snapcliente.val();
-            });
-
-            var direccion = direccion_json.calle + "/" + direccion_json.numero + "/" +
-                            direccion_json.colonia + "/" + direccion_json.ciudad + "/" +
-                            direccion_json.estado + "/" + direccion_json.cp;
-            var direccion_text = direccion_json.calle + " " + direccion_json.numero + ", " +
-                              direccion_json.colonia + ". " + direccion_json.ciudad + ", " +
-                              direccion_json.estado + ". CP: " + direccion_json.cp;
-
-            var fecha = new Date(fechas.fecha_inicio_teorica);
-            var fecha_inicio = fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2);
-            fecha = new Date(fechas.fecha_final_teorica);
-            var fecha_final = fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2);
-
-            var icon_class = "";
-            if(habilitada) {
-                icon_class = "'icono_verde fas fa-check-circle'";
-            } else {
-                icon_class = "'icono_rojo fas fa-times-circle'"
-            }
-            if (terminada){
-              terminada = "Sí";
-            } else {
-              terminada = "No";
-            }
-
-            datos_obras.push([
-                uid,
-                id_cliente,
-                clave,
-                nombre,
-                cliente,
-                direccion,
-                direccion_text,
-                fondo_garantia,
-                fecha_inicio,
-                fecha_final,
-                terminada,
-                "<button type='button' class='btn btn-transparente' onclick='habilitarObra(" + habilitada + "," + "\`"  + uid  + "\`" + ")'><i class=" + icon_class + "></i></button>",
+    firebase.database().ref(rama_bd_insumos + "/productos").on("value",function(snapshot){
+        var datos_insumos = [];
+        snapshot.forEach(function(insumoSnap){
+            var uid = insumoSnap.key;
+            var insumo = insumoSnap.val();
+            datos_insumos.push([
+                insumoSnap.key,
+                insumo.catalogo,
+                insumo.descripcion,
+                insumo.catfabric,
+                insumo.marca,
+                marcas.val()[insumo.marca]["nombre"],
+                insumo.unidad,
+                unidades.val()[insumo.unidad]["nombre"],
+                insumo.clasificacion,
+                clasificaciones.val()[insumo.clasificacion]["nombre"],
+                insumo.categoria,
+                categorias.val()[insumo.categoria]["nombre"]
             ]);
         });
 
-        tabla_obra = $('#'+ id_dataTable_obra).DataTable({
+        tabla_insumo = $('#'+ id_dataTable_insumo).DataTable({
             destroy: true,
-            data: datos_obras,
+            data: datos_insumos,
             language: idioma_espanol,
             "autoWidth": false,
             "columnDefs": [
-                { "width": "150px", "targets": 3 },
-                { "width": "100px", "targets": 6 },
+                { "width": "150px", "targets": 2 },
                 {
                     targets: -2,
                     className: 'dt-body-center'
                 },
                 { "visible": false, "targets": 0 }, //campos auxiliares
-                { "visible": false, "targets": 1 },
-                { "visible": false, "targets": 5 },
+                { "visible": false, "targets": 4 },
+                { "visible": false, "targets": 6 },
+                { "visible": false, "targets": 8 },
+                { "visible": false, "targets": 10 },
                 {
                     "targets": -1,
                     "data": null,
                     "defaultContent": "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>"
-                },
-                { targets: [2,7,8,9,10], className: 'dt-body-center'},
+                }
               ]
         });
         //Funcion para llenar los campos cuando se quiere editar desde las opciones de la tabla
-        $('#' + id_dataTable_obra + ' tbody').on( 'click', '.editar', function () {
-            highLightAllObra();
-            var data = tabla_obra.row( $(this).parents('tr') ).data();
-            var direccion = data[5].split("/");
-            resetFormObra();
-            existe_obra = true;
+        $('#' + id_dataTable_insumo + ' tbody').on( 'click', '.editar', function () {
+            highLightProductoInsumo();
+            var data = tabla_insumo.row( $(this).parents('tr') ).data();
+            resetFormInsumo();
+            existe_insumo = true;
             uid_existente = data[0];
-            $('#' + id_clave_obra).val(data[2]);
-            $('#' + id_nombre_obra).val(data[3]);
-            $('#' + id_ddl_cliente_obra).val(data[1]);
-            $('#' + id_garantia_obra).val(data[7]);
-            $('#' + id_estado_obra).val(direccion[4]);
-            $('#' + id_ciudad_obra).val(direccion[3]);
-            $('#' + id_colonia_obra).val(direccion[2]);
-            $('#' + id_calle_obra).val(direccion[0]);
-            $('#' + id_codigo_postal_obra).val(direccion[5]);
-            $('#' + id_numero_obra).val(direccion[1]);
-            $('#' + id_fecha_inicio_obra).val(data[8]);
-            $('#' + id_fecha_final_obra).val(data[9]);
+            $('#' + id_catalogoInsumos ).val(data[1]);
+            $('#' + id_descripcionInsumos ).val(data[2]);
+            $('#' + id_catfabricInsumos ).val(data[3]);
+            $('#' + id_ddl_marcaInsumos ).val(data[4]);
+            $('#' + id_ddl_unidadInsumos ).val(direccion[6]);
+            $('#' + id_ddl_clasificacionInsumos ).val(direccion[8]);
+            $('#' + id_ddl_categoriaInsumos ).val(direccion[10]);
+            actualizaTablaProveedoresInsumo(data[0]);
         } );
     });
 }
 
-function llenaDdlMarca(){
+function highLightProductoInsumo(){
+  highLight(id_catalogoInsumos);
+  highLight(id_descripcionInsumos);
+  highLight(id_catfabricInsumos);
+  highLight(id_ddl_marcaInsumos);
+  highLight(id_ddl_unidadInsumos);
+  highLight(id_ddl_clasificacionInsumos);
+  highLight(id_ddl_categoriaInsumos);
+}
+
+function llenaDdlMarcaInsumo(){
   // Llenado del ddl de marca
   $('#' + id_ddl_marcaInsumos).empty();
   var select = document.getElementById(id_ddl_marcaInsumos);
@@ -476,16 +393,15 @@ function llenaDdlMarca(){
   option.text = option.value = "";
   select.appendChild(option);
   var marca;
-  firebase.database().ref(rama_bd_insumos + "/marcas").orderByChild('nombre').on('child_added',function(snapshot){
-      marca = snapshot.val();
-      option = document.createElement('option');
-      option.value = snapshot.key;
-      option.text = marca.nombre;
-      select.appendChild(option);
+  marcas.forEach(function(snapChild){
+    option = document.createElement('option');
+    option.value = snapChild.key;
+    option.text = snapChild.val().nombre;
+    select.appendChild(option);
   });
 }
 
-function llenaDdlUnidad(){
+function llenaDdlUnidadInsumo(){
   // Llenado del ddl de unidad
   $('#' + id_ddl_unidadInsumos).empty();
   var select = document.getElementById(id_ddl_unidadInsumos);
@@ -494,16 +410,15 @@ function llenaDdlUnidad(){
   option.text = option.value = "";
   select.appendChild(option);
   var unidad;
-  firebase.database().ref(rama_bd_insumos + "/unidades").orderByChild('nombre').on('child_added',function(snapshot){
-      unidad = snapshot.val();
+  unidades.forEach(function(snapChild){
       option = document.createElement('option');
-      option.value = snapshot.key;
-      option.text = unidad.nombre;
+      option.value = snapChild.key;
+      option.text = snapChild.val().nombre;
       select.appendChild(option);
   });
 }
 
-function llenaDdlCategoria(){
+function llenaDdlCategoriaInsumo(){
   // Llenado del ddl de categoria
   $('#' + id_ddl_categoriaInsumos).empty();
   var select = document.getElementById(id_ddl_categoriaInsumos);
@@ -512,16 +427,15 @@ function llenaDdlCategoria(){
   option.text = option.value = "";
   select.appendChild(option);
   var categoria;
-  firebase.database().ref(rama_bd_insumos + "/categorias").orderByChild('nombre').on('child_added',function(snapshot){
-      categoria = snapshot.val();
+  categorias.forEach(function(snapChild){
       option = document.createElement('option');
-      option.value = snapshot.key;
-      option.text = categoria.nombre;
+      option.value = snapChild.key;
+      option.text = snapChild.val().nombre;
       select.appendChild(option);
   });
 }
 
-function llenaDdlClasificacion(){
+function llenaDdlClasificacionInsumo(){
   // Llenado del ddl de proveedor
   $('#' + id_ddl_clasificacionInsumos).empty();
   var select = document.getElementById(id_ddl_clasificacionInsumos);
@@ -530,16 +444,15 @@ function llenaDdlClasificacion(){
   option.text = option.value = "";
   select.appendChild(option);
   var clasificacion;
-  firebase.database().ref(rama_bd_insumos + "/clasificaciones").orderByChild('nombre').on('child_added',function(snapshot){
-      clasificacion = snapshot.val();
+  clasificaciones.forEach(function(snapChild){
       option = document.createElement('option');
-      option.value = snapshot.key;
-      option.text = clasificacion.nombre;
+      option.value = snapChild.key;
+      option.text = snapChild.val().nombre;
       select.appendChild(option);
   });
 }
 
-function llenaDdlProveedor(){
+function llenaDdlProveedorInsumo(){
   // Llenado del ddl de proveedor
   $('#' + id_ddl_proveedorInsumos).empty();
   var select = document.getElementById(id_ddl_proveedorInsumos);
@@ -548,11 +461,10 @@ function llenaDdlProveedor(){
   option.text = option.value = "";
   select.appendChild(option);
   var proveedor;
-  firebase.database().ref(rama_bd_insumos + "/proveedores").orderByChild('razon_social').on('child_added',function(snapshot){
-      proveedor = snapshot.val();
+  clasificaciones.forEach(function(snapChild){
       option = document.createElement('option');
-      option.value = snapshot.key;
-      option.text = proveedor.razon_social;
+      option.value = snapChild.key;
+      option.text = snapChild.val().razon_social;
       select.appendChild(option);
   });
 }
