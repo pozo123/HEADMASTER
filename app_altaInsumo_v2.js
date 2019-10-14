@@ -177,8 +177,8 @@ $('#' + id_botonAgregarProveedorInsumos).click(function() {
       tabla_proveedorInsumo.row.add(altaProveedorInsumo()).draw();
     }
   }
+  resetFormProveedorInsumo();
   existe_proveedor= false;
-
 });
 
 // ----------------------- VALIDACIÓN DE FORMULARIO ------------------------
@@ -536,7 +536,7 @@ function llenaDdlProveedorInsumo(){
   option.text = option.value = "";
   select.appendChild(option);
   var proveedor;
-  clasificaciones.forEach(function(snapChild){
+  proveedores.forEach(function(snapChild){
       option = document.createElement('option');
       option.value = snapChild.key;
       option.text = snapChild.val().razon_social;

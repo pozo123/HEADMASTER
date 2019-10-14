@@ -30,7 +30,7 @@ var registro_antiguo;
 var tabla_contactoProveedor;
 
 //Dar formato a los elementos existentes
-$('#' + id_tab_insumo).click(function() {
+$('#' + id_tab_proveedor).click(function() {
     existe_proveedor=false;
     uid_existente="";
     existe_contacto=false;
@@ -48,85 +48,44 @@ $('#' + id_tab_insumo).click(function() {
 $('#' + id_boton_AgregarProveedoress).click(function() {
   //Validar datos ingresados
   if (validateFormProveedor()){
-    var datos_insumo = altaProductoInsumo();
-    var proveedores = recuperaDatosProveedoresInsumo();
-    console.log(datos_insumo);
-    console.log(proveedores);
+    var datos_proveedor = altaProveedor();
+    var contactos = recuperaDatosContactosProveedor();
+    console.log(datos_proveedor);
+    console.log(contactos);
+    datos_proveedor["contacto"] = contactos;
+    console.log(datos_proveedor);
     //Decidir si editar o dar de alta
-    if (existe_insumo){ //editar
+    if (existe_proveedor){ //editar
       console.log("Editar");
-        firebase.database().ref(rama_bd_insumos + "/productos/" + uid_existente).once("value").then(function(snapshot){
+        firebase.database().ref(rama_bd_insumos + "/proveedores/" + uid_existente).once("value").then(function(snapshot){
             var registro_antiguo = snapshot.val();
-            var insumo_update = {};
+            var proveedor_update = {};
             //Actualizar los campos de la obra
-            var path_insumo = "productos/" + uid_existente;
-            insumo_update[path_insumo] = datos_insumo;
+            var path_proveedor = "proveedores/" + uid_existente;
+            proveedor_update[path_proveedor] = datos_proveedor;
 
-            if(registro_antiguo.marca !== datos_insumo.marca){
-              insumo_update["listas/marcas/" + registro_antiguo.marca +"/"+ uid_existente] = null;
-              insumo_update["listas/marcas/" + datos_insumo.marca +"/"+ uid_existente] = true;
-            }
-            if(registro_antiguo.unidad !== datos_insumo.unidad){
-              insumo_update["listas/unidades/" + registro_antiguo.unidad +"/"+ uid_existente] = null;
-              insumo_update["listas/unidades/" + datos_insumo.unidad +"/"+ uid_existente] = true;
-            }
-            if(registro_antiguo.clasificacion !== datos_insumo.clasificacion){
-              insumo_update["listas/clasificaciones/" + registro_antiguo.clasificacion +"/"+ uid_existente] = null;
-              insumo_update["listas/clasificaciones/" + datos_insumo.clasificacion +"/"+ uid_existente] = true;
-            }
-            if(registro_antiguo.categoria !== datos_insumo.categoria){
-              insumo_update["listas/categorias/" + registro_antiguo.categoria +"/"+ uid_existente] = null;
-              insumo_update["listas/categorias/" + datos_insumo.categoria +"/"+ uid_existente] = true;
-            }
-            insumo_update["listas/productos/" + uid_existente] = proveedores;
-            for(key in proveedores){
-              insumo_update["listas/proveedores/" + key + "/"+ uid_existente ] = proveedores[key];
-            }
-            console.log(registro_proveedores);
-            for (key in registro_proveedores){
-              if(proveedores[key] == undefined){
-                insumo_update["listas/proveedores/" + key + "/"+ uid_existente ] = null;
-              }
-            }
-
-            console.log(insumo_update);
-            firebase.database().ref(rama_bd_insumos).update(insumo_update);
+            console.log(proveedor_update);
+            firebase.database().ref(rama_bd_insumos).update(proveedor_update);
 
             // PAD
-            pda("modificacion", rama_bd_insumos + "/" + path_insumo, registro_antiguo);
+            pda("modificacion", rama_bd_insumos + "/" + path_proveedor, registro_antiguo);
             alert("¡Edición exitosa!");
-            resetFormInsumo();
+            resetFormProveedor();
         });
     } else { //dar de alta
       console.log("Dar de alta");
-        firebase.database().ref(rama_bd_insumos + "/productos").push(datos_insumo).then(function(snapshot){
+        firebase.database().ref(rama_bd_insumos + "/proveedores").push(datos_proveedor).then(function(snapshot){
             var regKey = snapshot.key;
-            var insumo_update = {};
-            var marca = $('#' + id_ddl_marcaInsumos + ' option:selected').val();
-            var unidad = $('#' + id_ddl_unidadInsumos + ' option:selected').val();
-            var clasificacion = $('#' + id_ddl_clasificacionInsumos + ' option:selected').val();
-            var categoria = $('#' + id_ddl_categoriaInsumos + ' option:selected').val();
-            // Actualizar listas
-            insumo_update["listas/unidades/" + unidad +"/"+ regKey] = true;
-            insumo_update["listas/marcas/" + marca +"/"+ regKey] = true;
-            insumo_update["listas/clasificaciones/" + clasificacion +"/"+ regKey] = true;
-            insumo_update["listas/categorias/" + categoria +"/"+ regKey] = true;
-            insumo_update["listas/productos/" + regKey ] = proveedores;
-            for(key in proveedores){
-              insumo_update["listas/proveedores/" + key + "/"+ regKey ] = proveedores[key];
-            }
-
-            console.log(insumo_update);
-            firebase.database().ref(rama_bd_insumos).update(insumo_update);
 
             // PAD
-            pda("alta", rama_bd_insumos + "/productos/" + regKey, "");
+            pda("alta", rama_bd_insumos + "/proveedores/" + regKey, "");
             alert("¡Alta exitosa!");
-            resetFormInsumo();
+            resetFormProveedor();
         });
     };
   };
 });
+
 //Funcionalidad del boton 'Borrar todo'
 $('#' + id_boton_BorrarProveedores).click(function() {
   resetFormProveedor();
@@ -142,6 +101,7 @@ $('#' + id_boton_AgregarContactoProveedores).click(function() {
       tabla_contactoProveedor.row.add(altaContactoProveedor()).draw();
     }
   }
+  resetContactoProveedor();
   existe_contacto= false;
 });
 
@@ -155,7 +115,7 @@ $('#' + id_rfcProveedores).change(function(){
 });
 
 $('#' + id_razonSocialProveedores ).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_0123456789áéíóú/.",e)
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_0123456789áéíóú/.,",e)
 });
 
 $('#' + id_razonSocialProveedores).change(function(){
@@ -163,7 +123,7 @@ $('#' + id_razonSocialProveedores).change(function(){
 });
 
 $('#' + id_direccionProveedores).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_0123456789áéíóú/.",e)
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_0123456789áéíóú/.,#",e)
 });
 
 $('#' + id_direccionProveedores).change(function(){
@@ -199,6 +159,9 @@ function resetFormProveedor(){
   $('#' + id_razonSocialProveedores ).val("");
   $('#' + id_direccionProveedores ).val("");
   existe_proveedor=false;
+  uid_existente = "";
+  resetContactoProveedor();
+  actualizarTablaContactosProveedor();
 }
 
 function resetContactoProveedor(){
@@ -206,6 +169,7 @@ function resetContactoProveedor(){
   $('#' + id_telefonoProveedores).val("");
   $('#' + id_correoProveedores).val("");
   existe_contacto=false;
+  uid_existente_contacto = "";
 }
 
 //Validar que no esté vacío nungún campo
@@ -258,7 +222,6 @@ function altaProveedor(){
 
 function altaContactoProveedor(){
   var contacto = [];
-  var icon_class = "'icono_rojo fas fa-times-circle'";
   var uid_contacto;
   if(existe_contacto){
     uid_contacto = uid_existente_contacto;
@@ -271,15 +234,16 @@ function altaContactoProveedor(){
     $('#'+id_telefonoProveedores).val(),
     $('#'+id_correoProveedores).val(),
     "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>",
-    "<button type='button' class='desplegar btn btn-transparente'><i class=" + icon_class + "></i></button>"
+    "<button type='button' class='eliminar btn btn-transparente'><i class='icono_rojo fas fa-times-circle'></i></button>"
   ];
-  return proveedor;
+  return contacto;
 }
 
 // función que actualiza la tabla (revisar librería DataTable para ver funcionalidad)
 // se utiliza on "value" para que en cada movimiento en la base de datos "colaboradores", la tabla se actualize
 // automáticamente.
 function actualizarTablaProveedores(){
+  console.log("Actualizando tabla proveedores");
     firebase.database().ref(rama_bd_insumos + "/proveedores").on("value",function(snapshot){
         var datos_proveedores = [];
         snapshot.forEach(function(proveedoresnap){
@@ -291,7 +255,7 @@ function actualizarTablaProveedores(){
                 proveedor.razon_social,
                 proveedor.direccion,
                 "<button type='button' class='btn btn-dark'><span class='fas fa-address-book'></span></button>",
-                "<button type='button' class='btn btn-dark'><span class='fas fa-hammer'></span></button>"
+                "<button type='button' class='btn btn-dark'><i class='fas fa-toolbox'></i></button>"
             ]);
         });
 
@@ -311,7 +275,8 @@ function actualizarTablaProveedores(){
                     "targets": -1,
                     "data": null,
                     "defaultContent": "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>"
-                }
+                },
+                { targets: [4,5,6], className: 'dt-body-center'}
               ]
         });
         //Funcion para llenar los campos cuando se quiere editar desde las opciones de la tabla
@@ -330,6 +295,7 @@ function actualizarTablaProveedores(){
 }
 
 function actualizarTablaContactosProveedor(){
+    console.log("Actualizando tabla contactos");
     firebase.database().ref(rama_bd_insumos + "/proveedores/"+ uid_existente +"/contacto").on("value",function(snapshot){
         if (snapshot.exists()){
           registro_contactos = snapshot.val();
@@ -337,7 +303,6 @@ function actualizarTablaContactosProveedor(){
           registro_contactos = {};
         }
         var datos_contactos = [];
-        var icon_class = "'icono_rojo fas fa-times-circle'";
         snapshot.forEach(function(contactoSnap){
             var uid = contactoSnap.key;
             var contacto = contactoSnap.val();
@@ -347,13 +312,13 @@ function actualizarTablaContactosProveedor(){
                 contacto.telefono,
                 contacto.correo,
                 "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>",
-                "<button type='button' class='desplegar btn btn-transparente'><i class=" + icon_class + "></i></button>",
+                "<button type='button' class='eliminar btn btn-transparent'><i class='icono_rojo fas fa-times-circle'></i></button>"
             ]);
         });
 
         tabla_contactoProveedor = $('#'+ id_dataTableContactosProveedores).DataTable({
             destroy: true,
-            data: datos_proveedores,
+            data: datos_contactos,
             language: idioma_espanol,
             "autoWidth": false,
             "columnDefs": [
@@ -362,14 +327,15 @@ function actualizarTablaContactosProveedor(){
                     targets: -2,
                     className: 'dt-body-center'
                 },
-                { "visible": false, "targets": 0 } //campos auxiliares
+                { "visible": false, "targets": 0 }, //campos auxiliares
+                { targets: [4,5], className: 'dt-body-center'}
               ]
         });
         //Funcion para llenar los campos cuando se quiere editar desde las opciones de la tabla
         $('#' + id_dataTableContactosProveedores + ' tbody').on( 'click', '.editar', function () {
             highLightContactoProveedor();
             var data = tabla_contactoProveedor.row( $(this).parents('tr') ).data();
-            resetFormContactoProveedor();
+            resetContactoProveedor();
             existe_contacto = true;
             uid_existente_contacto = data[0];
             existe_contacto_index = tabla_contactoProveedor.row(this).index();
@@ -377,21 +343,31 @@ function actualizarTablaContactosProveedor(){
             $('#' + id_telefonoProveedores).val(data[2]);
             $('#' + id_correoProveedores).val(data[3]);
         } );
+
+        $('#' + id_dataTableContactosProveedores + ' tbody').on( 'click', '.eliminar', function () {
+            console.log("Eliminar");
+            tabla_contactoProveedor.row( $(this).parents('tr') ).remove().draw();
+            existe_contacto = false;
+            uid_existente_contacto = "";
+            existe_contacto_index = -1;
+        } );
     });
 }
 
-function recuperaDatosProveedoresInsumo(){
-  var proveedoresInsumo = {};
-  $('#' + id_dataTableProveedoresInsumos).DataTable().rows().iterator('row', function(context, index){
+function recuperaDatosContactosProveedor(){
+  var contactosProveedor = {};
+  var cont = 0;
+  $('#' + id_dataTableContactosProveedores).DataTable().rows().iterator('row', function(context, index){
     var data = this.row(index).data();
     console.log(data);
-    var f_cotizacion = data[3].split('.');
-    proveedoresInsumo[data[0]]={
-      precio: deformatMoney(data[2]),
-      fecha: new Date(f_cotizacion[0], f_cotizacion[1] - 1, f_cotizacion[2]).getTime()
+    contactosProveedor["CONT-"+cont]={
+      nombre: data[1],
+      telefono: data[2],
+      correo: data[3]
     };
+    cont++;
   });
-  return proveedoresInsumo;
+  return contactosProveedor;
 }
 
 function highLightContactoProveedor(){

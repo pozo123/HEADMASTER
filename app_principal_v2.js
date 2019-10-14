@@ -16,7 +16,7 @@ var json_personal = {};
 
 var id_div_dropdown_areas = "dropdown_areas";
 
-var version = "version2";
+var version = "test";
 
 var rama_bd_personal = version + "/personal";
 var rama_bd_obras = version + "/obras";
@@ -53,7 +53,7 @@ $(document).ready(function() {
 
     document.getElementById(id_week_label).innerHTML = "Semana " + getWeek(new Date().getTime())[0];
 
-/* 
+/*
     firebase.database().ref("rrhh/trabajadores").once("value").then(function(snapshot){
 
         var datos = {
