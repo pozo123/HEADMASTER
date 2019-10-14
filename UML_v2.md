@@ -573,14 +573,14 @@ Nota: Todo float se ingresa a 2 decimales.
               - categorias
                   - categoria  
                       - id_producto: true
-              - marca
+              - marcas
                   - marca
                       - id_producto: true
-              - clasificacion
+              - clasificaciones
                   - clasificacion
                       - id_producto: true
-              - ramo
-                  - ramos
+              - unidades
+                  - unidad
                       - id_producto: true
     - matriciales
         - obras

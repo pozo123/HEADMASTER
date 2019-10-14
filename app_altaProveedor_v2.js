@@ -1,88 +1,55 @@
 // id's de los elementos HTML
-var id_tab_insumo = "tabAltaInsumos";
-var id_form_insumo = "formInsumos";
-var id_dataTable_insumo = "dataTableInsumos";
+var id_tab_proveedor = "tabAltaProveedores";
+var id_form_proveedor = "formProveedores";
+var id_dataTable_proveedor = "dataTableProveedores";
 
 //Definición de variables del formulario
-var id_catalogoInsumos = "catalogoInsumos";
-var id_descripcionInsumos = "descripcionInsumos";
-var id_catfabricInsumos = "catfabricInsumos";
-var id_ddl_marcaInsumos = "ddl_marcaInsumos";
-var id_ddl_unidadInsumos = "ddl_unidadInsumos";
-var id_ddl_clasificacionInsumos = "ddl_clasificacionInsumos";
-var id_ddl_categoriaInsumos = "ddl_categoriaInsumos";
-var id_ddl_proveedorInsumos = "ddl_proveedorInsumos";
-var id_precioInsumos = "precioInsumos";
-var id_fecha_cotizacionInsumos = "fechaCotizacionInsumos";
-var id_botonAgregarProveedorInsumos = "botonAgregarProveedorInsumos";
-var id_dataTableProveedoresInsumos = "dataTableProveedoresInsumos";
+var id_rfcProveedor = "rfcProveedores";
+var id_razonSocialProveedor = "razonSocialProveedores";
+var id_direccionProveedores = "direccionProveedores";
+var id_contactoProveedores = "contactoProveedores";
+var id_telefonoProveedores = "telefonoProveedores";
+var id_correoProveedores = "correoProveedores";
+var id_boton_AgregarContactoProveedores = "botonAgregarContactoProveedores";
+var id_dataTableContactosProveedores = "dataTableContactosProveedores";
 
-var id_boton_AgregarInsumos = "botonAgregarInsumos";
-var id_boton_BorrarInsumos = "botonBorrarInsumos";
+var id_boton_AgregarProveedoress = "botonAgregarProveedores";
+var id_boton_BorrarProveedores = "botonBorrarProveedores";
 
 //Variables globales para controlar edición
-var existe_insumo;
+var existe_proveedor;
 var uid_existente;
 
-var existe_proveedor;
-var uid_existente_proveedor;
-var existe_proveedor_index;
+var existe_contacto;
+var uid_existente_contacto;
+var existe_contacto_index;
 
-var registro_proveedores;
+var registro_contactos;
 var registro_antiguo;
 
-var tabla_proveedorInsumo;
-
-var marcas;
-var categorias;
-var clasificaciones;
-var unidades;
-var proveedores;
+var tabla_contactoProveedor;
 
 jQuery.datetimepicker.setLocale('es');
 
 //Dar formato a los elementos existentes
 $('#' + id_tab_insumo).click(function() {
-    uid_existente="";
-    existe_insumo=false;
     existe_proveedor=false;
-    uid_existente_proveedor="";
-    existe_proveedor_index=-1;
-    registro_proveedores={};
+    uid_existente="";
+    existe_contacto=false;
+    uid_existente_contacto="";
+    existe_contacto_index=-1;
+    registro_contactos={};
     registro_antiguo = {};
     resetFormInsumo();
-    // Con las líneas siguiente se genera el cuadro para las fechas en el HTML
-    jQuery('#' + id_fecha_cotizacionInsumos).datetimepicker(
-        {timepicker:false, weeks:true,format:'Y.m.d'}
-    );
-    firebase.database().ref(rama_bd_insumos + "/marcas").orderByChild('nombre').on('value',function(snapshot){
-      marcas = snapshot;
-      llenaDdlMarcaInsumo();
-    });
-    firebase.database().ref(rama_bd_insumos + "/unidades").orderByChild('nombre').on('value',function(snapshot){
-      unidades = snapshot;
-      llenaDdlUnidadInsumo();
-    });
-    firebase.database().ref(rama_bd_insumos + "/categorias").orderByChild('nombre').on('value',function(snapshot){
-      categorias = snapshot;
-      llenaDdlCategoriaInsumo();
-    });
-    firebase.database().ref(rama_bd_insumos + "/clasificaciones").orderByChild('nombre').on('value',function(snapshot){
-      clasificaciones = snapshot;
-      llenaDdlClasificacionInsumo();
-    });
-    firebase.database().ref(rama_bd_insumos + "/proveedores").orderByChild('razon_social').on('value',function(snapshot){
-      proveedores = snapshot;
-      llenaDdlProveedorInsumo();
-    });
-    actualizarTablaInsumos();
-    actualizarTablaProveedoresInsumo();
+
+    actualizarTablaProveedores();
+    actualizarTablaContactosProveedor();
 });
 
 //Funcionalidad del boton 'Registrar/Editar'
-$('#' + id_boton_AgregarInsumos).click(function() {
+$('#' + id_boton_AgregarProveedoress).click(function() {
   //Validar datos ingresados
-  if (validateFormInsumo()){
+  if (validateFormProveedor()){
     var datos_insumo = altaProductoInsumo();
     var proveedores = recuperaDatosProveedoresInsumo();
     console.log(datos_insumo);
@@ -163,124 +130,116 @@ $('#' + id_boton_AgregarInsumos).click(function() {
   };
 });
 //Funcionalidad del boton 'Borrar todo'
-$('#' + id_boton_BorrarInsumos).click(function() {
-  resetFormInsumo();
-  existe_insumo=false;
+$('#' + id_boton_BorrarProveedores).click(function() {
+  resetFormProveedor();
+  existe_proveedor=false;
 });
 
-$('#' + id_botonAgregarProveedorInsumos).click(function() {
-  if(validateProveedorInsumo()){
-    if(existe_proveedor){
-      tabla_proveedorInsumo.row(existe_proveedor_index).data(altaProveedorInsumo()).draw();
+$('#' + id_boton_AgregarContactoProveedores).click(function() {
+  if(validateContactoProveedor()){
+    if(existe_contacto){
+      tabla_contactoProveedor.row(existe_contacto_index).data(altaContactoProveedor()).draw();
     }else{
-      tabla_proveedorInsumo.row.add(altaProveedorInsumo()).draw();
+      tabla_contactoProveedor.row.add(altaContactoProveedor()).draw();
     }
   }
-  existe_proveedor= false;
-
+  existe_contacto= false;
 });
 
 // ----------------------- VALIDACIÓN DE FORMULARIO ------------------------
-$('#' + id_catalogoInsumos).keypress(function(e){
-    charactersAllowed(" 0123456789",e)
+$('#' + id_rfcProveedor ).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789",e)
 });
 
-$('#' + id_descripcionInsumos).change(function(){
-    $('#' + id_descripcionInsumos).val($('#' + id_descripcionInsumos).val().toUpperCase());
+$('#' + id_rfcProveedor).change(function(){
+    $('#' + id_rfcProveedor).val($('#' + id_rfcProveedor).val().toUpperCase());
 });
 
-$('#' + id_descripcionInsumos).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_0123456789áéíóú/",e)
+$('#' + id_razonSocialProveedor ).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_0123456789áéíóú/.",e)
 });
 
-$('#' + id_catfabricInsumos).change(function(){
-    $('#' + id_catfabricInsumos).val($('#' + id_catfabricInsumos).val().toUpperCase());
+$('#' + id_razonSocialProveedor).change(function(){
+    $('#' + id_razonSocialProveedor).val(deleteBlankSpaces(id_razonSocialProveedor));
 });
 
-$('#' + id_catfabricInsumos).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-/0123456789",e)
+$('#' + id_direccionProveedores).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_0123456789áéíóú/.",e)
 });
 
-$('#' + id_precioInsumos).keypress(function(e){
-    charactersAllowed("0123456789.",e);
+$('#' + id_direccionProveedores).change(function(){
+  var direccion = deleteBlankSpaces(id_direccionProveedores);
+  direccion = direccion.charAt(0).toUpperCase() + direccion.slice(1);
+  $('#' + id_direccionProveedores).val(direccion);
 });
 
-$('#' + id_precioInsumos).focus(function(){
-  if($('#'+id_precioInsumos).val() !== ""){
-		$('#' + id_precioInsumos).val(deformatMoney($('#' + id_precioInsumos).val()));
-	}
-
+$('#' + id_contactoProveedores ).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_0123456789áéíóú/.",e)
 });
 
-$('#' + id_precioInsumos).focusout(function(){
-  if($('#'+id_precioInsumos).val() !== ""){
-		$('#' + id_precioInsumos).val(formatMoney($('#' + id_precioInsumos).val()));
-	}
+$('#' + id_contactoProveedores ).change(function(){
+  $('#' + id_contactoProveedores).val(corrigeCampoComplejo(id_contactoProveedores));
+});
+
+$('#' + id_telefonoProveedores  ).keypress(function(e){
+    charactersAllowed("extEXT.-0123456789",e)
+});
+
+$('#' + id_correoProveedores  ).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_@.",e)
+});
+
+$('#' + id_correoProveedores).change(function(){
+    $('#' + id_correoProveedores).val($('#' + id_correoProveedores).val().toLowerCase());
 });
 
 // ----------------------- FUNCIONES NECESARIAS ----------------------------
 //Borrar la información de todos los campos
-function resetFormInsumo(){
-  $('#' + id_catalogoInsumos).val("");
-  $('#' + id_descripcionInsumos).val("");
-  $('#' + id_catfabricInsumos).val("");
-  $('#' + id_ddl_marcaInsumos).val("");
-  $('#' + id_ddl_unidadInsumos).val("");
-  $('#' + id_ddl_clasificacionInsumos).val("");
-  $('#' + id_ddl_categoriaInsumos).val("");
-  $('#' + id_ddl_proveedorInsumos).val("");
-  $('#' + id_precioInsumos).val("");
-  $('#' + id_fecha_cotizacionInsumos).val("")
-  existe_insumo=false;
+function resetFormProveedor(){
+  $('#' + id_rfcProveedor ).val("");
+  $('#' + id_razonSocialProveedor ).val("");
+  $('#' + id_direccionProveedores ).val("");
+  existe_proveedor=false;
+}
+
+function resetContactoProveedor(){
+  $('#' + id_contactoProveedores).val("");
+  $('#' + id_telefonoProveedores).val("");
+  $('#' + id_correoProveedores).val("");
+  existe_contacto=false;
 }
 
 //Validar que no esté vacío nungún campo
-function validateFormInsumo(){
-    if ($('#' + id_catalogoInsumos).val() == ""){
-        alert("Escribe el número de catálogo");
-        highLightColor(id_catalogoInsumos,"#FF0000");
+function validateFormProveedor(){
+    if ($('#' + id_rfcProveedor ).val() == ""){
+        alert("Escribe el RFC");
+        highLightColor(id_rfcProveedor,"#FF0000");
         return false;
-    } else if($('#' + id_descripcionInsumos).val() == ""){
-        alert("Escribe la descripcion del producto");
-        highLightColor(id_descripcionInsumos,"#FF0000");
+    } else if($('#' + id_razonSocialProveedor ).val() == ""){
+        alert("Escribe la razón social o nombre del proveedor");
+        highLightColor(id_razonSocialProveedor,"#FF0000");
         return false;
-    } else if($('#' + id_catfabricInsumos).val() == ""){
-        alert("Escribe el catfabric del producto");
-        highLightColor(id_catfabricInsumos,"#FF0000");
-        return false;
-    } else if($('#' + id_ddl_marcaInsumos + 'option:selected').val() == ""){
-        alert("Selecciona una marca para el producto.");
-        highLightColor(id_ddl_marcaInsumos,"#FF0000");
-        return false;
-    } else if($('#' + id_ddl_unidadInsumos + 'option:selected').val() == ""){
-        alert("Selecciona una unidad para el producto.");
-        highLightColor(id_ddl_unidadInsumos,"#FF0000");
-        return false;
-    } else if($('#' + id_ddl_clasificacionInsumos + 'option:selected').val() == ""){
-        alert("Selecciona una clasificacion para el producto.");
-        highLightColor(id_ddl_clasificacionInsumos,"#FF0000");
-        return false;
-    } else if($('#' + id_ddl_categoriaInsumos + 'option:selected').val() == ""){
-        alert("Selecciona una categoría para el producto.");
-        highLightColor(id_ddl_categoriaInsumos,"#FF0000");
+    } else if($('#' + id_direccionProveedores ).val() == ""){
+        alert("Escribe la dirección del proveedor");
+        highLightColor(id_direccionProveedores,"#FF0000");
         return false;
     } else {
         return true;
     }
 }
 
-function validateProveedorInsumo(){
-  if ($('#' + id_ddl_proveedorInsumos + 'option:selected').val() == ""){
-    alert("Selecciona un proveedor.");
-    highLightColor(id_ddl_proveedorInsumos,"#FF0000");
+function validateContactoProveedor(){
+  if ($('#' + id_contactoProveedores).val() == ""){
+    alert("Escribe el nombre del contacto.");
+    highLightColor(id_contactoProveedores,"#FF0000");
     return false;
-  } else if($('#' + id_precioInsumos).val() == ""){
-      alert("Escribe el precio del proveedor para este producto");
-      highLightColor(id_precioInsumos,"#FF0000");
+  } else if($('#' + id_telefonoProveedores ).val() == ""){
+      alert("Escribe el teléfono de contacto");
+      highLightColor(id_telefonoProveedores,"#FF0000");
       return false;
-  } else if($('#' + id_fecha_cotizacionInsumos).val() == ""){
-      alert("Escribe una fecha de vigencia para el precio");
-      highLightColor(id_fecha_cotizacionInsumos,"#FF0000");
+  } else if($('#' + id_correoProveedores ).val() == ""){
+      alert("Escribe el correo de contacto");
+      highLightColor(id_correoProveedores,"#FF0000");
       return false;
   } else {
       return true;
@@ -288,24 +247,19 @@ function validateProveedorInsumo(){
 }
 
 //Construir el JSON de direccion para la obra
-function altaProductoInsumo(){
-  var insumo = {};
-  insumo = {
-      descripcion: $('#' + id_descripcionInsumos).val(),
-      catalogo: $('#' + id_catalogoInsumos).val(),
-      catfabric: $('#' + id_catfabricInsumos).val(),
-      marca: $('#' + id_ddl_marcaInsumos + ' option:selected').val(),
-      unidad: $('#' + id_ddl_unidadInsumos + ' option:selected').val(),
-      clasificacion: $('#' + id_ddl_clasificacionInsumos + ' option:selected').val(),
-      categoria: $('#' + id_ddl_categoriaInsumos + ' option:selected').val()
+function altaProveedor(){
+  var proveedor = {};
+  proveedor = {
+      rfc: $('#' + id_rfcProveedor).val(),
+      razon_social: $('#' + id_razonSocialProveedor).val(),
+      direccion: $('#' + id_direccionProveedores).val()
   };
-  return insumo;
+  return proveedor;
 };
 
-function altaProveedorInsumo(){
-  var proveedor = [];
-  var f_cotizacion = $('#' + id_fecha_cotizacionInsumos).val().split('.');
-  proveedor = [
+function altaContactoProveedor(){
+  var contacto = [];
+  contacto = [
     $('#'+id_ddl_proveedorInsumos + ' option:selected').val(),
     deformatMoney($('#'+id_precioInsumos).val()),
     new Date(f_cotizacion[0], f_cotizacion[1] - 1, f_cotizacion[2]).getTime(),
