@@ -161,6 +161,16 @@ Nota: Todo float se ingresa a 2 decimales.
                                 - score
                                     - horas_programadas: (en horas)
                                     - costo_hora: float (2 decimales)
+        - equipos
+            - obra
+                - iva:
+                - utilidad:
+                -  equipos
+                    - equipo
+                        - nombre
+                        - monto
+                        - cotizacion (url)
+                        
         - copeo
             - id_obra
                 - id_proceso
@@ -572,6 +582,32 @@ Nota: Todo float se ingresa a 2 decimales.
               - ramo
                   - ramos
                       - id_producto: true
+    - matriciales
+        - obras
+            - obra (firebase_id)
+                - id_creador
+                - supervisores
+                    - nombre: string
+                    - prefijo: string
+                - anticipos
+                    - materiales
+                        - iva: int
+                        - procesos
+                            - proceso (id)
+                                - nombre
+                                - entradas
+                                    - entrada (firebase)
+                                        - clave
+                                        - descripcion
+                                        - fecha_prog
+                    - equipos
+                        - entradas
+                            - entrada (firebase)
+                            - nombre
+                            - fecha_primer_pago
+                            - fecha_finiquito
+                            - monto
+                            - porcentaje_requerido
 
 DEFINIR DESPUÉS
 
