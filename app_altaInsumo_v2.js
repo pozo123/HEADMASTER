@@ -166,6 +166,7 @@ $('#' + id_boton_AgregarInsumos).click(function() {
 $('#' + id_boton_BorrarInsumos).click(function() {
   resetFormInsumo();
   existe_insumo=false;
+  existe_proveedor=false;
 });
 
 $('#' + id_botonAgregarProveedorInsumos).click(function() {
@@ -305,38 +306,15 @@ function altaProductoInsumo(){
 function altaProveedorInsumo(){
   var proveedor = [];
   var f_cotizacion = $('#' + id_fecha_cotizacionInsumos).val().split('.');
+  var icon_class = "'icono_rojo fas fa-times-circle'";
   proveedor = [
     $('#'+id_ddl_proveedorInsumos + ' option:selected').val(),
     deformatMoney($('#'+id_precioInsumos).val()),
     new Date(f_cotizacion[0], f_cotizacion[1] - 1, f_cotizacion[2]).getTime(),
-    "<button type='button' class='desplegar btn btn-transparente'><i class=" + icon_class + "></i></button>",
-    "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>"
+    "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>",
+    "<button type='button' class='desplegar btn btn-transparente'><i class=" + icon_class + "></i></button>"
   ];
   return proveedor;
-}
-
-//Llenar los campos en caso de existir la clave de la obra
-function llenaCamposInsumo(clave){
-  firebase.database().ref(rama_bd_insumos + "/productos").orderByChild('clave_obra').equalTo(clave).limitToFirst(1).once("value").then(function(snapshot){
-      snapshot.forEach(function(child_snap){
-          var value = child_snap.val();
-          if (value){
-              existe_insumo = true;
-              uid_existente = child_snap.key;
-              $('#' + id_descripcionInsumos).val(value.descripcion),
-              $('#' + id_catalogoInsumos).val(value.catalogo),
-              $('#' + id_catfabricInsumos).val(value.catfabric),
-              $('#' + id_ddl_marcaInsumos).val(value.marca),
-              $('#' + id_ddl_unidadInsumos).val(value.unidad),
-              $('#' + id_ddl_clasificacionInsumos).val(value.clasificacion),
-              $('#' + id_ddl_categoriaInsumos).val(value.categoria)
-
-              highLightProductoInsumo();
-          } else {
-              existe_insumo = false;
-          }
-      });
-  });
 }
 
 // función que actualiza la tabla (revisar librería DataTable para ver funcionalidad)

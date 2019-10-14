@@ -4,8 +4,8 @@ var id_form_proveedor = "formProveedores";
 var id_dataTable_proveedor = "dataTableProveedores";
 
 //Definición de variables del formulario
-var id_rfcProveedor = "rfcProveedores";
-var id_razonSocialProveedor = "razonSocialProveedores";
+var id_rfcProveedores = "rfcProveedores";
+var id_razonSocialProveedores = "razonSocialProveedores";
 var id_direccionProveedores = "direccionProveedores";
 var id_contactoProveedores = "contactoProveedores";
 var id_telefonoProveedores = "telefonoProveedores";
@@ -29,8 +29,6 @@ var registro_antiguo;
 
 var tabla_contactoProveedor;
 
-jQuery.datetimepicker.setLocale('es');
-
 //Dar formato a los elementos existentes
 $('#' + id_tab_insumo).click(function() {
     existe_proveedor=false;
@@ -40,7 +38,7 @@ $('#' + id_tab_insumo).click(function() {
     existe_contacto_index=-1;
     registro_contactos={};
     registro_antiguo = {};
-    resetFormInsumo();
+    resetFormProveedor();
 
     actualizarTablaProveedores();
     actualizarTablaContactosProveedor();
@@ -133,6 +131,7 @@ $('#' + id_boton_AgregarProveedoress).click(function() {
 $('#' + id_boton_BorrarProveedores).click(function() {
   resetFormProveedor();
   existe_proveedor=false;
+  existe_contacto=false;
 });
 
 $('#' + id_boton_AgregarContactoProveedores).click(function() {
@@ -147,20 +146,20 @@ $('#' + id_boton_AgregarContactoProveedores).click(function() {
 });
 
 // ----------------------- VALIDACIÓN DE FORMULARIO ------------------------
-$('#' + id_rfcProveedor ).keypress(function(e){
+$('#' + id_rfcProveedores ).keypress(function(e){
     charactersAllowed("abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789",e)
 });
 
-$('#' + id_rfcProveedor).change(function(){
-    $('#' + id_rfcProveedor).val($('#' + id_rfcProveedor).val().toUpperCase());
+$('#' + id_rfcProveedores).change(function(){
+    $('#' + id_rfcProveedores).val($('#' + id_rfcProveedores).val().toUpperCase());
 });
 
-$('#' + id_razonSocialProveedor ).keypress(function(e){
+$('#' + id_razonSocialProveedores ).keypress(function(e){
     charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_0123456789áéíóú/.",e)
 });
 
-$('#' + id_razonSocialProveedor).change(function(){
-    $('#' + id_razonSocialProveedor).val(deleteBlankSpaces(id_razonSocialProveedor));
+$('#' + id_razonSocialProveedores).change(function(){
+    $('#' + id_razonSocialProveedores).val(deleteBlankSpaces(id_razonSocialProveedores));
 });
 
 $('#' + id_direccionProveedores).keypress(function(e){
@@ -196,8 +195,8 @@ $('#' + id_correoProveedores).change(function(){
 // ----------------------- FUNCIONES NECESARIAS ----------------------------
 //Borrar la información de todos los campos
 function resetFormProveedor(){
-  $('#' + id_rfcProveedor ).val("");
-  $('#' + id_razonSocialProveedor ).val("");
+  $('#' + id_rfcProveedores ).val("");
+  $('#' + id_razonSocialProveedores ).val("");
   $('#' + id_direccionProveedores ).val("");
   existe_proveedor=false;
 }
@@ -211,13 +210,13 @@ function resetContactoProveedor(){
 
 //Validar que no esté vacío nungún campo
 function validateFormProveedor(){
-    if ($('#' + id_rfcProveedor ).val() == ""){
+    if ($('#' + id_rfcProveedores ).val() == ""){
         alert("Escribe el RFC");
-        highLightColor(id_rfcProveedor,"#FF0000");
+        highLightColor(id_rfcProveedores,"#FF0000");
         return false;
-    } else if($('#' + id_razonSocialProveedor ).val() == ""){
+    } else if($('#' + id_razonSocialProveedores ).val() == ""){
         alert("Escribe la razón social o nombre del proveedor");
-        highLightColor(id_razonSocialProveedor,"#FF0000");
+        highLightColor(id_razonSocialProveedores,"#FF0000");
         return false;
     } else if($('#' + id_direccionProveedores ).val() == ""){
         alert("Escribe la dirección del proveedor");
@@ -250,8 +249,8 @@ function validateContactoProveedor(){
 function altaProveedor(){
   var proveedor = {};
   proveedor = {
-      rfc: $('#' + id_rfcProveedor).val(),
-      razon_social: $('#' + id_razonSocialProveedor).val(),
+      rfc: $('#' + id_rfcProveedores).val(),
+      razon_social: $('#' + id_razonSocialProveedores).val(),
       direccion: $('#' + id_direccionProveedores).val()
   };
   return proveedor;
@@ -259,68 +258,46 @@ function altaProveedor(){
 
 function altaContactoProveedor(){
   var contacto = [];
+  var icon_class = "'icono_rojo fas fa-times-circle'";
+  var uid_contacto;
+  if(existe_contacto){
+    uid_contacto = uid_existente_contacto;
+  }else{
+    uid_contacto = "";
+  }
   contacto = [
-    $('#'+id_ddl_proveedorInsumos + ' option:selected').val(),
-    deformatMoney($('#'+id_precioInsumos).val()),
-    new Date(f_cotizacion[0], f_cotizacion[1] - 1, f_cotizacion[2]).getTime(),
-    "<button type='button' class='desplegar btn btn-transparente'><i class=" + icon_class + "></i></button>",
-    "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>"
+    uid_contacto,
+    $('#'+id_contactoProveedores).val(),
+    $('#'+id_telefonoProveedores).val(),
+    $('#'+id_correoProveedores).val(),
+    "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>",
+    "<button type='button' class='desplegar btn btn-transparente'><i class=" + icon_class + "></i></button>"
   ];
   return proveedor;
-}
-
-//Llenar los campos en caso de existir la clave de la obra
-function llenaCamposInsumo(clave){
-  firebase.database().ref(rama_bd_insumos + "/productos").orderByChild('clave_obra').equalTo(clave).limitToFirst(1).once("value").then(function(snapshot){
-      snapshot.forEach(function(child_snap){
-          var value = child_snap.val();
-          if (value){
-              existe_insumo = true;
-              uid_existente = child_snap.key;
-              $('#' + id_descripcionInsumos).val(value.descripcion),
-              $('#' + id_catalogoInsumos).val(value.catalogo),
-              $('#' + id_catfabricInsumos).val(value.catfabric),
-              $('#' + id_ddl_marcaInsumos).val(value.marca),
-              $('#' + id_ddl_unidadInsumos).val(value.unidad),
-              $('#' + id_ddl_clasificacionInsumos).val(value.clasificacion),
-              $('#' + id_ddl_categoriaInsumos).val(value.categoria)
-
-              highLightProductoInsumo();
-          } else {
-              existe_insumo = false;
-          }
-      });
-  });
 }
 
 // función que actualiza la tabla (revisar librería DataTable para ver funcionalidad)
 // se utiliza on "value" para que en cada movimiento en la base de datos "colaboradores", la tabla se actualize
 // automáticamente.
-function actualizarTablaInsumos(){
-    firebase.database().ref(rama_bd_insumos + "/productos").on("value",function(snapshot){
-        var datos_insumos = [];
-        snapshot.forEach(function(insumoSnap){
-            var uid = insumoSnap.key;
-            var insumo = insumoSnap.val();
-            datos_insumos.push([
-                insumoSnap.key,
-                insumo.catalogo,
-                insumo.descripcion,
-                insumo.catfabric,
-                insumo.marca,
-                marcas.val()[insumo.marca]["nombre"],
-                insumo.unidad,
-                unidades.val()[insumo.unidad]["nombre"],
-                insumo.clasificacion,
-                clasificaciones.val()[insumo.clasificacion]["nombre"],
-                insumo.categoria,
-                categorias.val()[insumo.categoria]["nombre"]
+function actualizarTablaProveedores(){
+    firebase.database().ref(rama_bd_insumos + "/proveedores").on("value",function(snapshot){
+        var datos_proveedores = [];
+        snapshot.forEach(function(proveedoresnap){
+            var uid = proveedoresnap.key;
+            var proveedor = proveedoresnap.val();
+            datos_proveedores.push([
+                proveedoresnap.key,
+                proveedor.rfc,
+                proveedor.razon_social,
+                proveedor.direccion,
+                "<button type='button' class='btn btn-dark'><span class='fas fa-address-book'></span></button>",
+                "<button type='button' class='btn btn-dark'><span class='fas fa-hammer'></span></button>"
             ]);
         });
 
-        tabla_insumo = $('#'+ id_dataTable_insumo).DataTable({
+        tabla_proveedor = $('#'+ id_dataTable_proveedor).DataTable({
             destroy: true,
-            data: datos_insumos,
+            data: datos_proveedores,
             language: idioma_espanol,
             "autoWidth": false,
             "columnDefs": [
@@ -330,10 +307,6 @@ function actualizarTablaInsumos(){
                     className: 'dt-body-center'
                 },
                 { "visible": false, "targets": 0 }, //campos auxiliares
-                { "visible": false, "targets": 4 },
-                { "visible": false, "targets": 6 },
-                { "visible": false, "targets": 8 },
-                { "visible": false, "targets": 10 },
                 {
                     "targets": -1,
                     "data": null,
@@ -342,47 +315,43 @@ function actualizarTablaInsumos(){
               ]
         });
         //Funcion para llenar los campos cuando se quiere editar desde las opciones de la tabla
-        $('#' + id_dataTable_insumo + ' tbody').on( 'click', '.editar', function () {
-            highLightProductoInsumo();
-            var data = tabla_insumo.row( $(this).parents('tr') ).data();
-            resetFormInsumo();
-            existe_insumo = true;
+        $('#' + id_dataTable_proveedor + ' tbody').on( 'click', '.editar', function () {
+            highLightProveedor();
+            var data = tabla_proveedor.row( $(this).parents('tr') ).data();
+            resetFormProveedor();
+            existe_proveedor = true;
             uid_existente = data[0];
-            $('#' + id_catalogoInsumos ).val(data[1]);
-            $('#' + id_descripcionInsumos ).val(data[2]);
-            $('#' + id_catfabricInsumos ).val(data[3]);
-            $('#' + id_ddl_marcaInsumos ).val(data[4]);
-            $('#' + id_ddl_unidadInsumos ).val(data[6]);
-            $('#' + id_ddl_clasificacionInsumos ).val(data[8]);
-            $('#' + id_ddl_categoriaInsumos ).val(data[10]);
-            actualizarTablaProveedoresInsumo();
+            $('#' + id_rfcProveedores).val(data[1]);
+            $('#' + id_razonSocialProveedores).val(data[2]);
+            $('#' + id_direccionProveedores).val(data[3]);
+            actualizarTablaContactosProveedor();
         } );
     });
 }
 
-function actualizarTablaProveedoresInsumo(){
-    firebase.database().ref(rama_bd_insumos + "/listas/productos/"+uid_existente).on("value",function(snapshot){
+function actualizarTablaContactosProveedor(){
+    firebase.database().ref(rama_bd_insumos + "/proveedores/"+ uid_existente +"/contacto").on("value",function(snapshot){
         if (snapshot.exists()){
-          registro_proveedores = snapshot.val();
+          registro_contactos = snapshot.val();
         } else {
-          registro_proveedores = {};
+          registro_contactos = {};
         }
-        var datos_proveedores = [];
-        icon = "'icono_verde fas fa-check-circle'";
-        snapshot.forEach(function(proveedorSnap){
-            var uid = proveedorSnap.key;
-            var proveedor = proveedorSnap.val();
-            datos_proveedores.push([
+        var datos_contactos = [];
+        var icon_class = "'icono_rojo fas fa-times-circle'";
+        snapshot.forEach(function(contactoSnap){
+            var uid = contactoSnap.key;
+            var contacto = contactoSnap.val();
+            datos_contactos.push([
                 uid,
-                proveedores[uid]["razon_social"],
-                proveedor.precio,
-                proveedor.fecha,
+                contacto.nombre,
+                contacto.telefono,
+                contacto.correo,
+                "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>",
                 "<button type='button' class='desplegar btn btn-transparente'><i class=" + icon_class + "></i></button>",
-                "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>"
             ]);
         });
 
-        tabla_proveedorInsumo = $('#'+ id_dataTableProveedoresInsumos).DataTable({
+        tabla_contactoProveedor = $('#'+ id_dataTableContactosProveedores).DataTable({
             destroy: true,
             data: datos_proveedores,
             language: idioma_espanol,
@@ -397,16 +366,16 @@ function actualizarTablaProveedoresInsumo(){
               ]
         });
         //Funcion para llenar los campos cuando se quiere editar desde las opciones de la tabla
-        $('#' + id_dataTableProveedoresInsumos + ' tbody').on( 'click', '.editar', function () {
-            highLightProveedorInsumo();
-            var data = tabla_proveedorInsumo.row( $(this).parents('tr') ).data();
-            resetFormProveedorInsumo();
-            existe_proveedor = true;
-            uid_existente_proveedor = data[0];
-            existe_proveedor_index = tabla_proveedorInsumo.row(this).index();
-            $('#' + id_ddl_proveedorInsumos).val(data[0]);
-            $('#' + id_precioInsumos).val(data[2]);
-            $('#' + id_fecha_cotizacionInsumos).val(data[3]);
+        $('#' + id_dataTableContactosProveedores + ' tbody').on( 'click', '.editar', function () {
+            highLightContactoProveedor();
+            var data = tabla_contactoProveedor.row( $(this).parents('tr') ).data();
+            resetFormContactoProveedor();
+            existe_contacto = true;
+            uid_existente_contacto = data[0];
+            existe_contacto_index = tabla_contactoProveedor.row(this).index();
+            $('#' + id_contactoProveedores).val(data[1]);
+            $('#' + id_telefonoProveedores).val(data[2]);
+            $('#' + id_correoProveedores).val(data[3]);
         } );
     });
 }
@@ -425,97 +394,14 @@ function recuperaDatosProveedoresInsumo(){
   return proveedoresInsumo;
 }
 
-function highLightProductoInsumo(){
-  highLight(id_catalogoInsumos);
-  highLight(id_descripcionInsumos);
-  highLight(id_catfabricInsumos);
-  highLight(id_ddl_marcaInsumos);
-  highLight(id_ddl_unidadInsumos);
-  highLight(id_ddl_clasificacionInsumos);
-  highLight(id_ddl_categoriaInsumos);
+function highLightContactoProveedor(){
+  highLight(id_contactoProveedores);
+  highLight(id_telefonoProveedores);
+  highLight(id_correoProveedores);
 }
 
-function llenaDdlMarcaInsumo(){
-  // Llenado del ddl de marca
-  $('#' + id_ddl_marcaInsumos).empty();
-  var select = document.getElementById(id_ddl_marcaInsumos);
-  var option = document.createElement('option');
-  option.style = "display:none";
-  option.text = option.value = "";
-  select.appendChild(option);
-  var marca;
-  marcas.forEach(function(snapChild){
-    option = document.createElement('option');
-    option.value = snapChild.key;
-    option.text = snapChild.val().nombre;
-    select.appendChild(option);
-  });
-}
-
-function llenaDdlUnidadInsumo(){
-  // Llenado del ddl de unidad
-  $('#' + id_ddl_unidadInsumos).empty();
-  var select = document.getElementById(id_ddl_unidadInsumos);
-  var option = document.createElement('option');
-  option.style = "display:none";
-  option.text = option.value = "";
-  select.appendChild(option);
-  var unidad;
-  unidades.forEach(function(snapChild){
-      option = document.createElement('option');
-      option.value = snapChild.key;
-      option.text = snapChild.val().nombre;
-      select.appendChild(option);
-  });
-}
-
-function llenaDdlCategoriaInsumo(){
-  // Llenado del ddl de categoria
-  $('#' + id_ddl_categoriaInsumos).empty();
-  var select = document.getElementById(id_ddl_categoriaInsumos);
-  var option = document.createElement('option');
-  option.style = "display:none";
-  option.text = option.value = "";
-  select.appendChild(option);
-  var categoria;
-  categorias.forEach(function(snapChild){
-      option = document.createElement('option');
-      option.value = snapChild.key;
-      option.text = snapChild.val().nombre;
-      select.appendChild(option);
-  });
-}
-
-function llenaDdlClasificacionInsumo(){
-  // Llenado del ddl de proveedor
-  $('#' + id_ddl_clasificacionInsumos).empty();
-  var select = document.getElementById(id_ddl_clasificacionInsumos);
-  var option = document.createElement('option');
-  option.style = "display:none";
-  option.text = option.value = "";
-  select.appendChild(option);
-  var clasificacion;
-  clasificaciones.forEach(function(snapChild){
-      option = document.createElement('option');
-      option.value = snapChild.key;
-      option.text = snapChild.val().nombre;
-      select.appendChild(option);
-  });
-}
-
-function llenaDdlProveedorInsumo(){
-  // Llenado del ddl de proveedor
-  $('#' + id_ddl_proveedorInsumos).empty();
-  var select = document.getElementById(id_ddl_proveedorInsumos);
-  var option = document.createElement('option');
-  option.style = "display:none";
-  option.text = option.value = "";
-  select.appendChild(option);
-  var proveedor;
-  clasificaciones.forEach(function(snapChild){
-      option = document.createElement('option');
-      option.value = snapChild.key;
-      option.text = snapChild.val().razon_social;
-      select.appendChild(option);
-  });
+function highLightProveedor(){
+  highLight(id_rfcProveedores);
+  highLight(id_razonSocialProveedores);
+  highLight(id_direccionProveedores);
 }
