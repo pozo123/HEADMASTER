@@ -100,9 +100,9 @@ $('#' + id_boton_AgregarContactoProveedores).click(function() {
     }else{
       tabla_contactoProveedor.row.add(altaContactoProveedor()).draw();
     }
+    resetContactoProveedor();
+    existe_contacto= false;
   }
-  resetContactoProveedor();
-  existe_contacto= false;
 });
 
 // ----------------------- VALIDACIÓN DE FORMULARIO ------------------------
@@ -254,8 +254,7 @@ function actualizarTablaProveedores(){
                 proveedor.rfc,
                 proveedor.razon_social,
                 proveedor.direccion,
-                "<button type='button' class='btn btn-dark'><span class='fas fa-address-book'></span></button>",
-                "<button type='button' class='btn btn-dark'><i class='fas fa-toolbox'></i></button>"
+                "<button type='button' class='toolbox_insumos btn btn-dark'><i class='fas fa-toolbox'></i></button>"
             ]);
         });
 
@@ -276,7 +275,7 @@ function actualizarTablaProveedores(){
                     "data": null,
                     "defaultContent": "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>"
                 },
-                { targets: [4,5,6], className: 'dt-body-center'}
+                { targets: [4,5], className: 'dt-body-center'}
               ]
         });
         //Funcion para llenar los campos cuando se quiere editar desde las opciones de la tabla
@@ -290,7 +289,12 @@ function actualizarTablaProveedores(){
             $('#' + id_razonSocialProveedores).val(data[2]);
             $('#' + id_direccionProveedores).val(data[3]);
             actualizarTablaContactosProveedor();
-        } );
+         });
+
+         $('#' + id_dataTable_proveedor + ' tbody').on( 'click', '.toolbox_insumos', function () {
+             var data = tabla_proveedor.row( $(this).parents('tr') ).data();
+             modalInsumosProveedor(data[0]);
+          });
     });
 }
 
@@ -345,11 +349,13 @@ function actualizarTablaContactosProveedor(){
         } );
 
         $('#' + id_dataTableContactosProveedores + ' tbody').on( 'click', '.eliminar', function () {
-            console.log("Eliminar");
+            var data = tabla_contactoProveedor.row( $(this).parents('tr') ).data();
+            if(existe_contacto && data[0] == uid_existente_contacto){
+              existe_contacto = false;
+              uid_existente_contacto = "";
+              existe_contacto_index = -1;
+            }
             tabla_contactoProveedor.row( $(this).parents('tr') ).remove().draw();
-            existe_contacto = false;
-            uid_existente_contacto = "";
-            existe_contacto_index = -1;
         } );
     });
 }

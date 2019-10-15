@@ -439,7 +439,7 @@
                           </br>
                           <div class="form-row align-items-center">
                               <div class="col-lg-4">
-                                  <label for="buscaCatalogoAdicionales">Catálogo</label>
+                                  <label for="buscaCatalogoModalSuministros">Catálogo</label>
                                   <input type="text" id="buscaCatalogoModalSuministros" class="form-control" placeholder="Clave">
                               </div>
                           </div>
@@ -730,6 +730,124 @@
                                </div>
                                <div class="col-lg-1"></div>
                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-dark" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Insumos Proveedor-->
+        <div class="modal fade" id="modalInsumosProveedor" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Insumos</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                          <div class="form-row align-items-center">
+                              <div class="col-lg-4">
+                                  <label for="ddl_buscaCategoriaModalInsumosProveedor">Categoria</label>
+                                  <select id="ddl_buscaCategoriaModalInsumosProveedor" class="form-control"></select>
+                              </div>
+                              <div class="col-lg-4">
+                                  <label for="ddl_buscaMarcaModalInsumosProveedor">Marca</label>
+                                  <select id="ddl_buscaMarcaModalInsumosProveedor" class="form-control"></select>
+                              </div>
+                              <div class="col-lg-4">
+                                  <label for="ddl_buscaClasificacionModalInsumosProveedor">Clasificacion</label>
+                                  <select id="ddl_buscaClasificacionModalInsumosProveedor" class="form-control"></select>
+                              </div>
+                          </div>
+                          </br>
+                          <div class="form-row align-items-center">
+                              <div class="col-lg-4">
+                                  <label for="buscaCatalogoModalInsumosProveedor">Catálogo</label>
+                                  <input type="text" id="buscaCatalogoModalInsumosProveedor" class="form-control" placeholder="Clave">
+                              </div>
+                          </div>
+                          </br>
+                          <div class="form-group">
+                              <div class="row">
+                                <div class="col-lg-4"></div>
+                                  <div class="col-lg-4">
+                                      <button id="botonLimpiarFiltrosModalInsumosProveedor" type="reset" class="btn btn-secondary btn-block">Limpiar filtros</button>
+                                  </div>
+                              </div>
+                          </div>
+                          </br>
+                          <div class = "tableWrapper">
+                              <table id="dataTableBusquedaModalInsumosProveedor" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                  <thead>
+                                      <tr>
+                                          <th>Id_producto</th>
+                                          <th>Catalogo</th>
+                                          <th>Descripcion</th>
+                                          <th>Catfabric</th>
+                                          <th>Marca</th>
+                                          <th>Clasificacion</th>
+                                          <th>Unidad</th>
+                                          <th>Agregar</th>
+                                      </tr>
+                                  </thead>
+                              </table>
+                          </div>
+                          </br>
+                          <div class="form-row align-items-center">
+                              <div class="col-lg-3">
+                                  <label for="catalogoModalInsumosProveedor">Catálogo</label>
+                                  <input type="text" id="catalogoModalInsumosProveedor" class="form-control" placeholder="Clave" disabled="true">
+                              </div>
+                              <div class="col-lg-6">
+                                  <label for="descripcionModalInsumosProveedor">Descripción</label>
+                                  <input type="text" id="descripcionModalInsumosProveedor" class="form-control" placeholder="Clave" disabled="true">
+                              </div>
+                              <div class="col-lg-3">
+                                  <label for="precioModalInsumosProveedor">Precio</label>
+                                  <input type="text" id="precioModalInsumosProveedor" class="form-control" placeholder="Clave">
+                              </div>
+                          </div>
+                          </br>
+                          <div class="form-row">
+                              <div class= "col-4"></div>
+                              <div class= "col-4">
+                                  <button id="botonAgregarModalInsumosProveedor" type="button" class="btn btn-outline-info btn-block">Agregar producto</button>
+                              </div>
+                          </div>
+                          </br>
+                          <label>Productos seleccionados</label>
+                          <div class = "tableWrapper container_reporte_nomina">
+                              <table id="dataTableSeleccionadosModalInsumosProveedor" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                  <thead>
+                                      <tr>
+                                          <th>Id_producto</th>
+                                          <th>Catalogo</th>
+                                          <th>Descripcion</th>
+                                          <th>Catfabric</th>
+                                          <th>Marca</th>
+                                          <th>Clasificacion</th>
+                                          <th>Unidad</th>
+                                          <th>Precio</th>
+                                          <th>Editar</th>
+                                          <th>Eliminar</th>
+                                      </tr>
+                                  </thead>
+                              </table>
+                          </div>
+                          </br>
+                          <div class="form-group">
+                              <div class="row">
+                                <div class="col-lg-5"></div>
+                                  <div class="col-lg-2">
+                                      <button id="botonGuardarModalInsumosProveedor" type="reset" class="btn btn-outline-success btn-block">Guardar</button>
+                                  </div>
+                              </div>
+                          </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -2988,7 +3106,7 @@
                                              </br>
                                              <div class="form-row">
                                                  <div class= "col-6">
-                                                     <button id="botonAgregarProveedores" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                                     <button id="botonAgregarProveedores" type="button" class="btn btn-outline-success btn-block">Registrar/Guardar</button>
                                                  </div>
                                                  <div class= "col-6">
                                                      <button id="botonBorrarProveedores" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
@@ -3006,7 +3124,6 @@
                                                      <th>RFC</th>
                                                      <th>Razón Social</th>
                                                      <th>Dirección</th>
-                                                     <th>Atención</th>
                                                      <th>Insumos</th>
                                                      <th>Editar</th>
                                                  </tr>
@@ -3017,7 +3134,6 @@
                                                      <th>RFC</th>
                                                      <th>Razón Social</th>
                                                      <th>Dirección</th>
-                                                     <th>Atención</th>
                                                      <th>Insumos</th>
                                                      <th>Editar</th>
                                                  </tr>
@@ -3199,6 +3315,7 @@
         <script src="app_definicionesSuministros_v2.js"></script>
         <script src="app_altaInsumo_v2.js"></script>
         <script src="app_altaProveedor_v2.js"></script>
+        <script src="app_modal_insumosProveedor_v2.js"></script>
 
         <!-- Excel to Json-->
         <script src="xlsx.full.min.js"></script>
