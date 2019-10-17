@@ -487,7 +487,7 @@ function llenaDdlGeneric(item_id, snap, nombre){
   $('#' + item_id).empty();
   var select = document.getElementById(item_id);
   var option = document.createElement('option');
-  option.style = "display:none";
+  //option.style = "display:none";
   option.text = option.value = "";
   select.appendChild(option);
   snap.forEach(function(snapChild){
