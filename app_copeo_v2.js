@@ -511,7 +511,7 @@ function cargaCamposCopeo(claveObra, claveProceso, claveSubproceso, claveEntrada
       for(key in cuadrilla){
         aux_array[i] = key;
         $('#'+key).val(cuadrilla[key]["cantidad"]);
-        $('#'+"sueldo_"+key).val(cuadrilla[key]["sueldo_diario"]);
+        $('#'+"sueldo_"+key).val(formatMoney(cuadrilla[key]["sueldo_diario"]));
         i++;
       }
       selectTrabajadores.set(aux_array);
