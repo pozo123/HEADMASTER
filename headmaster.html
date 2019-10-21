@@ -933,6 +933,37 @@
                         </div>
                     </div>
                 </ul>
+
+                <ul class="list-unstyled components" id = "formRegistrosProyectos">
+                    <div class="card text-center text-white bg-dark">
+                        <div class="card-body" id="card">                 
+                            <div class="container-fluid">
+                                <label for="">¿En qué vas a trabajar hoy?</label>
+                                <div class="form-group">
+                                    <label for="">Obra:</label>
+                                    <select id ="obraDdlRegistrosProyectos" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Proceso:</label>
+                                    <select id ="procesoDdlRegistrosProyectos" class="form-control"></select>
+                                </div>
+
+                                <div class="form-group hidden" id="actividadGroupRegistrosProyectos">
+                                    <label for="">Actividad:</label>
+                                    <select id ="procDdlRegistros" class="form-control"></select>
+                                </div>
+                                <div class="form-group hidden" id="otrosGroupRegistros">
+                                    <label for="otros">¿Qué vas a hacer?</label>
+                                    <textarea class="form-control" id="otraActividadRegistrosProyectos" rows="5"></textarea>
+                                </div>
+                                <button type="button" name="" id="entradaButtonRegistrosProyectos" class="btn btn-success btn-lg btn-block">Entrada</button> 
+                            </div>
+                            <div class="container-fluid">
+                                <button type="button" name="" id="salidaButtonRegistrosProyectos" class="btn btn-danger btn-lg btn-block hidden">Salida</button>
+                            </div>
+                        </div>
+                    </div>
+                </ul>
                 <ul class="list-unstyled components">
                     <li class="administracion hidden">
                         <a href="#pageColaborador" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Colaboradores HEAD</a>
@@ -946,7 +977,7 @@
                             <li class="tab" id="tabAltaCliente"><a href="#" onclick="openTabs('tabAltaCliente','altaCliente')">Alta y Edición - Despachos</a></li>
                         </ul>
                     </li>
-                    <li class = "rrhh hidden">
+                    <li class="rrhh hidden">
                         <a href="#pageManoObra" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Mano de Obra</a>
                         <ul class="collapse list-unstyled" id="pageManoObra">
                             <li class="tab" id="tabEspecialidades"><a href="#" onclick="openTabs('tabEspecialidades','especialidadesHEAD')">Definición - Especialidades</a></li>
@@ -954,7 +985,7 @@
                             <li class="tab" id="tabTrabajadores"><a href="#" onclick="openTabs('tabTrabajadores','trabajadoresProduccion')">Trabajadores de obra</a></li>
                         </ul>
                     </li>
-                    <li class = "rrhh hidden">
+                    <li class="rrhh hidden">
                         <a href="#pageNomina" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Nómina</a>
                         <ul class="collapse list-unstyled" id="pageNomina">
                             <li class="tab" id="tabDatosNomina"><a href="#" onclick="openTabs('tabDatosNomina','datosNomina')">Asistencias, Horas Extra y Diversos</a></li>
@@ -981,14 +1012,20 @@
                         <a href="#pageSuministros" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Suministros</a>
                         <ul class="collapse list-unstyled" id="pageSuministros">
                             <li class="tab" id="tabDefinicionesSuministros"><a href="#" onclick="openTabs('tabDefinicionesSuministros','definicionesSuministros')">Marcas, Categorias, Clasificaciones y Unidades</a></li>
-                            <li class="tab" id="tabAltaInsumos"><a href="#" onclick="openTabs('tabAltaInsumos','altaInsumos')">Alta Insumos</a></li>
-                            <li class="tab" id="tabAltaProveedores"><a href="#" onclick="openTabs('tabAltaProveedores','altaProveedores')">Alta Proveedores</a></li>
+                            <li class="tab" id="tabAltaInsumos"><a href="#" onclick="openTabs('tabAltaInsumos','altaInsumos')">Alta - Insumos</a></li>
+                            <li class="tab" id="tabAltaProveedores"><a href="#" onclick="openTabs('tabAltaProveedores','altaProveedores')">Alta - Proveedores</a></li>
                         </ul>
                     </li>
                     <li>
                         <a href="#pageReportes" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Reportes</a>
                         <ul class="collapse list-unstyled" id="pageReportes">
                             <li class="tab administracion rrhh hidden" id="tabReporteNomina"><a href="#" onclick="openTabs('tabReporteNomina','reporteNomina')">Mano de obra</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#pageScore" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Score (Proyectos)</a>
+                        <ul class="collapse list-unstyled" id="pageScore">
+                            <li class="tab proyectos hidden" id="tabActividadScore"><a href="#" onclick="openTabs('tabActividadScore','actividadScore')">Alta - Actividades Score</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -3239,6 +3276,61 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Actividades Score -->
+                        <div id="actividadScore" class = "tabcontent hidden">
+                            <h1>Definición de actividades para Score (área de proyectos). </h1>
+                            <p>Página para definir las posibles actividades para los registros diarios del área de proyectos</p>
+                            <div class= "container-fluid">
+                                <div class= "row">
+                                    <div class="col-lg-1"></div>
+                                    <div class="col-lg-10">
+                                        <div class= "row">
+                                            <div class= "col-md-6">
+                                                <form id="formActividadesScore" action="#" onsubmit="return false;">
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-12">
+                                                            <label for="nombreActividadScore">Actividad:</label>
+                                                            <input type="text" name="" id="nombreActividadScore" class="form-control" placeholder="Ej: Cuantificaciones">
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                    <div class="form-row">
+                                                        <div class= "col-6">
+                                                            <button id="agregarButtonActividadScore" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                                        </div>
+                                                        <div class= "col-6">
+                                                            <button id="borrarButtonActividadScore" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <br/>
+                                            </div>
+                                            <div class= "col-md-6">
+                                                <div class = "tableWrapper">
+                                                    <table id="dataTableActividadScore" class="display" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID_actividad</th>
+                                                                <th>Nombre</th>
+                                                                <th>Editar</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th>ID_actividad</th>
+                                                                <th>Nombre</th>
+                                                                <th>Editar</th>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-1"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -3317,6 +3409,7 @@
         <script src="app_altaInsumo_v2.js"></script>
         <script src="app_altaProveedor_v2.js"></script>
         <script src="app_modal_insumosProveedor_v2.js"></script>
+        <script src="app_actividades_score_v2.js"></script>
 
         <!-- Excel to Json-->
         <script src="xlsx.full.min.js"></script>

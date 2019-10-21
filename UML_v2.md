@@ -337,6 +337,8 @@ Nota: Todo float se ingresa a 2 decimales.
             - requisito_id: nombre
         - diversos
             - diverso_id: nombre
+        - actividades_score
+            - actividad_id: nombre
 
     - proyectos
         - registros
@@ -347,6 +349,7 @@ Nota: Todo float se ingresa a 2 decimales.
                 - obra_id: string
                 - subproceso_clave: string
                 - especialidad: string
+                - tipo: string
         - listas
             - fechas
                 - aaaammdd
@@ -362,6 +365,8 @@ Nota: Todo float se ingresa a 2 decimales.
                     - id_colaborador: id_registro
             - registros_corruptos (los que checkout - checkin > dia, cada vez que genero un checkout reviso)
                 - id_registro: true
+            - tipo
+                - id_registro:true
     - rrhh
         - mano_obra:
             - trabajadores
