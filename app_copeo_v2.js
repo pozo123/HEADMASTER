@@ -37,6 +37,9 @@ var num_entradas;
 
 //Dar formato a los elementos existentes
 $('#' + id_tab_copeo).click(function() {
+  uid_obra="";
+  uid_proceso="";
+  uid_subproceso="";
   puestos_array = [];
   // Llenado del ddl de obra.
   $('#' + id_ddl_obraCopeo).empty();
@@ -75,6 +78,7 @@ $('#' + id_tab_copeo).click(function() {
       });
       resetFormCopeo();
   });
+  actualizarTablaCopeo();
 });
 
 //Funcionalidad del boton 'Aceptar'
@@ -121,7 +125,8 @@ $('#' + id_agregar_copeo).click(function() {
       console.log(registro_antiguo);
     }
 		resetFormCopeo();
-		//actualizarTablaCalculadora();
+    $('#'+id_ddl_obraCopeo).val(uid_obra);
+		actualizarTablaCopeo();
 	}
 });
 
@@ -135,6 +140,8 @@ $('#' + id_sueldos_copeo).click(function() {
   for(key in puestos_json){
     $('#'+"sueldo_"+key).val(formatMoney(puestos_json[key]["sueldo"]));
   }
+  calculaCostoUnitarioCopeo();
+  calculaCostoTotalCopeo();
 });
 
 // ----------------------- FUNCIONES DE LOS CAMPOS REGULARES ------------------------
@@ -624,9 +631,7 @@ function actualizarTablaCopeo(){
                   var costoTotal = 0;
                   var costoTotal_subproceso = 0;
                   var subtotal_subproceso= 0;
-									if (snapshotCopeo.exists()){
-                    if(snapshotCopeo.child(clave_proceso).exists()){
-                      if(snapshotCopeo.child(clave_proceso).child(clave_sub).exists()){
+									if (snapshotCopeo.exists() && snapshotCopeo.child(clave_proceso).exists() && snapshotCopeo.child(clave_proceso).child(clave_sub).exists()){
                         var subprocesoCopeo = snapshotCopeo.child(clave_proceso).child(clave_sub);
                         cargaSocial = subprocesoCopeo.val().impuestos;
 
@@ -663,8 +668,24 @@ function actualizarTablaCopeo(){
                           ];
                           costoTotal_proceso = costoTotal_proceso+costoTotal_subproceso;
                           subprocesoIndex_array.push(index_subproceso);
+                          index_subproceso = index_entrada;
+                          index_entrada+=1;
                         }
-                      }
+                  } else {
+                    if(clave_proceso !== clave_sub){
+                      datos_obra[index_subproceso]=[
+                        clave_obra,
+                        clave_proceso,
+                        clave_sub,
+                        "",
+                        formatMoney(0),
+                        "",
+                        formatMoney(0),
+                        ""
+                      ];
+                      subprocesoIndex_array.push(index_subproceso);
+                      index_subproceso = index_entrada;
+                      index_entrada+=1;
                     }
                   }
               });
