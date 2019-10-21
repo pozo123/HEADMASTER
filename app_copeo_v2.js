@@ -611,7 +611,7 @@ function actualizarTablaCopeo(){
 
         snapshot.forEach(function(procesoSnap){
             var clave_proceso = procesoSnap.key;
-            if(clave_proceso !== "ADIC" && clave_proceso !== "MISC" && clave_proceso !== "PC00"){
+            if(clave_proceso !== "ADIC" && clave_proceso !== "PC00"){
                 var costoTotal_proceso=0;
                 index_proceso = index_entrada;
                 index_subproceso = index_proceso+1;

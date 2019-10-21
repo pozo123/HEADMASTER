@@ -60,7 +60,7 @@ function modalInsumosProveedor(clave_proveedor){
 //----------------------------Botones -----------------------------------------
 $('#' + id_boton_agregarModalInsumosProveedor).click(function() {
   if(validateagregarModalInsumosProveedor()){
-    
+
   }
 });
 
@@ -210,6 +210,7 @@ function actualizarTablaBusquedaModalInsumosProveedor(json_info){
         data: datos_busqueda,
         language: idioma_espanol,
         "autoWidth": false,
+        "scrollX":true,
         "columnDefs": [
             { "width": "150px", "targets": 2 },
             { "visible": false, "targets": 0 }, //campos auxiliares
