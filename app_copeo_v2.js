@@ -154,7 +154,7 @@ $("#" + id_ddl_obraCopeo).change(function(){
   firebase.database().ref(rama_bd_obras + "/procesos/" + uid_obra + "/procesos").orderByKey().on('child_added',function(snapshot){
       proceso = snapshot.val();
       if (snapshot.exists()){
-        if (snapshot.key !== "ADIC" && snapshot.key !== "MISC" && snapshot.key !== "PC00"){ //descartamos los procesos default
+        if (snapshot.key !== "ADIC" && snapshot.key !== "PC00"){ //descartamos los procesos default
           option = document.createElement('option');
           option.value = snapshot.key;
           option.text = snapshot.key + " " + proceso.nombre;
