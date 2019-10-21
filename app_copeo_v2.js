@@ -345,8 +345,8 @@ function resetFormCopeo (){
 function resetFormCopeo_entrada(){
   $('#'+id_carga_socialCopeo).val("");
   $('#'+id_carga_socialCopeo).prop("disabled", true);
-  $('#'+id_diasCopeo).val("");
-  $('#'+id_multCopeo).val("");
+  $('#'+id_diasCopeo).val("5");
+  $('#'+id_multCopeo).val("1");
   $('#'+id_nombreCopeo).val("");
   $('#'+id_alcanceCopeo).val("");
   selectTrabajadores.set(puestos_array);
