@@ -57,9 +57,34 @@ function modalInsumosProveedor(clave_proveedor){
   $('#' + id_modalInsumosProveedor).modal('show');
 }
 
+//----------------------------Botones -----------------------------------------
+$('#' + id_boton_agregarModalInsumosProveedor).click(function() {
+  if(validateagregarModalInsumosProveedor()){
+    
+  }
+});
+
 $('#' + id_boton_limpiarModalInsumosProveedor).click(function() {
   limpiaFiltrosModalInsumosProveedor();
   actualizarTablaBusquedaModalInsumosProveedor(base_insumos);
+});
+
+//------------------------------------------------------------------------------
+$('#' + id_precioModalInsumosProveedor).keypress(function(e){
+    charactersAllowed("0123456789.",e);
+});
+
+$('#' + id_precioModalInsumosProveedor).focus(function(){
+  if($('#'+id_precioModalInsumosProveedor).val() !== ""){
+		$('#' + id_precioModalInsumosProveedor).val(deformatMoney($('#' + id_precioModalInsumosProveedor).val()));
+	}
+
+});
+
+$('#' + id_precioModalInsumosProveedor).focusout(function(){
+  if($('#'+id_precioModalInsumosProveedor).val() !== ""){
+		$('#' + id_precioModalInsumosProveedor).val(formatMoney($('#' + id_precioModalInsumosProveedor).val()));
+	}
 });
 
 // ----------------------Funciones necesarias ----------------------------------
@@ -80,6 +105,22 @@ function limpiaAgregarModalInsumosProveedor(){
   $('#'+id_catalogoModalInsumosProveedor).val("");
   $('#'+id_descripcionModalInsumosProveedor).val("");
   $('#'+id_precioModalInsumosProveedor).val("");
+}
+
+function validateagregarModalInsumosProveedor(){
+  if($('#' + id_catalogoModalInsumosProveedor).val() === ""){
+      alert("Ningún insumo fue seleccionado");
+      return false;
+  } else if($('#' + id_descripcionModalInsumosProveedor).val() == ""){
+      alert("Ningún insumo fue seleccionado");
+      return false;
+  } else if($('#' + id_precioModalInsumosProveedor).val() == ""){
+      alert("Ingresa un precio");
+      highLightColor(id_precioModalInsumosProveedor,"#FF0000");
+      return false;
+  } else {
+      return true;
+  }
 }
 
 //------------------------------- Filtros -------------------------------------
@@ -122,7 +163,6 @@ $('#' + id_buscaCatalogoModalInsumosProveedor).change(function(){
   base_filtrados = filtraGeneric(base_insumos, filtros);
   actualizarTablaBusquedaModalInsumosProveedor(base_filtrados);
 });
-
 
 //-------------------------Funciones necesarias -------------------------------
 function filtraGeneric (json_base, json_filtros){
