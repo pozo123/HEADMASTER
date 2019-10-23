@@ -170,7 +170,7 @@ Nota: Todo float se ingresa a 2 decimales.
                         - nombre
                         - monto
                         - cotizacion (url)
-                        
+
         - copeo
             - id_obra
                 - id_proceso
@@ -339,6 +339,8 @@ Nota: Todo float se ingresa a 2 decimales.
             - diverso_id: nombre
         - actividades_score
             - actividad_id: nombre
+        - anexos
+            - anexo_id: descripcion
 
     - proyectos
         - registros

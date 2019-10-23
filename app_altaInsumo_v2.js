@@ -85,11 +85,11 @@ $('#' + id_boton_AgregarInsumos).click(function() {
   if (validateFormInsumo()){
     var datos_insumo = altaProductoInsumo();
     var proveedores_json = recuperaDatosProveedoresInsumo();
-    console.log(datos_insumo);
-    console.log(proveedores_json);
+    //console.log(datos_insumo);
+    //console.log(proveedores_json);
     //Decidir si editar o dar de alta
     if (existe_insumo){ //editar
-      console.log("Editar");
+      //console.log("Editar");
         firebase.database().ref(rama_bd_insumos + "/productos/" + uid_existente).once("value").then(function(snapshot){
             var registro_antiguo = snapshot.val();
             var insumo_update = {};
@@ -117,14 +117,14 @@ $('#' + id_boton_AgregarInsumos).click(function() {
             for(key in proveedores_json){
               insumo_update["listas/proveedores/" + key + "/"+ uid_existente ] = proveedores_json[key];
             }
-            console.log(registro_proveedores);
+            //console.log(registro_proveedores);
             for (key in registro_proveedores){
               if(proveedores_json[key] == undefined){
                 insumo_update["listas/proveedores/" + key + "/"+ uid_existente ] = null;
               }
             }
 
-            console.log(insumo_update);
+            //console.log(insumo_update);
             firebase.database().ref(rama_bd_insumos).update(insumo_update);
 
             // PAD
@@ -133,7 +133,7 @@ $('#' + id_boton_AgregarInsumos).click(function() {
             resetFormInsumo();
         });
     } else { //dar de alta
-      console.log("Dar de alta");
+      //console.log("Dar de alta");
         firebase.database().ref(rama_bd_insumos + "/productos").push(datos_insumo).then(function(snapshot){
             var regKey = snapshot.key;
             var insumo_update = {};
@@ -151,7 +151,7 @@ $('#' + id_boton_AgregarInsumos).click(function() {
               insumo_update["listas/proveedores/" + key + "/"+ regKey ] = proveedores_json[key];
             }
 
-            console.log(insumo_update);
+            //console.log(insumo_update);
             firebase.database().ref(rama_bd_insumos).update(insumo_update);
 
             // PAD
@@ -485,7 +485,7 @@ $(document).on('click','.editarProveedoresInsumos', function(){
 });
 
 $(document).on('click','.eliminarProveedoresInsumos', function(){
-    console.log("Eliminar");
+    //console.log("Eliminar");
     var data = tabla_proveedorInsumo.row( $(this).parents('tr') ).data();
     if(existe_proveedor && data[0] == uid_existente_proveedor){
       existe_proveedor = false;
@@ -499,7 +499,7 @@ function recuperaDatosProveedoresInsumo(){
   var proveedoresInsumo = {};
   $('#' + id_dataTableProveedoresInsumos).DataTable().rows().iterator('row', function(context, index){
     var data = this.row(index).data();
-    console.log(data);
+    //console.log(data);
     var f_cotizacion = data[3].split('.');
     proveedoresInsumo[data[0]]={
       precio: deformatMoney(data[2]),

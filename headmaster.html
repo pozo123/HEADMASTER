@@ -1014,6 +1014,7 @@
                         <a href="#pageProduccion" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Producción</a>
                         <ul class="collapse list-unstyled" id="pageProduccion">
                             <li class="tab" id="tabCopeo"><a href="#" onclick="openTabs('tabCopeo','copeo')">Copeo</a></li>
+                            <li class="tab" id="tabSolicitudAdicional"><a href="#" onclick="openTabs('tabSolicitudAdicional','solicitudAdicional')">Solicitud de Adicionales</a></li>
                         </ul>
                     </li>
                     <li class = "administracion compras hidden">
@@ -2918,6 +2919,76 @@
                                  </div>
                              </div>
                          </div>
+                         <!-- Solicitud adicional Supervisor -->
+                         <div id= "solicitudAdicional" class="tabcontent hidden">
+                             <div class="container-fluid">
+                                 <h1>SOLICITUD DE ADICIONALES</h1>
+                                 <p>Generador de solicitudes para presupuestos adicionales </p>
+                                 <div class="row">
+                                     <div class="col-lg-1"></div>
+                                     <div class="col-lg-10">
+                                         <form action="#" onsubmit="return false;" id="formSolicitudAdicional">
+                                             <div class="form-row" >
+                                                 <div class="form-group col-md-6">
+                                                     <label for="ddl_obraSolicitudAdicional">Obra:</label>
+                                                     <select id="ddl_obraSolicitudAdicional" class="form-control"></select>
+                                                 </div>
+                                                 <div class="form-group col-md-6">
+                                                     <label for="ddl_atnSolicitudAdicional">Atención:</label>
+                                                     <select id="ddl_atnSolicitudAdicional" class="form-control"></select>
+                                                 </div>
+                                              </div>
+                                              <div class="form-row">
+                                                 <div class="form-group col-md-12">
+                                                     <label for="descripcionSolicitudAdicional">Descripción:</label>
+                                                     <textarea class="form-control calcCopeoClass" id="descripcionSolicitudAdicional" rows="5" placeholder= "Descripción del adicional."></textarea>
+                                                 </div>
+                                             </div>
+                                             <br/>
+                                             <div class="form-row">
+                                               <div class="form-group col-md-3">
+                                                  <label>Anexo de apoyo</label>
+                                               </div>
+                                               <div class="form-group col-md-9">
+                                                   <select id="anexosSolicitudAdicional" multiple>
+                                                   </select>
+                                               </div>
+                                             </div>
+                                             <div class="form-row hidden" id="div_otroSolicitudAdicional">
+                                                 <div class="form-group col-md-6">
+                                                     <label for="otroSolicitudAdicional">Otro:</label>
+                                                     <input type="text" disabled="true" class="form-control" id="otroSolicitudAdicional" placeholder="Especificar">
+                                                 </div>
+                                              </div>
+                                             <div class="form-group">
+                                                 <label for="fotoInputSolicitudAdicional">Selecciona una imagen</label>
+                                                 <div class="custom-file">
+                                                     <input type="file" class="custom-file-input" id="fotoInputSolicitudAdicional" accept="image/*"/>
+                                                     <label class = "custom-file-label" id="imagenLabelSolicitudAdicional">Archivo no seleccionado</label>
+                                                 </div>
+                                             </div>
+                                             <div class="form-row">
+                                                 <div class= "col-lg-4"></div>
+                                                 <div class= "col-lg-4">
+                                                     <button id="botonPDFSolicitudAdicional" type="button"  class="btn btn-secondary btn-block">Generar PDF</button>
+                                                 </div>
+                                                 <div class= "col-lg-4"></div>
+                                             </div>
+                                           </br>
+                                             <div class="form-row">
+                                                 <div class= "col-lg-4"></div>
+                                                 <div class= "col-lg-4">
+                                                     <button id="botonRegistrarSolicitudAdicional" type="button" class="btn btn-outline-success btn-block">Registrar solicitud</button>
+                                                 </div>
+                                             </div>
+                                         </form>
+                                         <br/>
+                                         <hr class="style2">
+                                     </div>
+                                     <div class="col-lg-1"></div>
+                                 </div>
+                             </div>
+                         </div>
                          <!-- alta Insumos -->
                          <div id="altaInsumos" class = "tabcontent hidden">
                              <h1>Alta o edición de Insumos </h1>
@@ -3419,6 +3490,7 @@
         <script src="app_altaProveedor_v2.js"></script>
         <script src="app_modal_insumosProveedor_v2.js"></script>
         <script src="app_actividades_score_v2.js"></script>
+        <script src="app_solicitudAdicional_v2.js"></script>
 
         <!-- Excel to Json-->
         <script src="xlsx.full.min.js"></script>

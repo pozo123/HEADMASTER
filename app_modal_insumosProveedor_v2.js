@@ -120,17 +120,17 @@ $('#' + id_boton_guardarModalInsumosProveedor).click(function() {
   insumo_update = {};
   var insumos_json = recuperaDatosModalInsumosProveedor();
   insumo_update["listas/proveedores/" + uid_modalProveedor] = insumos_json;
-  console.log(insumos_json);
+  //console.log(insumos_json);
   for(key in insumos_json){
     insumo_update["listas/productos/" + key + "/"+ uid_modalProveedor] = insumos_json[key];
   }
   for (key in registro_productos){
     if(insumos_json[key] == undefined){
-      console.log("Borrando");
+      //console.log("Borrando");
       insumo_update["listas/productos/" + key + "/"+ uid_modalProveedor] = null;
     }
   }
-  console.log(insumo_update);
+  //console.log(insumo_update);
   firebase.database().ref(rama_bd_insumos).update(insumo_update);
   // PAD
   pda("modificacion", rama_bd_insumos + "/listas/proveedores/" + uid_modalProveedor, registro_productos);
@@ -357,7 +357,7 @@ function actualizarTablaBusquedaModalInsumosProveedor(json_info){
 
 function crearTablaSeleccionadosModalInsumosProveedor(clave){
   firebase.database().ref(rama_bd_insumos + "/listas/proveedores/"+clave).on("value",function(snapshot){
-    console.log("Ejecutando firebase");
+    //console.log("Ejecutando firebase");
     var datos_seleccionados=[];
     if (snapshot.exists()){
       registro_productos = snapshot.val();
@@ -417,7 +417,7 @@ function crearTablaSeleccionadosModalInsumosProveedor(clave){
 }
 
 $(document).on('click','.agregarModalInsumosProveedor', function(){
-  console.log("Agregar");
+  //console.log("Agregar");
     var data = tabla_BusquedaModalInsumosProveedor.row( $(this).parents('tr') ).data();
     uid_existente_insumo = data[0];
     if(existeInsumoModalInsumosProveedor(uid_existente_insumo)){
@@ -431,7 +431,7 @@ $(document).on('click','.agregarModalInsumosProveedor', function(){
 } );
 
 $(document).on('click','.eliminarModalInsumosProveedor', function(){
-  console.log("Eliminar");
+  //console.log("Eliminar");
   var data = tabla_SelectModalInsumosProveedor.row( $(this).parents('tr') ).data();
   // Elimina directamente de la base de datos
   //eliminarModalInsumosProveedor(data[0]);
@@ -444,7 +444,7 @@ $(document).on('click','.eliminarModalInsumosProveedor', function(){
 });
 
 $(document).on('click','.editarModalInsumosProveedor', function(){
-  console.log("Editar");
+  //console.log("Editar");
   var data = tabla_SelectModalInsumosProveedor.row( $(this).parents('tr') ).data();
   uid_existente_insumo = data[0];
   existe_insumo=true;
