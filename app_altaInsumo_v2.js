@@ -317,8 +317,8 @@ function altaProveedorInsumo(){
     $('#'+id_ddl_proveedorInsumos + ' option:selected').text(),
     $('#'+id_precioInsumos).val(),
     $('#' + id_fecha_cotizacionInsumos).val(),
-    "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>",
-    "<button type='button' class='eliminar btn btn-transparent'><i class='icono_rojo fas fa-times-circle'></i></button>"
+    "<button type='button' class='editarProveedoresInsumos btn btn-info'><i class='fas fa-edit'></i></button>",
+    "<button type='button' class='eliminarProveedoresInsumos btn btn-transparent'><i class='icono_rojo fas fa-times-circle'></i></button>"
   ];
   return proveedor;
 }
@@ -367,11 +367,12 @@ function actualizarTablaInsumos(){
                 {
                     "targets": -1,
                     "data": null,
-                    "defaultContent": "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>"
+                    "defaultContent": "<button type='button' class='editarInsumo btn btn-info'><i class='fas fa-edit'></i></button>"
                 }
               ]
         });
         //Funcion para llenar los campos cuando se quiere editar desde las opciones de la tabla
+        /*
         $('#' + id_dataTable_insumo + ' tbody').on( 'click', '.editar', function () {
             highLightProductoInsumo();
             var data = tabla_insumo.row( $(this).parents('tr') ).data();
@@ -387,8 +388,25 @@ function actualizarTablaInsumos(){
             $('#' + id_ddl_categoriaInsumos ).val(data[10]);
             actualizarTablaProveedoresInsumo();
         } );
+        */
     });
 }
+
+$(document).on('click','.editarInsumo', function(){
+    highLightProductoInsumo();
+    var data = tabla_insumo.row( $(this).parents('tr') ).data();
+    resetFormInsumo();
+    existe_insumo = true;
+    uid_existente = data[0];
+    $('#' + id_catalogoInsumos ).val(data[1]);
+    $('#' + id_descripcionInsumos ).val(data[2]);
+    $('#' + id_catfabricInsumos ).val(data[3]);
+    $('#' + id_ddl_marcaInsumos ).val(data[4]);
+    $('#' + id_ddl_unidadInsumos ).val(data[6]);
+    $('#' + id_ddl_clasificacionInsumos ).val(data[8]);
+    $('#' + id_ddl_categoriaInsumos ).val(data[10]);
+    actualizarTablaProveedoresInsumo();
+});
 
 function actualizarTablaProveedoresInsumo(){
     firebase.database().ref(rama_bd_insumos + "/listas/productos/"+uid_existente).on("value",function(snapshot){
@@ -407,8 +425,8 @@ function actualizarTablaProveedoresInsumo(){
                 proveedores.val()[uid]["razon_social"],
                 formatMoney(proveedor.precio),
                 fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2),
-                "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>",
-                "<button type='button' class='eliminar btn btn-transparent'><i class='icono_rojo fas fa-times-circle'></i></button>"
+                "<button type='button' class='editarProveedoresInsumos btn btn-info'><i class='fas fa-edit'></i></button>",
+                "<button type='button' class='eliminarProveedoresInsumos btn btn-transparent'><i class='icono_rojo fas fa-times-circle'></i></button>"
             ]);
         });
 
@@ -427,6 +445,7 @@ function actualizarTablaProveedoresInsumo(){
               ]
         });
         //Funcion para llenar los campos cuando se quiere editar desde las opciones de la tabla
+        /*
         $('#' + id_dataTableProveedoresInsumos + ' tbody').on( 'click', '.editar', function () {
             highLightProveedorInsumo();
             var data = tabla_proveedorInsumo.row( $(this).parents('tr') ).data();
@@ -449,8 +468,32 @@ function actualizarTablaProveedoresInsumo(){
             }
             tabla_proveedorInsumo.row( $(this).parents('tr') ).remove().draw();
         } );
+        */
     });
 }
+
+$(document).on('click','.editarProveedoresInsumos', function(){
+    highLightProveedorInsumo();
+    var data = tabla_proveedorInsumo.row( $(this).parents('tr') ).data();
+    resetProveedorInsumo();
+    existe_proveedor = true;
+    uid_existente_proveedor = data[0];
+    existe_proveedor_index = tabla_proveedorInsumo.row(this).index();
+    $('#' + id_ddl_proveedorInsumos).val(data[0]);
+    $('#' + id_precioInsumos).val(data[2]);
+    $('#' + id_fecha_cotizacionInsumos).val(data[3]);
+});
+
+$(document).on('click','.eliminarProveedoresInsumos', function(){
+    console.log("Eliminar");
+    var data = tabla_proveedorInsumo.row( $(this).parents('tr') ).data();
+    if(existe_proveedor && data[0] == uid_existente_proveedor){
+      existe_proveedor = false;
+      uid_existente_proveedor = "";
+      existe_proveedor_index = -1;
+    }
+    tabla_proveedorInsumo.row( $(this).parents('tr') ).remove().draw();
+});
 
 function recuperaDatosProveedoresInsumo(){
   var proveedoresInsumo = {};
