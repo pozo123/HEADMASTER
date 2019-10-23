@@ -16,7 +16,7 @@ var json_personal = {};
 
 var id_div_dropdown_areas = "dropdown_areas";
 
-var version = "test";
+var version = "version2";
 
 var rama_bd_personal = version + "/personal";
 var rama_bd_obras = version + "/obras";
@@ -53,7 +53,6 @@ $(document).ready(function() {
 
     document.getElementById(id_week_label).innerHTML = "Semana " + getWeek(new Date().getTime())[0];
 
-/*
     firebase.database().ref("rrhh/trabajadores").once("value").then(function(snapshot){
 
         var datos = {
@@ -128,6 +127,13 @@ $(document).ready(function() {
                 total_pago: 0,
             },
             "ICON": {
+                horas_extra: 0,
+                total_horas_extra: 0,
+                diversos: 0,
+                total_asistencias: 0,
+                total_pago: 0,
+            },
+            "Icon Beyond": {
                 horas_extra: 0,
                 total_horas_extra: 0,
                 diversos: 0,
@@ -222,7 +228,7 @@ $(document).ready(function() {
         };
         var pago_ejemplo = 0;
         snapshot.forEach(function(subSnap){
-            var semana = subSnap.child("nomina/2019/39").val();
+            var semana = subSnap.child("nomina/2019/41").val();
             if(semana != null){
                 if(semana.total){
                     pago_ejemplo += parseFloat(semana.total);
@@ -356,7 +362,7 @@ $(document).ready(function() {
                 }},
             ],
         });
-    }); */
+    });
 });
 
 firebase.auth().onAuthStateChanged(user => {
