@@ -814,6 +814,16 @@
                               </div>
                           </div>
                           </br>
+                          <div class="form-row align-items-center">
+                              <div class="col-lg-3 col-sm-12"></div>
+                              <div class="col-lg-3 col-sm-12">
+                                  <label for="fechaCotizacionModalInsumosProveedor">Vencimiento de cotización:</label>
+                              </div>
+                              <div class="col-lg-3 col-sm-12">
+                                  <input class="form-control" type="text" id="fechaCotizacionModalInsumosProveedor" placeholder="" readonly="readonly">
+                              </div>
+                          </div>
+                          </br>
                           <div class="form-row">
                               <div class= "col-4"></div>
                               <div class= "col-4">
@@ -821,7 +831,7 @@
                               </div>
                           </div>
                           </br>
-                          <label>Productos seleccionados</label>
+                          <h2>Productos seleccionados</h2>
                           <div class = "tableWrapper container_reporte_nomina">
                               <table id="dataTableSeleccionadosModalInsumosProveedor" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
                                   <thead>
@@ -829,11 +839,9 @@
                                           <th>Id_producto</th>
                                           <th>Catalogo</th>
                                           <th>Descripcion</th>
-                                          <th>Catfabric</th>
                                           <th>Marca</th>
-                                          <th>Clasificacion</th>
-                                          <th>Unidad</th>
                                           <th>Precio</th>
+                                          <th>Vencimiento</th>
                                           <th>Editar</th>
                                           <th>Eliminar</th>
                                       </tr>
@@ -936,7 +944,7 @@
 
                 <ul class="list-unstyled components" id = "formRegistrosProyectos">
                     <div class="card text-center text-white bg-dark">
-                        <div class="card-body" id="card">                 
+                        <div class="card-body" id="card">
                             <div class="container-fluid">
                                 <label for="">¿En qué vas a trabajar hoy?</label>
                                 <div class="form-group">
@@ -956,7 +964,7 @@
                                     <label for="otros">¿Qué vas a hacer?</label>
                                     <textarea class="form-control" id="otraActividadRegistrosProyectos" rows="5"></textarea>
                                 </div>
-                                <button type="button" name="" id="entradaButtonRegistrosProyectos" class="btn btn-success btn-lg btn-block">Entrada</button> 
+                                <button type="button" name="" id="entradaButtonRegistrosProyectos" class="btn btn-success btn-lg btn-block">Entrada</button>
                             </div>
                             <div class="container-fluid">
                                 <button type="button" name="" id="salidaButtonRegistrosProyectos" class="btn btn-danger btn-lg btn-block hidden">Salida</button>
