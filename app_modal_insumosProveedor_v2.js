@@ -131,9 +131,9 @@ $('#' + id_boton_guardarModalInsumosProveedor).click(function() {
     }
   }
   console.log(insumo_update);
-  //firebase.database().ref(rama_bd_insumos).update(insumo_update);
+  firebase.database().ref(rama_bd_insumos).update(insumo_update);
   // PAD
-  //pda("modificacion", rama_bd_insumos + "/listas/proveedores/" + uid_modalProveedor, registro_productos);
+  pda("modificacion", rama_bd_insumos + "/listas/proveedores/" + uid_modalProveedor, registro_productos);
   alert("¡Insumos registrados con éxito!");
 
   resetModalInsumosProveedor();
@@ -417,6 +417,7 @@ function crearTablaSeleccionadosModalInsumosProveedor(clave){
 }
 
 $(document).on('click','.agregarModalInsumosProveedor', function(){
+  console.log("Agregar");
     var data = tabla_BusquedaModalInsumosProveedor.row( $(this).parents('tr') ).data();
     uid_existente_insumo = data[0];
     if(existeInsumoModalInsumosProveedor(uid_existente_insumo)){
@@ -432,10 +433,18 @@ $(document).on('click','.agregarModalInsumosProveedor', function(){
 $(document).on('click','.eliminarModalInsumosProveedor', function(){
   console.log("Eliminar");
   var data = tabla_SelectModalInsumosProveedor.row( $(this).parents('tr') ).data();
-  eliminarModalInsumosProveedor(data[0]);
+  // Elimina directamente de la base de datos
+  //eliminarModalInsumosProveedor(data[0]);
+  if(existe_insumo && data[0] == uid_existente_insumo){
+    existe_insumo = false;
+    uid_existente_insumo = "";
+    existe_insumo_index = -1;
+  }
+  tabla_SelectModalInsumosProveedor.row( $(this).parents('tr') ).remove().draw();
 });
 
 $(document).on('click','.editarModalInsumosProveedor', function(){
+  console.log("Editar");
   var data = tabla_SelectModalInsumosProveedor.row( $(this).parents('tr') ).data();
   uid_existente_insumo = data[0];
   existe_insumo=true;
@@ -446,8 +455,7 @@ $(document).on('click','.editarModalInsumosProveedor', function(){
   $('#' + id_fecha_cotizacionModalInsumosProveedor).val(data[5]);
 });
 
-
-
+//Funcion para eliminar directamente un registro de la base de datos
 function eliminarModalInsumosProveedor (clave){
   var insumo_update = {};
   var registro_antiguo = registro_productos[clave];
