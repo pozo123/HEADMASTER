@@ -52,7 +52,7 @@ $(document).ready(function() {
     });
 
     document.getElementById(id_week_label).innerHTML = "Semana " + getWeek(new Date().getTime())[0];
-
+/* 
     firebase.database().ref("rrhh/trabajadores").once("value").then(function(snapshot){
 
         var datos = {
@@ -362,7 +362,7 @@ $(document).ready(function() {
                 }},
             ],
         });
-    });
+    }); */
 });
 
 firebase.auth().onAuthStateChanged(user => {
