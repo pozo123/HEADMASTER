@@ -54,8 +54,6 @@ $('#' + id_tab_reporte_nomina).click(function(){
     });
 
     tableReporteGlobalReporteNomina();
-    reporteSemanalReporteNomina();
-    reporteObraReporteNomina();
 });
 
 $('#' + id_ddl_year_reporte_nomina).change(function(){
@@ -102,6 +100,10 @@ $('#' + id_ddl_year_reporte_nomina).change(function(){
 
 $('#' + id_ddl_week_reporte_nomina).change(function(){
     reporteSemanalReporteNomina();
+});
+
+$('#' + id_ddl_obra_reporte_nomina).change(function(){
+    reporteObraReporteNomina();
 });
 // tabla para el reporte más general.
 
@@ -410,12 +412,60 @@ function reporteObraReporteNomina(){
                 }
             });
         } else {
+            snapshot.forEach(function(regSnap){
+                var registro = regSnap.val();
+                var nomina = 0;
+                var horas_extra = 0;
+                var diversos = 0;
+                var iva = 0;
+                var pago = 0;
 
+                if(registro.pagos_nomina){
+                    pago = registro.pagos_nomina.monto;
+                    for(asistKey in registro.asistencias){
+                        if(registro.asistencias[asistKey].actividad != "Falta" && registro.asistencias[asistKey].obra == obra_selected){
+                            nomina += registro.sueldo_semanal * 0.2;
+                        }
+                    }
+    
+                    for(heKey in registro.horas_extra){
+                        if(registro.horas_extra[heKey].obra == obra_selected){
+                            horas_extra += registro.horas_extra[heKey].cantidad * (registro.sueldo_semanal / 24);
+                        }
+                    }
+                    for(divKey in registro.diversos){
+                        if(registro.diversos[divKey].obra == obra_selected){
+                            diversos += registro.diversos[divKey].cantidad;
+                        };
+                    };
+    
+                    iva = (nomina + horas_extra + diversos)*0.16
+    
+                    if(json_datos[registro.year_head + "_" + registro.week_head] == undefined){
+                        json_datos[registro.year_head + "_" + registro.week_head] = {
+                            nomina: nomina,
+                            horas_extra: horas_extra,
+                            diversos: diversos,
+                            iva: iva,
+                            carga_social: pago - nomina - horas_extra - diversos - iva,
+                            total: pago
+                        }
+                    } else {
+                        json_datos[registro.year_head + "_" + registro.week_head].nomina += nomina;
+                        json_datos[registro.year_head + "_" + registro.week_head].horas_extra += horas_extra;
+                        json_datos[registro.year_head + "_" + registro.week_head].diversos += diversos;
+                        json_datos[registro.year_head + "_" + registro.week_head].iva += iva;
+                        json_datos[registro.year_head + "_" + registro.week_head].carga_social += pago - nomina - horas_extra - diversos - iva;
+                        json_datos[registro.year_head + "_" + registro.week_head].total += pago;
+                    }
+                }
+            });
         };
 
         var datos = [];
         for(key in json_datos){
             datos.push([
+                key,
                 key.split("_")[0],
                 key.split("_")[1],
                 formatMoney(json_datos[key].nomina),
@@ -439,6 +489,7 @@ function reporteObraReporteNomina(){
             "order": [[ 0, "desc" ]],
             "columnDefs": [
                 { "width": "20%", "targets": 3 },
+                { "visible": false, "targets": 0 },
                 {
                     targets: [-1],
                     className: 'bolded'
@@ -447,7 +498,7 @@ function reporteObraReporteNomina(){
             ],
             buttons: [
                 {extend: 'excelHtml5',
-                title: "Reporte_global_nomina",
+                title: "Cambiar_nombre",
                 exportOptions: {
                     columns: [':visible']
                 }},
