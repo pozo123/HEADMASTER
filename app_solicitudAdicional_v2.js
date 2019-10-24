@@ -6,7 +6,7 @@ var id_ddl_accionSolicitudAdicional = "ddl_accionSolicitudAdicional";
 
 var id_ddl_obraSolicitudAdicional="ddl_obraSolicitudAdicional";
 var id_ddl_solicitudSolicitudAdicional="ddl_solicitudSolicitudAdicional";
-var id_dd_atnSolicitudAdicional="ddl_atnSolicitudAdicional";
+var id_ddl_atnSolicitudAdicional="ddl_atnSolicitudAdicional";
 var id_descripcionSolicitudAdicional="descripcionSolicitudAdicional";
 var id_anexosSolicitudAdicional="anexosSolicitudAdicional";
 var id_fotoInputSolicitudAdicional="fotoInputSolicitudAdicional";
@@ -24,6 +24,8 @@ var id_boton_terminarSolicitudAdicional="botonTerminarSolicitudAdicional";
 
 var selectAnexos;
 var selectImagenes;
+
+var existe_solicitud;
 
 $('#' + id_tab_solicitudAdicional).click(function() {
     arrayAnexos = [];
@@ -103,8 +105,8 @@ function ddlObrasActivasGeneric (id_objeto){
 $('#' + id_ddl_obraSolicitudAdicional).change(function(){
   uid_obra = $('#' + id_ddl_obraSolicitudAdicional+' option:selected').val();
   resetForm1SolicitudAdicional();
-  llenaDdlSolicitudSolicitudAdicional();
-  llenaDdlAtnSolicitudAdicionall();
+  llenaDdlSolicitudSolicitudAdicional(id_ddl_solicitudSolicitudAdicional);
+  llenaDdlAtnSolicitudAdicionall(id_ddl_atnSolicitudAdicional);
 });
 
 $('#' + id_ddl_solicitudSolicitudAdicional).change(function(){
@@ -120,10 +122,51 @@ $('#' + id_ddl_solicitudSolicitudAdicional).change(function(){
 
 function resetForm1SolicitudAdicional(){
   $('#'+id_ddl_solicitudSolicitudAdicional).val("");
-  $('#'+id_dd_atnSolicitudAdicional).val("");
+  $('#'+id_ddl_atnSolicitudAdicional).val("");
   $('#'+id_descripcionSolicitudAdicional).val("");
   selectAnexos.set([]);
   $('#'+id_fotoInputSolicitudAdicional).val("");
+}
+
+function llenaDdlSolicitudSolicitudAdicional(id_objeto){
+    $('#' + id_objeto).empty();
+    var select = document.getElementById(id_objeto);
+    var option = document.createElement('option');
+    option.style = "display:none";
+    option.text = option.value = "";
+    select.appendChild(option);
+    var solicitud;
+    firebase.database().ref(rama_bd_obras + "/adicionales/solicitudes/"+ uid_obra).on('child_added',function(snapshot){
+      solicitud = snapshot.val();
+      option = document.createElement('option');
+      option.value = snapshot.key;
+      option.text = solicitud.nombre;
+      select.appendChild(option);
+    });
+    option = document.createElement('option');
+    option.value = "NUEVA";
+    option.text = "NUEVA";
+    select.appendChild(option);
+}
+
+function llenaDdlAtnSolicitudAdicionall(id_objeto){
+  firebase.database().ref(rama_bd_obras + "/obras/id_cliente").on('value',function(snapshot){
+    var cliente_id = snapshot.val();
+    $('#' + id_objeto).empty();
+    var select = document.getElementById(id_objeto);
+    var option = document.createElement('option');
+    option.style = "display:none";
+    option.text = option.value = "";
+    select.appendChild(option);
+    var atencion;
+    firebase.database().ref(rama_bd_clientes + "/contactos/"+ cliente_id).on('child_added',function(snapshot){
+      atencion = snapshot.val();
+      option = document.createElement('option');
+      option.value = snapshot.key;
+      option.text = atencion.prefijo + " " + atencion.nombre + " " + atencion.a_paterno + " " + atencion.a_materno;
+      select.appendChild(option);
+    });
+  });
 }
 
 function llenaFormSolicitudSolicitudAdicional(solicitud_id){
