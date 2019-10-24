@@ -207,7 +207,12 @@ Nota: Todo float se ingresa a 2 decimales.
             - solicitudes
                 - obra
                     - id_solicitud
-                        - info (por definir)
+                        - descripcion: string
+                        - anexos_tipo:
+                            - anexo_id: nombre
+                        - anexos_imag:
+                            - anexo_id: url
+                        - atencion: contacto_id
                         - terminada: boolean
                         - url_evidencia: string
                         - copeo:
