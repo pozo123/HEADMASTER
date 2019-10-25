@@ -210,6 +210,12 @@ $('#' + id_button_abrir_datos_nomina).click(function(){
     });
 });
 
+$("#" + id_id_head_datos_nomina).keypress(function(event) { 
+    if (event.keyCode === 13) { 
+        $('#' + id_button_abrir_datos_nomina).click(); 
+    } 
+}); 
+
 $('#' + id_button_guardar_datos_nomina).click(function(){
     if(!validateModalDatosNomina()){
         alert("Por favor llena todos los campos incluyendo la obra asignada. En caso de querer eliminar un registro de horas extra o diversos basta escribir 0 en su cantidad.")
