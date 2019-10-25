@@ -27,30 +27,29 @@ $('#' + id_reset_actividad_score).click(function(){
 })
 
 $('#' + id_agregar_actividad_score).click(function(){
-    console.log("as")
     if(!validateActividadScore()){
         return;
     }
     if (existe_actividad_score){
         firebase.database().ref(rama_bd_datos_referencia + "/actividades_score/" + id_actividad_score_existente).once("value").then(function(snapshot){
-            var registro_antiguo = snapshot.val();
-            
+            var registro_antiguo = snapshot.val();      
             var actividad_update = {};
+
             actividad_update["actividades_score/" + id_actividad_score_existente + "/nombre"] = $('#' + id_nombre_actividad_score).val();
             firebase.database().ref(rama_bd_datos_referencia).update(actividad_update);
 
             // pda
             pda("modificacion", rama_bd_datos_referencia + "/actividades_score/" + id_actividad_score_existente, registro_antiguo);
             alert("¡Edición exitosa!");
-            resetFormEspecialidad();
+            resetFormActividadScore();
         });
     } else {
-        firebase.database().ref(rama_bd_datos_referencia + "/actividades_score").push(datosEspecialidad()).then(function(snapshot){
+        firebase.database().ref(rama_bd_datos_referencia + "/actividades_score").push(datosActividadScore()).then(function(snapshot){
             var regKey = snapshot.key
             // pista de auditoría
             pda("alta", rama_bd_datos_referencia + "/actividades_score/" + regKey, "");
             alert("¡Alta exitosa!");
-            resetFormEspecialidad();
+            resetFormActividadScore();
         });
     };
 });
@@ -81,7 +80,7 @@ $('#' + id_nombre_actividad_score).change(function(){
 
  function validateActividadScore(){
     if($('#' + id_nombre_actividad_score).val() == ""){
-        alert("Escribe la actividad para SCORE que deseas dar de alta en el sistema. Ejemplo: cuantificaciones");
+        alert("Escribe la actividad para SCORE que deseas dar de alta en el sistema. Ejemplo: Cuantificaciones");
         return false;
     } else {
         return true;
@@ -89,21 +88,21 @@ $('#' + id_nombre_actividad_score).change(function(){
  };
 
  function actualizarTablaActividadScore(){
-    firebase.database().ref(rama_bd_datos_referencia + "/especialidades").on("value", function(snapshot){
-        var datosEspecialidad = [];
-        snapshot.forEach(function(especialidadSnap){
-            var especialidad = especialidadSnap.val();
-            var especialidad_id = especialidadSnap.key;
-            var especialidad_nombre = especialidad.nombre;
+    firebase.database().ref(rama_bd_datos_referencia + "/actividades_score").on("value", function(snapshot){
+        var datosActividadScore = [];
+        snapshot.forEach(function(actividadSnap){
+            var actividad = actividadSnap.val();
+            var actividad_id = actividadSnap.key;
+            var actividad_nombre = actividad.nombre;
 
-            datosEspecialidad.push([
-                especialidad_id,
-                especialidad_nombre
+            datosActividadScore.push([
+                actividad_id,
+                actividad_nombre
             ]);
         });
         tabla_actividad_score = $('#'+ id_dataTable_actividad_score).DataTable({
             destroy: true,
-            data: datosEspecialidad,
+            data: datosActividadScore,
             language: idioma_espanol,
             "columnDefs": [
                 {
@@ -125,16 +124,16 @@ $('#' + id_nombre_actividad_score).change(function(){
             existe_actividad_score = true;
             id_actividad_score_existente = data[0];
                
-            $('#' + id_nombre_actividad_score).val(data[2]);
+            $('#' + id_nombre_actividad_score).val(data[1]);
         });
     });
  };
 
- function datosEspecialidad(){
-    var especialidad = {
+ function datosActividadScore(){
+    var actividad = {
             nombre: $('#' + id_nombre_actividad_score).val(),
     }
-    return especialidad;
+    return actividad;
  }
 
  function highLightAllActividadScore(){
