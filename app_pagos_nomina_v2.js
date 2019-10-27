@@ -272,11 +272,20 @@ $('#' + id_button_guardar_pagos_nomina).click(function(){
 
 $(document).on('keypress','.pago', function(e){
     charactersAllowed("$1234567890,.",e);
+    if (event.keyCode === 13) { 
+       alert("232");
+    } 
 });
 
 $(document).on('change','.pago', function(){
     var deformat_sueldo = deformatMoney($(this).val());
     $(this).val(formatMoney(deformat_sueldo));
+});
+
+$(document).on('change','.pago', function(){
+    var deformat_sueldo = deformatMoney($(this).val());
+    $(this).val(formatMoney(deformat_sueldo));
+    $(".pago").eq( $("..pago").index( $(this) ) + 1 ).focus();
 });
 
 
