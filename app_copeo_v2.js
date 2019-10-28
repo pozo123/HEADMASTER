@@ -111,9 +111,9 @@ $('#' + id_agregar_copeo).click(function() {
     }
     //Generar el JSON de la entrada con los datos del formulario
 		entrada_update[path_subproceso + "/entradas/" + uid_entrada] = datosEntradaCopeo();
-    console.log(datosEntradaCopeo());
+    //console.log(datosEntradaCopeo());
 		//Escribir los cambios en la base de datos
-		console.log(entrada_update);
+		//console.log(entrada_update);
 		firebase.database().ref(rama_bd_obras).update(entrada_update);
 		// PAD
     if (nueva){
@@ -122,7 +122,7 @@ $('#' + id_agregar_copeo).click(function() {
     }else {
       pda("modificacion", rama_bd_obras + "/" +path_subproceso +"/entradas/" + uid_entrada, registro_antiguo);
       alert("¡Edición exitosa!");
-      console.log(registro_antiguo);
+      //console.log(registro_antiguo);
     }
 		resetFormCopeo();
 		//actualizarTablaCopeo();
@@ -319,7 +319,7 @@ function validateFormCopeo(){
 			return false;
 	} else {
     var aux = selectTrabajadores.selected();
-    console.log(aux);
+    //console.log(aux);
     if(aux && aux.length>0){
       for(i=0;i<aux.length; i++){
         if ($('#' + aux[i]).val() == ""){
@@ -493,7 +493,7 @@ function agregaCamposPuesto(puesto){
 
 function cargaCamposCopeo(claveObra, claveProceso, claveSubproceso, claveEntrada){
   if( claveEntrada == "-NUEVA-"){
-    console.log("Sin registro de entrada");
+    //console.log("Sin registro de entrada");
     resetFormCopeo_entrada();
     if(num_entradas==0){
       $('#'+id_carga_socialCopeo).prop("disabled", false);
@@ -506,7 +506,7 @@ function cargaCamposCopeo(claveObra, claveProceso, claveSubproceso, claveEntrada
   }else{
     firebase.database().ref(rama_bd_obras + "/copeo/" + claveObra + "/" + claveProceso + "/" + claveSubproceso).once('value',function(snapshot){
       var subproceso = snapshot.val();
-      console.log(subproceso);
+      //console.log(subproceso);
       var entrada = subproceso["entradas"][claveEntrada];
       registro_antiguo = entrada;
       var cuadrilla = entrada.cuadrilla;
@@ -556,11 +556,11 @@ function calculaCostoTotalCopeo(){
   var total = 0;
   var totalCS = 0;
   if ($('#'+id_diasCopeo).val() !== "" && $('#'+id_multCopeo).val() !== ""){
-    console.log("calculando total");
+    //console.log("calculando total");
     total = suma * parseFloat($('#'+id_diasCopeo).val()) * parseFloat($('#'+id_multCopeo).val());
     if($('#'+id_carga_socialCopeo).val() !== ""){
       totalCS = total * (1 + parseFloat($('#'+id_carga_socialCopeo).val())*0.01)
-      console.log(totalCS);
+      //console.log(totalCS);
     }
   } else {
     total = 0;
@@ -723,7 +723,7 @@ function actualizarTablaCopeo(){
       formatMoney(costoTotal_obra),
       ""
     ];
-    console.log(datos_obra);
+    //console.log(datos_obra);
     tabla_copeo = $('#'+ id_dataTable_copeo).DataTable({
 				"fnRowCallback": function (row, data, index_table) {
 							if ( index_table==0) {
