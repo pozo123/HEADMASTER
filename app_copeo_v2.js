@@ -147,6 +147,7 @@ $('#' + id_sueldos_copeo).click(function() {
 // -----------------------------------  DDLS  ---------------------------------------
 
 $("#" + id_ddl_obraCopeo).change(function(){
+  resetFormCopeo();
   uid_obra=$('#' + id_ddl_obraCopeo + " option:selected").val();
   getProcesosCopeo(uid_obra);
   $('#' + id_ddl_procesoCopeo).empty();
@@ -184,6 +185,7 @@ $("#" + id_ddl_subprocesoCopeo).change(function(){
 });
 
 $("#" + id_ddl_entradaCopeo).change(function(){
+  uid_subproceso = $('#'+id_ddl_subprocesoCopeo+" option:selected").val()
   resetFormCopeo_entrada();
   cargaCamposCopeo(uid_obra, uid_proceso, uid_subproceso, $("#" + id_ddl_entradaCopeo+" option:selected").val() );
 });
@@ -370,6 +372,7 @@ function resetFormCopeo_entrada(){
 
 function llenaDdlSubprocesoCopeo(clave_obra, clave_proceso){
 	$('#' + id_ddl_subprocesoCopeo).empty();
+  $('#' + id_ddl_entradaCopeo).empty();
   var select = document.getElementById(id_ddl_subprocesoCopeo);
   var option = document.createElement('option');
   option.style = "display:none";
