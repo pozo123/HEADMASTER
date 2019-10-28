@@ -57,9 +57,7 @@ Nota: Todo float se ingresa a 2 decimales.
             - cliente (id_firebase)
                 - contacto (firebase_id)
                     - prefijo: string
-                    - nombre: string
-                    - a_paterno: string
-                    - a_materno: string
+                    - nombre_completo: string
                     - area: string
                     - celular: string
                     - email: string

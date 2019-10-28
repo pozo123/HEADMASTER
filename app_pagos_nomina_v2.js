@@ -273,7 +273,12 @@ $('#' + id_button_guardar_pagos_nomina).click(function(){
 $(document).on('keypress','.pago', function(e){
     charactersAllowed("$1234567890,.",e);
     if (event.keyCode === 13) { 
-       alert("232");
+        console.log($('.pago').index(this)+1);
+        if($('.pago').index(this) + 1 < $('.pago').length){
+            $('.pago').eq($('.pago').index(this)+1).focus();
+        } else {
+            $('#' + id_button_guardar_pagos_nomina).click(); 
+        }
     } 
 });
 
@@ -284,8 +289,7 @@ $(document).on('change','.pago', function(){
 
 $(document).on('change','.pago', function(){
     var deformat_sueldo = deformatMoney($(this).val());
-    $(this).val(formatMoney(deformat_sueldo));
-    $(".pago").eq( $("..pago").index( $(this) ) + 1 ).focus();
+    $(this).val(formatMoney(deformat_sueldo));    
 });
 
 

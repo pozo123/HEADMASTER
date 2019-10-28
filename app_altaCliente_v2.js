@@ -32,6 +32,29 @@ var id_reset_form_cliente = "borrarButtonCliente";
 var existe_cliente = false;
 var id_cliente_existente = "";
 
+// modal datos cliente
+
+var id_modal_contacto_cliente = "modalContactosCliente";
+var id_form_contacto_cliente = "form_contacto_cliente";
+
+var id_dataTable_contacto_cliente = "dataTableContactosCliente";
+
+var id_prefijo_contacto_cliente = "prefijoContactosCliente";
+var id_nombre_contacto_cliente = "nombreContactosCliente";
+var id_area_contacto_cliente = "areaContactosCliente";
+var id_celular_contacto_cliente = "celularContactosCliente";
+var id_email_contacto_cliente = "emailContactosCliente";
+var id_extension_contacto_cliente = "extensionContactosCliente";
+
+var id_button_guardar_contacto_cliente = "guardarContactosCliente";
+var id_button_borrar_contacto_cliente = "resetContactosCliente";
+
+var existe_contacto_cliente = false;
+var id_contacto_cliente_existente = "";
+var id_cliente_cliente_existente = "";
+
+
+
 
 // Lo necesario para inicializar la pestaña (se hace al seleccionar la pestaña)
 // se resetea el formulario (ver en funciones)
@@ -56,12 +79,12 @@ $('#' + id_agregar_cliente).click(function(){
         firebase.database().ref(rama_bd_clientes + "/despachos/" + uid_existente).once("value").then(function(snapshot){
             var registro_antiguo = snapshot.val();
             
-            var cliente_update = {};
-            cliente_update["despachos/" + uid_existente + "/clave_cliente"] = $('#' + id_clave_cliente).val();
-            cliente_update["despachos/" + uid_existente + "/nombre"] = $('#' + id_nombre_cliente).val();
-            cliente_update["despachos/" + uid_existente + "/telefono"] = $('#' + id_telefono_cliente).val();
-            cliente_update["despachos/" + uid_existente + "/direccion"] = datosAltaCliente().direccion;
-            firebase.database().ref(rama_bd_clientes).update(cliente_update);
+            var contacto_update = {};
+            contacto_update["despachos/" + uid_existente + "/clave_cliente"] = $('#' + id_clave_cliente).val();
+            contacto_update["despachos/" + uid_existente + "/nombre"] = $('#' + id_nombre_cliente).val();
+            contacto_update["despachos/" + uid_existente + "/telefono"] = $('#' + id_telefono_cliente).val();
+            contacto_update["despachos/" + uid_existente + "/direccion"] = datosAltaCliente().direccion;
+            firebase.database().ref(rama_bd_clientes).update(contacto_update);
             // pad
             pda("modificacion", rama_bd_clientes + "/despachos/" + uid_existente, registro_antiguo);
             alert("¡Edición exitosa!");
@@ -238,6 +261,7 @@ $('#' + id_nombre_cliente).on("cut copy paste",function(e) {
 function resetFormCliente(){
     $('#' + id_form_cliente).trigger("reset");
     existe_cliente = false;
+    id_cliente_existente = "";
 };
 
 function validateCliente(){
@@ -297,7 +321,7 @@ function actualizarTablaCliente(){
                 nombre_cliente,
                 direccion_text,
                 telefono_cliente,
-                "<button type='button' class='btn btn-dark'><span class='fas fa-address-book'></span></button>", 
+                "<button type='button' class='btn btn-dark' onclick='loadModalContactoCliente(" + "\`" + cliente_id + "\`" + ")'><span class='fas fa-address-book'></span></button>", 
                 "<button type='button' class='btn btn-transparente' onclick='habilitarCliente(" + habilitado + "," + "\`"  + cliente_id  + "\`" + ")'><span class=" + icon_class + "></span></button>",
             ])  ;        
         });
@@ -417,3 +441,249 @@ function  habilitarCliente(habilitado, id){
         pda("modificacion", rama_bd_clientes + "/despachos/" + id, registro_antiguo)
     });
 }
+
+
+
+
+// ------------- MOOOOOOOOODAAAAAAAAAAAL para contactos -------------------------
+
+function loadModalContactoCliente (id_contacto){
+    resetFormContactoCliente();
+    id_cliente_cliente_existente = id_contacto;
+    actualizarTablaContactoCliente();
+    $('#' + id_modal_contacto_cliente).modal('show');
+}
+
+function resetFormContactoCliente(){
+    $('#' + id_form_contacto_cliente).trigger("reset");
+    existe_contacto_cliente = false;
+    id_contacto_cliente_existente = "";
+};
+
+
+// Validaciones
+
+function validateContactoCliente(){
+    if($('#' + id_nombre_contacto_cliente).val() == ""){
+        alert("Escribe el nombre del contacto en cuestión.");
+        return false;
+    } else if($('#' + id_email_contacto_cliente).val() != "" && !validateEmail($('#' + id_email_contacto_cliente).val())) {
+        alert("Escribe una dirección de correo válida");
+        return false;
+    } else if($('#' + id_celular_contacto_cliente).val() != "" && $('#' + id_celular_contacto_cliente).val().length < 14){
+        alert("El número de teléfono tiene que ser de 10 dígitos.")
+        $('#' + id_telefono_cliente).val("");
+        return false;
+    } else {
+        return true;
+    };
+};
+
+$('#' + id_prefijo_contacto_cliente).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZáéíóú",e);
+});
+
+$('#' + id_nombre_contacto_cliente).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZáéíóú",e);
+});
+
+$('#' + id_area_contacto_cliente).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZáéíóú",e);
+});
+
+$('#' + id_celular_contacto_cliente).keypress(function(e){
+    charactersAllowed("1234567890,.",e);
+});
+
+$('#' + id_extension_contacto_cliente).keypress(function(e){
+    charactersAllowed("1234567890,.",e);
+});
+
+$('#' + id_email_contacto_cliente).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_.@0123456789",e)
+});
+
+
+$('#' + id_nombre_contacto_cliente).change(function(){
+    var nombre_array = deleteBlankSpaces(id_nombre_contacto_cliente).split(" ");
+    var nombre = "";
+    for(var i=0; i<nombre_array.length; i++){
+        if(i>0){
+            nombre += " ";
+        }
+        nombre += nombre_array[i].charAt(0).toUpperCase() + nombre_array[i].slice(1);
+    }
+    $('#' + id_nombre_contacto_cliente).val(nombre);
+});
+
+$('#' + id_celular_contacto_cliente).change(function(){
+    var telefono = "" + $('#' + id_celular_contacto_cliente).val()
+    if(telefono.length > 0){
+        var aux = "";
+        for(i=0;i<telefono.length;i++){
+            if(i%2 == 0 && i > 0){
+                aux+= " ";
+            }
+            aux += telefono.charAt(i);
+        }
+        $('#' + id_celular_contacto_cliente).val(aux);
+    }
+});
+
+$('#' + id_celular_contacto_cliente).focus(function(){
+    var aux_array = $('#' + id_celular_contacto_cliente).val().split(" ");
+    var aux = "";
+    for(var i=0;i< aux_array.length;i++){
+        aux += aux_array[i];
+    }
+    $('#' + id_celular_contacto_cliente).val(aux);
+});
+
+$('#' + id_email_contacto_cliente).change(function(){
+    $('#' + id_email_contacto_cliente).val($('#' + id_email_contacto_cliente).val().toLowerCase());
+});
+
+$('#' + id_area_contacto_cliente).change(function(){
+    var area = deleteBlankSpaces(id_area_contacto_cliente);
+    area = area.charAt(0).toUpperCase() + area.slice(1);
+    $('#' + id_area_contacto_cliente).val(area);
+});
+
+$('#' + id_prefijo_contacto_cliente).change(function(){
+    var prefijo = deleteBlankSpaces(id_prefijo_contacto_cliente);
+    prefijo = prefijo.charAt(0).toUpperCase() + prefijo.slice(1);
+    $('#' + id_prefijo_contacto_cliente).val(prefijo);
+});
+
+// Funcionabilidad
+
+$('#' + id_button_guardar_contacto_cliente).click(function(){
+    if(!validateContactoCliente()){
+        return;
+    };
+
+    if (existe_contacto_cliente){
+        firebase.database().ref(rama_bd_clientes + "/contactos/" + id_cliente_cliente_existente + "/" + id_contacto_cliente_existente).once("value").then(function(snapshot){
+            var registro_antiguo = snapshot.val();
+            var contacto_update = {};
+
+            contacto_update["contactos/" + id_cliente_cliente_existente + "/" + id_contacto_cliente_existente + "/prefijo"] = $('#' + id_prefijo_contacto_cliente).val();
+            contacto_update["contactos/" + id_cliente_cliente_existente + "/" + id_contacto_cliente_existente + "/nombre_completo"] = $('#' + id_nombre_contacto_cliente).val();
+            contacto_update["contactos/" + id_cliente_cliente_existente + "/" + id_contacto_cliente_existente + "/area"] = $('#' + id_area_contacto_cliente).val();
+            contacto_update["contactos/" + id_cliente_cliente_existente + "/" + id_contacto_cliente_existente + "/celular"] = $('#' + id_celular_contacto_cliente).val();
+            contacto_update["contactos/" + id_cliente_cliente_existente + "/" + id_contacto_cliente_existente + "/email"] = $('#' + id_email_contacto_cliente).val();
+            contacto_update["contactos/" + id_cliente_cliente_existente + "/" + id_contacto_cliente_existente + "/extension"] = $('#' + id_extension_contacto_cliente).val();
+
+            firebase.database().ref(rama_bd_clientes).update(contacto_update);
+            // pad
+            pda("modificacion", rama_bd_clientes + "/contactos/" + id_cliente_cliente_existente + "/" + id_contacto_cliente_existente, registro_antiguo);
+            alert("¡Edición exitosa!");
+            resetFormContactoCliente();
+        });
+    } else {
+
+        var contacto = {};
+        contacto = {
+            prefijo: $('#' + id_prefijo_contacto_cliente).val(),
+            nombre_completo: $('#' + id_nombre_contacto_cliente).val(),
+            area: $('#' + id_area_contacto_cliente).val(),
+            celular: $('#' + id_celular_contacto_cliente).val(),
+            email: $('#' + id_email_contacto_cliente).val(),
+            extension: $('#' + id_extension_contacto_cliente).val()
+        }
+
+        firebase.database().ref(rama_bd_clientes + "/contactos/" + id_cliente_cliente_existente).push(contacto).then(function(snapshot){
+            var regKey = snapshot.key
+            // pista de auditoría
+            pda("alta", rama_bd_clientes + "/despachos/" + id_cliente_cliente_existente + "/"+ regKey, "");
+            alert("¡Alta exitosa!");
+            resetFormContactoCliente();
+        });
+    };
+});
+
+function highLightAllContactoCliente(){
+    highLight(id_prefijo_contacto_cliente);
+    highLight(id_nombre_contacto_cliente);
+    highLight(id_area_contacto_cliente);
+    highLight(id_celular_contacto_cliente);
+    highLight(id_email_contacto_cliente);
+    highLight(id_extension_contacto_cliente);
+}
+
+function actualizarTablaContactoCliente(){
+    firebase.database().ref(rama_bd_clientes+ "/contactos/" + id_cliente_cliente_existente).on("value", function(snapshot){
+        var datosContactoCliente = [];
+        snapshot.forEach(function(contactoSnap){
+            var contacto = contactoSnap.val();
+            var contacto_id = contactoSnap.key;
+
+            var prefijo = contacto.prefijo;
+            var nombre_completo = contacto.nombre_completo;
+            var area = contacto.area;
+            var celular = contacto.celular;
+            var email = contacto.email;
+            var extension = contacto.extension;
+
+            datosContactoCliente.push([
+                contacto_id,
+                prefijo,
+                nombre_completo,
+                area,
+                celular,
+                email,
+                extension,
+                "<button type='button' class='editar_contacto btn btn-info'><i class='fas fa-edit'></i></button>",
+                "<button type='button' class='eliminar_contacto btn btn-danger'><i class='fas fa-trash-alt'></i></button>", 
+            ])  ;        
+        });
+        tabla_cliente = $('#'+ id_dataTable_contacto_cliente).DataTable({
+            destroy: true,
+            data: datosContactoCliente,
+            language: idioma_espanol,
+            "columnDefs": [
+                {
+                    targets: -1,
+                    className: 'dt-body-center'
+                },
+                {
+                    targets: -2,
+                    className: 'dt-body-center'
+                },
+                {
+                    targets: 0,
+                    className: 'dt-body-center'
+                },
+                { "visible": false, "targets": 0 },
+              ]
+        });
+
+        $('#' + id_dataTable_contacto_cliente + ' tbody').on( 'click', '.editar_contacto', function () {
+            
+            var data = tabla_cliente.row( $(this).parents('tr') ).data();
+            
+            highLightAllContactoCliente();
+            resetFormContactoCliente();
+
+            existe_contacto_cliente = true;
+            id_contacto_cliente_existente = data[0];
+
+            $('#' + id_prefijo_contacto_cliente).val(data[1]);
+            $('#' + id_nombre_contacto_cliente).val(data[2]);
+            $('#' + id_area_contacto_cliente).val(data[3]);
+            $('#' + id_celular_contacto_cliente).val(data[4]);
+            $('#' + id_email_contacto_cliente).val(data[5]);
+            $('#' + id_extension_contacto_cliente).val(data[6]);
+        } );
+
+        $('#' + id_dataTable_contacto_cliente + ' tbody').on( 'click', '.eliminar_contacto', function () {
+            
+            var data = tabla_cliente.row( $(this).parents('tr') ).data();
+            id_contacto_cliente_existente = data[0];
+
+            firebase.database().ref(rama_bd_clientes + "/contactos/" + id_cliente_cliente_existente + "/" + id_contacto_cliente_existente).set(null);
+            alert("Contacto eliminado");
+
+        } );
+    });
+};

@@ -219,7 +219,7 @@
         </div>
         <!-- Modal Datos Nomina -->
         <div class="modal fade" id="modalDatosNomina">
-            <div id= "modalDatos" class="modal-dialog modal-lg" role="document">
+            <div id= "modalDatos" class="modal-dialog modal-lg modalLG" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
                     <div class="flex-column">
@@ -402,6 +402,89 @@
                             </thead>
                             <tbody id="bodyModalTrabajadores"></tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-dark" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Contactos de Cliente-->
+        <div class="modal fade" id="modalContactosCliente" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg modalLG" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">At'n (Contactos)</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <form  id= "form_contacto_cliente" action="#" onsubmit ="return false;">
+                                <div class="form-row align-items-center">
+                                    <div class="col-lg-2">
+                                        <label for="prefijoContactosCliente">Prefijo</label>
+                                        <input type="text" id="prefijoContactosCliente" class="form-control" placeholder="Prefijo">
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label for="nombreContactosCliente">Nombre Completo</label>
+                                        <input type="text" id="nombreContactosCliente" class="form-control" placeholder="Nombre">
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label for="areaContactosCliente">Área</label>
+                                        <input type="text" id="areaContactosCliente" class="form-control" placeholder="Área">
+                                    </div>
+                                </div>
+                                </br>
+                                <div class="form-row align-items-center">
+                                    <div class="col-lg-4">
+                                        <label for="celularContactosCliente">Celular</label>
+                                        <input type="text" id="celularContactosCliente" class="form-control" placeholder="Celular">
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label for="emailContactosCliente">Email</label>
+                                        <input type="text" id="emailContactosCliente" class="form-control" placeholder="Email">
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label for="extensionContactosCliente">Extensión</label>
+                                        <input type="text" id="extensionContactosCliente" class="form-control" placeholder="Extensión">
+                                    </div>
+                                </div>
+                                </br>
+                                <div class="form-row align-items-center">
+                                    <div class= "col-2"></div>
+                                    <div class="col-4">
+                                        <button id="guardarContactosCliente" type="button" class="btn btn-outline-success btn-block">Guardar</button>
+                                    </div>
+                                    <div class="col-4">
+                                        <button id="resetContactosCliente" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                    </div>
+                                    <div class= "col-2"></div>
+                                </div>
+                                </br>
+                            </form>
+                            <div class="container-fluid">
+                                <div class = "tableWrapper container_reporte_nomina">
+                                    <table id="dataTableContactosCliente" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>ID_contacto</th>
+                                                <th>Prefijo</th>
+                                                <th>Nombre Completo</th>
+                                                <th>Área</th>
+                                                <th>Celular</th>
+                                                <th>Email</th>
+                                                <th>Extension</th>
+                                                <th>Editar</th>
+                                                <th>Eliminar</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                            </br>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -1284,37 +1367,37 @@
                                         </form>
                                         <br/>
                                     </div>
-                                    <div class = "tableWrapper">
-                                        <table id="dataTableCliente" class="display" style="width:100%">
-                                            <thead>
-                                                <tr>
-                                                    <th>Editar</th>
-                                                    <th>ID</th>
-                                                    <th>Dirección</th>
-                                                    <th>Clave</th>
-                                                    <th>Despacho</th>
-                                                    <th>Dirección</th>
-                                                    <th>Teléfono</th>
-                                                    <th>At'n</th>
-                                                    <th>Habilitado</th>
-                                                </tr>
-                                            </thead>
-                                            <tfoot>
-                                                <tr>
-                                                    <th>Editar</th>
-                                                    <th>ID</th>
-                                                    <th>Dirección</th>
-                                                    <th>Clave</th>
-                                                    <th>Despacho</th>
-                                                    <th>Dirección</th>
-                                                    <th>Teléfono</th>
-                                                    <th>At'n</th>
-                                                    <th>Habilitado</th>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
-                                    </div>
                                     <div class= "col-lg-2"></div>
+                                </div>
+                                <div class = "tableWrapper">
+                                    <table id="dataTableCliente" class="display" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Editar</th>
+                                                <th>ID</th>
+                                                <th>Dirección</th>
+                                                <th>Clave</th>
+                                                <th>Despacho</th>
+                                                <th>Dirección</th>
+                                                <th>Teléfono</th>
+                                                <th>At'n</th>
+                                                <th>Habilitado</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Editar</th>
+                                                <th>ID</th>
+                                                <th>Dirección</th>
+                                                <th>Clave</th>
+                                                <th>Despacho</th>
+                                                <th>Dirección</th>
+                                                <th>Teléfono</th>
+                                                <th>At'n</th>
+                                                <th>Habilitado</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
                                 </div>
                             </div>
                         </div>
