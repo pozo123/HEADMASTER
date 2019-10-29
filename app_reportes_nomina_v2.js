@@ -24,6 +24,13 @@ $('#' + id_tab_reporte_nomina).click(function(){
 
     $('#' + id_ddl_week_reporte_nomina).empty();
     var select_week = document.getElementById(id_ddl_week_reporte_nomina);
+
+    // Aquí insertar una empty que diga "SELECCIONA SEMANA"
+    var option = document.createElement('option');
+    option.style = "display:none";
+    option.text = option.value = "SELECCIONA SEMANA";
+    select_week.appendChild(option);
+
     for(i=actual_week;i>0;i--){
         var ju_mi = getDaysWeek(i,actual_year);
         var jueves = ju_mi[0];
@@ -40,7 +47,14 @@ $('#' + id_tab_reporte_nomina).click(function(){
     }
 
     $('#' + id_ddl_obra_reporte_nomina).empty();
+
     var select_asignada = document.getElementById(id_ddl_obra_reporte_nomina);
+    
+    var option1 = document.createElement('option');
+    option1.style = "display:none";
+    option1.text = option.value = "SELECCIONA UNA OBRA O TODAS";
+    select_asignada.appendChild(option);
+
     var option_asignada = document.createElement('option');
     option_asignada.text = option_asignada.value = "TODAS";
     select_asignada.appendChild(option_asignada);
@@ -62,6 +76,14 @@ $('#' + id_ddl_year_reporte_nomina).change(function(){
 
     var select = document.getElementById(id_ddl_week_reporte_nomina);
     var year = $('#' + id_ddl_year_reporte_nomina + " option:selected").val();
+
+    // Aquí hacer lo mismo de insertar "Selecciona semana"
+
+    var option = document.createElement('option');
+    option.style = "display:none";
+    option.text = option.value = "SELECCIONA SEMANA";
+    select.appendChild(option);
+
     if(year < new Date().getFullYear()){
         var ultima_semana = getWeek(new Date(year,11,31).getTime())[0];
         for(i=ultima_semana;i>0;i--){
@@ -108,7 +130,6 @@ $('#' + id_ddl_obra_reporte_nomina).change(function(){
 // tabla para el reporte más general.
 
 function tableReporteGlobalReporteNomina(){
-
     firebase.database().ref(rama_bd_nomina + "/nomina").on("value", function(regSnap){
         firebase.database().ref(rama_bd_obras + "/listas/obras_activas").once("value").then(function(obraSnap){
             var json_datos = {};
@@ -163,8 +184,8 @@ function tableReporteGlobalReporteNomina(){
                             json_datos[obra].nomina += 0.2 * registros[reg_key].sueldo_semanal;
 
                             if(aux_proporcion > 0 && pago_registro - aux > 0) {
-                                json_datos[obra].carga_social += ((pago_registro - aux) * 0.2) / aux_proporcion;
-                            }
+                                json_datos[obra].carga_social += (pago_registro - aux) * (0.2 / aux_proporcion);
+                            } 
                         };
                     };
                 };
@@ -419,44 +440,62 @@ function reporteObraReporteNomina(){
                 var diversos = 0;
                 var iva = 0;
                 var pago = 0;
+                var carga_social = 0;
 
                 if(registro.pagos_nomina){
                     pago = registro.pagos_nomina.monto;
+
+                    var aux_proporcion = 0;
+                    var aux = 0;
+
+                    
                     for(asistKey in registro.asistencias){
-                        if(registro.asistencias[asistKey].actividad != "Falta" && registro.asistencias[asistKey].obra == obra_selected){
-                            nomina += registro.sueldo_semanal * 0.2;
+                        if(registro.asistencias[asistKey].actividad != "Falta"){
+                            aux_proporcion += 0.2;
+                            aux += (0.2 * registro.sueldo_semanal) * 1.16;
                         }
-                    }
+                    };
+
+                    // calcular horas_extra
     
                     for(heKey in registro.horas_extra){
+                        aux += registro.horas_extra[heKey].cantidad * (registro.sueldo_semanal / 24) * 1.16;
                         if(registro.horas_extra[heKey].obra == obra_selected){
                             horas_extra += registro.horas_extra[heKey].cantidad * (registro.sueldo_semanal / 24);
                         }
                     }
                     for(divKey in registro.diversos){
+                        aux += registro.diversos[divKey].cantidad * 1.16;
                         if(registro.diversos[divKey].obra == obra_selected){
                             diversos += registro.diversos[divKey].cantidad;
                         };
                     };
-    
-                    iva = (nomina + horas_extra + diversos)*0.16
+                    // calcular nomina
+                    for(asistKey in registro.asistencias){
+                        if(registro.asistencias[asistKey].actividad != "Falta" && registro.asistencias[asistKey].obra == obra_selected){
+                            nomina += registro.sueldo_semanal * 0.2;
+                            if(aux_proporcion > 0 && pago - aux > 0) {
+                                carga_social += (pago - aux) * (0.2 / aux_proporcion);
+                            } 
+                        }
+                    };
     
                     if(json_datos[registro.year_head + "_" + registro.week_head] == undefined){
                         json_datos[registro.year_head + "_" + registro.week_head] = {
                             nomina: nomina,
                             horas_extra: horas_extra,
                             diversos: diversos,
-                            iva: iva,
-                            carga_social: pago - nomina - horas_extra - diversos - iva,
-                            total: pago
+                            iva: (nomina + horas_extra + diversos) * 0.16,
+                            carga_social: carga_social,
+                            total: (nomina + horas_extra + diversos) * 1.16 + carga_social
                         }
                     } else {
                         json_datos[registro.year_head + "_" + registro.week_head].nomina += nomina;
                         json_datos[registro.year_head + "_" + registro.week_head].horas_extra += horas_extra;
                         json_datos[registro.year_head + "_" + registro.week_head].diversos += diversos;
-                        json_datos[registro.year_head + "_" + registro.week_head].iva += iva;
-                        json_datos[registro.year_head + "_" + registro.week_head].carga_social += pago - nomina - horas_extra - diversos - iva;
-                        json_datos[registro.year_head + "_" + registro.week_head].total += pago;
+                        json_datos[registro.year_head + "_" + registro.week_head].iva += (nomina + horas_extra + diversos) * 0.16;
+                        json_datos[registro.year_head + "_" + registro.week_head].carga_social += carga_social
+                        json_datos[registro.year_head + "_" + registro.week_head].total += (nomina + horas_extra + diversos) * 1.16 + carga_social;
                     }
                 }
             });
@@ -464,21 +503,23 @@ function reporteObraReporteNomina(){
 
         var datos = [];
         for(key in json_datos){
-            datos.push([
-                key,
-                key.split("_")[0],
-                key.split("_")[1],
-                formatMoney(json_datos[key].nomina),
-                "" + ((json_datos[key].nomina / (json_datos[key].nomina + json_datos[key].horas_extra + json_datos[key].diversos)) * 100).toFixed(2) +"%", 
-                formatMoney(json_datos[key].horas_extra),
-                "" + ((json_datos[key].horas_extra / (json_datos[key].nomina + json_datos[key].horas_extra + json_datos[key].diversos)) * 100).toFixed(2) +"%", 
-                formatMoney(json_datos[key].diversos),
-                "" + ((json_datos[key].diversos / (json_datos[key].nomina + json_datos[key].horas_extra + json_datos[key].diversos)) * 100).toFixed(2) +"%", 
-                formatMoney(json_datos[key].nomina + json_datos[key].horas_extra + json_datos[key].diversos),
-                formatMoney(json_datos[key].iva),
-                formatMoney(json_datos[key].carga_social),
-                formatMoney(json_datos[key].total),
-            ]);
+            if(json_datos[key].total > 0){
+                datos.push([
+                    key,
+                    key.split("_")[0],
+                    key.split("_")[1],
+                    formatMoney(json_datos[key].nomina),
+                    "" + ((json_datos[key].nomina / (json_datos[key].nomina + json_datos[key].horas_extra + json_datos[key].diversos)) * 100).toFixed(2) +"%", 
+                    formatMoney(json_datos[key].horas_extra),
+                    "" + ((json_datos[key].horas_extra / (json_datos[key].nomina + json_datos[key].horas_extra + json_datos[key].diversos)) * 100).toFixed(2) +"%", 
+                    formatMoney(json_datos[key].diversos),
+                    "" + ((json_datos[key].diversos / (json_datos[key].nomina + json_datos[key].horas_extra + json_datos[key].diversos)) * 100).toFixed(2) +"%", 
+                    formatMoney(json_datos[key].nomina + json_datos[key].horas_extra + json_datos[key].diversos),
+                    formatMoney(json_datos[key].iva),
+                    formatMoney(json_datos[key].carga_social),
+                    formatMoney(json_datos[key].total),
+                ]);
+            }
         };
         tabla_reporte_obra_nomina = $('#'+ id_dataTable_reporte_obra_reporte_nomina).DataTable({
             destroy: true,
