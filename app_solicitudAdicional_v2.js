@@ -9,8 +9,11 @@ var id_ddl_solicitudSolicitudAdicional="ddl_solicitudSolicitudAdicional";
 var id_ddl_atnSolicitudAdicional="ddl_atnSolicitudAdicional";
 var id_descripcionSolicitudAdicional="descripcionSolicitudAdicional";
 var id_anexosSolicitudAdicional="anexosSolicitudAdicional";
+var id_div_otroSolicitudAdicional = "div_otroSolicitudAdicional";
 var id_fotoInputSolicitudAdicional="fotoInputSolicitudAdicional";
 var id_imagenLabelSolicitudAdicional="imagenLabelSolicitudAdicional";
+var id_leyendaSolicitudAdicional = "leyendaSolicitudAdicional";
+var id_boton_cargaFotoSolicitudAdicional = "botonCargaFotoSolicitudAdicional";
 var id_imagenesSolicitudAdicional="imagenesSolicitudAdicional";
 var id_boton_pdfSolicitudAdicional="botonPDFSolicitudAdicional";
 var id_boton_registrarSolicitudAdicional="botonRegistrarSolicitudAdicional";
@@ -25,10 +28,23 @@ var id_boton_terminarSolicitudAdicional="botonTerminarSolicitudAdicional";
 var selectAnexos;
 var selectImagenes;
 
+var fotoSeleccionada; //input
+var array_fotosSeleccionadas; //inputs
+var array_fotosAnexos; //inputs como url
+var array_leyendasAnexos;
+var indexSolicitudAdicional;
+var json_anexos;
+
 var existe_solicitud;
 
 $('#' + id_tab_solicitudAdicional).click(function() {
     arrayAnexos = [];
+    array_fotosSeleccionadas=[];
+    array_fotosAnexos=[];
+    array_leyendasAnexos=[];
+    indexSolicitudAdicional = 0;
+    json_anexos={};
+
     //resetFormSolicitudAdicional();
     $('#' + id_ddl_accionSolicitudAdicional).empty();
     var select = document.getElementById(id_ddl_accionSolicitudAdicional);
@@ -57,6 +73,7 @@ $('#' + id_tab_solicitudAdicional).click(function() {
           option.value = snapChild.key;
           option.text = anexo;
           select2.appendChild(option);
+          json_anexos[snapChild.key]=anexo;
         })
         //Llenado de la lista de puestos
         selectAnexos = new SlimSelect({
@@ -64,6 +81,8 @@ $('#' + id_tab_solicitudAdicional).click(function() {
             placeholder: 'Elige el tipo de anexo proporcionado',
         });
     });
+
+    $('#' + id_imagenesSolicitudAdicional).empty();
     selectImagenes = new SlimSelect({
         select: '#' + id_imagenesSolicitudAdicional,
         placeholder: 'Imagenes seleccionadas',
@@ -120,6 +139,75 @@ $('#' + id_ddl_solicitudSolicitudAdicional).change(function(){
   }
 });
 
+$('#' + id_anexosSolicitudAdicional).change(function(){
+    var array_anexos = selectAnexos.selected();
+    var item;
+    if(array_anexos.includes("AN-05")){
+      $('#'+id_div_otroSolicitudAdicional).removeClass("hidden");
+    } else {
+      $('#'+id_div_otroSolicitudAdicional).addClass("hidden");
+    }
+});
+
+$('#' + id_leyendaSolicitudAdicional).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789áéíóú,.-",e);
+});
+
+$('#' + id_fotoInputSolicitudAdicional).on("change", function(event){
+    fotoSeleccionada = event.target.files[0];
+    $('#' + id_imagenLabelSolicitudAdicional).text(fotoSeleccionada.name);
+    $('#' + id_boton_cargaFotoSolicitudAdicional).prop("disabled", false);
+    $('#' + id_boton_cargaFotoSolicitudAdicional).removeClass('btn-outline-dark');
+    $('#' + id_boton_cargaFotoSolicitudAdicional).addClass('btn-outline-success');
+});
+
+$('#' + id_boton_cargaFotoSolicitudAdicional).click(function() {
+  var leyenda = $('#'+id_leyendaSolicitudAdicional).val();
+  if(leyenda !== "" ){
+    array_fotosSeleccionadas.push(fotoSeleccionada);
+    $('#' + id_imagenLabelSolicitudAdicional).text("Seleccionar una imagen");
+    $('#' + id_boton_cargaFotoSolicitudAdicional).prop("disabled", true);
+    $('#' + id_boton_cargaFotoSolicitudAdicional).removeClass('btn-outline-success');
+    $('#' + id_boton_cargaFotoSolicitudAdicional).addClass('btn-outline-dark');
+    var reader = new FileReader();
+    reader.readAsDataURL(fotoSeleccionada);
+    reader.onloadend = function () {
+        array_fotosAnexos.push({url: reader.result, file: fotoSeleccionada});
+        //console.log(imagenes_anexos);
+    }
+    array_leyendasAnexos.push(leyenda);
+    cargaImagenDdlSolicitudAdicional();
+  }else {
+    alert("Ingresa una leyenda para este anexo");
+  }
+});
+
+$('#' + id_boton_pdfSolicitudAdicional).click(function() {
+  var fecha_pdf = new Date();
+  
+  const pdfDocGenerator = pdfMake.createPdf(generaSolicitudAdic(false,"NOMBRE DE LA OBRA", "CLAVE DE LA SOLICITUD","DESCRIPCION DE LA SOLICTUD", "NOMBRE DE ATN", json_anexos, selectAnexos.selected(), "", array_fotosAnexos, array_leyendasAnexos, fecha_pdf , "NOMBRE DE SUPERVISOR"));
+  pdfDocGenerator.open()
+});
+
+async function cargaImagenDdlSolicitudAdicional(){
+  try {
+    var select2 = document.getElementById(id_imagenesSolicitudAdicional);
+    var option = document.createElement('option');
+    option.value = indexSolicitudAdicional;
+    option.text = fotoSeleccionada.name;
+    if (await select2.appendChild(option)){
+      var seleccionadas = selectImagenes.selected().concat([indexSolicitudAdicional]);
+      selectImagenes.set(seleccionadas);
+      //console.log("Termino");
+    }else{
+      console.log("Chale");
+    }
+    indexSolicitudAdicional+=1;
+  } catch (error){
+    console.log(error);
+  }
+}
+
 function resetForm1SolicitudAdicional(){
   $('#'+id_ddl_solicitudSolicitudAdicional).val("");
   $('#'+id_ddl_atnSolicitudAdicional).val("");
@@ -150,7 +238,7 @@ function llenaDdlSolicitudSolicitudAdicional(id_objeto){
 }
 
 function llenaDdlAtnSolicitudAdicionall(id_objeto){
-  firebase.database().ref(rama_bd_obras + "/obras/id_cliente").on('value',function(snapshot){
+  firebase.database().ref(rama_bd_obras + "/obras/" + uid_obra +"/id_cliente").on('value',function(snapshot){
     var cliente_id = snapshot.val();
     $('#' + id_objeto).empty();
     var select = document.getElementById(id_objeto);
@@ -163,7 +251,7 @@ function llenaDdlAtnSolicitudAdicionall(id_objeto){
       atencion = snapshot.val();
       option = document.createElement('option');
       option.value = snapshot.key;
-      option.text = atencion.prefijo + " " + atencion.nombre + " " + atencion.a_paterno + " " + atencion.a_materno;
+      option.text = atencion.prefijo + " " + atencion.nombre_completo;
       select.appendChild(option);
     });
   });

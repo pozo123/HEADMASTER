@@ -3053,18 +3053,39 @@
                                                </div>
                                              </div>
                                              <div class="form-row hidden" id="div_otroSolicitudAdicional">
-                                                 <div class="form-group col-md-6">
+                                                 <div class= "col-lg-2"></div>
+                                                 <div class="form-group col-md-8">
                                                      <label for="otroSolicitudAdicional">Otro:</label>
-                                                     <input type="text" disabled="true" class="form-control" id="otroSolicitudAdicional" placeholder="Especificar">
+                                                     <input type="text" class="form-control" id="otroSolicitudAdicional" placeholder="Especificar">
                                                  </div>
+                                                 <div class= "col-lg-2"></div>
                                               </div>
                                              <div class="form-group">
                                                  <label for="fotoInputSolicitudAdicional">Selecciona una imagen</label>
                                                  <div class="custom-file">
                                                      <input type="file" class="custom-file-input" id="fotoInputSolicitudAdicional" accept="image/*"/>
-                                                     <label class = "custom-file-label" id="imagenLabelSolicitudAdicional">Archivo no seleccionado</label>
+                                                     <label class = "custom-file-label" id="imagenLabelSolicitudAdicional">Seleccionar una imagen</label>
                                                  </div>
                                              </div>
+                                             </br>
+                                             <div class="form-row">
+                                                 <div class= "col-lg-2"></div>
+                                                 <div class="form-group col-md-8">
+                                                     <label for="otroSolicitudAdicional">Leyenda:</label>
+                                                     <input type="text" class="form-control" id="leyendaSolicitudAdicional" placeholder="Especificar">
+                                                 </div>
+                                                 <div class= "col-lg-2"></div>
+                                              </div>
+                                             </br>
+                                             <div class="form-row">
+                                                 <div class= "col-lg-4"></div>
+                                                 <div class= "col-lg-4">
+                                                     <button id="botonCargaFotoSolicitudAdicional" type="button"  class="btn btn-outline-dark btn-block" disabled = "true">Cargar foto</button>
+                                                 </div>
+                                                 <div class= "col-lg-4"></div>
+                                             </div>
+                                             </br>
+                                             </br>
                                              <div class="form-row">
                                                <div class="form-group col-md-3">
                                                   <label>Imagenes seleccionadas</label>
@@ -3640,6 +3661,7 @@
         <script src="app_modal_insumosProveedor_v2.js"></script>
         <script src="app_actividades_score_v2.js"></script>
         <script src="app_solicitudAdicional_v2.js"></script>
+        <script src="pdf_solicitudAdicional_v2.js"></script>
 
         <!-- Excel to Json-->
         <script src="xlsx.full.min.js"></script>
