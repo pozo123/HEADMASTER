@@ -10,6 +10,7 @@ var id_ddl_atnSolicitudAdicional="ddl_atnSolicitudAdicional";
 var id_descripcionSolicitudAdicional="descripcionSolicitudAdicional";
 var id_anexosSolicitudAdicional="anexosSolicitudAdicional";
 var id_div_otroSolicitudAdicional = "div_otroSolicitudAdicional";
+var id_otroSolicitudAdicional = "otroSolicitudAdicional";
 var id_fotoInputSolicitudAdicional="fotoInputSolicitudAdicional";
 var id_imagenLabelSolicitudAdicional="imagenLabelSolicitudAdicional";
 var id_leyendaSolicitudAdicional = "leyendaSolicitudAdicional";
@@ -184,8 +185,22 @@ $('#' + id_boton_cargaFotoSolicitudAdicional).click(function() {
 
 $('#' + id_boton_pdfSolicitudAdicional).click(function() {
   var fecha_pdf = new Date();
-  
-  const pdfDocGenerator = pdfMake.createPdf(generaSolicitudAdic(false,"NOMBRE DE LA OBRA", "CLAVE DE LA SOLICITUD","DESCRIPCION DE LA SOLICTUD", "NOMBRE DE ATN", json_anexos, selectAnexos.selected(), "", array_fotosAnexos, array_leyendasAnexos, fecha_pdf , "NOMBRE DE SUPERVISOR"));
+  var obra = $('#'+ id_ddl_obraSolicitudAdicional).text();
+  var solicitud = $('#'+ id_ddl_solicitudSolicitudAdicional).val();
+  var atencion = $('#'+ id_ddl_atnSolicitudAdicional).text();
+  var descripcion = $('#'+ id_descripcionSolicitudAdicional).val();
+  var anexos_seleccionados = selectAnexos.selected();
+  var otros;
+  if(anexos_seleccionados.includes("AN-05")){
+    otros = $('#'+ id_otroSolicitudAdicional).val();
+  } else {
+    otros = "";
+  }
+  //FALTA DISCRIMINAR LAS IMAGENES Y LEYENDAS QUE SI ENTRAN EN LA SOLICITUD
+  //FATA OBTENER EL NOMBRE DEL COLABORADOR HEAD
+  //FALTA HACER LA VALIDACION DE LOS DATOS
+  //FALTA FUNCIONALIDAD DEL BOTON REGISTRAR
+  const pdfDocGenerator = pdfMake.createPdf(generaSolicitudAdic(false, obra, solicitud, descripcion, atencion, json_anexos, anexos_seleccionados, otro, array_fotosAnexos, array_leyendasAnexos, fecha_pdf , "NOMBRE DE SUPERVISOR"));
   pdfDocGenerator.open()
 });
 

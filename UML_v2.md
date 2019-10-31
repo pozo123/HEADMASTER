@@ -209,7 +209,9 @@ Nota: Todo float se ingresa a 2 decimales.
                         - anexos_tipo:
                             - anexo_id: nombre
                         - anexos_imag:
-                            - anexo_id: url
+                            - anexo_id
+                                - imagen: url
+                                - leyenda: string
                         - atencion: contacto_id
                         - terminada: boolean
                         - url_evidencia: string
