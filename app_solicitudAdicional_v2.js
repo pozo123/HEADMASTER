@@ -30,21 +30,23 @@ var selectAnexos;
 var selectImagenes;
 
 var fotoSeleccionada; //input
-var array_fotosSeleccionadas; //inputs
-var array_fotosAnexos; //inputs como url
+var array_fotosAnexos; //inputs con url
 var array_leyendasAnexos;
 var indexSolicitudAdicional;
 var json_anexos;
+var cont_solicitudes;
+var colaborador;
 
 var existe_solicitud;
 
 $('#' + id_tab_solicitudAdicional).click(function() {
     arrayAnexos = [];
-    array_fotosSeleccionadas=[];
     array_fotosAnexos=[];
     array_leyendasAnexos=[];
     indexSolicitudAdicional = 0;
     json_anexos={};
+    cont_solicitudes = 0;
+    colaborador = "";
 
     //resetFormSolicitudAdicional();
     $('#' + id_ddl_accionSolicitudAdicional).empty();
@@ -87,6 +89,11 @@ $('#' + id_tab_solicitudAdicional).click(function() {
     selectImagenes = new SlimSelect({
         select: '#' + id_imagenesSolicitudAdicional,
         placeholder: 'Imagenes seleccionadas',
+    });
+
+    firebase.database().ref(rama_bd_personal + "/colaboradores/"+uid_usuario_global).on('value',function(snapshot){
+        var usuario = snapshot.val();
+        colaborador = usuario.nombre + " " +usuario.a_paterno + " " + usuario.a_materno;
     });
 });
 
@@ -165,7 +172,6 @@ $('#' + id_fotoInputSolicitudAdicional).on("change", function(event){
 $('#' + id_boton_cargaFotoSolicitudAdicional).click(function() {
   var leyenda = $('#'+id_leyendaSolicitudAdicional).val();
   if(leyenda !== "" ){
-    array_fotosSeleccionadas.push(fotoSeleccionada);
     $('#' + id_imagenLabelSolicitudAdicional).text("Seleccionar una imagen");
     $('#' + id_boton_cargaFotoSolicitudAdicional).prop("disabled", true);
     $('#' + id_boton_cargaFotoSolicitudAdicional).removeClass('btn-outline-success');
@@ -177,6 +183,7 @@ $('#' + id_boton_cargaFotoSolicitudAdicional).click(function() {
         //console.log(imagenes_anexos);
     }
     array_leyendasAnexos.push(leyenda);
+    $('#'+id_leyendaSolicitudAdicional).val("");
     cargaImagenDdlSolicitudAdicional();
   }else {
     alert("Ingresa una leyenda para este anexo");
@@ -184,25 +191,70 @@ $('#' + id_boton_cargaFotoSolicitudAdicional).click(function() {
 });
 
 $('#' + id_boton_pdfSolicitudAdicional).click(function() {
-  var fecha_pdf = new Date();
-  var obra = $('#'+ id_ddl_obraSolicitudAdicional).text();
-  var solicitud = $('#'+ id_ddl_solicitudSolicitudAdicional).val();
-  var atencion = $('#'+ id_ddl_atnSolicitudAdicional).text();
-  var descripcion = $('#'+ id_descripcionSolicitudAdicional).val();
-  var anexos_seleccionados = selectAnexos.selected();
-  var otros;
-  if(anexos_seleccionados.includes("AN-05")){
-    otros = $('#'+ id_otroSolicitudAdicional).val();
-  } else {
-    otros = "";
+  if (validateFormSolicitudAdicional()){
+    var fecha_pdf = new Date();
+    var obra = $('#'+ id_ddl_obraSolicitudAdicional + ' option:selected').text();
+    var solicitud = $('#'+ id_ddl_solicitudSolicitudAdicional  + ' option:selected').val();
+    var atencion = $('#'+ id_ddl_atnSolicitudAdicional + ' option:selected').text();
+    var descripcion = $('#'+ id_descripcionSolicitudAdicional).val();
+    var anexos_seleccionados = selectAnexos.selected();
+    var otros;
+    if(anexos_seleccionados.includes("AN-05")){
+      otros = $('#'+ id_otroSolicitudAdicional).val();
+    } else {
+      otros = "";
+    }
+    if(solicitud == "NUEVA"){
+      if(cont_solicitudes <10){
+        solicitud = "S-0"+cont_solicitudes;
+      }else {
+        solicitud = "S-"+cont_solicitudes;
+      }
+    }
+    var indices_seleccionados = selectImagenes.selected();
+    var fotos_seleccionadas=[];
+    var leyendas_seleccionadas=[];
+    for(i=0; i<indices_seleccionados.length; i++){
+      fotos_seleccionadas.push(array_fotosAnexos[indices_seleccionados[i]]);
+      leyendas_seleccionadas.push(array_leyendasAnexos[indices_seleccionados[i]]);
+    }
+    const pdfDocGenerator = pdfMake.createPdf(generaSolicitudAdic(false, obra, solicitud, descripcion, atencion, json_anexos, anexos_seleccionados, otros, fotos_seleccionadas, leyendas_seleccionadas, fecha_pdf , colaborador));
+    pdfDocGenerator.open()
   }
-  //FALTA DISCRIMINAR LAS IMAGENES Y LEYENDAS QUE SI ENTRAN EN LA SOLICITUD
-  //FATA OBTENER EL NOMBRE DEL COLABORADOR HEAD
-  //FALTA HACER LA VALIDACION DE LOS DATOS
-  //FALTA FUNCIONALIDAD DEL BOTON REGISTRAR
-  const pdfDocGenerator = pdfMake.createPdf(generaSolicitudAdic(false, obra, solicitud, descripcion, atencion, json_anexos, anexos_seleccionados, otro, array_fotosAnexos, array_leyendasAnexos, fecha_pdf , "NOMBRE DE SUPERVISOR"));
-  pdfDocGenerator.open()
 });
+
+function validateFormSolicitudAdicional(){
+  if($('#' + id_ddl_obraSolicitudAdicional  + " option:selected").val() == ""){
+      alert("Selecciona una obra.");
+      highLightColor(id_ddl_obraSolicitudAdicional,"#FF0000");
+      return false;
+  }  else if($('#' + id_ddl_solicitudSolicitudAdicional  + " option:selected").val() === ""){
+      alert("Selecciona una solicitud");
+      highLightColor(id_ddl_solicitudSolicitudAdicional,"#FF0000");
+      return false;
+  } else if($('#' + id_ddl_atnSolicitudAdicional + " option:selected").val() == ""){
+      alert("Selecciona una persona de atención");
+      highLightColor(id_ddl_atnSolicitudAdicional,"#FF0000");
+      return false;
+  } else if($('#' + id_descripcionSolicitudAdicional ).val() == ""){
+      alert("Agrega una descripción para la solicitud");
+      highLightColor(id_descripcionSolicitudAdicional,"#FF0000");
+      return false;
+  } else if(selectAnexos.selected().length == 0){
+      alert("Selecciona el tipo de anexo a agregar");
+      highLightColor(id_anexosSolicitudAdicional,"#FF0000");
+      return false;
+  } else if(selectAnexos.selected().includes("AN-05") && $('#' + id_otroSolicitudAdicional).val() == ""){
+      alert("Especifica el tipo de anexo");
+      highLightColor(id_otroSolicitudAdicional,"#FF0000");
+      return false;
+  } else if(selectImagenes.selected().length == 0){
+      alert("Agrega una imagen para sustentar la solicitud");
+      return false;
+  } else {
+      return true;
+  }
+}
 
 async function cargaImagenDdlSolicitudAdicional(){
   try {
@@ -245,6 +297,7 @@ function llenaDdlSolicitudSolicitudAdicional(id_objeto){
       option.value = snapshot.key;
       option.text = solicitud.nombre;
       select.appendChild(option);
+      cont_solicitudes+=1;
     });
     option = document.createElement('option');
     option.value = "NUEVA";

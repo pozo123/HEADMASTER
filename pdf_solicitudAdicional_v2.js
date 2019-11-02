@@ -52,9 +52,15 @@ function generaSolicitudAdic(vista_previa, obra_nombre, solicitud, descripcion, 
     aux={};
     var anexos_tabla = [];
     for(key in lista_anexos){
-         aux = {
-            text: lista_anexos[key],
-        };
+        if(key == "AN-05"){
+            aux = {
+               text: lista_anexos[key] + " (" + otros + ")",
+            };
+        }else{
+            aux = {
+               text: lista_anexos[key],
+            };
+        }
         if(select_anexos.includes(key)){
           anexos_tabla.push([{text:"(X)", alignment:'center'}, aux]);
         } else {
