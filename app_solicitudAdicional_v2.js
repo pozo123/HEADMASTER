@@ -5,7 +5,8 @@ var id_form_solicitud2Adicional = "form2SolicitudAdicional";
 var id_ddl_accionSolicitudAdicional = "ddl_accionSolicitudAdicional";
 
 var id_ddl_obraSolicitudAdicional="ddl_obraSolicitudAdicional";
-var id_ddl_solicitudSolicitudAdicional="ddl_solicitudSolicitudAdicional";
+//var id_ddl_solicitudSolicitudAdicional="ddl_solicitudSolicitudAdicional";
+var id_solicitudSolicitudAdicional="solicitudSolicitudAdicional";
 var id_ddl_atnSolicitudAdicional="ddl_atnSolicitudAdicional";
 var id_descripcionSolicitudAdicional="descripcionSolicitudAdicional";
 var id_anexosSolicitudAdicional="anexosSolicitudAdicional";
@@ -132,10 +133,11 @@ function ddlObrasActivasGeneric (id_objeto){
 $('#' + id_ddl_obraSolicitudAdicional).change(function(){
   uid_obra = $('#' + id_ddl_obraSolicitudAdicional+' option:selected').val();
   resetForm1SolicitudAdicional();
-  llenaDdlSolicitudSolicitudAdicional(id_ddl_solicitudSolicitudAdicional);
+  //llenaDdlSolicitudSolicitudAdicional(id_ddl_solicitudSolicitudAdicional);
+  getContadorSolicitudAdicional(uid_obra);
   llenaDdlAtnSolicitudAdicionall(id_ddl_atnSolicitudAdicional);
 });
-
+/*
 $('#' + id_ddl_solicitudSolicitudAdicional).change(function(){
   var solicitud_id = $('#' + id_ddl_solicitudSolicitudAdicional+' option:selected').val();
   if(solicitud_id == "NUEVA"){
@@ -146,7 +148,7 @@ $('#' + id_ddl_solicitudSolicitudAdicional).change(function(){
     llenaFormSolicitudSolicitudAdicional(solicitud_id);
   }
 });
-
+*/
 $('#' + id_anexosSolicitudAdicional).change(function(){
     var array_anexos = selectAnexos.selected();
     var item;
@@ -192,44 +194,113 @@ $('#' + id_boton_cargaFotoSolicitudAdicional).click(function() {
 
 $('#' + id_boton_pdfSolicitudAdicional).click(function() {
   if (validateFormSolicitudAdicional()){
-    var fecha_pdf = new Date();
-    var obra = $('#'+ id_ddl_obraSolicitudAdicional + ' option:selected').text();
-    var solicitud = $('#'+ id_ddl_solicitudSolicitudAdicional  + ' option:selected').val();
-    var atencion = $('#'+ id_ddl_atnSolicitudAdicional + ' option:selected').text();
-    var descripcion = $('#'+ id_descripcionSolicitudAdicional).val();
-    var anexos_seleccionados = selectAnexos.selected();
-    var otros;
-    if(anexos_seleccionados.includes("AN-05")){
-      otros = $('#'+ id_otroSolicitudAdicional).val();
-    } else {
-      otros = "";
-    }
-    if(solicitud == "NUEVA"){
-      if(cont_solicitudes <10){
-        solicitud = "S-0"+cont_solicitudes;
-      }else {
-        solicitud = "S-"+cont_solicitudes;
-      }
-    }
-    var indices_seleccionados = selectImagenes.selected();
-    var fotos_seleccionadas=[];
-    var leyendas_seleccionadas=[];
-    for(i=0; i<indices_seleccionados.length; i++){
-      fotos_seleccionadas.push(array_fotosAnexos[indices_seleccionados[i]]);
-      leyendas_seleccionadas.push(array_leyendasAnexos[indices_seleccionados[i]]);
-    }
-    const pdfDocGenerator = pdfMake.createPdf(generaSolicitudAdic(false, obra, solicitud, descripcion, atencion, json_anexos, anexos_seleccionados, otros, fotos_seleccionadas, leyendas_seleccionadas, fecha_pdf , colaborador));
+    var pdfDocGenerator = generaPDFsolicitudAdicional(true);
     pdfDocGenerator.open()
   }
 });
+
+$('#' + id_boton_registrarSolicitudAdicional).click(function(){
+  if(validateFormSolicitudAdicional()){
+    var obra = $('#'+ id_ddl_obraSolicitudAdicional + ' option:selected').val();
+    var solicitud = generaClaveSolicitudAdicional();
+    var json_solicitud = solicitudSolicitudAdicional();
+    var solicitud_update = {};
+    var solicitud_path = rama_bd_obras + "/adicionales/solicitudes/";
+    var storageRef = firebase.storage().ref(solicitud_path + obra + "/solicitudes/" + solicitud +".pdf");
+    const pdfDocGenerator = generaPDFsolicitudAdicional(false);
+    pdfDocGenerator.download(solicitud + '.pdf');
+    $(id_boton_registrarSolicitudAdicional).prop('disabled', true);
+
+    pdfDocGenerator.getBase64((data) => {
+      var uploadTask = storageRef.putString(data,'base64');
+      uploadTask.on('state_changed', function(snapshot){
+          // Observe state change events such as progress, pause, and resume
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case firebase.storage.TaskState.PAUSED: // or 'paused'
+              console.log('Upload is paused');
+              break;
+            case firebase.storage.TaskState.RUNNING: // or 'running'
+              console.log('Upload is running');
+              break;
+          }
+        }, function(error) {
+          // Handle unsuccessful uploads
+          console.log('Error al cargar el pdf');
+        }, function() {
+          // Handle successful uploads on complete
+          // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+          uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+            console.log('File available at', downloadURL);
+            json_solicitud['url_pdf'] = downloadURL;
+            //console.log(json_solicitud);
+            solicitud_update[obra + "/solicitudes/" + solicitud] = json_solicitud;
+            solicitud_update[obra + "/contador"] = cont_solicitudes+1;
+            firebase.database().ref(solicitud_path).update(solicitud_update, function(error) {
+              if (error) {
+                // The write failed...
+                alert("¡Ups, hubo un error!");
+              } else {
+                // Data saved successfully!
+                // PAD
+                pda("alta", solicitud_path, "");
+                alert("¡Registro de solicitud exitoso!");
+                $(id_boton_registrarSolicitudAdicional).prop('disabled', false);
+                resetForm1SolicitudAdicional();
+              }
+            });
+          });
+        });
+    });
+
+  }
+});
+
+function solicitudSolicitudAdicional(){
+  var fecha_pdf = new Date();
+  var atencion = $('#'+ id_ddl_atnSolicitudAdicional + ' option:selected').text();
+  var descripcion = $('#'+ id_descripcionSolicitudAdicional).val();
+  var anexos_seleccionados = selectAnexos.selected();
+  var otros;
+  if(anexos_seleccionados.includes("AN-05")){
+    otros = $('#'+ id_otroSolicitudAdicional).val();
+  } else {
+    otros = "";
+  }
+  var json_anexos_seleccionados = {};
+  for(i=0; i<anexos_seleccionados.length;i++){
+    json_anexos_seleccionados[anexos_seleccionados[i]] = json_anexos[anexos_seleccionados[i]];
+  }
+  var json_solicitud = {
+    descripcion: descripcion,
+    anexos_tipo: json_anexos_seleccionados,
+    otros: otros,
+    atencion: atencion,
+    terminada: false,
+  };
+  return json_solicitud
+}
+
+function generaClaveSolicitudAdicional(){
+  var solicitud;
+  var clave = cont_solicitudes+1;
+  if(clave <10){
+    solicitud = "S-0"+ clave;
+  }else {
+    solicitud = "S-"+ clave;
+  }
+  return solicitud;
+}
 
 function validateFormSolicitudAdicional(){
   if($('#' + id_ddl_obraSolicitudAdicional  + " option:selected").val() == ""){
       alert("Selecciona una obra.");
       highLightColor(id_ddl_obraSolicitudAdicional,"#FF0000");
       return false;
-  }  else if($('#' + id_ddl_solicitudSolicitudAdicional  + " option:selected").val() === ""){
-      alert("Selecciona una solicitud");
+  }  else if($('#' + id_solicitudSolicitudAdicional  + " option:selected").val() === ""){
+      alert("Error en la generacion de la clave");
       highLightColor(id_ddl_solicitudSolicitudAdicional,"#FF0000");
       return false;
   } else if($('#' + id_ddl_atnSolicitudAdicional + " option:selected").val() == ""){
@@ -276,11 +347,15 @@ async function cargaImagenDdlSolicitudAdicional(){
 }
 
 function resetForm1SolicitudAdicional(){
-  $('#'+id_ddl_solicitudSolicitudAdicional).val("");
+  $('#'+id_ddl_obraSolicitudAdicional).val("");
+  $('#'+id_solicitudSolicitudAdicional).val("");
   $('#'+id_ddl_atnSolicitudAdicional).val("");
   $('#'+id_descripcionSolicitudAdicional).val("");
   selectAnexos.set([]);
-  $('#'+id_fotoInputSolicitudAdicional).val("");
+  $('#'+id_imagenLabelSolicitudAdicional).val("Seleccionar una imagen");
+  $('#' + id_leyendaSolicitudAdicional).val("");
+  $('#' + id_imagenesSolicitudAdicional).empty();
+
 }
 
 function llenaDdlSolicitudSolicitudAdicional(id_objeto){
@@ -292,10 +367,9 @@ function llenaDdlSolicitudSolicitudAdicional(id_objeto){
     select.appendChild(option);
     var solicitud;
     firebase.database().ref(rama_bd_obras + "/adicionales/solicitudes/"+ uid_obra).on('child_added',function(snapshot){
-      solicitud = snapshot.val();
       option = document.createElement('option');
       option.value = snapshot.key;
-      option.text = solicitud.nombre;
+      option.text = snapshot.key;
       select.appendChild(option);
       cont_solicitudes+=1;
     });
@@ -303,6 +377,17 @@ function llenaDdlSolicitudSolicitudAdicional(id_objeto){
     option.value = "NUEVA";
     option.text = "NUEVA";
     select.appendChild(option);
+}
+
+function getContadorSolicitudAdicional(clave_obra){
+  firebase.database().ref(rama_bd_obras + "/adicionales/solicitudes/"+ clave_obra + "/contador").on('value',function(snapshot){
+      if(snapshot.exists()){
+        cont_solicitudes = snapshot.val();
+      } else {
+        cont_solicitudes = 0;
+      }
+      $('#'+id_solicitudSolicitudAdicional).val(generaClaveSolicitudAdicional());
+  });
 }
 
 function llenaDdlAtnSolicitudAdicionall(id_objeto){
@@ -350,6 +435,29 @@ function llenaFormSolicitudSolicitudAdicional(solicitud_id){
   });
 }
 
+function generaPDFsolicitudAdicional(vista_previa){
+  var fecha_pdf = new Date();
+  var obra = $('#'+ id_ddl_obraSolicitudAdicional + ' option:selected').text();
+  var solicitud = generaClaveSolicitudAdicional();
+  var atencion = $('#'+ id_ddl_atnSolicitudAdicional + ' option:selected').text();
+  var descripcion = $('#'+ id_descripcionSolicitudAdicional).val();
+  var anexos_seleccionados = selectAnexos.selected();
+  var otros;
+  if(anexos_seleccionados.includes("AN-05")){
+    otros = $('#'+ id_otroSolicitudAdicional).val();
+  } else {
+    otros = "";
+  }
+  var indices_seleccionados = selectImagenes.selected();
+  var fotos_seleccionadas=[];
+  var leyendas_seleccionadas=[];
+  for(i=0; i<indices_seleccionados.length; i++){
+    fotos_seleccionadas.push(array_fotosAnexos[indices_seleccionados[i]]);
+    leyendas_seleccionadas.push(array_leyendasAnexos[indices_seleccionados[i]]);
+  }
+  var pdfDocGenerator = pdfMake.createPdf(generaSolicitudAdic(vista_previa, obra, solicitud, descripcion, atencion, json_anexos, anexos_seleccionados, otros, fotos_seleccionadas, leyendas_seleccionadas, fecha_pdf , colaborador));
+  return pdfDocGenerator;
+}
 
 //=============================================================================
 //====================== FORM SUMMIT SOLICITUD ================================

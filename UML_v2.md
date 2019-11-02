@@ -204,39 +204,39 @@ Nota: Todo float se ingresa a 2 decimales.
         - adicionales
             - solicitudes
                 - obra
-                    - id_solicitud
-                        - descripcion: string
-                        - anexos_tipo:
-                            - anexo_id: nombre
-                        - anexos_imag:
-                            - anexo_id
-                                - imagen: url
-                                - leyenda: string
-                        - atencion: contacto_id
-                        - terminada: boolean
-                        - url_evidencia: string
-                        - copeo:
-                            - num_entradas: int
-                            - entradas
-                                - entrada (num)
-                                    - nombre: string
-                                    - alcance: string
-                                    - subtotal: float
-                                    - cuadrilla:
-                                        - id_puesto
-                                            - cantidad: int
-                                            - sueldo_diario: float (sin impuestos)
-                                    - multiplicadores
-                                        - dias: float
-                                        - unidades: float
-                        - cuantificacion:
-                            - materiales
-                                - id_material:
-                                    - descripcion: string
-                                    - unidad: string
-                                    - precio: float
-                                    - cantidad: integer
-                                    - desplegar: boolean
+                    - contador: int
+                    - solicitudes: 
+                        - id_solicitud
+                            - descripcion: string
+                            - anexos_tipo:
+                                - anexo_id: nombre
+                            - otros: string (en caso de tener anexo tipo otros)
+                            - atencion: contacto_id
+                            - terminada: boolean
+                            - url_pdf : string
+                            - url_evidencia: string
+                            - copeo:
+                                - num_entradas: int
+                                - entradas
+                                    - entrada (num)
+                                        - nombre: string
+                                        - alcance: string
+                                        - subtotal: float
+                                        - cuadrilla:
+                                            - id_puesto
+                                                - cantidad: int
+                                                - sueldo_diario: float (sin impuestos)
+                                        - multiplicadores
+                                            - dias: float
+                                            - unidades: float
+                            - cuantificacion:
+                                - materiales
+                                    - id_material:
+                                        - descripcion: string
+                                        - unidad: string
+                                        - precio: float
+                                        - cantidad: integer
+                                        - desplegar: boolean
             - propuestas
                 - obra
                     - id_subproceso
