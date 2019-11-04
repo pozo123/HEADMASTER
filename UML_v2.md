@@ -205,7 +205,7 @@ Nota: Todo float se ingresa a 2 decimales.
             - solicitudes
                 - obra
                     - contador: int
-                    - solicitudes: 
+                    - solicitudes:
                         - id_solicitud
                             - descripcion: string
                             - anexos_tipo:
@@ -237,6 +237,12 @@ Nota: Todo float se ingresa a 2 decimales.
                                         - precio: float
                                         - cantidad: integer
                                         - desplegar: boolean
+                    - listas
+                        - terminadas
+                            - id_solicitud: true
+                        - pendientes
+                            - id_solicitud: true
+
             - propuestas
                 - obra
                     - id_subproceso

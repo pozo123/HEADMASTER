@@ -22,7 +22,11 @@ var id_boton_registrarSolicitudAdicional="botonRegistrarSolicitudAdicional";
 
 var id_ddl_obra2SolicitudAdicional="ddl_obra2SolicitudAdicional";
 var id_ddl_solicitud2SolicitudAdicional="ddl_solicitud2SolicitudAdicional";
-var id_evidenciaInputSolicitudAdicional="evidenciaInputSolicitudAdicional";
+var id_boton_descargarPDFSolicitudAdicional = "botonDescargarPDFSolicitudAdicional";
+var id_evidenciaInputSolicitudAdicional ="evidenciaInputSolicitudAdicional";
+var id_evidenciaLabelSolicitudAdicional = "evidenciaLabelSolicitudAdicional";
+var id_boton_carga2FotoSolicitudAdicional = "botonCargaFotoSolicitudAdicional";
+var id_imagenes2SolicitudAdicional="imagenesSolicitudAdicional";
 var id_boton_copeoSolicitudAdicional="botonCopeoSolicitudAdicional";
 var id_boton_cuantSolicitudAdicional="botonCuantSolicitudAdicional";
 var id_boton_terminarSolicitudAdicional="botonTerminarSolicitudAdicional";
@@ -238,6 +242,7 @@ $('#' + id_boton_registrarSolicitudAdicional).click(function(){
             //console.log(json_solicitud);
             solicitud_update[obra + "/solicitudes/" + solicitud] = json_solicitud;
             solicitud_update[obra + "/contador"] = cont_solicitudes+1;
+            solicitud_update[obra + "/listas/pendientes/" + solicitud] = true;
             firebase.database().ref(solicitud_path).update(solicitud_update, function(error) {
               if (error) {
                 // The write failed...
@@ -249,6 +254,7 @@ $('#' + id_boton_registrarSolicitudAdicional).click(function(){
                 alert("¡Registro de solicitud exitoso!");
                 $(id_boton_registrarSolicitudAdicional).prop('disabled', false);
                 resetForm1SolicitudAdicional();
+                $('#' + id_ddl_obraSolicitudAdicional).val("");
               }
             });
           });
@@ -257,6 +263,8 @@ $('#' + id_boton_registrarSolicitudAdicional).click(function(){
 
   }
 });
+
+// ----------------------- FUNCIONES NECESARIAS -------------------------------
 
 function solicitudSolicitudAdicional(){
   var fecha_pdf = new Date();
@@ -347,36 +355,14 @@ async function cargaImagenDdlSolicitudAdicional(){
 }
 
 function resetForm1SolicitudAdicional(){
-  $('#'+id_ddl_obraSolicitudAdicional).val("");
+  //$('#'+id_ddl_obraSolicitudAdicional).val("");
   $('#'+id_solicitudSolicitudAdicional).val("");
   $('#'+id_ddl_atnSolicitudAdicional).val("");
   $('#'+id_descripcionSolicitudAdicional).val("");
   selectAnexos.set([]);
-  $('#'+id_imagenLabelSolicitudAdicional).val("Seleccionar una imagen");
+  $('#' + id_imagenLabelSolicitudAdicional).text("Seleccionar una imagen");
   $('#' + id_leyendaSolicitudAdicional).val("");
   $('#' + id_imagenesSolicitudAdicional).empty();
-
-}
-
-function llenaDdlSolicitudSolicitudAdicional(id_objeto){
-    $('#' + id_objeto).empty();
-    var select = document.getElementById(id_objeto);
-    var option = document.createElement('option');
-    option.style = "display:none";
-    option.text = option.value = "";
-    select.appendChild(option);
-    var solicitud;
-    firebase.database().ref(rama_bd_obras + "/adicionales/solicitudes/"+ uid_obra).on('child_added',function(snapshot){
-      option = document.createElement('option');
-      option.value = snapshot.key;
-      option.text = snapshot.key;
-      select.appendChild(option);
-      cont_solicitudes+=1;
-    });
-    option = document.createElement('option');
-    option.value = "NUEVA";
-    option.text = "NUEVA";
-    select.appendChild(option);
 }
 
 function getContadorSolicitudAdicional(clave_obra){
@@ -462,3 +448,91 @@ function generaPDFsolicitudAdicional(vista_previa){
 //=============================================================================
 //====================== FORM SUMMIT SOLICITUD ================================
 //=============================================================================
+
+$('#' + id_ddl_obra2SolicitudAdicional).change(function(){
+  uid_obra = $('#' + id_ddl_obra2SolicitudAdicional+' option:selected').val();
+  resetForm2SolicitudAdicional();
+  llenaDdlSolicitudSolicitudAdicional(id_ddl_solicitud2SolicitudAdicional);
+});
+
+$('#' + id_boton_descargarPDFSolicitudAdicional).click(function() {
+  if($('#' + id_ddl_obra2SolicitudAdicional).val() !== "" && $('#' + id_ddl_solicitud2SolicitudAdicional).val() !== ""){
+    var solicitud_path = rama_bd_obras + "/adicionales/solicitudes/";
+    // Create a reference to the file we want to download
+    var storageRef = firebase.storage().ref(solicitud_path + uid_obra + "/solicitudes/" + $('#' + id_ddl_solicitud2SolicitudAdicional).val() +".pdf");
+    // Get the download URL
+    storageRef.getDownloadURL().then(function(url) {
+    //console.log(url);
+    window.open(url);
+
+    }).catch(function(error) {
+      // A full list of error codes is available at
+      // https://firebase.google.com/docs/storage/web/handle-errors
+      switch (error.code) {
+        case 'storage/object-not-found':
+          // File doesn't exist
+          console.log("El archivo no existe");
+          break;
+
+        case 'storage/unauthorized':
+          // User doesn't have permission to access the object
+          console.log("Acceso denegado");
+          break;
+
+        case 'storage/canceled':
+          // User canceled the upload
+          console.log("Descarga cancelada");
+          break;
+
+        case 'storage/unknown':
+          // Unknown error occurred, inspect the server response
+          console.log("Error desconocido");
+          break;
+
+        default:
+          console.log("Hubo error");
+      }
+});
+  }else {
+    alert("Selecciona una obra y una solicitud");
+  }
+});
+
+$('#' + id_boton_carga2FotoSolicitudAdicional).click(function() {
+  $('#' + id_evidenciaLabelSolicitudAdicional).text("Seleccionar una imagen");
+  $('#' + id_boton_carga2FotoSolicitudAdicional).prop("disabled", true);
+  $('#' + id_boton_carga2FotoSolicitudAdicional).removeClass('btn-outline-success');
+  $('#' + id_boton_carga2FotoSolicitudAdicional).addClass('btn-outline-dark');
+  var reader = new FileReader();
+  reader.readAsDataURL(fotoSeleccionada);
+  reader.onloadend = function () {
+      array_fotosAnexos.push({url: reader.result, file: fotoSeleccionada});
+      //console.log(imagenes_anexos);
+  }
+  array_leyendasAnexos.push(leyenda);
+  $('#'+id_leyendaSolicitudAdicional).val("");
+  cargaImagenDdlSolicitudAdicional();
+});
+
+//-------------------------FUNCIONES NECESARIAS -------------------------------
+function resetForm2SolicitudAdicional(){
+  //$('#'+id_ddl_obra2SolicitudAdicional ).val("");
+  $('#' + id_ddl_solicitud2SolicitudAdicional).val("");;
+  $('#' + id_evidenciaInputSolicitudAdicional).text("Archivo no seleccionado");
+}
+
+function llenaDdlSolicitudSolicitudAdicional(id_objeto){
+    $('#' + id_objeto).empty();
+    var select = document.getElementById(id_objeto);
+    var option = document.createElement('option');
+    option.style = "display:none";
+    option.text = option.value = "";
+    select.appendChild(option);
+    var solicitud;
+    firebase.database().ref(rama_bd_obras + "/adicionales/solicitudes/"+ uid_obra+"/listas/pendientes").on('child_added',function(snapshot){
+      option = document.createElement('option');
+      option.value = snapshot.key;
+      option.text = snapshot.key;
+      select.appendChild(option);
+    });
+}
