@@ -25,8 +25,8 @@ var id_ddl_solicitud2SolicitudAdicional="ddl_solicitud2SolicitudAdicional";
 var id_boton_descargarPDFSolicitudAdicional = "botonDescargarPDFSolicitudAdicional";
 var id_evidenciaInputSolicitudAdicional ="evidenciaInputSolicitudAdicional";
 var id_evidenciaLabelSolicitudAdicional = "evidenciaLabelSolicitudAdicional";
-var id_boton_carga2FotoSolicitudAdicional = "botonCargaFotoSolicitudAdicional";
-var id_imagenes2SolicitudAdicional="imagenesSolicitudAdicional";
+var id_boton_carga2FotoSolicitudAdicional = "botonCarga2FotoSolicitudAdicional";
+var id_imagenes2SolicitudAdicional="imagenes2SolicitudAdicional";
 var id_boton_copeoSolicitudAdicional="botonCopeoSolicitudAdicional";
 var id_boton_cuantSolicitudAdicional="botonCuantSolicitudAdicional";
 var id_boton_terminarSolicitudAdicional="botonTerminarSolicitudAdicional";
@@ -36,7 +36,8 @@ var selectImagenes;
 
 var fotoSeleccionada; //input
 var array_fotosAnexos; //inputs con url
-var array_leyendasAnexos;
+var array_leyendasAnexos; //arreglo en paralelo
+var array_fotosEvidencias;
 var indexSolicitudAdicional;
 var json_anexos;
 var cont_solicitudes;
@@ -48,6 +49,7 @@ $('#' + id_tab_solicitudAdicional).click(function() {
     arrayAnexos = [];
     array_fotosAnexos=[];
     array_leyendasAnexos=[];
+    array_fotosEvidencias=[];
     indexSolicitudAdicional = 0;
     json_anexos={};
     cont_solicitudes = 0;
@@ -96,6 +98,12 @@ $('#' + id_tab_solicitudAdicional).click(function() {
         placeholder: 'Imagenes seleccionadas',
     });
 
+    $('#' + id_imagenes2SolicitudAdicional).empty();
+    selectImagenes2 = new SlimSelect({
+        select: '#' + id_imagenes2SolicitudAdicional,
+        placeholder: 'Imagenes seleccionadas',
+    });
+
     firebase.database().ref(rama_bd_personal + "/colaboradores/"+uid_usuario_global).on('value',function(snapshot){
         var usuario = snapshot.val();
         colaborador = usuario.nombre + " " +usuario.a_paterno + " " + usuario.a_materno;
@@ -104,12 +112,24 @@ $('#' + id_tab_solicitudAdicional).click(function() {
 
 $('#' + id_ddl_accionSolicitudAdicional).change(function(){
   var opcion = $('#' + id_ddl_accionSolicitudAdicional+' option:selected').val();
+  arrayAnexos = [];
+  array_fotosAnexos=[];
+  array_leyendasAnexos=[];
+  array_fotosEvidencias=[];
+  indexSolicitudAdicional = 0;
+  json_anexos={};
+  cont_solicitudes = 0;
+  colaborador = "";
   if(opcion == 0){
     $('#' + id_form_solicitud2Adicional).addClass("hidden");
     $('#' + id_form_solicitudAdicional).removeClass("hidden");
+    $('#'+id_ddl_obraSolicitudAdicional).val("");
+    resetForm1SolicitudAdicional();
   }else{
     $('#' + id_form_solicitud2Adicional).removeClass("hidden");
     $('#' + id_form_solicitudAdicional).addClass("hidden");
+    $('#'+id_ddl_obra2SolicitudAdicional).val("");
+    resetForm2SolicitudAdicional();
   }
 });
 
@@ -129,6 +149,25 @@ function ddlObrasActivasGeneric (id_objeto){
       option.text = obra.nombre;
       select.appendChild(option);
   });
+}
+
+async function cargaImagenDdlSolicitudAdicional(id_ddl, id_slim_select){
+  try {
+    var select2 = document.getElementById(id_ddl);
+    var option = document.createElement('option');
+    option.value = indexSolicitudAdicional;
+    option.text = fotoSeleccionada.name;
+    if (await select2.appendChild(option)){
+      var seleccionadas = id_slim_select.selected().concat([indexSolicitudAdicional]);
+      id_slim_select.set(seleccionadas);
+      //console.log("Termino");
+    }else{
+      console.log("Chale");
+    }
+    indexSolicitudAdicional+=1;
+  } catch (error){
+    console.log(error);
+  }
 }
 
 //=============================================================================
@@ -190,7 +229,8 @@ $('#' + id_boton_cargaFotoSolicitudAdicional).click(function() {
     }
     array_leyendasAnexos.push(leyenda);
     $('#'+id_leyendaSolicitudAdicional).val("");
-    cargaImagenDdlSolicitudAdicional();
+    cargaImagenDdlSolicitudAdicional(id_imagenesSolicitudAdicional, selectImagenes);
+    $('#'+id_fotoInputSolicitudAdicional).val("");
   }else {
     alert("Ingresa una leyenda para este anexo");
   }
@@ -332,25 +372,6 @@ function validateFormSolicitudAdicional(){
       return false;
   } else {
       return true;
-  }
-}
-
-async function cargaImagenDdlSolicitudAdicional(){
-  try {
-    var select2 = document.getElementById(id_imagenesSolicitudAdicional);
-    var option = document.createElement('option');
-    option.value = indexSolicitudAdicional;
-    option.text = fotoSeleccionada.name;
-    if (await select2.appendChild(option)){
-      var seleccionadas = selectImagenes.selected().concat([indexSolicitudAdicional]);
-      selectImagenes.set(seleccionadas);
-      //console.log("Termino");
-    }else{
-      console.log("Chale");
-    }
-    indexSolicitudAdicional+=1;
-  } catch (error){
-    console.log(error);
   }
 }
 
@@ -498,6 +519,14 @@ $('#' + id_boton_descargarPDFSolicitudAdicional).click(function() {
   }
 });
 
+$('#' + id_evidenciaInputSolicitudAdicional).on("change", function(event){
+    fotoSeleccionada = event.target.files[0];
+    $('#' + id_evidenciaLabelSolicitudAdicional).text(fotoSeleccionada.name);
+    $('#' + id_boton_carga2FotoSolicitudAdicional).prop("disabled", false);
+    $('#' + id_boton_carga2FotoSolicitudAdicional).removeClass('btn-outline-dark');
+    $('#' + id_boton_carga2FotoSolicitudAdicional).addClass('btn-outline-success');
+});
+
 $('#' + id_boton_carga2FotoSolicitudAdicional).click(function() {
   $('#' + id_evidenciaLabelSolicitudAdicional).text("Seleccionar una imagen");
   $('#' + id_boton_carga2FotoSolicitudAdicional).prop("disabled", true);
@@ -506,12 +535,10 @@ $('#' + id_boton_carga2FotoSolicitudAdicional).click(function() {
   var reader = new FileReader();
   reader.readAsDataURL(fotoSeleccionada);
   reader.onloadend = function () {
-      array_fotosAnexos.push({url: reader.result, file: fotoSeleccionada});
+      array_fotosEvidencias.push({url: reader.result, file: fotoSeleccionada});
       //console.log(imagenes_anexos);
   }
-  array_leyendasAnexos.push(leyenda);
-  $('#'+id_leyendaSolicitudAdicional).val("");
-  cargaImagenDdlSolicitudAdicional();
+  cargaImagenDdlSolicitudAdicional(id_imagenes2SolicitudAdicional, selectImagenes2);
 });
 
 //-------------------------FUNCIONES NECESARIAS -------------------------------
@@ -519,6 +546,7 @@ function resetForm2SolicitudAdicional(){
   //$('#'+id_ddl_obra2SolicitudAdicional ).val("");
   $('#' + id_ddl_solicitud2SolicitudAdicional).val("");;
   $('#' + id_evidenciaInputSolicitudAdicional).text("Archivo no seleccionado");
+  $('#' + id_imagenesSolicitudAdicional).empty();
 }
 
 function llenaDdlSolicitudSolicitudAdicional(id_objeto){
