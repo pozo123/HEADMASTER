@@ -198,6 +198,15 @@ Nota: Todo float se ingresa a 2 decimales.
                                 - descripcion: string
                                 - unidad: string
                                 - precio: float
+                                - indirectos: float
+                                - cantidad: integer
+                                - desplegar: boolean
+                        - materiales_nr
+                            - id_consecutivo
+                                - descripcion: string
+                                - unidad: string
+                                - precio: float
+                                - indirectos: float
                                 - cantidad: integer
                                 - desplegar: boolean
 
@@ -215,6 +224,7 @@ Nota: Todo float se ingresa a 2 decimales.
                             - terminada: boolean
                             - url_pdf : string
                             - url_evidencia: string
+                            - notas: string
                             - copeo:
                                 - num_entradas: int
                                 - entradas

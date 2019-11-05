@@ -113,7 +113,7 @@ function generaSolicitudAdic(vista_previa, obra_nombre, solicitud, descripcion, 
             style: 'tableBody',
             table:{
                 widths: [20, 210, 30, 210,20],
-                heights: [20,80,20],
+                heights: [20,50,20],
                 body: firmas_tabla,
             },
             unbreakable: true,

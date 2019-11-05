@@ -108,6 +108,10 @@ $('#' + id_tab_solicitudAdicional).click(function() {
         var usuario = snapshot.val();
         colaborador = usuario.nombre + " " +usuario.a_paterno + " " + usuario.a_materno;
     });
+    //Establecer la primera pestana como default
+    $('#' + id_form_solicitud2Adicional).addClass("hidden");
+    $('#' + id_form_solicitudAdicional).removeClass("hidden");
+    $('#'+id_ddl_obraSolicitudAdicional).val("");
 });
 
 $('#' + id_ddl_accionSolicitudAdicional).change(function(){
@@ -539,6 +543,14 @@ $('#' + id_boton_carga2FotoSolicitudAdicional).click(function() {
       //console.log(imagenes_anexos);
   }
   cargaImagenDdlSolicitudAdicional(id_imagenes2SolicitudAdicional, selectImagenes2);
+});
+
+$('#' + id_boton_cuantSolicitudAdicional).click(function() {
+  modalSuministros(10, false);
+});
+
+$('#' + id_boton_copeoSolicitudAdicional).click(function() {
+  modalCopeo();
 });
 
 //-------------------------FUNCIONES NECESARIAS -------------------------------

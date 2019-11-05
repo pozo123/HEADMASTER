@@ -553,6 +553,42 @@
                               </table>
                           </div>
                           </br>
+                          <div class="form-row align-items-center">
+                              <div class="col-lg-3">
+                                  <label for="catalogoModalInsumosProveedor">Catálogo</label>
+                                  <input type="text" id="catalogoModalSuministros" class="form-control" placeholder="Catálogo" disabled="true">
+                              </div>
+                              <div class="col-lg-7">
+                                  <label for="descripcionModalInsumosProveedor">Descripción</label>
+                                  <input type="text" id="descripcionModalSuministros" class="form-control" placeholder="Descripción" disabled="true">
+                              </div>
+                              <div class="col-lg-2">
+                                  <label for="descripcionModalInsumosProveedor">Cantidad</label>
+                                  <input type="text" id="cantidadModalSuministros" class="form-control" placeholder="Cantidad">
+                              </div>
+                          </div>
+                          </br>
+                          <div class="form-row align-items-center" id="div_preciosModalSuministros">
+                              <div class="col-lg-3">
+                                  <label for="catalogoModalInsumosProveedor">Precio de lista</label>
+                                  <input type="text" id="precioListaModalSuministros" class="form-control" placeholder="Precio de lista" disabled="true">
+                              </div>
+                              <div class="col-lg-6">
+                                  <label for="descripcionModalInsumosProveedor">Porcentaje Indirectos</label>
+                                  <input type="text" id="indirectosModalSuministros" class="form-control" placeholder="% indirectos">
+                              </div>
+                              <div class="col-lg-3">
+                                  <label for="precioModalInsumosProveedor">Precio cliente</label>
+                                  <input type="text" id="precioClienteModalSuministros" class="form-control" placeholder="Precio cliente">
+                              </div>
+                          </div>
+                          </br>
+                          <div class="form-row">
+                              <div class= "col-4"></div>
+                              <div class= "col-4">
+                                  <button id="botonAgregarModalSuministros" type="button" class="btn btn-outline-info btn-block">Agregar producto</button>
+                              </div>
+                          </div>
                           </br>
                           <label>Productos seleccionados</label>
                           <div class = "tableWrapper container_reporte_nomina">
@@ -562,10 +598,11 @@
                                           <th>Id_producto</th>
                                           <th>Catalogo</th>
                                           <th>Marca</th>
-                                          <th>Clasificacion</th>
                                           <th>Descripcion</th>
                                           <th>Unidad</th>
                                           <th>Precio</th>
+                                          <th>Indirectos(%)</th>
+                                          <th>Cantidad</th>
                                           <th>Eliminar</th>
                                       </tr>
                                   </thead>
@@ -3130,7 +3167,7 @@
                                                  <div class= "col-lg-4"></div>
                                              </div>
                                              <div class="form-group">
-                                                 <label for="evidenciaInputSolicitudAdicional">Selecciona una imagen</label>
+                                                 <label for="evidenciaInputSolicitudAdicional">Ingresar adicional firmado</label>
                                                  <div class="custom-file">
                                                      <input type="file" class="custom-file-input" id="evidenciaInputSolicitudAdicional" accept="image/*"/>
                                                      <label class = "custom-file-label" id="evidenciaLabelSolicitudAdicional">Archivo no seleccionado</label>
@@ -3157,7 +3194,7 @@
                                              <div class="form-row">
                                                  <div class= "col-lg-4"></div>
                                                  <div class= "col-lg-4">
-                                                     <button id="botonCopeoSolicitudAdicional" type="button"  class="btn btn-secondary btn-block">Copeo</button>
+                                                     <button id="botonCuantSolicitudAdicional" type="button"  class="btn btn-secondary btn-block">Cuantificación</button>
                                                  </div>
                                                  <div class= "col-lg-4"></div>
                                              </div>
@@ -3165,11 +3202,11 @@
                                              <div class="form-row">
                                                  <div class= "col-lg-4"></div>
                                                  <div class= "col-lg-4">
-                                                     <button id="botonCuantSolicitudAdicional" type="button"  class="btn btn-secondary btn-block">Cuantificación</button>
+                                                     <button id="botonCopeoSolicitudAdicional" type="button"  class="btn btn-secondary btn-block">Copeo</button>
                                                  </div>
                                                  <div class= "col-lg-4"></div>
                                              </div>
-                                           </br>
+                                             </br>
                                              <div class="form-row">
                                                  <div class= "col-lg-4"></div>
                                                  <div class= "col-lg-4">
