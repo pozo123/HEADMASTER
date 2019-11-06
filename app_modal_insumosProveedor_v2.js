@@ -46,6 +46,9 @@ function modalInsumosProveedor(clave_proveedor){
   uid_existente_insumo="";
   existe_insumo = false;
   registro_productos = {};
+  base_insumos={};
+  base_filtrados={};
+  filtros={};
 
   jQuery('#' + id_fecha_cotizacionModalInsumosProveedor).datetimepicker(
       {timepicker:false, weeks:true,format:'Y.m.d'}

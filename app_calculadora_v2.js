@@ -82,7 +82,7 @@ $('#' + id_agregar_calculadora).click(function(){
 		subproceso_update[path_subproceso + "/utilidad"] = deformatMoney($('#'+id_profit_cantidadCalculadora).val());
 		subproceso_update[path_subproceso + "/precio_venta"] = deformatMoney($('#'+id_precio_ventaCalculadora).val());
 		//Escribir los cambios en la base de datos
-		console.log(subproceso_update);
+		//console.log(subproceso_update);
 		firebase.database().ref(rama_bd_obras).update(subproceso_update);
 		// PAD
 		pda("modificacion", rama_bd_obras + "/" +path_subproceso, registro_antiguo);
@@ -660,11 +660,11 @@ function llenaDdlSubprocesoCalculadora(clave_obra, clave_proceso){
   select.appendChild(option);
 	var proceso;
 	var subproceso;
-	console.log(clave_obra);
-	console.log(clave_proceso);
+	//console.log(clave_obra);
+	//console.log(clave_proceso);
   firebase.database().ref(rama_bd_obras + "/procesos/" + clave_obra + "/procesos/" + clave_proceso).on('value',function(snapshot){
 			proceso = snapshot.val();
-			console.log(proceso);
+			//console.log(proceso);
 			snapshot.child("subprocesos").forEach(function(snapchild){
 				subproceso = snapchild.val();
 	      if (snapchild.exists()){
@@ -715,7 +715,7 @@ function actualizarTablaCalculadora(){
 						var validacion_corrupto = false;
             if(clave_proceso !== "ADIC" && clave_proceso !== "MISC" && clave_proceso !== "PC00"){
                 procesoSnap.child("subprocesos").forEach(function(subprocesoSnap){
-									console.log(subprocesoSnap.val());
+									//console.log(subprocesoSnap.val());
 									var clave_sub = subprocesoSnap.key;
 	                var subproceso = subprocesoSnap.val();
 									var costoScore = subproceso.score.horas_programadas*subproceso.score.costo_hora;
@@ -811,7 +811,7 @@ function actualizarTablaCalculadora(){
 							index=index + cont;
             }
         });
-				console.log(procesoIndex_array);
+				//console.log(procesoIndex_array);
         tabla_calculadora = $('#'+ id_dataTable_calculadora).DataTable({
 						"fnRowCallback": function (row, data, index_table) {
 									if ( procesoIndex_array.includes(index_table)) {

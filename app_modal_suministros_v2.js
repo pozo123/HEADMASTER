@@ -15,16 +15,18 @@ var id_precioListaModalSuministros = "precioListaModalSuministros";
 var id_indirectosModalSuministros = "indirectosModalSuministros";
 var id_precioClienteModalSuministros = "precioClienteModalSuministros";
 
-var id_boton_agregarModalSuministross = "botonAgregarModalSuministros";
+var id_boton_agregarModalSuministros = "botonAgregarModalSuministros";
 var id_boton_limpiarModalSuministros = "botonLimpiarFiltrosModalSuministros";
 var id_boton_guardarModalSuministros = "botonGuardarModalSuministros";
 
-var tabla_busqueda;
-var tabla_selectos;
+var tabla_busquedaModalSuministros;
+var tabla_selectosModalSuministros;
 
 var json_precios;
 var p_indirectos;
 var supervisorFlag;
+
+var json_modalSuministros;
 
 // --------------------- Método de inicialización -----------------------------
 function modalSuministros(indirectos, supervisor){
@@ -32,6 +34,10 @@ function modalSuministros(indirectos, supervisor){
   json_precios = {};
   p_indirectos = indirectos;
   supervisorFlag = supervisor;
+  base_insumos={};
+  base_filtrados={};
+  filtros={};
+  json_modalSuministros={};
   firebase.database().ref(rama_bd_insumos + "/marcas").orderByChild('nombre').on('value',function(snapshot){
     marcas = snapshot;
     json_marcas=marcas.val();
@@ -72,11 +78,110 @@ function modalSuministros(indirectos, supervisor){
       }
       console.log(json_precios);
     }
-    actualizarTablaSuministros(base_insumos);
+    limpiaAgregarModalSuministros();
+    actualizarTablaModalSuministros(base_insumos);
   });
-  creaTablaSelectosSuministros();
+  creaTablaSelectosModalSuministros();
+  $('#' + id_div_preciosModalSuministros).prop('disabled', supervisorFlag?true:false)
   $('#' + id_modalSuministros).modal('show');
 }
+
+//------------------ Funciones del formulario ----------------------------------
+$('#' + id_boton_limpiarModalSuministros).click(function() {
+  limpiaFiltrosModalSuministros();
+  actualizarTablaModalSuministros(base_insumos);
+});
+
+$('#' + id_boton_agregarModalSuministros).click(function() {
+  if(validateagregarModalSuministros()){
+    if(!existeInsumoModalSuministros(uid_existente_insumo)){
+      tabla_selectosModalSuministros.row.add(datosModalSuministros()).draw();
+      limpiaAgregarModalSuministros();
+    } else {
+      alert("El insumo ya ha sido seleccionado antes");
+    }
+  }
+});
+
+$('#' + id_boton_guardarModalSuministros).click(function() {
+  json_modalSuministros = recuperaDatosModalSuministros();
+  console.log(json_modalSuministros);
+});
+
+$('#'+id_indirectosModalSuministros ).keypress(function(e){
+    charactersAllowed("0123456789.",e);
+});
+
+$('#'+id_indirectosModalSuministros ).change(function (){
+		if($('#'+id_indirectosModalSuministros ).val() == ""){
+			$('#'+id_indirectosModalSuministros ).val(formatMoney(0));
+		}
+    $('#'+id_precioClienteModalSuministros).val(formatMoney( deformatMoney( $('#'+id_precioListaModalSuministros).val()) * (1 + $('#'+id_indirectosModalSuministros ).val() *0.01) ));
+});
+
+$('#'+id_precioClienteModalSuministros  ).keypress(function(e){
+    charactersAllowed("0123456789.",e);
+});
+
+$('#'+id_precioClienteModalSuministros).change(function (){
+		if($('#'+id_precioClienteModalSuministros).val() == ""){
+			$('#'+id_precioClienteModalSuministros).val(formatMoney(0));
+		}
+    $('#'+id_indirectosModalSuministros).val( parseFloat((deformatMoney($('#'+id_precioClienteModalSuministros).val()) / deformatMoney($('#'+id_precioListaModalSuministros).val()) - 1)*100).toFixed(2) );
+});
+
+$('#'+id_precioClienteModalSuministros).focus(function (){
+	if($('#'+id_precioClienteModalSuministros).val() !== ""){
+		$('#'+id_precioClienteModalSuministros).val(deformatMoney($('#'+id_precioClienteModalSuministros ).val()));
+	}
+});
+
+$('#'+id_precioClienteModalSuministros  ).focusout(function (){
+	if($('#'+id_precioClienteModalSuministros  ).val() !== ""){
+		$('#'+id_precioClienteModalSuministros  ).val(formatMoney($('#'+id_precioClienteModalSuministros ).val()));
+	}
+});
+
+//------------------------------- Filtros -------------------------------------
+$('#' + id_ddl_buscaMarcaModalSuministros).change(function(){
+  if($('#' + id_ddl_buscaMarcaModalSuministros+' option:selected').val() == ""){
+    delete filtros["marca"];
+  } else {
+    filtros["marca"]= $('#' + id_ddl_buscaMarcaModalSuministros+' option:selected').val();
+  }
+  base_filtrados = filtraGeneric(base_insumos, filtros);
+  actualizarTablaModalSuministros(base_filtrados);
+});
+
+$('#' + id_ddl_buscaCategoriaModalSuministros).change(function(){
+  if($('#' + id_ddl_buscaCategoriaModalSuministros+' option:selected').val() == ""){
+    delete filtros["categoria"];
+  } else {
+    filtros["categoria"]=$('#' + id_ddl_buscaCategoriaModalSuministros+' option:selected').val();
+  }
+  base_filtrados = filtraGeneric(base_insumos, filtros);
+  actualizarTablaModalSuministros(base_filtrados);
+});
+
+$('#' + id_ddl_buscaClasificacionModalSuministros).change(function(){
+  if($('#' + id_ddl_buscaClasificacionModalSuministros +' option:selected').val() == ""){
+    delete filtros["clasificacion"];
+  } else {
+    filtros["clasificacion"]=$('#' + id_ddl_buscaClasificacionModalSuministros+' option:selected').val();
+  }
+  base_filtrados = filtraGeneric(base_insumos, filtros);
+  actualizarTablaModalSuministros(base_filtrados);
+});
+
+$('#' + id_buscaCatalogoModalSuministros).change(function(){
+  if($('#' + id_buscaCatalogoModalSuministros).val() == ""){
+    delete filtros["catalogo"];
+  } else {
+    filtros["catalogo"]= $('#' + id_buscaCatalogoModalSuministros).val();
+  }
+  base_filtrados = filtraGeneric(base_insumos, filtros);
+  actualizarTablaModalSuministros(base_filtrados);
+});
 
 // ----------------------Funciones necesarias ----------------------------------
 function resetModalSuministros(){
@@ -86,14 +191,103 @@ function resetModalSuministros(){
 
 }
 
-function limpiaBusquedaModalSuministros(){
+function limpiaFiltrosModalSuministros(){
   $('#'+id_ddl_buscaMarcaModalSuministros).val("");
   $('#'+id_ddl_buscaClasificacionModalSuministros).val("");
   $('#'+id_ddl_buscaCategoriaModalSuministros).val("");
+  $('#'+id_buscaCatalogoModalSuministros).val("");
+  filtros={};
 }
 
+function limpiaAgregarModalSuministros(){
+  $('#'+id_catalogoModalSuministros ).val("");
+  $('#'+id_descripcionModalSuministros ).val("");
+  $('#'+id_cantidadModalSuministros ).val("");
+  $('#'+id_precioListaModalSuministros ).val("");
+  $('#'+id_indirectosModalSuministros  ).val("");
+  $('#'+id_precioClienteModalSuministros  ).val("");
+}
+
+function validateagregarModalSuministros(){
+  if($('#' + id_catalogoModalSuministros).val() === ""){
+      alert("Ningún insumo fue seleccionado");
+      return false;
+  } else if($('#' + id_descripcionModalSuministros).val() == ""){
+      alert("Ningún insumo fue seleccionado");
+      return false;
+  } else if($('#' + id_cantidadModalSuministros).val() == ""){
+      alert("Ingresa una cantidad");
+      highLightColor(id_cantidadModalSuministros,"#FF0000");
+      return false;
+  } else if(!supervisorFlag){
+    if($('#' + id_precioListaModalSuministros).val() == ""){
+        alert("Hay un problema con el precio de este insumo");
+        highLightColor(id_precioListaModalSuministros,"#FF0000");
+        return false;
+    } else if($('#' + id_indirectosModalSuministros).val() == ""){
+        alert("Ingresa un porcentaje de costos indirectos");
+        highLightColor(id_indirectosModalSuministros,"#FF0000");
+        return false;
+    } else if($('#' + id_precioClienteModalSuministros).val() == ""){
+        alert("Ingresa el precio final para el cliente");
+        highLightColor(id_precioClienteModalSuministros,"#FF0000");
+        return false;
+    } else {
+      return true;
+    }
+  } else {
+      return true;
+  }
+}
+
+function datosModalSuministros(){
+  var insumo=[];
+  var insumo_reg = base_insumos[uid_existente_insumo];
+  insumo=[
+    uid_existente_insumo,
+    true,
+    "<button type='button' class='desplegarModalSuministros btn btn-transparente'><i class='icono_verde fas fa-check-circle'></i></button>",
+    insumo_reg["catalogo"],
+    json_marcas[insumo_reg["marca"]]["nombre"],
+    insumo_reg["descripcion"],
+    json_unidades[insumo_reg["unidad"]]["nombre"],
+    $('#'+id_precioListaModalSuministros).val(),
+    $('#'+id_indirectosModalSuministros).val(),
+    $('#'+id_precioClienteModalSuministros).val(),
+    $('#'+id_cantidadModalSuministros).val(),
+    "<button type='button' class='eliminarModalSuministros btn btn-transparente'><i class='icono_rojo fas fa-times-circle'></i></button>"
+  ]
+  return insumo;
+}
+
+function existeInsumoModalSuministros(clave){
+  var resp = false;
+  tabla_selectosModalSuministros.rows().iterator('row', function(context, index){
+    var data = this.row(index).data();
+    if(data[0] == clave){
+      resp = true;
+    }
+  });
+  return resp;
+}
+
+function recuperaDatosModalSuministros(){
+  var insumosSuministros = {};
+  tabla_selectosModalSuministros.rows().iterator('row', function(context, index){
+    var data = this.row(index).data();
+    insumosSuministros[data[0]]={
+      descripcion: data[5],
+      unidad: data[6],
+      precio_lista: deformatMoney(data[7]),
+      precio_cliente: deformatMoney(data[9]),
+      cantidad: data[10],
+      desplegar: data[1],
+    };
+  });
+  return insumosSuministros;
+}
 //------------------------------- DataTables -----------------------------------
-function actualizarTablaSuministros(datos){
+function actualizarTablaModalSuministros(datos){
   var datos_suministros = [];
   for(key in datos){
     var insumo = datos[key];
@@ -105,27 +299,25 @@ function actualizarTablaSuministros(datos){
       datos[key]["descripcion"],
       json_unidades[insumo["unidad"]]["nombre"],
       formatMoney(json_precios[key]),
-      "<button type='button' class='agregarSuministros btn btn-transparente'><i class='icono_verde fas fa-check-circle'></i></button>",
+      "<button type='button' class='agregarModalSuministros btn btn-transparente'><i class='icono_verde fas fa-check-circle'></i></button>",
     ]);
   }
-  tabla_busqueda = $('#'+ id_dataTable_busquedaModalSuministros).DataTable({
+  tabla_busquedaModalSuministros = $('#'+ id_dataTable_busquedaModalSuministros).DataTable({
       destroy: true,
       data: datos_suministros,
       language: idioma_espanol,
       //"autoWidth": false,
       "columnDefs": [
           { "width": "120px", "targets": 4 },
-          {
-              targets: -2,
-              className: 'dt-body-center'
-          },
+          { targets: [-1,-3], className: 'dt-body-center'},
           { "visible": false, "targets": supervisorFlag?[0,6]:[0] }, //Campos auxiliares
         ]
   });
 }
 
-$(document).on('click','.agregarSuministros', function(){
-  var data = tabla_busqueda.row( $(this).parents('tr') ).data();
+$(document).on('click','.agregarModalSuministros', function(){
+  var data = tabla_busquedaModalSuministros.row( $(this).parents('tr') ).data();
+  uid_existente_insumo = data[0];
   $('#' + id_catalogoModalSuministros).val(data[1]);
   $('#' + id_descripcionModalSuministros).val(data[4]);
   $('#' + id_cantidadModalSuministros).val(1);
@@ -134,38 +326,34 @@ $(document).on('click','.agregarSuministros', function(){
   $('#' + id_precioClienteModalSuministros).val( formatMoney( deformatMoney(data[6]) * (1 + p_indirectos*0.01) ) );
 });
 
-function creaTablaSelectosSuministros(){
+function creaTablaSelectosModalSuministros(){
   var datos_suministros = [];
-  tabla_selectos = $('#'+ id_dataTable_selectModalSuministros).DataTable({
+  tabla_selectosModalSuministros = $('#'+ id_dataTable_selectModalSuministros).DataTable({
       destroy: true,
       data: datos_suministros,
       language: idioma_espanol,
       "columnDefs": [
           { "width": "120px", "targets": 4 },
-          {
-              targets: -2,
-              className: 'dt-body-center'
-          },
-          { "visible": false, "targets": 0 }, //Campos auxiliares
+          { targets: [-1,-2,-3], className: 'dt-body-center'},
+          { "visible": false, "targets": supervisorFlag?[0,1,2,7,8,9]:[0,1,9] }, //Campos auxiliares
         ]
   });
-
-  $('#' + id_dataTable_selectModalSuministros + ' tbody').on( 'click', '.desplegar', function () {
-      var data = tabla_selectos.row( $(this).parents('tr')).data();
-      var icon_class = "";
-      if(data[9]) {
-          icon_class = "'icono_rojo fas fa-times-circle'"
-          data[9]=false;
-      } else {
-        icon_class = "'icono_verde fas fa-check-circle'";
-        data[9]=true;
-      }
-      data[7] = "<button type='button' class='desplegar btn btn-transparente'><i class=" + icon_class + "></i></button>";
-      tabla_selectos.row( $(this).parents('tr')).data(data).draw();
-  });
-
-  $('#' + id_dataTable_selectModalSuministros + ' tbody').on( 'click', '.eliminar', function () {
-      tabla_selectos.row( $(this).parents('tr') ).remove().draw();
-  });
-
 }
+
+$(document).on('click','.desplegarModalSuministros', function(){
+  var data = tabla_selectosModalSuministros.row( $(this).parents('tr')).data();
+  var icon_class = "";
+  if(data[1]) {
+      icon_class = "'icono_rojo fas fa-times-circle'"
+      data[1]=false;
+  } else {
+    icon_class = "'icono_verde fas fa-check-circle'";
+    data[1]=true;
+  }
+  data[2] = "<button type='button' class='desplegarModalSuministros btn btn-transparente'><i class=" + icon_class + "></i></button>";
+  tabla_selectosModalSuministros.row( $(this).parents('tr')).data(data).draw();
+});
+
+$(document).on('click','.eliminarModalSuministros', function(){
+  tabla_selectosModalSuministros.row( $(this).parents('tr') ).remove().draw();
+});
