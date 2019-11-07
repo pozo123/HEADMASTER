@@ -244,7 +244,8 @@ Nota: Todo float se ingresa a 2 decimales.
                                     - id_material:
                                         - descripcion: string
                                         - unidad: string
-                                        - precio: float
+                                        - precio_lista: float
+                                        - precio_cliente: float
                                         - cantidad: integer
                                         - desplegar: boolean
                     - listas

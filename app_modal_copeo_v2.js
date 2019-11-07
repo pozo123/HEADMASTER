@@ -71,7 +71,7 @@ $('#' + id_agregar_modalCopeo).click(function() {
     //Generar el JSON de la entrada con los datos del formulario
     json_copeo["entradas"] = {};
 		json_copeo["entradas"][uid_entrada] = datosEntradaModalCopeo();
-    console.log(json_copeo);
+    //console.log(json_copeo);
 		resetFormModalCopeo();
     llenaDdlEntradaModalCopeo();
 	}
@@ -306,7 +306,7 @@ function cargaListaTrabajadoresModalCopeo(){
 }
 
 function llenaDdlEntradaModalCopeo(){
-  console.log("Llenando entradas");
+  //console.log("Llenando entradas");
 	$('#' + id_ddl_entradaModalCopeo).empty();
   var select = document.getElementById(id_ddl_entradaModalCopeo);
   var option = document.createElement('option');
@@ -315,7 +315,6 @@ function llenaDdlEntradaModalCopeo(){
   select.appendChild(option);
 	var subproceso;
   if(!jQuery.isEmptyObject(json_copeo)){
-    console.log("Sí hay entradas");
     subproceso = json_copeo;
     num_entradas=subproceso.num_entradas;
     for(key in subproceso.entradas){
@@ -325,7 +324,6 @@ function llenaDdlEntradaModalCopeo(){
       select.appendChild(option);
     }
   }else{
-    console.log("No hay entradas");
     num_entradas=0;
   }
   option = document.createElement('option');

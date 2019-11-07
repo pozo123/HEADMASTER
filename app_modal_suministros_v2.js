@@ -106,7 +106,7 @@ $('#' + id_boton_agregarModalSuministros).click(function() {
 
 $('#' + id_boton_guardarModalSuministros).click(function() {
   json_modalSuministros = recuperaDatosModalSuministros();
-  console.log(json_modalSuministros);
+  //console.log(json_modalSuministros);
 });
 
 $('#'+id_indirectosModalSuministros ).keypress(function(e){
