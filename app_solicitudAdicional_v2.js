@@ -546,11 +546,24 @@ $('#' + id_boton_carga2FotoSolicitudAdicional).click(function() {
 });
 
 $('#' + id_boton_cuantSolicitudAdicional).click(function() {
-  modalSuministros(10, false);
+  /*
+  var json_prueba = {
+    '-LqvvP8fTtFc90YpVAFy':{
+      cantidad: 1,
+      descripcion: "EHE",
+      desplegar: true,
+      precio_cliente: 55,
+      precio_lista: 50,
+      unidad: "Kg",
+    }
+  };
+  */
+  modalSuministros(10, false, {});
 });
 
 $('#' + id_boton_copeoSolicitudAdicional).click(function() {
-  modalCopeo();
+  var pathCopeo = rama_bd_obras+"/adicionales/solicitudes/" + uid_obra + "/solicitudes/" + $('#' + id_ddl_solicitud2SolicitudAdicional).val() + "/copeo";
+  modalCopeo(pathCopeo, true);
 });
 
 //-------------------------FUNCIONES NECESARIAS -------------------------------

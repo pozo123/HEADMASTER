@@ -273,6 +273,7 @@ Nota: Todo float se ingresa a 2 decimales.
                         - precio_venta_aprobado: float
                         - copeo:
                             - num_entradas: int
+                            - impuestos: float (0 a 100)
                             - entradas
                                 - entrada (num)
                                     - nombre: string

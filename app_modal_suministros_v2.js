@@ -29,7 +29,7 @@ var supervisorFlag;
 var json_modalSuministros;
 
 // --------------------- Método de inicialización -----------------------------
-function modalSuministros(indirectos, supervisor){
+function modalSuministros(indirectos, supervisor, json_actuales){
   resetModalSuministros();
   json_precios = {};
   p_indirectos = indirectos;
@@ -38,6 +38,7 @@ function modalSuministros(indirectos, supervisor){
   base_filtrados={};
   filtros={};
   json_modalSuministros={};
+
   firebase.database().ref(rama_bd_insumos + "/marcas").orderByChild('nombre').on('value',function(snapshot){
     marcas = snapshot;
     json_marcas=marcas.val();
@@ -76,12 +77,12 @@ function modalSuministros(indirectos, supervisor){
         }
         json_precios[key] = maximo;
       }
-      console.log(json_precios);
+      //console.log(json_precios);
     }
     limpiaAgregarModalSuministros();
     actualizarTablaModalSuministros(base_insumos);
+    creaTablaSelectosModalSuministros(fitDatosTablaModalSuministros(json_actuales));
   });
-  creaTablaSelectosModalSuministros();
   $('#' + id_div_preciosModalSuministros).prop('disabled', supervisorFlag?true:false)
   $('#' + id_modalSuministros).modal('show');
 }
@@ -117,6 +118,12 @@ $('#'+id_indirectosModalSuministros ).change(function (){
 			$('#'+id_indirectosModalSuministros ).val(formatMoney(0));
 		}
     $('#'+id_precioClienteModalSuministros).val(formatMoney( deformatMoney( $('#'+id_precioListaModalSuministros).val()) * (1 + $('#'+id_indirectosModalSuministros ).val() *0.01) ));
+});
+
+$('#'+id_indirectosModalSuministros  ).focusout(function (){
+	if($('#'+id_indirectosModalSuministros  ).val() !== ""){
+		$('#'+id_indirectosModalSuministros  ).val(parseFloat($('#'+id_indirectosModalSuministros ).val()).toFixed(2));
+	}
 });
 
 $('#'+id_precioClienteModalSuministros  ).keypress(function(e){
@@ -254,7 +261,7 @@ function datosModalSuministros(){
     $('#'+id_precioListaModalSuministros).val(),
     $('#'+id_indirectosModalSuministros).val(),
     $('#'+id_precioClienteModalSuministros).val(),
-    $('#'+id_cantidadModalSuministros).val(),
+    "<input type='text' class='cantidadModalSuministros form-control' id=cantidad" + uid_existente_insumo + "ModalSuministros value=" + $('#'+id_cantidadModalSuministros).val() + ">",
     "<button type='button' class='eliminarModalSuministros btn btn-transparente'><i class='icono_rojo fas fa-times-circle'></i></button>"
   ]
   return insumo;
@@ -280,11 +287,44 @@ function recuperaDatosModalSuministros(){
       unidad: data[6],
       precio_lista: deformatMoney(data[7]),
       precio_cliente: deformatMoney(data[9]),
-      cantidad: data[10],
+      cantidad: parseFloat($('#cantidad' + data[0] + 'ModalSuministros').val()),
       desplegar: data[1],
     };
   });
   return insumosSuministros;
+}
+
+function fitDatosTablaModalSuministros(json_actuales){
+  //console.log(json_actuales);
+  var array_datos = [];
+  var aux = [];
+  var insumo_reg={};
+  var icono="";
+  for (key in json_actuales){
+    insumo_reg=base_insumos[key];
+    if(json_actuales[key]["desplegar"]){
+      icono = "'icono_verde fas fa-check-circle'";
+    }else{
+      icono = "'icono_rojo fas fa-times-circle'"
+    }
+    aux = [
+      key,
+      json_actuales[key]["desplegar"],
+      "<button type='button' class='desplegarModalSuministros btn btn-transparente'><i class="+icono+"></i></button>",
+      insumo_reg["catalogo"],
+      json_marcas[insumo_reg["marca"]]["nombre"],
+      insumo_reg["descripcion"],
+      json_unidades[insumo_reg["unidad"]]["nombre"],
+      //formatMoney(json_actuales[key]["precio_lista"]),
+      formatMoney(json_precios[key]),
+      json_actuales[key]["precio_lista"]!==0?parseFloat((json_actuales[key]["precio_cliente"]/json_actuales[key]["precio_lista"]-1)*100).toFixed(2):p_indirectos,
+      formatMoney(json_actuales[key]["precio_cliente"]),
+      "<input type='text' class='cantidadModalSuministros form-control' id=cantidad"+ key +"ModalSuministros value=" + json_actuales[key]["cantidad"] + ">",
+      "<button type='button' class='eliminarModalSuministros btn btn-transparente'><i class='icono_rojo fas fa-times-circle'></i></button>"
+    ];
+    array_datos.push(aux);
+  }
+  return array_datos;
 }
 //------------------------------- DataTables -----------------------------------
 function actualizarTablaModalSuministros(datos){
@@ -322,12 +362,12 @@ $(document).on('click','.agregarModalSuministros', function(){
   $('#' + id_descripcionModalSuministros).val(data[4]);
   $('#' + id_cantidadModalSuministros).val(1);
   $('#' + id_precioListaModalSuministros).val(data[6]);
-  $('#' + id_indirectosModalSuministros).val(p_indirectos);
+  $('#' + id_indirectosModalSuministros).val(parseFloat(p_indirectos).toFixed(2));
   $('#' + id_precioClienteModalSuministros).val( formatMoney( deformatMoney(data[6]) * (1 + p_indirectos*0.01) ) );
 });
 
-function creaTablaSelectosModalSuministros(){
-  var datos_suministros = [];
+function creaTablaSelectosModalSuministros(datos){
+  var datos_suministros = datos;
   tabla_selectosModalSuministros = $('#'+ id_dataTable_selectModalSuministros).DataTable({
       destroy: true,
       data: datos_suministros,
@@ -356,4 +396,15 @@ $(document).on('click','.desplegarModalSuministros', function(){
 
 $(document).on('click','.eliminarModalSuministros', function(){
   tabla_selectosModalSuministros.row( $(this).parents('tr') ).remove().draw();
+});
+
+$(document).on('change','.cantidadModalSuministros', function(){
+  if(isNaN($(this).val())){
+    alert("Ingresa solo números en las cantidades");
+    if(isNaN(parseFloat($(this).val()))){
+      $(this).val(1);
+    } else {
+      $(this).val(parseFloat($(this).val()));
+    }
+  }
 });
