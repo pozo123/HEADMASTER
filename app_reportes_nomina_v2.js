@@ -519,7 +519,7 @@ function reporteObraReporteNomina(){
                     formatMoney(json_datos[key].carga_social),
                     formatMoney(json_datos[key].total),
                 ]);
-            }
+            };
         };
         tabla_reporte_obra_nomina = $('#'+ id_dataTable_reporte_obra_reporte_nomina).DataTable({
             destroy: true,
