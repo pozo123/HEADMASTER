@@ -240,14 +240,13 @@ Nota: Todo float se ingresa a 2 decimales.
                                             - dias: float
                                             - unidades: float
                             - cuantificacion:
-                                - materiales
-                                    - id_material:
-                                        - descripcion: string
-                                        - unidad: string
-                                        - precio_lista: float
-                                        - precio_cliente: float
-                                        - cantidad: integer
-                                        - desplegar: boolean
+                                - id_material:
+                                    - descripcion: string
+                                    - unidad: string
+                                    - precio_lista: float
+                                    - precio_cliente: float
+                                    - cantidad: integer
+                                    - desplegar: boolean
                     - listas
                         - terminadas
                             - id_solicitud: true

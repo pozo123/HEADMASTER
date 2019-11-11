@@ -1,8 +1,10 @@
 // ------------------ Campos Modal Suministros --------------------------------
+// elementos generales de la pagina
 var id_modalSuministros = "modalSuministros";
 var id_dataTable_selectModalSuministros = "dataTableSeleccionadosModalSuministros";
 var id_dataTable_busquedaModalSuministros = "dataTableBusquedaModalSuministros";
 
+// elementos del form
 var id_ddl_buscaMarcaModalSuministros = "ddl_buscaMarcaModalSuministros";
 var id_ddl_buscaClasificacionModalSuministros = "ddl_buscaClasificacionModalSuministros";
 var id_ddl_buscaCategoriaModalSuministros = "ddl_buscaCategoriaModalSuministros";
@@ -14,23 +16,24 @@ var id_div_preciosModalSuministros = "div_preciosModalSuministros";
 var id_precioListaModalSuministros = "precioListaModalSuministros";
 var id_indirectosModalSuministros = "indirectosModalSuministros";
 var id_precioClienteModalSuministros = "precioClienteModalSuministros";
-
+// botones del form
 var id_boton_agregarModalSuministros = "botonAgregarModalSuministros";
 var id_boton_limpiarModalSuministros = "botonLimpiarFiltrosModalSuministros";
 var id_boton_guardarModalSuministros = "botonGuardarModalSuministros";
-
-var tabla_busquedaModalSuministros;
-var tabla_selectosModalSuministros;
-
-var json_precios;
-var p_indirectos;
-var supervisorFlag;
-
-var json_modalSuministros;
+// variables globales auxiliares
+var tabla_busquedaModalSuministros; // tabla donde aparecen todos los insumos disponibles
+var tabla_selectosModalSuministros; // tabla donde aparecen los insumos seleccionados
+var json_precios; // almacena el precio maximo de los insumos
+var p_indirectos; // almacena el porcentaje de costos indirectos default
+var supervisorFlag; // boolean que indica si el usuario es un supervisor, sirve para discriminar la vista del form
+var json_modalSuministros; // almacenara los datos ingresados en el modal
 
 // --------------------- Método de inicialización -----------------------------
+// Metodo de inicializacion del modal
 function modalSuministros(indirectos, supervisor, json_actuales){
+  // Se vacian los ddls de los filtros
   resetModalSuministros();
+  // Se inicializan las variables auxiliares
   json_precios = {};
   p_indirectos = indirectos;
   supervisorFlag = supervisor;
@@ -38,29 +41,34 @@ function modalSuministros(indirectos, supervisor, json_actuales){
   base_filtrados={};
   filtros={};
   json_modalSuministros={};
-
+  // Se cargan los datos de las marcas para los filtros
   firebase.database().ref(rama_bd_insumos + "/marcas").orderByChild('nombre').on('value',function(snapshot){
     marcas = snapshot;
     json_marcas=marcas.val();
     llenaDdlGeneric(id_ddl_buscaMarcaModalSuministros, marcas, "nombre");
   });
+  // Se cargan los datos de las categorias para los filtros
   firebase.database().ref(rama_bd_insumos + "/categorias").orderByChild('nombre').on('value',function(snapshot){
     categorias = snapshot;
     json_categorias=categorias.val();
     llenaDdlGeneric(id_ddl_buscaCategoriaModalSuministros, categorias, "nombre");
   });
+  // Se cargan los datos de las clasificaciones para los filtros
   firebase.database().ref(rama_bd_insumos + "/clasificaciones").orderByChild('nombre').on('value',function(snapshot){
     clasificaciones = snapshot;
     json_clasificaciones=clasificaciones.val();
     llenaDdlGeneric(id_ddl_buscaClasificacionModalSuministros, clasificaciones, "nombre");
   });
+  // Se cargan los datos de las unidades para los filtros
   firebase.database().ref(rama_bd_insumos + "/unidades").orderByChild('nombre').on('value',function(snapshot){
     unidades = snapshot;
     json_unidades=unidades.val();
   });
+  // Se cargan los datos de todos los insumos
   firebase.database().ref(rama_bd_insumos + "/productos").orderByChild('catalogo').on('value',function(snapshot){
     base_insumos = snapshot.val();
   });
+  // Se cargan los precios maximos de cada uno de los insumos
   firebase.database().ref(rama_bd_insumos + "/listas/productos").on('value',function(snapshot){
     var productos = {};
     var produc = {};
@@ -79,20 +87,26 @@ function modalSuministros(indirectos, supervisor, json_actuales){
       }
       //console.log(json_precios);
     }
+    // Se limpia el formulario
     limpiaAgregarModalSuministros();
+    // Se crean las tablas
     actualizarTablaModalSuministros(base_insumos);
     creaTablaSelectosModalSuministros(fitDatosTablaModalSuministros(json_actuales));
   });
+  // Se despliegan (o no) los campos de precios
   $('#' + id_div_preciosModalSuministros).prop('disabled', supervisorFlag?true:false)
+  // Se despliega el modal
   $('#' + id_modalSuministros).modal('show');
 }
 
-//------------------ Funciones del formulario ----------------------------------
+//------------------ FUNCIONES DEL FORMULARIO----------------------------------
+// Metodo para el boton que limpia los filtros
 $('#' + id_boton_limpiarModalSuministros).click(function() {
   limpiaFiltrosModalSuministros();
   actualizarTablaModalSuministros(base_insumos);
 });
 
+// Metodo para el boton que agrega un insumo a la tabla de seleccionados
 $('#' + id_boton_agregarModalSuministros).click(function() {
   if(validateagregarModalSuministros()){
     if(!existeInsumoModalSuministros(uid_existente_insumo)){
@@ -104,15 +118,18 @@ $('#' + id_boton_agregarModalSuministros).click(function() {
   }
 });
 
+// Metodo para el boton que guarda los los cambios registrados en el modal
 $('#' + id_boton_guardarModalSuministros).click(function() {
   json_modalSuministros = recuperaDatosModalSuministros();
   //console.log(json_modalSuministros);
 });
 
+// Metodo para restringir los caracteres en el campo de indirectos
 $('#'+id_indirectosModalSuministros ).keypress(function(e){
     charactersAllowed("0123456789.",e);
 });
 
+// Metodo accionado al cambiar el valor del campo indirectos
 $('#'+id_indirectosModalSuministros ).change(function (){
 		if($('#'+id_indirectosModalSuministros ).val() == ""){
 			$('#'+id_indirectosModalSuministros ).val(formatMoney(0));
@@ -120,16 +137,19 @@ $('#'+id_indirectosModalSuministros ).change(function (){
     $('#'+id_precioClienteModalSuministros).val(formatMoney( deformatMoney( $('#'+id_precioListaModalSuministros).val()) * (1 + $('#'+id_indirectosModalSuministros ).val() *0.01) ));
 });
 
+// Metodo accionado cuando indirectos es seleccionado
 $('#'+id_indirectosModalSuministros  ).focusout(function (){
 	if($('#'+id_indirectosModalSuministros  ).val() !== ""){
 		$('#'+id_indirectosModalSuministros  ).val(parseFloat($('#'+id_indirectosModalSuministros ).val()).toFixed(2));
 	}
 });
 
+// Metodo para restringir los caracteres del campo precio cliente
 $('#'+id_precioClienteModalSuministros  ).keypress(function(e){
     charactersAllowed("0123456789.",e);
 });
 
+// Metodo accionado cuando el precio cliente es modificado
 $('#'+id_precioClienteModalSuministros).change(function (){
 		if($('#'+id_precioClienteModalSuministros).val() == ""){
 			$('#'+id_precioClienteModalSuministros).val(formatMoney(0));
@@ -137,19 +157,22 @@ $('#'+id_precioClienteModalSuministros).change(function (){
     $('#'+id_indirectosModalSuministros).val( parseFloat((deformatMoney($('#'+id_precioClienteModalSuministros).val()) / deformatMoney($('#'+id_precioListaModalSuministros).val()) - 1)*100).toFixed(2) );
 });
 
+// Metodo accionado cuando precio cliente es enfocado
 $('#'+id_precioClienteModalSuministros).focus(function (){
 	if($('#'+id_precioClienteModalSuministros).val() !== ""){
 		$('#'+id_precioClienteModalSuministros).val(deformatMoney($('#'+id_precioClienteModalSuministros ).val()));
 	}
 });
 
+// Metodo accionado cuando precio cliente pierde enfoque
 $('#'+id_precioClienteModalSuministros  ).focusout(function (){
 	if($('#'+id_precioClienteModalSuministros  ).val() !== ""){
 		$('#'+id_precioClienteModalSuministros  ).val(formatMoney($('#'+id_precioClienteModalSuministros ).val()));
 	}
 });
 
-//------------------------------- Filtros -------------------------------------
+//------------------------------- FILTROS -------------------------------------
+// Metodo accionado cuando se filtra por marca
 $('#' + id_ddl_buscaMarcaModalSuministros).change(function(){
   if($('#' + id_ddl_buscaMarcaModalSuministros+' option:selected').val() == ""){
     delete filtros["marca"];
@@ -160,6 +183,7 @@ $('#' + id_ddl_buscaMarcaModalSuministros).change(function(){
   actualizarTablaModalSuministros(base_filtrados);
 });
 
+// Metodo accionado cuando se filtra por categoria
 $('#' + id_ddl_buscaCategoriaModalSuministros).change(function(){
   if($('#' + id_ddl_buscaCategoriaModalSuministros+' option:selected').val() == ""){
     delete filtros["categoria"];
@@ -170,6 +194,7 @@ $('#' + id_ddl_buscaCategoriaModalSuministros).change(function(){
   actualizarTablaModalSuministros(base_filtrados);
 });
 
+// Metodo accionado cuando se filtra por clasificacion
 $('#' + id_ddl_buscaClasificacionModalSuministros).change(function(){
   if($('#' + id_ddl_buscaClasificacionModalSuministros +' option:selected').val() == ""){
     delete filtros["clasificacion"];
@@ -180,6 +205,7 @@ $('#' + id_ddl_buscaClasificacionModalSuministros).change(function(){
   actualizarTablaModalSuministros(base_filtrados);
 });
 
+// Metodo accionado cuando se filtra por catalogo
 $('#' + id_buscaCatalogoModalSuministros).change(function(){
   if($('#' + id_buscaCatalogoModalSuministros).val() == ""){
     delete filtros["catalogo"];
@@ -191,13 +217,14 @@ $('#' + id_buscaCatalogoModalSuministros).change(function(){
 });
 
 // ----------------------Funciones necesarias ----------------------------------
+// Metodo para vaciar los filtros
 function resetModalSuministros(){
   $('#'+id_ddl_buscaMarcaModalSuministros).empty();
   $('#'+id_ddl_buscaClasificacionModalSuministros).empty();
   $('#'+id_ddl_buscaCategoriaModalSuministros).empty();
-
 }
 
+// Metodo para limpiar los filtros
 function limpiaFiltrosModalSuministros(){
   $('#'+id_ddl_buscaMarcaModalSuministros).val("");
   $('#'+id_ddl_buscaClasificacionModalSuministros).val("");
@@ -206,6 +233,7 @@ function limpiaFiltrosModalSuministros(){
   filtros={};
 }
 
+// Metodo para limpiar los campos del pequeno form
 function limpiaAgregarModalSuministros(){
   $('#'+id_catalogoModalSuministros ).val("");
   $('#'+id_descripcionModalSuministros ).val("");
@@ -215,6 +243,7 @@ function limpiaAgregarModalSuministros(){
   $('#'+id_precioClienteModalSuministros  ).val("");
 }
 
+// Metodo para validar los datos del form
 function validateagregarModalSuministros(){
   if($('#' + id_catalogoModalSuministros).val() === ""){
       alert("Ningún insumo fue seleccionado");
@@ -247,6 +276,7 @@ function validateagregarModalSuministros(){
   }
 }
 
+// Metodo para crear un reglon para la tabla seleccionados con el nuevo insumo
 function datosModalSuministros(){
   var insumo=[];
   var insumo_reg = base_insumos[uid_existente_insumo];
@@ -267,6 +297,7 @@ function datosModalSuministros(){
   return insumo;
 }
 
+// Metodo para verificar si un insumo ya ha sido seleccionado
 function existeInsumoModalSuministros(clave){
   var resp = false;
   tabla_selectosModalSuministros.rows().iterator('row', function(context, index){
@@ -278,6 +309,7 @@ function existeInsumoModalSuministros(clave){
   return resp;
 }
 
+// Metodo para extraer los datos de la tabla seleccionados
 function recuperaDatosModalSuministros(){
   var insumosSuministros = {};
   tabla_selectosModalSuministros.rows().iterator('row', function(context, index){
@@ -294,6 +326,8 @@ function recuperaDatosModalSuministros(){
   return insumosSuministros;
 }
 
+// Metodo para transformar los datos json a un formato adecuado
+// para desplegarlos en la tabla seleccionados
 function fitDatosTablaModalSuministros(json_actuales){
   //console.log(json_actuales);
   var array_datos = [];
@@ -327,6 +361,7 @@ function fitDatosTablaModalSuministros(json_actuales){
   return array_datos;
 }
 //------------------------------- DataTables -----------------------------------
+// Metodo para ingresar los insumos que de desean desplegar en la tabla
 function actualizarTablaModalSuministros(datos){
   var datos_suministros = [];
   for(key in datos){
@@ -355,6 +390,7 @@ function actualizarTablaModalSuministros(datos){
   });
 }
 
+// Metodo accionado cuando se hace clic en el icono de agregar en tabla busqueda
 $(document).on('click','.agregarModalSuministros', function(){
   var data = tabla_busquedaModalSuministros.row( $(this).parents('tr') ).data();
   uid_existente_insumo = data[0];
@@ -366,6 +402,7 @@ $(document).on('click','.agregarModalSuministros', function(){
   $('#' + id_precioClienteModalSuministros).val( formatMoney( deformatMoney(data[6]) * (1 + p_indirectos*0.01) ) );
 });
 
+// Metodo para crear la tabla seleccionados
 function creaTablaSelectosModalSuministros(datos){
   var datos_suministros = datos;
   tabla_selectosModalSuministros = $('#'+ id_dataTable_selectModalSuministros).DataTable({
@@ -380,6 +417,7 @@ function creaTablaSelectosModalSuministros(datos){
   });
 }
 
+// Metodo accionado cuando se hace clic en el icono de editar en tabla seleccionados
 $(document).on('click','.desplegarModalSuministros', function(){
   var data = tabla_selectosModalSuministros.row( $(this).parents('tr')).data();
   var icon_class = "";
@@ -394,10 +432,12 @@ $(document).on('click','.desplegarModalSuministros', function(){
   tabla_selectosModalSuministros.row( $(this).parents('tr')).data(data).draw();
 });
 
+// Metodo accionado cuando se hace clic en el icono de eliminar en tabla seleccionados
 $(document).on('click','.eliminarModalSuministros', function(){
   tabla_selectosModalSuministros.row( $(this).parents('tr') ).remove().draw();
 });
 
+// Metodo accionado cuando se hace cambia el valor de alguna celda cantidad
 $(document).on('change','.cantidadModalSuministros', function(){
   if(isNaN($(this).val())){
     alert("Ingresa solo números en las cantidades");

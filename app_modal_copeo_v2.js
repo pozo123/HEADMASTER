@@ -1,6 +1,8 @@
 // ------------------ Campos Modal Suministros --------------------------------
+// elementos generales de la pagina
 var id_modalCopeo = "modalCopeo";
 
+// elementos del form
 var id_ddl_obraModalCopeo = "ddl_obraModalCopeo";
 var id_ddl_procesoModalCopeo = "ddl_procesoModalCopeo";
 var id_ddl_subprocesoModalCopeo = "ddl_subprocesoModalCopeo";
@@ -17,44 +19,38 @@ var id_costo_copeoModalCopeo = "costoModalCopeo";
 var id_costo_copeo_CSModalCopeo = "costoCSModalCopeo";
 var id_seccion_subprocesoModalCopeo = "div_subprocesoModalCopeo";
 
+// botones del form
 var id_agregar_modalCopeo = "botonAceptarModalCopeo";
 var id_borrar_modalCopeo = "botonResetModalCopeo";
 var id_sueldos_modalCopeo = "botonSueldosModalCopeo";
 
-var adicionalFlag;
-var return_modalCopeo;
-var json_copeo;
+// variables auxiliares
+var adicionalFlag; // determina si el el copeo de un adicional, para desplegar o no algunos elementos
+var json_modalCopeo;
 var pathModalCopeo;
 
 // --------------------- Método de inicialización -----------------------------
-function modalCopeo(ruta, adicional){
+// Metodo de inicializacion del modal
+function modalCopeo(json_modalCopeoRegistrado, adicional){
   pathModalCopeo = ruta;
   adicionalFlag=adicional;
   puestos_array = [];
-  json_copeo={};
-  cargaCopeo();
+  json_modalCopeo = json_modalCopeoRegistrado;
   cargaListaTrabajadoresModalCopeo();
   llenaDdlEntradaModalCopeo();
   $('#' + id_modalCopeo).modal('show');
 }
 
-function cargaCopeo(){
-  firebase.database().ref(pathModalCopeo).on('value',function(snapshot){
-    if(snapshot.exists()){
-      json_copeo = snapshot.val();
-    }
-  });
-}
-
-//Funcionalidad del boton 'Aceptar'
+// Funcionalidad del boton 'Guardar'
 $('#' + id_agregar_modalCopeo).click(function() {
+  // Validar la informacion del formulario
   if(validateFormModalCopeo()){
     var uid_entrada;
     var nueva = false;
     //Determinar si es alta o modificación
     if($('#'+id_ddl_entradaModalCopeo+' option:selected').val() == "-NUEVA-"){
       num_entradas = num_entradas+1;
-      json_copeo["num_entradas"] = num_entradas;
+      json_modalCopeo["num_entradas"] = num_entradas;
       if(num_entradas<10){
         uid_entrada = "EN-0"+num_entradas;
       }else{
@@ -66,41 +62,40 @@ $('#' + id_agregar_modalCopeo).click(function() {
     }
 		//Actualizar los campos de la entrada
     if(parseFloat(uid_entrada.slice(3)) == 1){
-      json_copeo["impuestos"] = parseFloat($('#'+id_carga_socialModalCopeo).val());
+      json_modalCopeo["impuestos"] = parseFloat($('#'+id_carga_socialModalCopeo).val());
     }
     //Generar el JSON de la entrada con los datos del formulario
-    json_copeo["entradas"] = {};
-		json_copeo["entradas"][uid_entrada] = datosEntradaModalCopeo();
-    //console.log(json_copeo);
+    json_modalCopeo["entradas"] = {};
+		json_modalCopeo["entradas"][uid_entrada] = datosEntradaModalCopeo();
+    //console.log(json_modalCopeo);
 		resetFormModalCopeo();
     llenaDdlEntradaModalCopeo();
 	}
 });
 
-//Funcionalidad del boton 'Borrar'
+// Funcionalidad del boton 'Borrar'
 $('#' + id_borrar_modalCopeo).click(function() {
   resetFormModalCopeo();
 });
 
-//Funcionalidad del boton 'Sueldos default'
+// Funcionalidad del boton 'Sueldos default'
 $('#' + id_sueldos_modalCopeo).click(function() {
   for(key in puestos_json){
     $('#'+"sueldo_"+key).val(formatMoney(puestos_json[key]["sueldo"]));
   }
-  calculaCostoUnitarioModalCopeo();
+  calculaCostoDiarioModalCopeo();
   calculaCostoTotalModalCopeo();
 });
 
-// ----------------------- FUNCIONES DE LOS CAMPOS REGULARES ------------------------
-// -----------------------------------  DDLS  ---------------------------------------
+//------------------ FUNCIONES DEL FORMULARIO----------------------------------
+// Metodo accionado cuando se selecciona una entrada
 $("#" + id_ddl_entradaModalCopeo).change(function(){
   //uid_subproceso = $('#'+id_ddl_subprocesoModalCopeo+" option:selected").val()
   resetFormModalCopeo_entrada();
-  cargaCamposModalCopeo(uid_obra, uid_proceso, uid_subproceso, $("#" + id_ddl_entradaModalCopeo+" option:selected").val() );
+  cargaCamposModalCopeo($("#" + id_ddl_entradaModalCopeo+" option:selected").val() );
 });
 
-// -------------------- FUNCIONES DE LOS CAMPOS DE PUESTOS----------------------
-
+// Metodo accionado cuando se hace altera la seleccion de trabajadores
 $('#' + id_lista_trabajadoresModalCopeo).change(function(){
     var array_html = selectTrabajadores.selected();
     var item;
@@ -112,36 +107,40 @@ $('#' + id_lista_trabajadoresModalCopeo).change(function(){
         $('#' + "row-"+item).addClass('hidden');
       }
     }
-    calculaCostoUnitarioModalCopeo();
+    calculaCostoDiarioModalCopeo();
     calculaCostoTotalModalCopeo();
 });
 
-// ----------------------- INFORMACION DE LA ENTRADA ---------------------------
-
+// Metodo para restringir los caracteres del campo nombre
 $('#'+id_nombreModalCopeo).keypress(function(e){
     charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789_-.",e);
 });
 
+// Metodo accionado cuando se altera el campo nombre
 $('#'+id_nombreModalCopeo).change(function (){
   var nombre = deleteBlankSpaces(id_nombreModalCopeo);
   nombre = nombre.charAt(0).toUpperCase() + nombre.slice(1);
   $('#' + id_nombreModalCopeo).val(nombre);
 });
 
+// Metodo para restringir los caracteres del campo alcance
 $('#'+id_alcanceModalCopeo ).keypress(function(e){
     charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789_-.()",e);
 });
 
+// Metodo accionado cuando se altera el campo alcance
 $('#'+id_alcanceModalCopeo ).change(function (){
   var alcance = deleteBlankSpaces(id_alcanceModalCopeo );
   alcance = alcance.charAt(0).toUpperCase() + alcance.slice(1);
   $('#' + id_alcanceModalCopeo ).val(alcance);
 });
 
+// Metodo para restringir los caracteres del campo carga social
 $('#'+id_carga_socialModalCopeo  ).keypress(function(e){
     charactersAllowed("0123456789.",e);
 });
 
+// // Metodo accionado cuando se altera el campo carga social
 $('#'+id_carga_socialModalCopeo  ).change(function (){
   if($('#'+id_carga_socialModalCopeo).val() == ""){
     $('#'+id_carga_socialModalCopeo).val(0);
@@ -151,10 +150,12 @@ $('#'+id_carga_socialModalCopeo  ).change(function (){
   calculaCostoTotalModalCopeo();
 });
 
+// Metodo para restringir los caracteres del campo dias
 $('#'+id_diasModalCopeo).keypress(function(e){
     charactersAllowed("0123456789.",e);
 });
 
+// Metodo accionado cuando se altera el campo dias
 $('#'+id_diasModalCopeo).change(function (){
   if($('#'+id_diasModalCopeo).val() == ""){
     $('#'+id_diasModalCopeo).val(0);
@@ -164,10 +165,12 @@ $('#'+id_diasModalCopeo).change(function (){
   calculaCostoTotalModalCopeo();
 });
 
+// Metodo para restringir los caracteres del campo multiplicaador
 $('#'+id_multModalCopeo).keypress(function(e){
     charactersAllowed("0123456789.",e);
 });
 
+// Metodo accionado cuando se altera el campo multiplicador
 $('#'+id_multModalCopeo).change(function (){
   if($('#'+id_multModalCopeo).val() == ""){
     $('#'+id_multModalCopeo).val(0);
@@ -178,19 +181,22 @@ $('#'+id_multModalCopeo).change(function (){
 });
 
 // --------------- FUNCIONES PARA CAMPOS CREADOS DINAMICAMENTE -----------------
+// Metodo para restringir los caracteres de los campos puesto-cantidad
 $(document).on('keypress','.puestosModalCopeo', function(e){
     charactersAllowed("0123456789",e);
 });
 
+// Metodo accionado cuando se alteran los campos de puesto-cantidad
 $(document).on('change','.puestosModalCopeo', function(e){
 		if(this.value == ""){
 			this.value = 0;
 		}
-    calculaCostoUnitarioModalCopeo();
+    calculaCostoDiarioModalCopeo();
     calculaCostoTotalModalCopeo();
 });
 
 // ------------------------------ VALIDACIONES ---------------------------------
+//  Metodo para validar los datos del form
 function validateFormModalCopeo(){
   if ($('#' + id_ddl_obraModalCopeo).val() == ""){
 			alert("Selecciona la obra");
@@ -249,7 +255,7 @@ function validateFormModalCopeo(){
 }
 
 // --------------------------- FUNCIONES NECESARIAS ----------------------------
-
+// Metodo para resetear el formulario
 function resetFormModalCopeo (){
   //$('#'+id_ddl_obraCopeo).val("");
   if(!adicionalFlag){
@@ -264,6 +270,7 @@ function resetFormModalCopeo (){
   resetFormModalCopeo_entrada();
 }
 
+// Metodo para limpiar los datos del formulario
 function resetFormModalCopeo_entrada(){
   $('#'+id_carga_socialModalCopeo).val("");
   $('#'+id_carga_socialModalCopeo).prop("disabled", true);
@@ -280,7 +287,7 @@ function resetFormModalCopeo_entrada(){
     $('#'+puestos_array[i]).val("");
   }
 }
-
+// Metodo para cargar los trabajadores en el ddl
 function cargaListaTrabajadoresModalCopeo(){
   $('#' + id_lista_trabajadoresModalCopeo).empty();
   var puesto;
@@ -305,6 +312,7 @@ function cargaListaTrabajadoresModalCopeo(){
   });
 }
 
+// Metodo para cargar los datos de las entradas disponibles
 function llenaDdlEntradaModalCopeo(){
   //console.log("Llenando entradas");
 	$('#' + id_ddl_entradaModalCopeo).empty();
@@ -314,8 +322,8 @@ function llenaDdlEntradaModalCopeo(){
   option.text = option.value = "";
   select.appendChild(option);
 	var subproceso;
-  if(!jQuery.isEmptyObject(json_copeo)){
-    subproceso = json_copeo;
+  if(!jQuery.isEmptyObject(json_modalCopeo)){
+    subproceso = json_modalCopeo;
     num_entradas=subproceso.num_entradas;
     for(key in subproceso.entradas){
       option = document.createElement('option');
@@ -332,6 +340,7 @@ function llenaDdlEntradaModalCopeo(){
   select.appendChild(option);
 }
 
+// Metodo para crear los campos de los trabajadores dinamicamente
 function agregaCamposPuestoModalCopeo(puesto){
   var id_puesto = puesto;
   var cantidad = document.createElement('input');
@@ -382,7 +391,8 @@ function agregaCamposPuestoModalCopeo(puesto){
   div_trabajadores.appendChild(row);
 }
 
-function cargaCamposModalCopeo(claveObra, claveProceso, claveSubproceso, claveEntrada){
+// Metodo para llenar el formulario con los datos de una entrada
+function cargaCamposModalCopeo(claveEntrada){
   if( claveEntrada == "-NUEVA-"){
     //console.log("Sin registro de entrada");
     resetFormModalCopeo_entrada();
@@ -390,10 +400,10 @@ function cargaCamposModalCopeo(claveObra, claveProceso, claveSubproceso, claveEn
       $('#'+id_carga_socialModalCopeo).prop("disabled", false);
     } else{
       var subproceso = snapshot.val();
-      $('#' + id_carga_socialModalCopeo).val(json_copeo.impuestos);
+      $('#' + id_carga_socialModalCopeo).val(json_modalCopeo.impuestos);
     }
   }else{
-    var subproceso = json_copeo;
+    var subproceso = json_modalCopeo;
     //console.log(subproceso);
     var entrada = subproceso["entradas"][claveEntrada];
     var cuadrilla = entrada.cuadrilla;
@@ -411,18 +421,18 @@ function cargaCamposModalCopeo(claveObra, claveProceso, claveSubproceso, claveEn
       i++;
     }
     selectTrabajadores.set(aux_array);
-		calculaCostoUnitarioModalCopeo();
+		calculaCostoDiarioModalCopeo();
     calculaCostoTotalModalCopeo();
     if(parseFloat(claveEntrada.slice(3)) == 1){
-      $('#'+id_carga_socialModalCopeo).prop("disabled", false);
+      $('#' + id_carga_socialModalCopeo).prop("disabled", false);
     } else {
       $('#' + id_carga_socialModalCopeo).val(subproceso.impuestos);
     }
   }
-
 }
 
-function calculaCostoUnitarioModalCopeo(){
+// Metodo para calcular el costo diario de la cuadrilla
+function calculaCostoDiarioModalCopeo(){
   var aux = selectTrabajadores.selected();
   var suma = 0;
   var total = 0;
@@ -436,6 +446,7 @@ function calculaCostoUnitarioModalCopeo(){
   $('#'+ id_costo_unitarioModalCopeo).val(formatMoney(suma));
 }
 
+// Metodo para calcular el costo total de la entrada (con y sin carga social)
 function calculaCostoTotalModalCopeo(){
   var aux = selectTrabajadores.selected();
   var suma = deformatMoney($('#'+ id_costo_unitarioModalCopeo).val());
@@ -456,6 +467,7 @@ function calculaCostoTotalModalCopeo(){
   $('#'+ id_costo_copeo_CSModalCopeo).val(formatMoney(totalCS));
 }
 
+// Metodo para construir un json de la entrada con los datos del formulario
 function datosEntradaModalCopeo(){
   var entradaCopeo = {};
   var cuadrilla={};
@@ -478,16 +490,4 @@ function datosEntradaModalCopeo(){
     }
   }
   return entradaCopeo;
-}
-
-function verificaEntradas(json_subproceso){
-  var suma = 0;
-  for (key in json_subproceso.entradas){
-      suma = suma + json_subproceso.entradas[key]["subtotal"];
-  }
-  if (suma !== 0){
-    return true;
-  } else {
-    return false;
-  }
 }
