@@ -306,7 +306,7 @@ $('#' + id_boton_registrarSolicitudAdicional).click(function(){
                 // PAD
                 pda("alta", solicitud_path, "");
                 alert("¡Registro de solicitud exitoso!");
-                $(id_boton_registrarSolicitudAdicional).prop('disabled', false);
+                $('#' + id_boton_registrarSolicitudAdicional).prop('disabled', false);
                 resetForm1SolicitudAdicional();
                 $('#' + id_ddl_obraSolicitudAdicional).val("");
               }

@@ -31,7 +31,7 @@ var json_modalSuministros; // almacenara los datos ingresados en el modal
 // --------------------- Método de inicialización -----------------------------
 // Metodo de inicializacion del modal
 function modalSuministros(indirectos, supervisor, json_actuales){
-  console.log("Desplegando modal");
+  //console.log("Desplegando modal");
   // Se vacian los ddls de los filtros
   resetModalSuministros();
   // Se inicializan las variables auxiliares
