@@ -95,9 +95,9 @@ $('#' + id_ddl_accionSolicitudAdicional).change(function(){
   array_leyendasAnexos=[];
   array_fotosEvidencias=[];
   indexSolicitudAdicional = 0;
-  json_anexos={};
   cont_solicitudes = 0;
   colaborador = "";
+  registro_antiguo={};
   if(opcion == 0){
     $('#' + id_form_solicitud2Adicional).addClass("hidden");
     $('#' + id_form_solicitudAdicional).removeClass("hidden");
@@ -265,7 +265,7 @@ $('#' + id_boton_registrarSolicitudAdicional).click(function(){
     var solicitud_update = {};
     var solicitud_path = rama_bd_obras + "/adicionales/solicitudes/";
     var storageRef = firebase.storage().ref(solicitud_path + obra + "/solicitudes/" + solicitud +".pdf");
-    const pdfDocGenerator = generaPDFsolicitudAdicional(false);
+    var pdfDocGenerator = generaPDFsolicitudAdicional(false);
     pdfDocGenerator.download(solicitud + '.pdf');
     $('#' + id_boton_registrarSolicitudAdicional).prop('disabled', true);
 
@@ -458,6 +458,7 @@ function generaPDFsolicitudAdicional(vista_previa){
     fotos_seleccionadas.push(array_fotosAnexos[indices_seleccionados[i]]);
     leyendas_seleccionadas.push(array_leyendasAnexos[indices_seleccionados[i]]);
   }
+  //console.log(vista_previa, obra, solicitud, descripcion, atencion, json_anexos, anexos_seleccionados, otros, fotos_seleccionadas, leyendas_seleccionadas, fecha_pdf , colaborador);
   var pdfDocGenerator = pdfMake.createPdf(generaSolicitudAdic(vista_previa, obra, solicitud, descripcion, atencion, json_anexos, anexos_seleccionados, otros, fotos_seleccionadas, leyendas_seleccionadas, fecha_pdf , colaborador));
   return pdfDocGenerator;
 }
@@ -606,7 +607,7 @@ $('#' + id_boton_terminarSolicitudAdicional).click(function() {
     var solicitud_update = {};
     var solicitud_path = rama_bd_obras + "/adicionales/solicitudes/";
     var storageRef = firebase.storage().ref(solicitud_path + obra + "/solicitudesTerminadas/" + solicitud +".pdf");
-    const pdfDocGenerator = generaPDFsolicitudTerminada();
+    var pdfDocGenerator = generaPDFsolicitudTerminada();
     //pdfDocGenerator.open();
     $('#' + id_boton_terminarSolicitudAdicional).prop('disabled', true);
 
