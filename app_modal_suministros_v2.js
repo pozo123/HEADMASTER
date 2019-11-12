@@ -31,6 +31,7 @@ var json_modalSuministros; // almacenara los datos ingresados en el modal
 // --------------------- Método de inicialización -----------------------------
 // Metodo de inicializacion del modal
 function modalSuministros(indirectos, supervisor, json_actuales){
+  console.log("Desplegando modal");
   // Se vacian los ddls de los filtros
   resetModalSuministros();
   // Se inicializan las variables auxiliares
@@ -94,7 +95,11 @@ function modalSuministros(indirectos, supervisor, json_actuales){
     creaTablaSelectosModalSuministros(fitDatosTablaModalSuministros(json_actuales));
   });
   // Se despliegan (o no) los campos de precios
-  $('#' + id_div_preciosModalSuministros).prop('disabled', supervisorFlag?true:false)
+  if(supervisorFlag){
+    $('#' + id_div_preciosModalSuministros).addClass("hidden");
+  }else{
+    $('#' + id_div_preciosModalSuministros).removeClass("hidden");
+  }
   // Se despliega el modal
   $('#' + id_modalSuministros).modal('show');
 }

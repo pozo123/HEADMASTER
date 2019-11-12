@@ -27,12 +27,10 @@ var id_sueldos_modalCopeo = "botonSueldosModalCopeo";
 // variables auxiliares
 var adicionalFlag; // determina si el el copeo de un adicional, para desplegar o no algunos elementos
 var json_modalCopeo;
-var pathModalCopeo;
 
 // --------------------- Método de inicialización -----------------------------
 // Metodo de inicializacion del modal
 function modalCopeo(json_modalCopeoRegistrado, adicional){
-  pathModalCopeo = ruta;
   adicionalFlag=adicional;
   puestos_array = [];
   json_modalCopeo = json_modalCopeoRegistrado;
@@ -65,7 +63,9 @@ $('#' + id_agregar_modalCopeo).click(function() {
       json_modalCopeo["impuestos"] = parseFloat($('#'+id_carga_socialModalCopeo).val());
     }
     //Generar el JSON de la entrada con los datos del formulario
-    json_modalCopeo["entradas"] = {};
+    if(num_entradas == 1){
+      json_modalCopeo["entradas"] = {};
+    }
 		json_modalCopeo["entradas"][uid_entrada] = datosEntradaModalCopeo();
     //console.log(json_modalCopeo);
 		resetFormModalCopeo();
@@ -399,7 +399,6 @@ function cargaCamposModalCopeo(claveEntrada){
     if(num_entradas==0){
       $('#'+id_carga_socialModalCopeo).prop("disabled", false);
     } else{
-      var subproceso = snapshot.val();
       $('#' + id_carga_socialModalCopeo).val(json_modalCopeo.impuestos);
     }
   }else{
