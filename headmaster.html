@@ -2526,29 +2526,31 @@
                                          <form id="formGeneradorAdic" action="#" onsubmit="return false;">
                                             <br/>
                                             <div class="form-row">
-                                                <div class="form-group col-md-6">
+                                                <div class="form-group col-md-9">
                                                     <label for="ddl_obraAdicionales">Obra:</label>
                                                     <select id="ddl_obraAdicionales" class="form-control"></select>
                                                 </div>
-                                                <div class="form-group col-md-2">
-                                                    <label for="info_atencionAdicionales">Verificación</label>
-                                                    <input type="text" id="info_atencionAdicionales"class="form-control" disabled="true" placeholder="Info. Atención">
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-9" id="div_adicionalAdicionales">
+                                                    <label for="ddl_adicionalAdicionales">Adicional:</label>
+                                                    <select id="ddl_adicionalAdicionales" class="form-control"></select>
+                                                </div>
+                                                <div class="form-group col-md-3 ">
+                                                    <label for="claveAdicionales">Clave:</label>
+                                                    <input type="text" id="claveAdicionales"class="form-control" disabled="true" placeholder="Clave">
                                                 </div>
                                             </div>
                                             <div class="form-row">
-                                                <div class="form-group col-md-6" id="div_subprocesoAdicionales">
-                                                    <label for="ddl_subprocesoAdicionales">Adicional:</label>
-                                                    <select id="ddl_subprocesoAdicionales" class="form-control"></select>
-                                                </div>
-                                                <div class="form-group col-md-6 ">
-                                                    <label for="claveAdicionales">Clave:</label>
-                                                    <input type="text" id="claveAdicionales"class="form-control" disabled="true" placeholder="Clave">
+                                                <div class="form-group col-md-3"></div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="ddl_solicitudAdicionales">Solicitud: </label>
+                                                    <select id="ddl_solicitudAdicionales" class="form-control"></select>
                                                 </div>
                                             </div>
                                             </br>
                                             <h3>Header</h3>
                                             <hr class="style2">
-
                                             <div class="form-group">
                                                 <label for="nombreAdicionales">Nombre:</label>
                                                 <input type="text" id="nombreAdicionales"class="form-control" placeholder="Nombre del presupuesto">
@@ -2558,79 +2560,30 @@
                                                 <input type="text" id="tituloAdicionales"class="form-control" placeholder="Titulo del presupuesto">
                                             </div>
                                             <div class="form-group">
-                                                <!--<label for="atnDdlCbPptoProy">AT'N:</label>-->
-                                                <div class="myDropdownCheckbox" id="ddl_atnAdicionales"></div>
+                                                <label for="ddl_atencionAdicionales">Atención:</label>
+                                                <select id="ddl_atencionAdicionales" class="form-control"></select>
                                             </div>
                                             <br/>
                                             <h3>Body</h3>
                                             <hr class="style2">
-                                            <div class="form-row align-items-center">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="cb_altaSinSupervisorAdicionales">
-                                                    <label class="form-check-label" for="cb_altaSinSupervisorAdicionales">Dar de alta sin solicitud de un supervisor</label>
-                                                </div>
-                                            </div>
-                                          </br>
-                                            <div class="hidden" id="div_sinSupervisorAdicionales">
-                                                <div class="form-group">
-                                                    <label for="fotoInputAdicionales">Selecciona una imagen</label>
-                                                    <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="fotoInputAdicionales" accept="image/*"/>
-                                                        <label class = "custom-file-label" id="imagenLabelAdicionales">Archivo no seleccionado</label>
-                                                    </div>
-                                                </div>
-                                                <div class="form-row">
-                                                    <button id="botonImagenAdicionales" type="button" class="btn btn-outline-dark btn-block">Aceptar</button>
-                                                </div>
-                                                <br/>
-                                                <div class="form-row">
-                                                  <div class="form-group col-md-3">
-                                                     <label>Imagenes seleccionadas</label>
-                                                  </div>
-                                                  <div class="form-group col-md-9">
-                                                      <select id="imagenesSeleccionadasAdicionales" multiple>
-                                                      </select>
-                                                  </div>
-                                                </div>
-                                            </div>
-                                            <div id="div_conSupervisorAdicionales">
-                                                <div class="form-row">
-                                                    <div class="form-group col-md-12">
-                                                        <label for="ddl_peticionAdicionales">Petición de supervisor:</label>
-                                                        <select id="ddl_peticionAdicionales" class="form-control"></select>
-                                                    </div>
-                                                </div>
-                                            </div>
-
                                             </br>
                                             <h4>Suministros</h4>
                                             <div class="form-group">
+                                                <div class="col-lg-4">
+                                                    <label for="indirectosAdicionales">Porcentaje indirectos:</label>
+                                                    <input type="number" id="indirectosAdicionales"class="form-control" placeholder="Indirectos">
+                                                </div>
                                                 <div class="row">
                                                   <div class="col-lg-4"></div>
-                                                    <div class="col-lg-4">
-                                                        <button id="botonAgregarSuministroAdicionales" type="button" class="btn btn-outline-success btn-lg btn-block">Agregar</button>
-                                                    </div>
+                                                  <div class="col-lg-4">
+                                                      <button id="botonSuministrosAdicionales" type="button" class="btn btn-outline-info btn-lg btn-block">Cuantificación</button>
+                                                  </div>
                                                 </div>
-                                            </div>
-                                            </br>
-                                            <label>Productos seleccionados</label>
-                                            <div class = "tableWrapper">
-                                                <table id="dataTableSeleccionadosAdicionales" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Id_producto</th>
-                                                            <th>Catalogo</th>
-                                                            <th>Descripcion</th>
-                                                            <th>Unidad</th>
-                                                            <th>Precio</th>
-                                                            <th>Cantidad</th>
-                                                            <th>Subtotal</th>
-                                                            <th>Desplegar</th>
-                                                            <th>Eliminar</th>
-                                                            <th>Desplegar</th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
+                                                </br>
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="cb_indirectosAdicionales">
+                                                    <label class="custom-control-label" for="cb_indirectosAdicionales">Desplegar costos indirectos</label>
+                                                </div>
                                             </div>
                                             </br>
                                             <h4>Copeo</h4>
@@ -2638,7 +2591,7 @@
                                                 <div class="row">
                                                   <div class="col-lg-4"></div>
                                                     <div class="col-lg-4">
-                                                        <button id="botonCopeoAdicionales" type="button" class="btn btn-outline-success btn-lg btn-block">Copeo</button>
+                                                        <button id="botonCopeoAdicionales" type="button" class="btn btn-outline-info btn-lg btn-block">Copeo</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -2648,27 +2601,49 @@
                                                 <div class="row">
                                                   <div class="col-lg-4"></div>
                                                     <div class="col-lg-4">
-                                                        <button id="botonCalculadoraAdicionales" type="button" class="btn btn-outline-success btn-lg btn-block">Calculadora</button>
+                                                        <button id="botonCalculadoraAdicionales" type="button" class="btn btn-outline-info btn-lg btn-block">Calculadora</button>
                                                     </div>
                                                 </div>
                                             </div>
                                             <br/>
                                             <h3>Footer</h3>
                                             <hr class="style2">
-                                            <div class="form-group">
-                                                <div class="myDropdownCheckbox" id="ddlCb_requisitosAdicionales"></div>
+                                            <div class="form-row">
+                                              <div class="form-group col-md-3">
+                                                 <label>Requisitos</label>
+                                              </div>
+                                              <div class="form-group col-md-12">
+                                                  <select id="ddl_requisitosAdicionales" multiple>
+                                                  </select>
+                                              </div>
                                             </div>
-                                            <div class="form-group">
-                                                <div class="myDropdownCheckbox" id="ddlCb_exclusionesAdicionales"></div>
+                                            <div class="form-row">
+                                              <div class="form-group col-md-3">
+                                                 <label>Exclusiones</label>
+                                              </div>
+                                              <div class="form-group col-md-12">
+                                                  <select id="ddl_exclusionesAdicionales" multiple>
+                                                  </select>
+                                              </div>
                                             </div>
                                             <br/>
                                             <h4>Condiciones Comerciales</h4>
                                             <br/>
+                                            <div class="form-row align-items-center">
+                                                <div class="col-lg-4">
+                                                    <label for="indirectosModalCalculadora">Anticipos(%):</label>
+                                                    <input type="number" id="anticiposAdicionales" class="form-control" placeholder="Porcentaje de anticipos">
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label for="indirectosModalCalculadora">Estimaciones(%):</label>
+                                                    <input type="number" id="estimacionesAdicionales" class="form-control" placeholder="Porcentaje de estimaciones">
+                                                </div>
+                                            </div>
+                                            </br>
                                             <div class="form-group">
                                                 <label for="tiempoEntregaAdicionales">Tiempo de Entrega:</label>
                                                 <textarea class="form-control" rows="6" id="tiempoEntregaAdicionales"></textarea>
                                             </div>
-
                                             <div class="custom-control custom-checkbox">
                                                 <input type="checkbox" class="custom-control-input" id="cb_bancariosAdicionales">
                                                 <label class="custom-control-label" for="cb_bancariosAdicionales">Agregar datos bancarios</label>
@@ -2682,14 +2657,22 @@
                                             <br/>
                                             <div class="form-group">
                                                 <div class="row">
-                                                    <div class="col-lg-4">
+                                                    <div class="col-lg-3">
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <button id="botonpdfAdicionales" type="reset" class="btn btn-outline-info btn-lg btn-block">Vista Previa</button>
+                                                    </div>
+                                                </div>
+                                                </br>
+                                                </br>
+                                                <div class="row">
+                                                    <div class="col-lg-5">
                                                         <button id="botonRegistrarAdicionales" type="button" class="btn btn-outline-success btn-lg btn-block">Generar Ppto</button>
                                                     </div>
-                                                    <div class="col-lg-4">
-                                                        <button id="botonvistaPreviaAdicionales" type="button" class="btn btn-outline-warning btn-lg btn-block">Vista Previa</button>
+                                                    <div class="col-lg-2">
                                                     </div>
-                                                    <div class="col-lg-4">
-                                                        <button id="botonBorrarTodoAdicionales" type="reset" class="btn btn-outline-danger btn-lg btn-block">Borrar Todo</button>
+                                                    <div class="col-lg-5">
+                                                        <button id="botonBorrarAdicionales" type="reset" class="btn btn-outline-danger btn-lg btn-block">Borrar Todo</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -3136,7 +3119,7 @@
                                              <div class="form-row">
                                                  <div class= "col-lg-4"></div>
                                                  <div class= "col-lg-4">
-                                                     <button id="botonPDFSolicitudAdicional" type="button"  class="btn btn-secondary btn-block">Generar PDF</button>
+                                                     <button id="botonPDFSolicitudAdicional" type="button"  class="btn btn-outline-info btn-block">Generar PDF</button>
                                                  </div>
                                                  <div class= "col-lg-4"></div>
                                              </div>
@@ -3163,7 +3146,7 @@
                                              <div class="form-row">
                                                  <div class= "col-lg-4"></div>
                                                  <div class= "col-lg-4">
-                                                     <button id="botonDescargarPDFSolicitudAdicional" type="button"  class="btn btn-outline-dark btn-block">Descargar PDF</button>
+                                                     <button id="botonDescargarPDFSolicitudAdicional" type="button"  class="btn btn-outline-info btn-block">Descargar PDF</button>
                                                  </div>
                                                  <div class= "col-lg-4"></div>
                                              </div>

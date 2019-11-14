@@ -259,6 +259,8 @@ Nota: Todo float se ingresa a 2 decimales.
                         - id_solicitud
                         - nombre: string
                         - titulo: string
+                        - atencion: string
+                        - porcentaje_anticipo: float
                         - requisitos:
                             - id_requisito
                                 - info: string
@@ -271,40 +273,11 @@ Nota: Todo float se ingresa a 2 decimales.
                         - aprobada: boolean
                         - url_evidencia: string
                         - precio_venta_aprobado: float
-                        - copeo:
-                            - num_entradas: int
-                            - impuestos: float (0 a 100)
-                            - entradas
-                                - entrada (num)
-                                    - nombre: string
-                                    - alcance: string
-                                    - subtotal: float
-                                    - cuadrilla:
-                                        - id_puesto
-                                            - cantidad: int
-                                            - sueldo_diario: float (sin impuestos)
-                                    - multiplicadores
-                                        - dias: float
-                                        - unidades: float
-                        - cuantificacion:
-                            - materiales
-                                - id_material:
-                                    - descripcion: string
-                                    - unidad: string
-                                    - precio: float
-                                    - cantidad: integer
-                                    - desplegar: boolean
-                        - calculadora:
-                            - precio_venta: float
-                            - costo_suministros:float
-                            - utilidad: float
-                            - precopeo: float
-                            - porcentaje_anticipo: float
-                            - porcentaje_indirectos: float
-                            - porcentaje_impuestos: float
-                            - score
-                                - horas_programadas: (en horas)
-                                - costo_hora: float (2 decimales)
+                    - listas
+                        - pendientes
+                            - id_subproceso:
+                        - terminados
+                            - id_subproceso:
 
         - presupuesto: (adic o pc00. pc00-misc = "") (DEFINIR CON RAY)
             - id_obra

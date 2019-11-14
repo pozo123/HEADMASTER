@@ -197,7 +197,7 @@ $('#' + id_ddl_obraSolicitudAdicional).change(function(){
   resetForm1SolicitudAdicional();
   //llenaDdlSolicitudSolicitudAdicional(id_ddl_solicitudSolicitudAdicional);
   getContadorSolicitudAdicional(uid_obra);
-  llenaDdlAtnSolicitudAdicionall(id_ddl_atnSolicitudAdicional);
+  llenaDdlAtnGeneric(id_ddl_atnSolicitudAdicional, uid_obra);
 });
 
 // Metodo para mostrar el input OTROS en caso de ser seleccionado ese anexo
@@ -416,8 +416,8 @@ function getContadorSolicitudAdicional(clave_obra){
 
 // Metodo para llenar ddl de atenciones de una obra (depende del cliente registrado)
 // id_objeto = ddl de las atenciones
-function llenaDdlAtnSolicitudAdicionall(id_objeto){
-  firebase.database().ref(rama_bd_obras + "/obras/" + uid_obra +"/id_cliente").on('value',function(snapshot){
+function llenaDdlAtnGeneric(id_objeto, obra){
+  firebase.database().ref(rama_bd_obras + "/obras/" + obra +"/id_cliente").on('value',function(snapshot){
     var cliente_id = snapshot.val();
     $('#' + id_objeto).empty();
     var select = document.getElementById(id_objeto);
