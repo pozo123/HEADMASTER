@@ -745,6 +745,14 @@ function actualizarTablaCopeo(){
         destroy: true,
         data: datos_obra,
         language: idioma_espanol,
+        dom: 'Bfrtip',
+        buttons: [
+          {extend: 'excelHtml5',
+          title: "Copeo",
+          exportOptions: {
+              columns: [':visible']
+          }},
+      ],
         "paging":false,
         "autoWidth": false,
         "columnDefs": [
@@ -757,7 +765,7 @@ function actualizarTablaCopeo(){
             },
             { "visible": false, "targets": 0 }, //Campos auxiliares
             { "visible": false, "targets": 1 },
-          ]
+          ],
     });
     //Funcion para llenar los campos cuando se quiere editar desde las opciones de la tabla
     /*
