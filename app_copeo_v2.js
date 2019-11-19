@@ -323,6 +323,7 @@ function validateFormCopeo(){
     var aux = selectTrabajadores.selected();
     //console.log(aux);
     if(aux && aux.length>0){
+      /*
       for(i=0;i<aux.length; i++){
         if ($('#' + aux[i]).val() == ""){
           alert("Ingresa los integrantes de la cuadrilla");
@@ -330,6 +331,7 @@ function validateFormCopeo(){
           return false
         }
       }
+      */
     } else {
       alert("Selecciona los puestos necesarios para el trabajo");
 			highLightColor(id_lista_trabajadoresCopeo,"#FF0000");
@@ -579,10 +581,13 @@ function datosEntradaCopeo(){
   var aux = selectTrabajadores.selected();
   var cuadrillaPuesto;
   for (i=0; i<aux.length; i++){
-    cuadrilla[aux[i]] = {
-    cantidad: parseFloat($('#'+aux[i]).val()),
-    sueldo_diario: deformatMoney($('#'+"sueldo_"+aux[i]).val())
-    };
+    if($('#'+aux[i]).val()!==""){
+      cuadrilla[aux[i]] = {
+        cantidad: parseFloat($('#'+aux[i]).val()),
+        sueldo_diario: deformatMoney($('#'+"sueldo_"+aux[i]).val())
+      };
+    }
+
   }
   entradaCopeo = {
     nombre: $('#'+id_nombreCopeo).val(),
@@ -655,10 +660,10 @@ function actualizarTablaCopeo(){
                         datos_obra[index_entrada]=[
                           clave_obra,
     											clave_proceso,
-    											clave_sub,
+    											"",
                           entradaSnap.key,
                           formatMoney(subtotal),
-                          cargaSocial+"%",
+                          "",
                           formatMoney(costoTotal),
                           "<button type='button' class='editarCopeo btn btn-info'><i class='fas fa-edit'></i></button>"
                         ];
@@ -748,7 +753,7 @@ function actualizarTablaCopeo(){
         dom: 'Bfrtip',
         buttons: [
           {extend: 'excelHtml5',
-          title: "Copeo",
+          title: "Copeo_" + $('#' + id_ddl_obraCopeo + ' option:selected').text().replace(/ /g, "_"),
           exportOptions: {
               columns: [':visible']
           }},

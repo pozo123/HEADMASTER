@@ -126,7 +126,8 @@ $('#' + id_boton_agregarModalSuministros).click(function() {
 // Metodo para el boton que guarda los los cambios registrados en el modal
 $('#' + id_boton_guardarModalSuministros).click(function() {
   json_modalSuministros = recuperaDatosModalSuministros();
-  console.log(json_modalSuministros);
+  alert("¡Insumos registrados!");
+  //console.log(json_modalSuministros);
 });
 
 // Metodo para restringir los caracteres en el campo de indirectos

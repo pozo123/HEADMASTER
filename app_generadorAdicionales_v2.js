@@ -92,9 +92,50 @@ $('#' + id_boton_copeoAdicionales).click(function() {
 });
 
 // Metodo del boton para abrir el modal de calculadora
-$('#' + id_boton_copeoAdicionales).click(function() {
-  modalCalculadora(json_modalCopeo, true);
+$('#' + id_boton_calculadoraAdicionales).click(function() {
+  if(jQuery.isEmptyObject(json_modalCalculadora)){
+    json_modalCalculadora["score"]={};
+    json_modalCalculadora["score"]["horas_programadas"] = 0;
+    json_modalCalculadora["score"]["costo_hora"] = 1300;
+    json_modalCalculadora["porcentaje_indirectos"] = 10;
+    json_modalCalculadora["utilidad"] = 0;
+    json_modalCalculadora["precio_venta"] = 0;
+  }
+  json_modalCalculadora["costo_suministros"] = calculaCostoSuministros();
+  json_modalCalculadora["precopeo"] = calculaCostoCopeo();
+  json_modalCalculadora["porcentaje_impuestos"] = extraeImpuesto();
+  console.log(json_modalCalculadora);
+
+  modalCalculadora(json_modalCalculadora, false);
 });
+
+function calculaCostoSuministros(){
+  var total = 0;
+  if(!jQuery.isEmptyObject(json_modalSuministros)){
+    for(key in json_modalSuministros){
+      total+= json_modalSuministros[key]["precio_cliente"] * json_modalSuministros[key]["cantidad"]
+    }
+  }
+  return total;
+}
+
+function calculaCostoCopeo(){
+  var total = 0;
+  if(!jQuery.isEmptyObject(json_modalCopeo)){
+    for(key in json_modalCopeo.entradas){
+      total+= json_modalCopeo["entradas"][key]["subtotal"]
+    }
+  }
+  return total;
+}
+
+function extraeImpuesto(){
+  var cargaSocial=0;
+  if(!jQuery.isEmptyObject(json_modalCopeo)){
+    cargaSocial = json_modalCopeo.impuestos;
+  }
+  return cargaSocial;
+}
 
 $('#' + id_anticiposAdicionales).change(function(){
   if($('#' + id_anticiposAdicionales).val() == "" || $('#' + id_anticiposAdicionales).val() < 0){

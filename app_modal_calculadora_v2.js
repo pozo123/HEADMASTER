@@ -28,19 +28,26 @@ var horasScoreManda;
 var copeoManda;
 var horasActualizadas;
 var json_modalCalculadora;
+var todosDefaultCalculadora;
 
 
 // --------------------- Método de inicialización -----------------------------
-function modalCalculadora(json_actuales){
+function modalCalculadora(json_actuales, camposHabilitados){
   cantProfitManda = true;
   horasScoreManda = true;
   copeoManda = true
   horasActualizadas = false;
+  todosDefaultCalculadora = camposHabilitados;
   // pongo el texto para el on hover
 	var texto_default = "Valores generalmente usados para el calculo de presupuestos como son: precio por hora del área de proyectos, impuestos para la mano de obra y el porcentaje de costos indirectos."
 	$('#' + id_default_modalCalculadora).attr("data-content", texto_default);
 	resetFormModalCalculadora();
   cargaCamposModalCalculadora(json_actuales);
+
+  $('#' + id_costo_copeoModalCalculadora).prop('disabled', !camposHabilitados);
+  $('#' + id_costo_suministrosModalCalculadora).prop('disabled', !camposHabilitados);
+  $('#' + id_costo_copeoCargaModalCalculadora).prop('disabled', !camposHabilitados);
+  $('#' + id_impuestosModalCalculadora).prop('disabled', !camposHabilitados);
   //returnToDefaultModalCalculadora();
   $('#' + id_modalCalculadora).modal('show');
 }
@@ -53,8 +60,8 @@ $('#' + id_agregar_modalCalculadora).click(function(){
 	if(validateFormModalCalculadora()){
 		//Actualizar los campos de la obra
     json_modalCalculadora["score"]={};
-		json_modalCalculadora["score/horas_programadas"] = deformatMoney($('#'+id_horas_proyectoModalCalculadora).val());
-		json_modalCalculadora["score/costo_hora"] = deformatMoney($('#'+id_costo_horaScoreModalCalculadora).val());
+		json_modalCalculadora["score"]["horas_programadas"] = deformatMoney($('#'+id_horas_proyectoModalCalculadora).val());
+		json_modalCalculadora["score"]["costo_hora"] = deformatMoney($('#'+id_costo_horaScoreModalCalculadora).val());
 		json_modalCalculadora["costo_suministros"] = deformatMoney($('#'+id_costo_suministrosModalCalculadora).val());
 		json_modalCalculadora["precopeo"] = deformatMoney($('#'+id_costo_copeoModalCalculadora).val());
 		json_modalCalculadora["porcentaje_indirectos"] = deformatMoney($('#'+id_indirectosModalCalculadora).val());
@@ -63,8 +70,8 @@ $('#' + id_agregar_modalCalculadora).click(function(){
 		json_modalCalculadora["precio_venta"] = deformatMoney($('#'+id_precio_ventaModalCalculadora).val());
 		//Escribir los cambios en la base de datos
 		console.log(json_modalCalculadora);
-		alert("¡Edición exitosa!");
-		resetFormModalCalculadora();
+		alert("¡Calculos registrados!");
+		//resetFormModalCalculadora();
 	}
 });
 
@@ -405,10 +412,12 @@ function resetFormModalCalculadora(){
 function returnToDefaultModalCalculadora(){
   $('#' + id_costo_horaScoreModalCalculadora).val(formatMoney(1300));
   $('#' + id_indirectosModalCalculadora).val(20);
-  $('#' + id_impuestosModalCalculadora).val(54);
+  if(todosDefaultCalculadora){
+    $('#' + id_impuestosModalCalculadora).val(54);
+    highLight(id_impuestosModalCalculadora);
+  }
 	highLight(id_costo_horaScoreModalCalculadora);
 	highLight(id_indirectosModalCalculadora);
-	highLight(id_impuestosModalCalculadora);
 }
 
 function calculaCostoOperacionalModalCalculadora(){
@@ -421,8 +430,8 @@ function calculaCostoOperacionalModalCalculadora(){
 	var costosIndirectos = (costoScore + costoSuministros + (costoPrecopeo*(1 + porcImpuestos*0.01)))*(porcIndirectos*0.01);
 	$('#' + id_costo_operacionesModalCalculadora).val(formatMoney(costoOperacion));
 	$('#' + id_costos_indirectosModalCalculadora).val(formatMoney(costosIndirectos));
-	highLight(id_costo_operacionesModalCalculadora);
-	highLight(id_costos_indirectosModalCalculadora);
+	//highLight(id_costo_operacionesModalCalculadora);
+	//highLight(id_costos_indirectosModalCalculadora);
 }
 
 function calculaScoreModalCalculadora(){
@@ -519,7 +528,7 @@ function actualizaCopeoCargaSocialModalCalculadora(){
 }
 
 function cargaCamposModalCalculadora(subproceso){
-  if (!jQuery.isEmptyObject(subproceso) && !(subproceso.precio_venta == 0 && subproceso.costo_suministros ==0 && subproceso.utilidad ==0 && subproceso.precopeo == 0 && subproceso.score.horas_programadas == 0)){
+  if (!jQuery.isEmptyObject(subproceso)){
     var costoScore = subproceso.score.horas_programadas*subproceso.score.costo_hora;
     var costoOperacion = (costoScore + subproceso.costo_suministros + (subproceso.precopeo*(1 + subproceso.porcentaje_impuestos*0.01)))*(1+ subproceso.porcentaje_indirectos*0.01);
 		var costoOperacionIndirectos = (costoScore + subproceso.costo_suministros + (subproceso.precopeo*(1 + subproceso.porcentaje_impuestos*0.01)))*(subproceso.porcentaje_indirectos*0.01);
@@ -534,7 +543,7 @@ function cargaCamposModalCalculadora(subproceso){
 		$('#' + id_costo_copeoCargaModalCalculadora).val(formatMoney(copeoConCarga));
     $('#' + id_profit_cantidadModalCalculadora).val(formatMoney(subproceso.utilidad));
 		$('#' + id_profit_porcentajeModalCalculadora).val(utilidadPorcentaje.toFixed(2));
-    $('#' + id_precio_ventaModalCalculadora).val(formatMoney(subproceso.precio_venta));
+    $('#' + id_precio_ventaModalCalculadora).val(formatMoney(costoOperacion + subproceso.utilidad));
 		$('#' + id_costo_operacionesModalCalculadora).val(formatMoney(costoOperacion));
 		$('#' + id_costos_indirectosModalCalculadora).val(formatMoney(costoOperacionIndirectos));
 
