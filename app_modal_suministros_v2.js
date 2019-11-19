@@ -41,7 +41,7 @@ function modalSuministros(indirectos, supervisor, json_actuales){
   base_insumos={};
   base_filtrados={};
   filtros={};
-  json_modalSuministros={};
+  //json_modalSuministros={};
   // Se cargan los datos de las marcas para los filtros
   firebase.database().ref(rama_bd_insumos + "/marcas").orderByChild('nombre').on('value',function(snapshot){
     marcas = snapshot;

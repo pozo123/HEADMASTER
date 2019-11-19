@@ -1,9 +1,6 @@
 // ------------------ Campos Modal Calculadora --------------------------------
 var id_modalCalculadora = "modalCalculadora";
 
-// id's de los elementos HTML
-var id_dataTable_modalCalculadora = "dataTableModalCalculadora";
-
 var id_ddl_obraModalCalculadora = "obraDdlModalCalculadora";
 var id_ddl_procesoModalCalculadora = "procesoDdlModalCalculadora";
 var id_ddl_subprocesoModalCalculadora = "subprocesoDdlModalCalculadora";
@@ -30,24 +27,20 @@ var cantProfitManda;
 var horasScoreManda;
 var copeoManda;
 var horasActualizadas;
-var registro_antiguo_modalCalculadora;
-var ruta_modalCalculadora;
-var return_modalCalculadora;
+var json_modalCalculadora;
 
 
 // --------------------- Método de inicialización -----------------------------
-function modalCalculadora(ruta){
-  ruta_modalCalculadora = ruta; //ruta hasta el subproceso
+function modalCalculadora(json_actuales){
   cantProfitManda = true;
   horasScoreManda = true;
   copeoManda = true
   horasActualizadas = false;
-  registro_antiguo_modalCalculadora = {};
   // pongo el texto para el on hover
 	var texto_default = "Valores generalmente usados para el calculo de presupuestos como son: precio por hora del área de proyectos, impuestos para la mano de obra y el porcentaje de costos indirectos."
 	$('#' + id_default_modalCalculadora).attr("data-content", texto_default);
 	resetFormModalCalculadora();
-  cargaCamposModalCalculadora();
+  cargaCamposModalCalculadora(json_actuales);
   //returnToDefaultModalCalculadora();
   $('#' + id_modalCalculadora).modal('show');
 }
@@ -58,25 +51,20 @@ $('#' + id_borrar_modalCalculadora).click(function(){
 
 $('#' + id_agregar_modalCalculadora).click(function(){
 	if(validateFormModalCalculadora()){
-		return_modalCalculadora = {};
 		//Actualizar los campos de la obra
-		var path_subproceso = ruta_modalCalculadora;
-		return_modalCalculadora[path_subproceso + "/score/horas_programadas"] = deformatMoney($('#'+id_horas_proyectoModalCalculadora).val());
-		return_modalCalculadora[path_subproceso + "/score/costo_hora"] = deformatMoney($('#'+id_costo_horaScoreModalCalculadora).val());
-		return_modalCalculadora[path_subproceso + "/costo_suministros"] = deformatMoney($('#'+id_costo_suministrosModalCalculadora).val());
-		return_modalCalculadora[path_subproceso + "/precopeo"] = deformatMoney($('#'+id_costo_copeoModalCalculadora).val());
-		return_modalCalculadora[path_subproceso + "/porcentaje_indirectos"] = deformatMoney($('#'+id_indirectosModalCalculadora).val());
-		return_modalCalculadora[path_subproceso + "/porcentaje_impuestos"] = deformatMoney($('#'+id_impuestosModalCalculadora).val());
-		return_modalCalculadora[path_subproceso + "/utilidad"] = deformatMoney($('#'+id_profit_cantidadModalCalculadora).val());
-		return_modalCalculadora[path_subproceso + "/precio_venta"] = deformatMoney($('#'+id_precio_ventaModalCalculadora).val());
+    json_modalCalculadora["score"]={};
+		json_modalCalculadora["score/horas_programadas"] = deformatMoney($('#'+id_horas_proyectoModalCalculadora).val());
+		json_modalCalculadora["score/costo_hora"] = deformatMoney($('#'+id_costo_horaScoreModalCalculadora).val());
+		json_modalCalculadora["costo_suministros"] = deformatMoney($('#'+id_costo_suministrosModalCalculadora).val());
+		json_modalCalculadora["precopeo"] = deformatMoney($('#'+id_costo_copeoModalCalculadora).val());
+		json_modalCalculadora["porcentaje_indirectos"] = deformatMoney($('#'+id_indirectosModalCalculadora).val());
+		json_modalCalculadora["porcentaje_impuestos"] = deformatMoney($('#'+id_impuestosModalCalculadora).val());
+		json_modalCalculadora["utilidad"] = deformatMoney($('#'+id_profit_cantidadModalCalculadora).val());
+		json_modalCalculadora["precio_venta"] = deformatMoney($('#'+id_precio_ventaModalCalculadora).val());
 		//Escribir los cambios en la base de datos
-		console.log(return_modalCalculadora);
-		//firebase.database().ref(rama_bd_obras).update(return_modalCalculadora);
-		// PAD
-		//pda("modificacion", rama_bd_obras + "/" +path_subproceso, registro_antiguo_modalCalculadora);
+		console.log(json_modalCalculadora);
 		alert("¡Edición exitosa!");
-		//resetFormModalCalculadora();
-		//actualizarTablaModalCalculadora();
+		resetFormModalCalculadora();
 	}
 });
 
@@ -530,36 +518,32 @@ function actualizaCopeoCargaSocialModalCalculadora(){
 	}
 }
 
-function cargaCamposModalCalculadora(){
-	firebase.database().ref(ruta_modalCalculadora).once('value',function(snapshot){
-    var subproceso = snapshot.val();
-    if (snapshot.exists() && !(subproceso.precio_venta == 0 && subproceso.costo_suministros ==0 && subproceso.utilidad ==0 && subproceso.precopeo == 0 && subproceso.score.horas_programadas == 0)){
-			registro_antiguo_modalCalculadora = subproceso;
-      var costoScore = subproceso.score.horas_programadas*subproceso.score.costo_hora;
-      var costoOperacion = (costoScore + subproceso.costo_suministros + (subproceso.precopeo*(1 + subproceso.porcentaje_impuestos*0.01)))*(1+ subproceso.porcentaje_indirectos*0.01);
-			var costoOperacionIndirectos = (costoScore + subproceso.costo_suministros + (subproceso.precopeo*(1 + subproceso.porcentaje_impuestos*0.01)))*(subproceso.porcentaje_indirectos*0.01);
-      var utilidadPorcentaje = subproceso.utilidad / costoOperacion * 100 ;
-			var copeoConCarga = subproceso.precopeo * (1+subproceso.porcentaje_impuestos*0.01);
+function cargaCamposModalCalculadora(subproceso){
+  if (!jQuery.isEmptyObject(subproceso) && !(subproceso.precio_venta == 0 && subproceso.costo_suministros ==0 && subproceso.utilidad ==0 && subproceso.precopeo == 0 && subproceso.score.horas_programadas == 0)){
+    var costoScore = subproceso.score.horas_programadas*subproceso.score.costo_hora;
+    var costoOperacion = (costoScore + subproceso.costo_suministros + (subproceso.precopeo*(1 + subproceso.porcentaje_impuestos*0.01)))*(1+ subproceso.porcentaje_indirectos*0.01);
+		var costoOperacionIndirectos = (costoScore + subproceso.costo_suministros + (subproceso.precopeo*(1 + subproceso.porcentaje_impuestos*0.01)))*(subproceso.porcentaje_indirectos*0.01);
+    var utilidadPorcentaje = subproceso.utilidad / costoOperacion * 100 ;
+		var copeoConCarga = subproceso.precopeo * (1+subproceso.porcentaje_impuestos*0.01);
 
-      $('#' + id_horas_proyectoModalCalculadora ).val(subproceso.score.horas_programadas);
-			$('#' + id_costo_horaScoreModalCalculadora).val(formatMoney(subproceso.score.costo_hora));
-			$('#' + id_costo_proyectoModalCalculadora).val(formatMoney(costoScore));
-      $('#' + id_costo_suministrosModalCalculadora).val(formatMoney(subproceso.costo_suministros));
-      $('#' + id_costo_copeoModalCalculadora).val(formatMoney(subproceso.precopeo));
-			$('#' + id_costo_copeoCargaModalCalculadora).val(formatMoney(copeoConCarga));
-      $('#' + id_profit_cantidadModalCalculadora).val(formatMoney(subproceso.utilidad));
-			$('#' + id_profit_porcentajeModalCalculadora).val(utilidadPorcentaje.toFixed(2));
-      $('#' + id_precio_ventaModalCalculadora).val(formatMoney(subproceso.precio_venta));
-			$('#' + id_costo_operacionesModalCalculadora).val(formatMoney(costoOperacion));
-			$('#' + id_costos_indirectosModalCalculadora).val(formatMoney(costoOperacionIndirectos));
+    $('#' + id_horas_proyectoModalCalculadora ).val(subproceso.score.horas_programadas);
+		$('#' + id_costo_horaScoreModalCalculadora).val(formatMoney(subproceso.score.costo_hora));
+		$('#' + id_costo_proyectoModalCalculadora).val(formatMoney(costoScore));
+    $('#' + id_costo_suministrosModalCalculadora).val(formatMoney(subproceso.costo_suministros));
+    $('#' + id_costo_copeoModalCalculadora).val(formatMoney(subproceso.precopeo));
+		$('#' + id_costo_copeoCargaModalCalculadora).val(formatMoney(copeoConCarga));
+    $('#' + id_profit_cantidadModalCalculadora).val(formatMoney(subproceso.utilidad));
+		$('#' + id_profit_porcentajeModalCalculadora).val(utilidadPorcentaje.toFixed(2));
+    $('#' + id_precio_ventaModalCalculadora).val(formatMoney(subproceso.precio_venta));
+		$('#' + id_costo_operacionesModalCalculadora).val(formatMoney(costoOperacion));
+		$('#' + id_costos_indirectosModalCalculadora).val(formatMoney(costoOperacionIndirectos));
 
-      $('#' + id_indirectosModalCalculadora).val(subproceso.porcentaje_indirectos);
-      $('#' + id_impuestosModalCalculadora).val(subproceso.porcentaje_impuestos);
+    $('#' + id_indirectosModalCalculadora).val(subproceso.porcentaje_indirectos);
+    $('#' + id_impuestosModalCalculadora).val(subproceso.porcentaje_impuestos);
 
-			horasScoreManda = true;
-			cantProfitManda = true;
-    } else {
-			resetFormModalCalculadora();
-		}
-  });
+		horasScoreManda = true;
+		cantProfitManda = true;
+  } else {
+		resetFormModalCalculadora();
+	}
 }

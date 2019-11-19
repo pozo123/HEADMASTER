@@ -67,6 +67,7 @@ $('#' + id_ddl_adicionalAdicionales ).change(function(){
 $('#' + id_ddl_solicitudAdicionales).change(function(){
   var clave_sol = $('#' + id_ddl_solicitudAdicionales + ' option:selected').val();
   llenarFormSolicitudAdicionales(clave_sol);
+  flagCuantificacion = false;
 });
 
 $('#' + id_indirectosAdicionales).on("change", function(event){
@@ -88,6 +89,11 @@ $('#' + id_boton_suministrosAdicionales).click(function() {
 // Metodo del boton para abrir el modal de cuantificacion
 $('#' + id_boton_copeoAdicionales).click(function() {
   modalCopeo(json_modalCopeo, true);
+});
+
+// Metodo del boton para abrir el modal de calculadora
+$('#' + id_boton_copeoAdicionales).click(function() {
+  modalCalculadora(json_modalCopeo, true);
 });
 
 $('#' + id_anticiposAdicionales).change(function(){
@@ -301,4 +307,8 @@ function resetAdicionales (){
  $('#' + id_tiempoEntregaAdicionales ).val("");
  $('#' + id_cb_bancariosAdicionales ).prop('checked', false);
  $('#' + id_cb_fiscalesAdicionales ).prop('checked', false);
+ flagCuantificacion = false;
+ json_modalSuministros={};
+ json_modalCopeo={};
+ json_modalCalculadora={};
 };
