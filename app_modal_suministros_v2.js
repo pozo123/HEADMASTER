@@ -126,7 +126,7 @@ $('#' + id_boton_agregarModalSuministros).click(function() {
 // Metodo para el boton que guarda los los cambios registrados en el modal
 $('#' + id_boton_guardarModalSuministros).click(function() {
   json_modalSuministros = recuperaDatosModalSuministros();
-  //console.log(json_modalSuministros);
+  console.log(json_modalSuministros);
 });
 
 // Metodo para restringir los caracteres en el campo de indirectos
@@ -294,8 +294,8 @@ function datosModalSuministros(){
     insumo_reg["descripcion"],
     json_unidades[insumo_reg["unidad"]]["nombre"],
     $('#'+id_precioListaModalSuministros).val(),
-    $('#'+id_indirectosModalSuministros).val(),
-    $('#'+id_precioClienteModalSuministros).val(),
+    "<input type='number' class='indirectosModalSuministros form-control' id=indirectos"+ uid_existente_insumo +"ModalSuministros value=" + $('#'+id_indirectosModalSuministros).val() + ">",
+    "<input type='text' class='precioClienteModalSuministros form-control' id=precioCliente"+ uid_existente_insumo +"ModalSuministros value=" + $('#'+id_precioClienteModalSuministros).val() + ">",
     "<input type='text' class='cantidadModalSuministros form-control' id=cantidad" + uid_existente_insumo + "ModalSuministros value=" + $('#'+id_cantidadModalSuministros).val() + ">",
     "<button type='button' class='eliminarModalSuministros btn btn-transparente'><i class='icono_rojo fas fa-times-circle'></i></button>"
   ]
@@ -323,7 +323,7 @@ function recuperaDatosModalSuministros(){
       descripcion: data[5],
       unidad: data[6],
       precio_lista: deformatMoney(data[7]),
-      precio_cliente: deformatMoney(data[9]),
+      precio_cliente: deformatMoney($('#precioCliente' + data[0] + 'ModalSuministros').val()),
       cantidad: parseFloat($('#cantidad' + data[0] + 'ModalSuministros').val()),
       desplegar: data[1],
     };
@@ -339,6 +339,7 @@ function fitDatosTablaModalSuministros(json_actuales){
   var aux = [];
   var insumo_reg={};
   var icono="";
+  var aux_indirectos;
   for (key in json_actuales){
     insumo_reg=base_insumos[key];
     if(json_actuales[key]["desplegar"]){
@@ -346,6 +347,7 @@ function fitDatosTablaModalSuministros(json_actuales){
     }else{
       icono = "'icono_rojo fas fa-times-circle'"
     }
+    aux_indirectos = json_actuales[key]["precio_lista"]!==0?parseFloat((json_actuales[key]["precio_cliente"]/json_actuales[key]["precio_lista"]-1)*100).toFixed(2):p_indirectos;
     aux = [
       key,
       json_actuales[key]["desplegar"],
@@ -356,9 +358,9 @@ function fitDatosTablaModalSuministros(json_actuales){
       json_unidades[insumo_reg["unidad"]]["nombre"],
       //formatMoney(json_actuales[key]["precio_lista"]),
       formatMoney(json_precios[key]),
-      json_actuales[key]["precio_lista"]!==0?parseFloat((json_actuales[key]["precio_cliente"]/json_actuales[key]["precio_lista"]-1)*100).toFixed(2):p_indirectos,
-      formatMoney(json_actuales[key]["precio_cliente"]),
-      "<input type='text' class='cantidadModalSuministros form-control' id=cantidad"+ key +"ModalSuministros value=" + json_actuales[key]["cantidad"] + ">",
+      "<input type='number' class='indirectosModalSuministros form-control' id=indirectos"+ key +"ModalSuministros value=" + aux_indirectos + ">",
+      "<input type='text' class='precioClienteModalSuministros form-control' id=precioCliente"+ key +"ModalSuministros value=" + formatMoney(json_actuales[key]["precio_cliente"]) + ">",
+      "<input type='number' class='cantidadModalSuministros form-control' id=cantidad"+ key +"ModalSuministros value=" + json_actuales[key]["cantidad"] + ">",
       "<button type='button' class='eliminarModalSuministros btn btn-transparente'><i class='icono_rojo fas fa-times-circle'></i></button>"
     ];
     array_datos.push(aux);
@@ -417,7 +419,7 @@ function creaTablaSelectosModalSuministros(datos){
       "columnDefs": [
           { "width": "120px", "targets": 4 },
           { targets: [-1,-2,-3], className: 'dt-body-center'},
-          { "visible": false, "targets": supervisorFlag?[0,1,2,7,8,9]:[0,1,9] }, //Campos auxiliares
+          { "visible": false, "targets": supervisorFlag?[0,1,2,7,8,9]:[0,1] }, //Campos auxiliares
         ]
   });
 }
@@ -444,12 +446,51 @@ $(document).on('click','.eliminarModalSuministros', function(){
 
 // Metodo accionado cuando se hace cambia el valor de alguna celda cantidad
 $(document).on('change','.cantidadModalSuministros', function(){
-  if(isNaN($(this).val())){
+  if(isNaN(parseFloat($(this).val()))){
     alert("Ingresa solo números en las cantidades");
-    if(isNaN(parseFloat($(this).val()))){
-      $(this).val(1);
-    } else {
-      $(this).val(parseFloat($(this).val()));
-    }
+    $(this).val(1);
+  } else {
+    $(this).val(parseFloat($(this).val()));
+  }
+});
+
+// Metodo accionado cuando se hace cambia el valor de alguna celda indirectos
+$(document).on('change','.indirectosModalSuministros', function(){
+  if(isNaN(parseFloat($(this).val()))){
+    alert("Ingresa números válidos y no dejes campos vacíos");
+    $(this).val(p_indirectos);
+  } else {
+    $(this).val(parseFloat($(this).val()));
+  }
+  var key = this.id.slice(10,-16);
+  $('#precioCliente'+ key + 'ModalSuministros').val( formatMoney( json_precios[key] * (1 + $(this).val() *0.01)));
+});
+
+// Metodo accionado cuando se hace cambia el valor de alguna celda indirectos
+$(document).on('change','.precioClienteModalSuministros', function(){
+  if($(this).val()==""){
+    alert("Ingresa números válidos y no dejes campos vacíos");
+    $(this).val(p_indirectos);
+  }
+  var key = this.id.slice(13,-16);
+  if(json_precios[key] !== 0){
+    $('#indirectos'+ key + 'ModalSuministros').val((deformatMoney($(this).val())/json_precios[key]-1)*100);
+  } else {
+    $('#indirectos'+ key + 'ModalSuministros').val(p_indirectos);
+  }
+
+});
+
+// Metodo accionado cuando se hace cambia el valor de alguna celda indirectos
+$(document).on('focus','.precioClienteModalSuministros', function(){
+  if ($(this).val() !==""){
+    $(this).val(deformatMoney($(this).val()));
+  }
+});
+
+// Metodo accionado cuando se hace cambia el valor de alguna celda indirectos
+$(document).on('focusout','.precioClienteModalSuministros', function(){
+  if ($(this).val() !==""){
+    $(this).val(formatMoney($(this).val()));
   }
 });
