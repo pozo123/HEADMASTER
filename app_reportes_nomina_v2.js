@@ -2,7 +2,8 @@ var id_tab_reporte_nomina = "tabReporteNomina";
 
 var id_dataTable_reporte_global_reporte_nomina = "dataTableGlobalReporteNomina";
 var id_dataTable_reporte_semanal_reporte_nomina = "dataTableSemanalReporteNomina";
-var id_dataTable_reporte_obra_reporte_nomina = "dataTableObraReporteNomina"
+var id_dataTable_reporte_obra_reporte_nomina = "dataTableObraReporteNomina";
+var id_dataTable_reporte_proceso_reporte_nomina = "dataTableProcesosReporteNomina";
 var id_pie_chart_semanal_reporte_nomina = "pieSemanalReporteNomina";
 
 var id_ddl_year_reporte_nomina = "yearDdlReporteNomina";
@@ -10,10 +11,10 @@ var id_ddl_week_reporte_nomina = "weekDdlReporteNomina";
 var id_ddl_obra_reporte_nomina = "obraDdlReporteNomina";
 
 $('#' + id_tab_reporte_nomina).click(function(){
-    firebase.database().ref("version2/info_web").set({
+/*     firebase.database().ref("version2/info_web").set({
         info_web: 4.01,
         formatos: "dummy",
-    });
+    }); */
     // construir el canvas desde el js y así lo puedo destruir
     var select_year = document.getElementById(id_ddl_year_reporte_nomina);
     for(i=actual_year;i>=starting_year;i--){
@@ -52,8 +53,8 @@ $('#' + id_tab_reporte_nomina).click(function(){
     
     var option1 = document.createElement('option');
     option1.style = "display:none";
-    option1.text = option.value = "SELECCIONA UNA OBRA O TODAS";
-    select_asignada.appendChild(option);
+    option1.text = option1.value = "SELECCIONA UNA OBRA O TODAS";
+    select_asignada.appendChild(option1);
 
     var option_asignada = document.createElement('option');
     option_asignada.text = option_asignada.value = "TODAS";
@@ -126,6 +127,7 @@ $('#' + id_ddl_week_reporte_nomina).change(function(){
 
 $('#' + id_ddl_obra_reporte_nomina).change(function(){
     reporteObraReporteNomina();
+    reporteProcesoObraReporteNomina();
 });
 // tabla para el reporte más general.
 
@@ -332,6 +334,11 @@ function reporteSemanalReporteNomina(){
                             className: 'bolded'
                         },
                         { targets: "_all", className: 'dt-body-center'},
+                        { "visible": false, "targets": 1 },
+                        { "visible": false, "targets": 2 },
+                        { "visible": false, "targets": 3 },
+                        { "visible": false, "targets": 4 },
+                        { "visible": false, "targets": 5 },
                     ],
                     buttons: [
                         {extend: 'excelHtml5',
@@ -438,7 +445,6 @@ function reporteObraReporteNomina(){
                 var nomina = 0;
                 var horas_extra = 0;
                 var diversos = 0;
-                var iva = 0;
                 var pago = 0;
                 var carga_social = 0;
 
@@ -545,5 +551,131 @@ function reporteObraReporteNomina(){
                 }},
             ],
         });
+    });
+}
+
+function reporteProcesoObraReporteNomina(){
+    firebase.database().ref(rama_bd_nomina + "/nomina").on("value", function(snapshot){
+        var obra_selected = $('#' + id_ddl_obra_reporte_nomina + " option:selected").val()
+        if(obra_selected == "TODAS"){
+            // darle hidden al de la tabla
+        } else {
+            var json_procesos = {};
+            firebase.database().ref(rama_bd_obras + "/procesos/" + obra_selected + "/procesos").once("value").then(function(procesoSnapshot){
+                procesoSnapshot.forEach(function(procesoSnap){
+                    if(procesoSnap.key != "PC00"){
+                        json_procesos[procesoSnap.key] = {
+                            nomina:0,
+                            horas_extra:0,
+                            diversos:0,
+                            carga_social:0,
+                            iva:0,
+                            total:0,
+                        }
+                    }
+                });
+                snapshot.forEach(function(regSnap){
+                    var registro = regSnap.val();
+                    var pago = 0;
+    
+                    if(registro.pagos_nomina){
+                        pago = registro.pagos_nomina.monto;
+                        var aux_proporcion = 0;
+                        var aux = 0;
+               
+                        for(asistKey in registro.asistencias){
+                            if(registro.asistencias[asistKey].actividad != "Falta"){
+                                aux_proporcion += 0.2;
+                                aux += (0.2 * registro.sueldo_semanal) * 1.16;
+                            }
+                        };
+    
+                        // calcular horas_extra
+        
+                        for(heKey in registro.horas_extra){
+                            aux += registro.horas_extra[heKey].cantidad * (registro.sueldo_semanal / 24) * 1.16;
+                            if(registro.horas_extra[heKey].obra == obra_selected){
+                                var proceso = registro.horas_extra[heKey].subproceso.split("-");
+                                proceso = proceso[0];
+                                json_procesos[proceso].horas_extra += registro.horas_extra[heKey].cantidad * (registro.sueldo_semanal / 24);
+                            }
+                        }
+                        for(divKey in registro.diversos){
+                            aux += registro.diversos[divKey].cantidad * 1.16;
+                            if(registro.diversos[divKey].obra == obra_selected){
+                                var proceso = registro.diversos[divKey].subproceso.split("-");
+                                proceso = proceso[0];
+                                json_procesos[proceso].diversos += registro.diversos[divKey].cantidad;
+                            };
+                        };
+                        // calcular nomina
+                        for(asistKey in registro.asistencias){
+                            if(registro.asistencias[asistKey].actividad != "Falta" && registro.asistencias[asistKey].obra == obra_selected){
+                                var proceso = registro.asistencias[asistKey].subproceso.split("-");
+                                console.log(proceso)
+                                proceso = proceso[0];
+                                json_procesos[proceso].nomina += registro.sueldo_semanal * 0.2;
+                                if(aux_proporcion > 0 && pago - aux > 0) {
+                                    json_procesos[proceso].carga_social += (pago - aux) * (0.2 / aux_proporcion);
+                                } 
+                            }
+                        };
+    
+                    }
+                });
+
+                for(key in json_procesos){
+                    json_procesos[key].iva = (json_procesos[key].nomina + json_procesos[key].horas_extra + json_procesos[key].diversos) * 0.16;
+                    json_procesos[key].total = (json_procesos[key].nomina + json_procesos[key].horas_extra + json_procesos[key].diversos) * 1.16 + json_procesos[key].carga_social;
+                }
+
+
+                var datos_proceso = [];
+                for(key in json_procesos){
+                    if(json_procesos[key].total > 0){
+                        datos_proceso.push([
+                            key,
+                            formatMoney(json_procesos[key].nomina),
+                            "" + ((json_procesos[key].nomina / (json_procesos[key].nomina + json_procesos[key].horas_extra + json_procesos[key].diversos)) * 100).toFixed(2) +"%", 
+                            formatMoney(json_procesos[key].horas_extra),
+                            "" + ((json_procesos[key].horas_extra / (json_procesos[key].nomina + json_procesos[key].horas_extra + json_procesos[key].diversos)) * 100).toFixed(2) +"%", 
+                            formatMoney(json_procesos[key].diversos),
+                            "" + ((json_procesos[key].diversos / (json_procesos[key].nomina + json_procesos[key].horas_extra + json_procesos[key].diversos)) * 100).toFixed(2) +"%", 
+                            formatMoney(json_procesos[key].nomina + json_procesos[key].horas_extra + json_procesos[key].diversos),
+                            formatMoney(json_procesos[key].iva),
+                            formatMoney(json_procesos[key].carga_social),
+                            formatMoney(json_procesos[key].total),
+                        ]);
+                    };
+                };
+                console.log(json_procesos)
+                console.log(datos_proceso);
+                 tabla_reporte_obra_nomina = $('#'+ id_dataTable_reporte_proceso_reporte_nomina).DataTable({
+                    destroy: true,
+                    data: datos_proceso,
+                    language: idioma_espanol,                    
+                    "autoWidth": false,
+                    dom: 'Bfrtip',
+                    "order": [[ 0, "desc" ]],
+                    "columnDefs": [
+                        { "width": "20%", "targets": 3 },
+                        //{ "visible": false, "targets": 0 },
+                        {
+                            targets: [-1],
+                            className: 'bolded'
+                        },
+                        { targets: "_all", className: 'dt-body-center'},
+                    ],
+                    buttons: [
+                        {extend: 'excelHtml5',
+                        title: "Reporte_por_proceso",
+                        exportOptions: {
+                            columns: [':visible']
+                        }},
+                    ],
+                }); 
+            });
+        };
+
     });
 }

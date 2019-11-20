@@ -1,0 +1,42 @@
+.block {
+    text-align: center;
+    vertical-align: middle;
+}
+.circle  {
+    background: red;
+    border-radius: 200px;
+    height: 200px !important;
+    font-weight: bold !important;
+    width: 200px !important;
+    display: table;
+    margin: 20px auto;
+}
+.circle span {
+    vertical-align: middle;
+    display: table-cell;
+}
+
+.circle-1  {
+    background: #FBE8A6;
+    color: rgb(66, 66, 66)
+}
+.circle-2  {
+    background: #F4976C;
+    color: rgb(66, 66, 66)
+}
+.circle-3  {
+    background: #303C6C;
+    color: rgb(201, 201, 201)
+}
+.circle-4  {
+    background: #B4DFE5;
+    color: rgb(66, 66, 66)
+}
+.circle-5  {
+    background: #D2FDFF;
+    color: rgb(66, 66, 66)
+}
+.circle-6  {
+    background: #8590AA;
+    color: rgb(66, 66, 66)
+}
