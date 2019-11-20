@@ -70,6 +70,7 @@ $('#' + id_agregar_modalCopeo).click(function() {
     //console.log(json_modalCopeo);
 		resetFormModalCopeo();
     llenaDdlEntradaModalCopeo();
+    alert("¡Entrada registrada!");
 	}
 });
 
@@ -238,6 +239,7 @@ function validateFormModalCopeo(){
     var aux = selectTrabajadores.selected();
     //console.log(aux);
     if(aux && aux.length>0){
+      /*
       for(i=0;i<aux.length; i++){
         if ($('#' + aux[i]).val() == ""){
           alert("Ingresa los integrantes de la cuadrilla");
@@ -245,6 +247,7 @@ function validateFormModalCopeo(){
           return false
         }
       }
+      */
     } else {
       alert("Selecciona los puestos necesarios para el trabajo");
 			highLightColor(id_lista_trabajadoresModalCopeo,"#FF0000");
@@ -473,10 +476,12 @@ function datosEntradaModalCopeo(){
   var aux = selectTrabajadores.selected();
   var cuadrillaPuesto;
   for (i=0; i<aux.length; i++){
-    cuadrilla[aux[i]] = {
-    cantidad: parseFloat($('#'+aux[i]).val()),
-    sueldo_diario: deformatMoney($('#'+"sueldo_"+aux[i]).val())
-    };
+    if($('#'+aux[i]).val()!==""){
+      cuadrilla[aux[i]] = {
+        cantidad: parseFloat($('#'+aux[i]).val()),
+        sueldo_diario: deformatMoney($('#'+"sueldo_"+aux[i]).val())
+      };
+    }
   }
   entradaCopeo = {
     nombre: $('#'+id_nombreModalCopeo).val(),
