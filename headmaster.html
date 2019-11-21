@@ -43,6 +43,7 @@
         <link rel="stylesheet" type="text/css" href="sidebar.css">
         <link rel="stylesheet" type="text/css" href="tabs.css">
         <link rel="stylesheet" type ="text/css" href="dataPicker/jquery.datetimepicker.css">
+        <link rel="stylesheet" type ="text/css" href="reporteProduccion.css">
 
         <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 
@@ -1094,6 +1095,18 @@
                     </div>
                 </ul>
                 <ul class="list-unstyled components">
+                    <li>
+                        <a href="#pageDashboard" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Dashboard</a>
+                        <ul class="collapse list-unstyled" id="pageDashboard">
+                            <li class="tab administracion hidden" id="tabDashProd"><a href="#" onclick="openTabs('tabDashProd','dashboardProduccion')">Producción</a></li>
+                        </ul>
+                    </li>
+                    <li class="administracion hidden">
+                        <a href="#pageAdministracion" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Administración</a>
+                        <ul class="collapse list-unstyled" id="pageAdministracion">
+                            <li class="tab administracion hidden" id="tabPagosCliente"><a href="#" onclick="openTabs('tabPagosCliente','pagosCliente')">Pagos por parte Cliente</a></li>
+                        </ul>
+                    </li>
                     <li class="administracion hidden">
                         <a href="#pageColaborador" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Colaboradores HEAD</a>
                         <ul class="collapse list-unstyled" id="pageColaborador">
@@ -1191,28 +1204,54 @@
                     <div class="container-fluid">
 
                         <!-- Dashboard-->
-                        <div id="dashboard" class="tabcontent">
+                        <div id="dashboardProduccion" class="tabcontent">
                             <div class="container-fluid">
-                                <h3>Dashboard</h3>
-                                <div class = "tableWrapper">
-                                    <table id="dataTableNomina" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
-                                        <thead>
-                                            <tr>
-                                                <th>Obra</th>
-                                                <th>Nómina</th>
-                                                <th>% Nómina</th>
-                                                <th>Horas Extra</th>
-                                                <th>Monto</th>
-                                                <th>% Monto</th>
-                                                <th>Pagos Diversos</th>
-                                                <th>% Pagos Diversos</th>
-                                                <th>Subtotal</th>
-                                                <th>IVA</th>
-                                                <th>Carga Social</th>
-                                                <th>Pago</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
+                                <h3>Dashboard - Producción</h3>
+                                <div class="row">
+                                    <div class="form-group col-md-3">
+                                        <label for="obraDashProd">Obra:</label>
+                                        <select id ="obraDashProd" class="form-control"></select>
+                                    </div>
+                                </div>
+                                <div class = "container-fluid hidden" id="divReporteDashProd">
+                                    <div class="row">
+                                        <div class="col-12">
+                                                <div class="card">
+                                                    <div class="card-header text-white" style="background-color: #00AA9E;">
+                                                        <span style ="font-size: 1.2em;">Resumen Global</span>
+                                                    </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="form-group col-md-3">
+                                                            <label for="procesoDashProd">Proceso:</label>
+                                                            <select id ="procesoDashProd" class="form-control"></select>
+                                                        </div>
+                                                    </div>
+    
+                                                    <div class="row fadeInDown">
+                                                        <div class="col-md-4 col-sm-6 block">
+                                                            <div class="circle circle-2">
+                                                                <span style ="font-size: 1.8em;" id="copeoDashProd"></span>
+                                                            </div>
+                                                            <p>COPEO</p>
+                                                        </div>
+                                                        <div class="col-md-4 col-sm-6 block">
+                                                            <div class="circle circle-1">
+                                                                <span style ="font-size: 1.8em;" id="pagadoDashProd"></span>
+                                                            </div>
+                                                            <p>M.O. Pagada</p>
+                                                        </div>
+                                                        <div class="col-md-4 col-sm-6 block">
+                                                            <div class="circle circle-3">
+                                                                <span style ="font-size: 3em;" id = "porcentajePagadoDashProd"></span>
+                                                            </div>
+                                                            <p>% Pagado</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>   
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -3576,6 +3615,29 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class = "row">
+                                    <div class = "col">
+                                        <div class = "tableWrapper">
+                                            <table id="dataTableProcesosReporteNomina" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Proceso</th>
+                                                        <th>Nómina</th>
+                                                        <th>% Nómina</th>
+                                                        <th>Horas Extra</th>
+                                                        <th>% Horas Extra</th>
+                                                        <th>Pagos Diversos</th>
+                                                        <th>% Diversos</th>
+                                                        <th>Subtotal</th>
+                                                        <th>IVA</th>
+                                                        <th>Carga social</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <!-- Actividades Score -->
@@ -3630,6 +3692,173 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-1"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Pagos por parte del Cliente -->
+                        <div id="pagosCliente" class = "tabcontent hidden">
+                            <h1>Pagos</h1>
+                            <p>Página para ingresar pagos realizados por parte del cliente</p>
+
+                            <div class= "container-fluid">
+                                <div class= "row align-items-center">
+                                    <div class= "col-lg-2"></div>
+                                    <div class= "col-lg-8">
+                                        <form id="formPagosCliente" action="#" onsubmit="return false;">
+                                            <div class="form-row">
+                                                <div class="form-group col-lg-4 col-md-4">
+                                                    <label for="obraPagosCliente">Obra:</label>
+                                                    <select id ="obraPagosCliente" class="form-control"></select>
+                                                </div>
+                                                <div class="form-group col-lg-4 col-md-4">
+                                                    <label for="montoPagosCliente">Monto:</label>
+                                                    <input type="text" name="" id="montoPagosCliente"class="form-control" placeholder="Monto">
+                                                </div>
+                                                <div class="form-group col-lg-4 col-md-4">
+                                                    <label for="fechaPagosCliente">Fecha de pago</label>
+                                                    <input class="form-control" type="text" id="fechaPagosCliente" placeholder="" readonly="readonly">
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="form-row">
+                                                <div class="col-lg-7 col-md-12">
+                                                    <div class="form-row">
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label for="folioPagosCliente">Folio:</label>
+                                                                <input type="text" name="" id="folioPagosCliente"class="form-control" placeholder="Folio">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-7">
+                                                            <br/>
+                                                            <div class="form-group text-center">
+                                                                <div class="form-check form-check-inline">
+                                                                    <input class="form-check-input" type="radio" name="tipo" id="tipoReciboRBPagosCliente" value="recibo" checked>
+                                                                    <label class="form-check-label" for="tipoReciboRBPagosCliente">Recibo</label>
+                                                                </div>
+                                                                <div class="form-check form-check-inline">
+                                                                    <input class="form-check-input" type="radio" name="tipo" id="tipoFacturaRBPagosCliente" value="factura">
+                                                                    <label class="form-check-label" for="tipoFacturaRBPagosCliente">Factura</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="custom-file col-11">
+                                                            <input type="file" class="custom-file-input" id="fileInputPagosCliente" accept="image/*, application/pdf">
+                                                            <label class = "custom-file-label" id="fileLabelPagosCliente">Archivo no seleccionado</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-5 col-md-12">
+                                                    <div class="form-group row">
+                                                        <div class = "col-sm-12">
+                                                            <textarea class="form-control" id="conceptoPagosCliente" rows="5" placeholder= "Concepto de pago"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <!--Distribución --> 
+                                            <h3>Distribución</h3>
+                                            <h6>La suma total  de pagos distribuidos es: <span id="montoSpanPagosCliente">$0.00</span></h6>
+                                            <div id ="distribucionPagosCliente">
+                                            </div>
+                                            <br>
+                                            <div class="form-row">
+                                                <div class= "col-6">
+                                                    <button id="guardarPagoButton" type="button" class="btn btn-outline-success btn-block">Guardar Pago</button>
+                                                </div>
+                                                <div class= "col-6">
+                                                    <button id="borrarPagoButton" type="button" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class= "col-lg-2"></div>
+                                    <div class = "tableWrapper">
+<!--                                         <table id="dataTableTrabajador" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID_firebase</th>
+                                                    <th>ID HEAD</th>
+                                                    <th>ID Pagadora</th>
+                                                    <th>Nombre</th>
+                                                    <th>Nombre(s)</th>
+                                                    <th>Apellido Paterno</th>
+                                                    <th>Apellido Materno</th>
+                                                    <th>Fecha de ingreso</th>
+                                                    <th>Puesto</th>
+                                                    <th>ID Puesto</th>
+                                                    <th>Esp</th>
+                                                    <th>ID Esp</th>
+                                                    <th>Sueldo</th>
+                                                    <th>¿Es destajista?</th>
+                                                    <th>Jefe</th>
+                                                    <th>ID jefe</th>
+                                                    <th>Fecha de nacimiento</th>
+                                                    <th>Estado civil</th>
+                                                    <th>Sexo</th>
+                                                    <th>Dirección</th>
+                                                    <th>Código postal</th>
+                                                    <th>RFC</th>
+                                                    <th>IMSS</th>
+                                                    <th>CURP</th>
+                                                    <th>Banco</th>
+                                                    <th>Cuenta</th>
+                                                    <th>CLABE</th>
+                                                    <th>Camisa</th>
+                                                    <th>Pantalon</th>
+                                                    <th>Cintura</th>
+                                                    <th>Largo</th>
+                                                    <th>Zapatos</th>
+                                                    <th>Activo</th>
+                                                    <th>Opcionales</th>
+                                                    <th>Editar</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>ID_firebase</th>
+                                                    <th>ID HEAD</th>
+                                                    <th>ID Pagadora</th>
+                                                    <th>Nombre</th>
+                                                    <th>Nombre(s)</th>
+                                                    <th>Apellido Paterno</th>
+                                                    <th>Apellido Materno</th>
+                                                    <th>Fecha de ingreso</th>
+                                                    <th>Puesto</th>
+                                                    <th>ID Puesto</th>
+                                                    <th>Esp</th>
+                                                    <th>ID Esp</th>
+                                                    <th>Sueldo</th>
+                                                    <th>¿Es destajista?</th>
+                                                    <th>Jefe</th>
+                                                    <th>ID jefe</th>
+                                                    <th>Fecha de nacimiento</th>
+                                                    <th>Estado civil</th>
+                                                    <th>Sexo</th>
+                                                    <th>Dirección</th>
+                                                    <th>Código postal</th>
+                                                    <th>RFC</th>
+                                                    <th>IMSS</th>
+                                                    <th>CURP</th>
+                                                    <th>Banco</th>
+                                                    <th>Cuenta</th>
+                                                    <th>CLABE</th>
+                                                    <th>Camisa</th>
+                                                    <th>Pantalon</th>
+                                                    <th>Cintura</th>
+                                                    <th>Largo</th>
+                                                    <th>Zapatos</th>
+                                                    <th>Activo</th>
+                                                    <th>Opcionales</th>
+                                                    <th>Editar</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table> -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -3715,6 +3944,8 @@
         <script src="app_solicitudAdicional_v2.js"></script>
         <script src="pdf_solicitudAdicional_v2.js"></script>
         <script src="pdf_solicitudAdicionalT_v2.js"></script>
+        <script src="app_pagosFlujos_v2.js"></script>
+        <script src="app_reporte_obra_dashboard_v2.js"></script>
 
         <!-- Excel to Json-->
         <script src="xlsx.full.min.js"></script>
