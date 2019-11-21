@@ -665,7 +665,8 @@ function actualizarTablaCopeo(){
                           formatMoney(subtotal),
                           "",
                           formatMoney(costoTotal),
-                          "<button type='button' class='editarCopeo btn btn-info'><i class='fas fa-edit'></i></button>"
+                          "<button type='button' class='editarCopeo btn btn-info'><i class='fas fa-edit'></i></button>",
+                          clave_sub
                         ];
                         index_entrada++;
                       }
@@ -679,6 +680,7 @@ function actualizarTablaCopeo(){
                         formatMoney(subtotal_subproceso),
                         cargaSocial+"%",
                         formatMoney(costoTotal_subproceso),
+                        "",
                         ""
                       ];
                       costoTotal_proceso = costoTotal_proceso+costoTotal_subproceso;
@@ -696,6 +698,7 @@ function actualizarTablaCopeo(){
                     formatMoney(0),
                     "",
                     formatMoney(0),
+                    "",
                     ""
                   ];
                   subprocesoIndex_array.push(index_subproceso);
@@ -712,6 +715,7 @@ function actualizarTablaCopeo(){
             "",
             "",
             formatMoney(costoTotal_proceso),
+            "",
             ""
           ];
           costoTotal_obra = costoTotal_obra + costoTotal_proceso;
@@ -729,6 +733,7 @@ function actualizarTablaCopeo(){
       "",
       "",
       formatMoney(costoTotal_obra),
+      "",
       ""
     ];
     //console.log(datos_obra);
@@ -768,8 +773,7 @@ function actualizarTablaCopeo(){
                 targets: -2,
                 className: 'dt-body-center'
             },
-            { "visible": false, "targets": 0 }, //Campos auxiliares
-            { "visible": false, "targets": 1 },
+            { "visible": false, "targets": [0,1,-1] }, //Campos auxiliares
           ],
     });
     //Funcion para llenar los campos cuando se quiere editar desde las opciones de la tabla
@@ -794,8 +798,8 @@ $(document).on('click','.editarCopeo', function(){
   resetFormCopeo_entrada();
   $('#'+id_ddl_procesoCopeo).val(data[1]);
   llenaDdlSubprocesoCopeo(data[0], data[1]);
-  $('#'+id_ddl_subprocesoCopeo).val(data[2]);
-  llenaDdlEntradaCopeo(data[0], data[1], data[2]);
+  $('#'+id_ddl_subprocesoCopeo).val(data[8]);
+  llenaDdlEntradaCopeo(data[0], data[1], data[8]);
   $('#'+id_ddl_entradaCopeo).val(data[3]);
-  cargaCamposCopeo(data[0], data[1], data[2], data[3]);
+  cargaCamposCopeo(data[0], data[1], data[8], data[3]);
 });

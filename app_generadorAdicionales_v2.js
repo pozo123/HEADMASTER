@@ -1,6 +1,5 @@
 var id_tab_adicionales = "tabGeneradorAdic";
 var id_form_adicionales = "formGeneradorAdic";
-var id_dataTable_selectAdicionales = "dataTableSeleccionadosAdicionales";
 
 var id_ddl_obraAdicionales = "ddl_obraAdicionales";
 var id_ddl_adicionalAdicionales = "ddl_adicionalAdicionales";
@@ -44,6 +43,8 @@ $('#' + id_tab_adicionales).click(function() {
   $('#' + id_ddl_obraAdicionales + ' option:selected').val("");
   resetAdicionales();
 });
+
+// ------------------------ FUNCIONES DEL FORM ---------------------------------
 
 $('#' + id_ddl_obraAdicionales).change(function(){
   resetAdicionales();
@@ -109,34 +110,6 @@ $('#' + id_boton_calculadoraAdicionales).click(function() {
   modalCalculadora(json_modalCalculadora, false);
 });
 
-function calculaCostoSuministros(){
-  var total = 0;
-  if(!jQuery.isEmptyObject(json_modalSuministros)){
-    for(key in json_modalSuministros){
-      total+= json_modalSuministros[key]["precio_cliente"] * json_modalSuministros[key]["cantidad"]
-    }
-  }
-  return total;
-}
-
-function calculaCostoCopeo(){
-  var total = 0;
-  if(!jQuery.isEmptyObject(json_modalCopeo)){
-    for(key in json_modalCopeo.entradas){
-      total+= json_modalCopeo["entradas"][key]["subtotal"]
-    }
-  }
-  return total;
-}
-
-function extraeImpuesto(){
-  var cargaSocial=0;
-  if(!jQuery.isEmptyObject(json_modalCopeo)){
-    cargaSocial = json_modalCopeo.impuestos;
-  }
-  return cargaSocial;
-}
-
 $('#' + id_anticiposAdicionales).change(function(){
   if($('#' + id_anticiposAdicionales).val() == "" || $('#' + id_anticiposAdicionales).val() < 0){
     $('#' + id_anticiposAdicionales).val(0);
@@ -150,6 +123,19 @@ $('#' + id_estimacionesAdicionales).change(function(){
   }
   $('#' + id_anticiposAdicionales).val(100 - $('#' + id_estimacionesAdicionales).val());
 });
+
+// Metodo del boton para abrir el modal de calculadora
+$('#' + id_botonpdfAdicionales).click(function() {
+  if (validateFormAdicionales()){
+    var pdfDocGenerator = generaPresupuestoAdicional(true);
+    var vista_previa = true;
+    var obra_ppto = {};
+    var clave_adic
+    pdfDocGenerator.open(vista_previa, obra_ppto, clave_adic, titulo_ppto, nombre_ppto, atencion, insumos_array, desplegar_indirectos, costo_directo, costo_indirecto, subtotal, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, imagen_anexo, fecha_ppto)
+  }
+});
+
+//---------------------------FUNCIONES NECESARIAS ------------------------------
 
 function llenarFormSolicitudAdicionales(clave_sol){
   firebase.database().ref(rama_bd_obras + "/adicionales/solicitudes/" + $('#' + id_ddl_obraAdicionales + ' option:selected').val()+"/solicitudes/" + clave_sol).on('value',function(snapshot){
@@ -333,6 +319,34 @@ function actualizaPreciosClienteAdicionales(){
   }
 }
 
+function calculaCostoSuministros(){
+  var total = 0;
+  if(!jQuery.isEmptyObject(json_modalSuministros)){
+    for(key in json_modalSuministros){
+      total+= json_modalSuministros[key]["precio_cliente"] * json_modalSuministros[key]["cantidad"]
+    }
+  }
+  return total;
+}
+
+function calculaCostoCopeo(){
+  var total = 0;
+  if(!jQuery.isEmptyObject(json_modalCopeo)){
+    for(key in json_modalCopeo.entradas){
+      total+= json_modalCopeo["entradas"][key]["subtotal"]
+    }
+  }
+  return total;
+}
+
+function extraeImpuesto(){
+  var cargaSocial=0;
+  if(!jQuery.isEmptyObject(json_modalCopeo)){
+    cargaSocial = json_modalCopeo.impuestos;
+  }
+  return cargaSocial;
+}
+
 function resetAdicionales (){
  //$('#' + id_ddl_obraAdicionales + ' option:selected').val("");
  $('#' + id_ddl_adicionalAdicionales ).empty();
@@ -353,3 +367,33 @@ function resetAdicionales (){
  json_modalCopeo={};
  json_modalCalculadora={};
 };
+
+function validateFormAdicionales(){
+  if($('#' + id_ddl_obraAdicionales  + " option:selected").val() == ""){
+    alert("Selecciona una obra");
+    return false;
+  } else if ($('#' + id_ddl_adicionalAdicionales  + " option:selected").val() == "") {
+    alert("Selecciona un adicional");
+    return false;
+  } else if ($('#' + id_ddl_solicitudAdicionales  + " option:selected").val() == "") {
+    alert("Selecciona un adicional");
+    return false;
+  } else if ($('#' + id_nombreAdicionales).val() == "") {
+    alert("Ingresa un nombre para el adicional");
+    return false;
+  } else if ($('#' + id_tituloAdicionales).val() == "") {
+    alert("Ingresa un titulo para el adicional");
+    return false;
+  } else if ($('#' + id_ddl_atencionAdicionales + ' option:selected').val() == "") {
+    alert("Selecciona un contacto de atención");
+    return false;
+  } else if ($('#' + id_indirectosAdicionales).val() == "") {
+    alert("Ingresa un porcentaje de costos indirectos");
+    return false;
+  } else if ($('#' + id_tiempoEntregaAdicionales).val() == "") {
+    alert("Especifica un tiempo de entrega");
+    return false;
+  } else {
+    return true;
+  }
+}
