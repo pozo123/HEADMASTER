@@ -1215,10 +1215,10 @@
                                 </div>
                                 <div class = "container-fluid hidden" id="divReporteDashProd">
                                     <div class="row">
-                                        <div class="col-12">
-                                                <div class="card">
+                                        <div class="col-lg-6">
+                                                <div class="card" style= "height: 100%;">
                                                     <div class="card-header text-white" style="background-color: #00AA9E;">
-                                                        <span style ="font-size: 1.2em;">Resumen Global</span>
+                                                        <span style ="font-size: 1.2em;">Resumen global</span>
                                                     </div>
                                                 <div class="card-body">
                                                     <div class="row">
@@ -1227,26 +1227,103 @@
                                                             <select id ="procesoDashProd" class="form-control"></select>
                                                         </div>
                                                     </div>
-    
                                                     <div class="row fadeInDown">
                                                         <div class="col-md-4 col-sm-6 block">
                                                             <div class="circle circle-2">
-                                                                <span style ="font-size: 1.8em;" id="copeoDashProd"></span>
+                                                                <span style ="font-size: 1em;" id="copeoDashProd"></span>
                                                             </div>
                                                             <p>COPEO</p>
                                                         </div>
                                                         <div class="col-md-4 col-sm-6 block">
                                                             <div class="circle circle-1">
-                                                                <span style ="font-size: 1.8em;" id="pagadoDashProd"></span>
+                                                                <span style ="font-size: 1em;" id="pagadoDashProd"></span>
                                                             </div>
-                                                            <p>M.O. Pagada</p>
+                                                            <p>M.O. pagada</p>
                                                         </div>
                                                         <div class="col-md-4 col-sm-6 block">
                                                             <div class="circle circle-3">
-                                                                <span style ="font-size: 3em;" id = "porcentajePagadoDashProd"></span>
+                                                                <span style ="font-size: 1.5em;" id = "porcentajePagadoDashProd"></span>
                                                             </div>
-                                                            <p>% Pagado</p>
+                                                            <p>% pagado</p>
                                                         </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        <div class="col-lg-6">
+                                            <div class="card " style= "height: 100%;">
+                                                <div class="card-header text-white" style="background-color: rgb(54, 3, 83);">
+                                                    <span style ="font-size: 1.2em;">Total acumulado</span>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="form-group col-12 container_reporte_nomina">
+                                                            <div id="lineChartDashBoard"  style = "min-width: 500px;"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>      
+                                    </div>
+                                    <br/>
+                                    <div class="row">
+                                        <div class="col-12">
+                                                <div class="card">
+                                                    <div class="card-header text-white" style="background-color: rgb(179, 53, 3);">
+                                                        <span style ="font-size: 1.2em;">Análisis semanal - Gráficas</span>
+                                                    </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="form-group col-lg-3">
+                                                            <label for="yearDashProd">Año:</label>
+                                                            <select id ="yearDashProd" class="form-control"></select>
+                                                        </div>
+                                                        <div class="form-group col-lg-3">
+                                                            <label for="weekDashProd">Semana:</label>
+                                                            <select id ="weekDashProd" class="form-control"></select>
+                                                        </div>
+                                                        <div class="form-group col-lg-6 hidden text-center" id = "divTotalPagadoSemanal">
+                                                            <br/>
+                                                            <h3>Total Pagado: <span id = "totalSemanalDashProd"></span></h3>
+                                                        </div>
+                                                    </div>
+    
+                                                    <div class="container-fluid hidden" id="analisisSemanalDashProd">
+                                                        <div class="row fadeInDown">
+                                                            <div id="procesosSemanalChartDashBoard" class = "col-lg-3" style = "height: 350px;"></div>
+                                                            <div id="tiposSemanalChartDashBoard" class = "col-lg-3" style = "height: 350px;"></div>
+                                                            <div class = "col-lg-6 container_reporte_nomina" style = "height: 100%;">
+                                                                <div id="diversosSemanalChartDashboard" style = "min-width: 600px;" ></div>
+                                                            </div>
+                                                        </div>
+                                                        <br/>
+                                                        <div class="row fadeInDown">
+                                                            <div class = "col-lg-6 container_reporte_nomina" style = "height: 350px;">
+                                                                <div id="destajoSemanalChartDashboard" style = "min-width: 600px;"></div>
+                                                            </div>
+                                                            <div id="especialidadSemanalChartDashboard" class = "col-lg-6" style = "height: 100%;"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>   
+                                    </div>
+                                    </br>
+                                    <div class="row hidden" id = "divAnalisisPersonalDashProd">
+                                        <div class="col-12">
+                                                <div class="card">
+                                                    <div class="card-header text-white" style="background-color: #283655;">
+                                                        <span style ="font-size: 1.2em;">Análisis semanal - Personal de obra</span>
+                                                    </div>
+                                                <div class="card-body">
+                                                    <div class="container-fluid" id="">
+                                                        <div class="row fadeInDown">
+                                                            <div class = "col-lg-12 container_reporte_nomina" style = "height: 100%;">
+                                                                Tabla
+                                                            </div>
+                                                        </div>
+                                                        <br/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -3537,8 +3614,8 @@
                                                         <th>Pagos Diversos</th>
                                                         <th>% Diversos</th>
                                                         <th>Subtotal</th>
-                                                        <th>IVA</th>
                                                         <th>Carga social</th>
+                                                        <th>IVA</th>
                                                         <th>Total</th>
                                                     </tr>
                                                 </thead>
@@ -3604,8 +3681,8 @@
                                                         <th>Pagos Diversos</th>
                                                         <th>% Diversos</th>
                                                         <th>Subtotal</th>
-                                                        <th>IVA</th>
                                                         <th>Carga social</th>
+                                                        <th>IVA</th>
                                                         <th>Total</th>
                                                     </tr>
                                                 </thead>
@@ -3627,8 +3704,8 @@
                                                         <th>Pagos Diversos</th>
                                                         <th>% Diversos</th>
                                                         <th>Subtotal</th>
-                                                        <th>IVA</th>
                                                         <th>Carga social</th>
+                                                        <th>IVA</th>
                                                         <th>Total</th>
                                                     </tr>
                                                 </thead>

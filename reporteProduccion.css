@@ -3,13 +3,12 @@
     vertical-align: middle;
 }
 .circle  {
-    background: red;
-    border-radius: 200px;
-    height: 200px !important;
+    border-radius: 50%;
+    height: 130px !important;
     font-weight: bold !important;
-    width: 200px !important;
+    width: 130px !important;
     display: table;
-    margin: 20px auto;
+    margin: 15px auto;
 }
 .circle span {
     vertical-align: middle;
