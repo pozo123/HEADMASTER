@@ -1,9 +1,7 @@
-function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_ppto, nombre_ppto, atencion, insumos_array, desplegar_indirectos, costo_directo, costo_indirecto, subtotal, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, imagen_anexo, fecha_ppto){
+function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_ppto, nombre_ppto, atencion, insumos_json, desplegar_indirectos, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, imagen_anexo, fecha_ppto){
     var obra = obra_ppto.nombre;
     var direccion = obra_ppto.direccion;
     var cliente = obra_ppto.cliente;
-    //_________________________
-
     var anticipo_str;
     if(anticipo == 0){
         anticipo_str = "100% contra entrega";
@@ -51,8 +49,10 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
             alignment: 'left',
         }
     }
-    var precio_total = subtotal;
 
+    var costo_directo = calculaCostoDirectoPdfPresupuestoAdicional();
+    var costo_indirecto = desplegar_indirectos?costo_directo*(1+$('#'+id_indirectosAdicionales).val()*0.01):0;
+    var subtotal=costo_directo+costo_indirecto;
     //________________________________________________________________________________________
 
     var tituloF = "";
@@ -124,8 +124,8 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
                 colSpan:4,
                 border: [false, false, false, false],
                 text: direccion.calle + ", No. " + direccion.numero + "\n" +
-                "col. " + direccion.colonia + "\n" + direccion.delegacion + ", \n" +
-                direccion.ciudad + ", " + direccion.cp,
+                "col. " + direccion.colonia + "\n" + direccion.ciudad + ", \n" +
+                direccion.estado + ", " + direccion.cp,
                 margin: [0,5],
                 fontSize:8,
             },
@@ -205,7 +205,7 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
             {
                 colSpan:6,
                 border: [false, false, false, false],
-                text: ['A continuación enviamos a su amable consideración el presupuesto adicional',
+                text: ['A continuación enviamos a su amable consideración el presupuesto adicional ',
                  {text: titulo_ppto.toUpperCase(), bold: true, fontSize: 9},
                  " a efectuarse en el edificio ubicado en la dirección arriba indicada."],
                 margin: [0,5],
@@ -220,6 +220,7 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
         ],
     ];
     var bod = [
+      [
         { colSpan:6,
           border: [true, true, true, true],
           text: 'DESCRIPCIÓN DEL PRESUPUESTO',
@@ -233,29 +234,36 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
         '',
         '',
         '',
-      ]);
+      ],
+    ];
     var aux = [];
     aux = [
       {
         text:"UNIDAD",
-        alignment:'left'
+        alignment:'left',
+        fontSize: 10,
       },
       {
         text:"CANTIDAD",
-        alignment:'left'
+        alignment:'left',
+        fontSize: 10,
       },
       {
+        colSpan:2,
         text:"DESCRIPCION",
-        alignment:'left'
+        alignment:'left',
+        fontSize: 10,
       },
       '',
       {
         text:"P.U.",
-        alignment:'left'
+        alignment:'left',
+        fontSize: 10,
       },
       {
         text:"IMPORTE",
-        alignment:'left'
+        alignment:'left',
+        fontSize: 10,
       },
     ];
     bod.push(aux);
@@ -263,25 +271,31 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
         aux = [
           {
             text:insumos_json[key].unidad,
-            alignment:'left'
+            alignment:'left',
+            fontSize: 9,
           },
           {
             text:insumos_json[key].cantidad,
-            alignment:'left'
+            alignment:'left',
+            fontSize: 9,
           },
           {
             colSpan:2,
             text:insumos_json[key].descripcion,
-            alignment:'left'
+            alignment:'left',
+            fontSize: 9,
           },
           '',
           {
-            text:insumos_json[key].precio_unitario,
-            alignment:'left'
+            text:formatMoney(desplegar_indirectos?insumos_json[key].precio_lista:insumos_json[key].precio_cliente),
+            alignment:'right',
+            fontSize: 9,
           },
           {
-            text:parseFloat(insumos_json[key].cantidad * insumos_json[key].precio_unitario).toFixed(2),
-            alignment:'left'},
+            text: formatMoney(insumos_json[key].cantidad * (desplegar_indirectos?insumos_json[key].precio_lista:insumos_json[key].precio_cliente)),
+            alignment:'right',
+            fontSize: 9,
+          },
         ];
         bod.push(aux);
     }
@@ -290,14 +304,13 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
       bod_tot = [
           [
               {
-                  colSpan:3,
+                  colSpan:2,
                   border: [false, true, false, false],
                   text: '',
                   margin: [0,0],
                   alignment: 'center',
                   fontSize: 8,
               },
-              '',
               '',
               {
                   colSpan:2,
@@ -309,24 +322,25 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
               },
               '',
               {
+                  colSpan:2,
                   border: [true, true, true, true],
                   text: formatMoney(costo_directo),
                   bold: true,
                   margin: [0,0],
                   alignment: 'right',
                   fontSize: 10,
-              }
+              },
+              '',
           ],
           [
               {
-                  colSpan:3,
+                  colSpan:2,
                   border: [false, false, false, false],
                   text: '',
                   margin: [0,0],
                   alignment: 'center',
                   fontSize: 8,
               },
-              '',
               '',
               {
                   colSpan:2,
@@ -338,13 +352,15 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
               },
               '',
               {
+                  colSpan:2,
                   border: [true, true, true, true],
                   text: formatMoney(costo_indirecto),
                   bold: true,
                   margin: [0,0],
                   alignment: 'right',
                   fontSize: 10,
-              }
+              },
+              '',
           ],
         ];
     }
@@ -352,18 +368,17 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
     var bod_tot_2 = [
         [
             {
-                colSpan:3,
-                border: [false, true, false, false],
+                colSpan:2,
+                border: [false, !desplegar_indirectos, false, false],
                 text: '',
                 margin: [0,0],
                 alignment: 'center',
                 fontSize: 8,
             },
             '',
-            '',
             {
                 colSpan:2,
-                border: [false, true, true, false],
+                border: [false, !desplegar_indirectos, true, false],
                 text: 'Subtotal',
                 margin: [0,0],
                 alignment: 'right',
@@ -371,24 +386,25 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
             },
             '',
             {
+                colSpan:2,
                 border: [true, true, true, true],
-                text: formatMoney(precio_total),
+                text: formatMoney(subtotal),
                 bold: true,
                 margin: [0,0],
                 alignment: 'right',
                 fontSize: 12,
-            }
+            },
+            '',
         ],
         [
             {
-                colSpan:3,
+                colSpan:2,
                 border: [false, false, false, false],
                 text: '',
                 margin: [0,0],
                 alignment: 'center',
                 fontSize: 8,
             },
-            '',
             '',
             {
                 colSpan:2,
@@ -400,24 +416,25 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
             },
             '',
             {
+                colSpan:2,
                 border: [true, true, true, true],
-                text: formatMoney(precio_total*0.16),
+                text: formatMoney(subtotal*0.16),
                 bold:true,
                 margin: [0,0],
                 alignment: 'right',
                 fontSize: 12,
-            }
+            },
+            '',
         ],
         [
             {
-                colSpan:3,
+                colSpan:2,
                 border: [false, false, false, false],
                 text: '',
                 margin: [0,0],
                 alignment: 'center',
                 fontSize: 8,
             },
-            '',
             '',
             {
                 colSpan:2,
@@ -430,19 +447,21 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
             },
             '',
             {
+                colSpan:2,
                 border: [true, true, true, true],
-                text: formatMoney(precio_total*1.16),
+                text: formatMoney(subtotal*1.16),
                 bold: true,
                 margin: [0,0],
                 alignment: 'right',
                 fontSize: 14,
-            }
+            },
+            '',
         ],
     ];
 
-    bod_tot = bod_tot.concat(bod_tot_2);
+    bod = bod.concat(bod_tot.concat(bod_tot_2));
 
-    var bod_exc = exc_str == "NA" ? ['','','','','','',] : [
+    var bod_exc = exc_str == "NA" ? [[{colSpan: 6, border: [false, false, false, false], margin: [0,2], text: ""},'','','','','']] : [
         [
             {
                 colSpan:6,
@@ -477,7 +496,7 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
         [
             {
                 colSpan: 6,
-                border: [false, false, false, true],
+                border: [false, false, false, false],
                 margin: [0,2],
                 text: "",
             },
@@ -489,7 +508,7 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
         ],
     ];
 
-    var bod_req = reqs_str == "NA" ? ['','','','','','',] : [
+    var bod_req = reqs_str == "NA" ? [[{colSpan: 6, border: [false, false, false, false], margin: [0,2], text: ""},'','','','','']] : [
         [
             {
                 colSpan: 6,
@@ -573,7 +592,7 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
           {
               colSpan:5,
               border: [true, true, true, true],
-              text: numeroALetras((precio_total*1.16).toFixed(2)),
+              text: numeroALetras((subtotal*1.16).toFixed(2)),
               bold: true,
               margin: [0,1],
               fillColor: '#dddddd',
@@ -607,10 +626,10 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
                 alignment: 'left',
                 fontSize: 10,
             },
-            '','','',
-
+            '',
+            '',
+            '',
         ],
-
         [
             {
                 colSpan:6,
@@ -618,12 +637,15 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
                 text: anticipo_str,
                 margin: [0,3],
                 alignment: 'center',
-                fontSize: 8,
+                fontSize: 10,
             },
-            '','','','','',
+            '',
+            '',
+            '',
+            '',
+            '',
 
         ],
-
         [
             {
                 colSpan:6,
@@ -633,22 +655,30 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
                 bold:true,
                 alignment: 'left',
                 fontSize: 8,
-                color :"#6FAFB4"
+                //color :"#6FAFB4"
             },
-            '','','','','',
+            '',
+            '',
+            '',
+            '',
+            '',
         ],
 
         [
             {
                 colSpan:6,
                 border: [false, false, false, false],
-                text: 'TIEMPO DE ENTREGA',
+                text: 'TIEMPO DE ENTREGA: ' + tiempoEntrega,
                 bold: true,
                 margin: [0,5],
                 alignment: 'left',
                 fontSize: 8,
             },
-            '','','','','',
+            '',
+            '',
+            '',
+            '',
+            '',
         ],
         [
             {
@@ -661,30 +691,36 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
             },
             '','','','','',
         ],
+        /*
         [
             {
                 colSpan:6,
                 border: [false, false, false, false],
-                text: tiempoEntrega + "\n" + "\n" +"\n",
-                margin: [0,5],
+                text: '' + "\n",
+                margin: [0,2],
                 alignment: 'left',
-                fontSize: 8,
+                fontSize: 10,
             },
-            '','','','','',
+            '',
+            '',
+            '',
+            '',
+            '',
         ],
-
+        */
         [
             {
                 colSpan:3,
                 rowSpan:2,
                 border: [false, false, false, false],
                 text: 'Cliente',
-                margin: [0,40],
+                margin: [0,30],
                 alignment: 'center',
                 fontSize: 10,
                 bold: true,
             },
-            '','',
+            '',
+            '',
             {
                 colSpan:3,
                 rowSpan:2,
@@ -695,8 +731,8 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
                 fontSize: 10,
                 bold: true,
             },
-            '','',
-
+            '',
+            '',
         ],
         ['','','','','',''],
         [
@@ -744,13 +780,13 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
             {
                 colSpan:6,
                 border: [false, false, false, false],
-                text: 'Con base al Decreto publicado en el D.O.F el pasado 26 de marzo de 2015 por el que se otorgan medidas de apoyo a la vivienda y otras medidas fiscales, sobre la contratación parcial para la construcción de Desarrollos Inmobiliarios de “casa habitación” exentos de IVA, únicamente se podrá facturar IVA EXENTO si cumple con lo siguiente:\n'
+                text: 'Con base en el Decreto publicado en el D.O.F el pasado 26 de marzo de 2015 por el que se otorgan medidas de apoyo a la vivienda y otras medidas fiscales, sobre la contratación parcial para la construcción de Desarrollos Inmobiliarios de “casa habitación” exentos de IVA, únicamente se podrá facturar IVA EXENTO si cumple con lo siguiente:\n'
                     + '\t- El nombre del propietario debe ser el que aparece en la Licencia de Construcción y a ese mismo nombre se debe facturar.\n'
                     + '\t- El prestador del servicio debe proporcionar la mano de obra y materiales\n'
                     + '\t- El cliente debe realizar ante el SAT anualmente el formato 61\n'
                     + '\t- Expedir comprobantes fiscales que amparen únicamente los servicios parciales de construcción de inmuebles destinados a casa habitación, que contengan:\n'
                     + '\t\ta.    El domicilio del inmueble en el que se proporcionen los servicios parciales de construcción.\n'
-                    + '\t\tb.    El número de permiso, licencia o autorización de construcción correspondiente que le haya proporcionado el prestador de los servicios parciales de construcción, el cual deberá coincidir con el señalado en la manifestación a que se refiere la fracción siguiente de este artículo.' + '\n' + '',
+                    + '\t\tb.    El número de permiso, licencia o autorización de construcción correspondiente que le haya proporcionado el prestador de los servicios parciales de construcción, el cual deberá coincidir con el señalado en la manifestación a que se refiere el Art. 9º Fracc II de la Ley del IVA y el Art. 29 del Reglamento del IVA.' + '\n' + '\n',
                 margin: [0,3],
                 alignment: 'left',
                 fontSize: 8,
@@ -777,10 +813,10 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
                 margin: [0,3],
                 alignment: 'center',
                 fontSize: 8,
-            },'','',
-
+            },
+            '',
+            '',
         ],
-
         [
             {
                 colSpan:1,
@@ -816,7 +852,6 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
                 fontSize: 7,
             },
             '',
-
         ],
     ];
 
@@ -844,6 +879,7 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
             },
         },
         //Totales
+        /*
         {
             table:{
                 widths: ['*', 120, '*', '*','*',120],
@@ -851,6 +887,7 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
                 unbreakable: true,
             },
         },
+        */
         //Letra
         {
             table:{
@@ -890,10 +927,10 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
                 height: 650.00
             };
             //console.log(i);
-            cont.push(img_an);
+            //cont.push(img_an);
         }
     }
-
+    var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     var fecha = fecha_ppto.toLocaleDateString("es-MX",options);
     fecha = fecha.charAt(0).toUpperCase() + fecha.slice(1);
     fecha = "\n" + fecha + "\n"+ "CDMX";
@@ -923,3 +960,17 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
     };
     return pdfPresupuesto;
 }
+
+function calculaCostoDirectoPdfPresupuestoAdicional(){
+  var total = 0;
+  var suministro={};
+  for (key in json_modalSuministros){
+    suministro = json_modalSuministros[key];
+    if($('#'+id_cb_indirectosAdicionales).prop('checked')){
+        total += suministro.precio_lista * suministro.cantidad;
+    } else {
+        total += suministro.precio_cliente * suministro.cantidad;
+    }
+  }
+  return total;
+};
