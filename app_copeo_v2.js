@@ -762,7 +762,7 @@ function actualizarTablaCopeo(){
           exportOptions: {
               columns: [':visible']
           }},
-      ],
+        ],
         "paging":false,
         "autoWidth": false,
         "columnDefs": [

@@ -57,8 +57,8 @@ $('#' + id_tab_reporte_nomina).click(function(){
     select_asignada.appendChild(option1);
 
     var option_asignada = document.createElement('option');
+    
     option_asignada.text = option_asignada.value = "TODAS";
-    select_asignada.appendChild(option_asignada);
     var obra;
     firebase.database().ref(rama_bd_obras + "/listas/obras_activas").orderByChild('nombre').on('child_added',function(snapshot){
         obra = snapshot.val();
@@ -73,7 +73,6 @@ $('#' + id_tab_reporte_nomina).click(function(){
 
 $('#' + id_ddl_year_reporte_nomina).change(function(){
     $('#' + id_ddl_week_reporte_nomina).empty();
-    $('#' + id_fecha_pagos_nomina).val("");
 
     var select = document.getElementById(id_ddl_week_reporte_nomina);
     var year = $('#' + id_ddl_year_reporte_nomina + " option:selected").val();
@@ -164,20 +163,20 @@ function tableReporteGlobalReporteNomina(){
                     for(asistKey in registros[reg_key].asistencias){
                         if(registros[reg_key].asistencias[asistKey].actividad != "Falta"){
                             aux_proporcion += 0.2;
-                            aux += (0.2 * registros[reg_key].sueldo_semanal) * 1.16;
+                            aux += (0.2 * registros[reg_key].sueldo_semanal);
                         };
                     };
 
                     for(heKey in registros[reg_key].horas_extra){
                         obra = registros[reg_key].horas_extra[heKey].obra;
                         json_datos[obra].horas_extra += registros[reg_key].horas_extra[heKey].cantidad * (registros[reg_key].sueldo_semanal / 24)
-                        aux += registros[reg_key].horas_extra[heKey].cantidad * (registros[reg_key].sueldo_semanal / 24) * 1.16;
+                        aux += registros[reg_key].horas_extra[heKey].cantidad * (registros[reg_key].sueldo_semanal / 24);
                     };
 
                     for(divKey in registros[reg_key].diversos){
                         obra = registros[reg_key].diversos[divKey].obra;
                         json_datos[obra].diversos += registros[reg_key].diversos[divKey].cantidad;
-                        aux += registros[reg_key].diversos[divKey].cantidad * 1.16;
+                        aux += registros[reg_key].diversos[divKey].cantidad;
                     };
 
                     for(asistKey in registros[reg_key].asistencias){
@@ -186,7 +185,7 @@ function tableReporteGlobalReporteNomina(){
                             json_datos[obra].nomina += 0.2 * registros[reg_key].sueldo_semanal;
 
                             if(aux_proporcion > 0 && pago_registro - aux > 0) {
-                                json_datos[obra].carga_social += (pago_registro - aux) * (0.2 / aux_proporcion);
+                                json_datos[obra].carga_social += ((pago_registro/1.16) - aux) * (0.2 / aux_proporcion);
                             } 
                         };
                     };
@@ -197,7 +196,7 @@ function tableReporteGlobalReporteNomina(){
             for(key in json_datos){
                 if(json_datos[key].nomina + json_datos[key].horas_extra + json_datos[key].diversos > 0){
                     var subtotal = json_datos[key].nomina + json_datos[key].horas_extra + json_datos[key].diversos;
-                    var iva = subtotal * 0.16;
+                    var iva = (subtotal + json_datos[key].carga_social) * 0.16;
                     datos.push([
                         json_datos[key].nombre,
                         formatMoney(json_datos[key].nomina),
@@ -207,8 +206,8 @@ function tableReporteGlobalReporteNomina(){
                         formatMoney(json_datos[key].diversos),
                         "" + ((json_datos[key].diversos / subtotal) * 100).toFixed(2) +"%",
                         formatMoney(subtotal),
-                        formatMoney(iva),
                         formatMoney(json_datos[key].carga_social),
+                        formatMoney(iva),
                         formatMoney(subtotal + iva + json_datos[key].carga_social)
                     ]);
                 };
@@ -276,20 +275,20 @@ function reporteSemanalReporteNomina(){
                         for(asistKey in registros[reg_key].asistencias){
                             if(registros[reg_key].asistencias[asistKey].actividad != "Falta"){
                                 aux_proporcion += 0.2;
-                                aux += (0.2 * registros[reg_key].sueldo_semanal) * 1.16;
+                                aux += (0.2 * registros[reg_key].sueldo_semanal);
                             };
                         };
 
                         for(heKey in registros[reg_key].horas_extra){
                             obra = registros[reg_key].horas_extra[heKey].obra;
                             json_datos[obra].horas_extra += registros[reg_key].horas_extra[heKey].cantidad * (registros[reg_key].sueldo_semanal / 24)
-                            aux += registros[reg_key].horas_extra[heKey].cantidad * (registros[reg_key].sueldo_semanal / 24) * 1.16;
+                            aux += registros[reg_key].horas_extra[heKey].cantidad * (registros[reg_key].sueldo_semanal / 24);
                         };
 
                         for(divKey in registros[reg_key].diversos){
                             obra = registros[reg_key].diversos[divKey].obra;
                             json_datos[obra].diversos += registros[reg_key].diversos[divKey].cantidad;
-                            aux += registros[reg_key].diversos[divKey].cantidad * 1.16;
+                            aux += registros[reg_key].diversos[divKey].cantidad;
                         };
 
                         for(asistKey in registros[reg_key].asistencias){
@@ -298,7 +297,7 @@ function reporteSemanalReporteNomina(){
                                 json_datos[obra].nomina += 0.2 * registros[reg_key].sueldo_semanal;
 
                                 if(aux_proporcion > 0 && pago_registro - aux > 0) {
-                                    json_datos[obra].carga_social += ((pago_registro - aux) * 0.2) / aux_proporcion;
+                                    json_datos[obra].carga_social += ((pago_registro/1.16) - aux) * (0.2 / aux_proporcion) / aux_proporcion;
                                 }
                             };
                         };
@@ -308,7 +307,7 @@ function reporteSemanalReporteNomina(){
 
                 for(key in json_datos){
                     if(json_datos[key].nomina + json_datos[key].horas_extra + json_datos[key].diversos > 0){
-                        var iva = (json_datos[key].nomina + json_datos[key].horas_extra + json_datos[key].diversos) * 0.16
+                        var iva = (json_datos[key].nomina + json_datos[key].horas_extra + json_datos[key].diversos + json_datos[key].carga_social) * 0.16
                         datos.push([
                             json_datos[key].nombre,
                             formatMoney(json_datos[key].nomina),
@@ -358,7 +357,7 @@ function reporteSemanalReporteNomina(){
 
                 // pie
                 var canvas = document.createElement('canvas');
-                canvas.style = "min-height: 350px; min-width: 350;"
+                canvas.style = "min-height: 350px; min-width: 350px;"
                 canvas.id = "canvasPie"
 
                 var canvas_container = document.getElementById(id_pie_chart_semanal_reporte_nomina);
@@ -380,7 +379,8 @@ function reporteSemanalReporteNomina(){
                             text: 'Resumen Semanal'
                         },
                         responsive: true,
-                        maintainAspectRatio: false
+                        maintainAspectRatio: false,
+                        
                     }
                 };
                 var ctx = document.getElementById(canvas.id).getContext('2d');
@@ -458,20 +458,20 @@ function reporteObraReporteNomina(){
                     for(asistKey in registro.asistencias){
                         if(registro.asistencias[asistKey].actividad != "Falta"){
                             aux_proporcion += 0.2;
-                            aux += (0.2 * registro.sueldo_semanal) * 1.16;
+                            aux += (0.2 * registro.sueldo_semanal);
                         }
                     };
 
                     // calcular horas_extra
     
                     for(heKey in registro.horas_extra){
-                        aux += registro.horas_extra[heKey].cantidad * (registro.sueldo_semanal / 24) * 1.16;
+                        aux += registro.horas_extra[heKey].cantidad * (registro.sueldo_semanal / 24);
                         if(registro.horas_extra[heKey].obra == obra_selected){
                             horas_extra += registro.horas_extra[heKey].cantidad * (registro.sueldo_semanal / 24);
                         }
                     }
                     for(divKey in registro.diversos){
-                        aux += registro.diversos[divKey].cantidad * 1.16;
+                        aux += registro.diversos[divKey].cantidad;
                         if(registro.diversos[divKey].obra == obra_selected){
                             diversos += registro.diversos[divKey].cantidad;
                         };
@@ -481,7 +481,7 @@ function reporteObraReporteNomina(){
                         if(registro.asistencias[asistKey].actividad != "Falta" && registro.asistencias[asistKey].obra == obra_selected){
                             nomina += registro.sueldo_semanal * 0.2;
                             if(aux_proporcion > 0 && pago - aux > 0) {
-                                carga_social += (pago - aux) * (0.2 / aux_proporcion);
+                                carga_social += ((pago/1.16) - aux) * (0.2 / aux_proporcion);
                             } 
                         }
                     };
@@ -499,9 +499,9 @@ function reporteObraReporteNomina(){
                         json_datos[registro.year_head + "_" + registro.week_head].nomina += nomina;
                         json_datos[registro.year_head + "_" + registro.week_head].horas_extra += horas_extra;
                         json_datos[registro.year_head + "_" + registro.week_head].diversos += diversos;
-                        json_datos[registro.year_head + "_" + registro.week_head].iva += (nomina + horas_extra + diversos) * 0.16;
                         json_datos[registro.year_head + "_" + registro.week_head].carga_social += carga_social
-                        json_datos[registro.year_head + "_" + registro.week_head].total += (nomina + horas_extra + diversos) * 1.16 + carga_social;
+                        json_datos[registro.year_head + "_" + registro.week_head].iva += (nomina + horas_extra + diversos + carga_social) * 0.16;
+                        json_datos[registro.year_head + "_" + registro.week_head].total += (nomina + horas_extra + diversos + carga_social) * 1.16;
                     }
                 }
             });
@@ -521,8 +521,8 @@ function reporteObraReporteNomina(){
                     formatMoney(json_datos[key].diversos),
                     "" + ((json_datos[key].diversos / (json_datos[key].nomina + json_datos[key].horas_extra + json_datos[key].diversos)) * 100).toFixed(2) +"%", 
                     formatMoney(json_datos[key].nomina + json_datos[key].horas_extra + json_datos[key].diversos),
-                    formatMoney(json_datos[key].iva),
                     formatMoney(json_datos[key].carga_social),
+                    formatMoney(json_datos[key].iva),
                     formatMoney(json_datos[key].total),
                 ]);
             };
@@ -586,14 +586,14 @@ function reporteProcesoObraReporteNomina(){
                         for(asistKey in registro.asistencias){
                             if(registro.asistencias[asistKey].actividad != "Falta"){
                                 aux_proporcion += 0.2;
-                                aux += (0.2 * registro.sueldo_semanal) * 1.16;
+                                aux += (0.2 * registro.sueldo_semanal);
                             }
                         };
     
                         // calcular horas_extra
         
                         for(heKey in registro.horas_extra){
-                            aux += registro.horas_extra[heKey].cantidad * (registro.sueldo_semanal / 24) * 1.16;
+                            aux += registro.horas_extra[heKey].cantidad * (registro.sueldo_semanal / 24);
                             if(registro.horas_extra[heKey].obra == obra_selected){
                                 var proceso = registro.horas_extra[heKey].subproceso.split("-");
                                 proceso = proceso[0];
@@ -601,7 +601,7 @@ function reporteProcesoObraReporteNomina(){
                             }
                         }
                         for(divKey in registro.diversos){
-                            aux += registro.diversos[divKey].cantidad * 1.16;
+                            aux += registro.diversos[divKey].cantidad;
                             if(registro.diversos[divKey].obra == obra_selected){
                                 var proceso = registro.diversos[divKey].subproceso.split("-");
                                 proceso = proceso[0];
@@ -612,11 +612,10 @@ function reporteProcesoObraReporteNomina(){
                         for(asistKey in registro.asistencias){
                             if(registro.asistencias[asistKey].actividad != "Falta" && registro.asistencias[asistKey].obra == obra_selected){
                                 var proceso = registro.asistencias[asistKey].subproceso.split("-");
-                                console.log(proceso)
                                 proceso = proceso[0];
                                 json_procesos[proceso].nomina += registro.sueldo_semanal * 0.2;
                                 if(aux_proporcion > 0 && pago - aux > 0) {
-                                    json_procesos[proceso].carga_social += (pago - aux) * (0.2 / aux_proporcion);
+                                    json_procesos[proceso].carga_social += ((pago/1.16) - aux) * (0.2 / aux_proporcion);
                                 } 
                             }
                         };
@@ -625,8 +624,8 @@ function reporteProcesoObraReporteNomina(){
                 });
 
                 for(key in json_procesos){
-                    json_procesos[key].iva = (json_procesos[key].nomina + json_procesos[key].horas_extra + json_procesos[key].diversos) * 0.16;
-                    json_procesos[key].total = (json_procesos[key].nomina + json_procesos[key].horas_extra + json_procesos[key].diversos) * 1.16 + json_procesos[key].carga_social;
+                    json_procesos[key].iva = (json_procesos[key].nomina + json_procesos[key].horas_extra + json_procesos[key].diversos + json_procesos[key].carga_social) * 0.16;
+                    json_procesos[key].total = (json_procesos[key].nomina + json_procesos[key].horas_extra + json_procesos[key].diversos + json_procesos[key].carga_social) * 1.16 ;
                 }
 
 
@@ -642,8 +641,8 @@ function reporteProcesoObraReporteNomina(){
                             formatMoney(json_procesos[key].diversos),
                             "" + ((json_procesos[key].diversos / (json_procesos[key].nomina + json_procesos[key].horas_extra + json_procesos[key].diversos)) * 100).toFixed(2) +"%", 
                             formatMoney(json_procesos[key].nomina + json_procesos[key].horas_extra + json_procesos[key].diversos),
-                            formatMoney(json_procesos[key].iva),
                             formatMoney(json_procesos[key].carga_social),
+                            formatMoney(json_procesos[key].iva),
                             formatMoney(json_procesos[key].total),
                         ]);
                     };
