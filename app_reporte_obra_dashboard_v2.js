@@ -1,5 +1,6 @@
 var id_tab_dash_prod = "tabPagosCliente";
 var id_form_dash_prod = "tabDashProd";
+var id_dataTable_personal_dash_prod = "dataTableTrabajadoresDashProd";
 
 var id_ddl_obra_dash_prod = "obraDashProd";
 var id_ddl_prod_dash_prod = "procesoDashProd";
@@ -625,8 +626,10 @@ $('#' + id_ddl_year_dash_prod).change(function(){
 $('#' + id_ddl_week_dash_prod).change(function(){
 
     $('#' + id_div_analisis_personal).addClass('hidden');
-    var diversos_json = {};
+    var trabajadores_json = {};
+    var diversos_data = {};
     var esp_json = {};
+    var puesto_json = {};
     var monto_destajo = 0;
     var monto_admon = 0;
 
@@ -655,8 +658,9 @@ $('#' + id_ddl_week_dash_prod).change(function(){
         $('#' + id_div_total_semanal).removeClass('hidden');
         
         firebase.database().ref(rama_bd_datos_referencia).on("value", function(snapshot){
+
             snapshot.child("diversos").forEach(function(divSnap){
-                diversos_json[divSnap.key] = {
+                diversos_data[divSnap.key] = {
                     nombre: divSnap.val(),
                     monto:0
                 };
@@ -668,6 +672,55 @@ $('#' + id_ddl_week_dash_prod).change(function(){
                     monto:0
                 };
             });
+
+
+            snapshot.child("puestos").forEach(function(puestoSnap){
+                puesto_json[puestoSnap.key] = {
+                    nombre: puestoSnap.val().puesto,
+                    monto:0
+                };
+            });
+
+            for(registro in json_registros_obra){
+                var nombre = "";
+                var aux = json_registros_obra[registro].trabajador_nombre;
+                aux = aux.split("_");
+                for(var i=0;i<aux.length;i++){
+                    if(i == 0){
+                        nombre += aux[i];
+                    } else {
+                        nombre += " " + aux[i];
+                    }
+                }
+
+                var jefe = "";
+                var aux1 = json_registros_obra[registro].trabajador_jefe;
+                aux1 = aux1.split("_");
+                for(var i=0;i<aux1.length;i++){
+                    if(i == 0){
+                        jefe += aux1[i];
+                    } else {
+                        jefe += " " + aux1[i];
+                    }
+                }
+
+                trabajadores_json[registro] = {
+                    id: json_registros_obra[registro].trabajador_id_head,
+                    nombre:  nombre,
+                    jefe: jefe,
+                    puesto:  puesto_json[json_registros_obra[registro].trabajador_puesto].nombre,
+                    especialidad: esp_json[json_registros_obra[registro].trabajador_esp].nombre,
+                    jueves: "",
+                    viernes: "",
+                    lunes: "",
+                    martes: "",
+                    miercoles: "",
+                    horas_extra: 0,
+                    diversos: 0,
+                    diversos_json: diversos_data,
+                    total: 0,
+                };
+            };
 
             $('#' + id_circle_total_semanal_dash_prod).text(formatMoney((json_datos_semana[key].nomina + json_datos_semana[key].horas_extra + json_datos_semana[key].diversos + json_datos_semana[key].carga_social) *1.16));
             // si selecciona todas las semanas, queremos totales.
@@ -787,6 +840,9 @@ $('#' + id_ddl_week_dash_prod).change(function(){
                             aux += json_registros_obra[reg].horas_extra[heKey].cantidad * (json_registros_obra[reg].sueldo_semanal / 24);
                             if(json_registros_obra[reg].horas_extra[heKey].obra == obra_selected){
                                 esp_json[json_registros_obra[reg].trabajador_esp].monto += (json_registros_obra[reg].horas_extra[heKey].cantidad * (json_registros_obra[reg].sueldo_semanal / 24))*1.16;
+                                
+                                trabajadores_json[reg].horas_extra += json_registros_obra[reg].horas_extra[heKey].cantidad;
+                                trabajadores_json[reg].total += (json_registros_obra[reg].horas_extra[heKey].cantidad * (json_registros_obra[reg].sueldo_semanal / 24))*1.16;
 
                                 if(json_registros_obra[reg].trabajador_jefe == "HEAD"){
                                     monto_admon += (json_registros_obra[reg].horas_extra[heKey].cantidad * (json_registros_obra[reg].sueldo_semanal / 24))*1.16;
@@ -796,13 +852,25 @@ $('#' + id_ddl_week_dash_prod).change(function(){
                             };
                         };
                     }
+
                     // diversos
                     if(json_registros_obra[reg].diversos){   
                         for(div in json_registros_obra[reg].diversos){
                             aux += json_registros_obra[reg].diversos[div].cantidad;
                             if(json_registros_obra[reg].diversos[div].obra == obra_selected){
                                 esp_json[json_registros_obra[reg].trabajador_esp].monto += json_registros_obra[reg].diversos[div].cantidad * 1.16;
-                                diversos_json[json_registros_obra[reg].diversos[div].tipo].monto += json_registros_obra[reg].diversos[div].cantidad * 1.16;
+                                
+                                // sin iva
+                                var diverso_tipo = json_registros_obra[reg].diversos[div].tipo;
+                                console.log(trabajadores_json[reg].diversos_json);
+                                trabajadores_json[reg]["diversos_json"][diverso_tipo].monto += json_registros_obra[reg].diversos[div].cantidad;
+                                console.log(trabajadores_json[reg].nombre)
+                                console.log(trabajadores_json[reg].diversos_json);
+
+                                //trabajadores_json[reg].diversos_json[].monto += json_registros_obra[reg].diversos[div].cantidad;
+                                trabajadores_json[reg].diversos += json_registros_obra[reg].diversos[div].cantidad;
+                                
+                                trabajadores_json[reg].total += json_registros_obra[reg].diversos[div].cantidad * 1.16;
 
                                 if(json_registros_obra[reg].trabajador_jefe == "HEAD"){
                                     monto_admon += json_registros_obra[reg].diversos[div].cantidad * 1.16;
@@ -815,12 +883,22 @@ $('#' + id_ddl_week_dash_prod).change(function(){
 
                     if(json_registros_obra[reg].asistencias){
                         for(asistKey in json_registros_obra[reg].asistencias){
-                            if(json_registros_obra[reg].obra == obra_selected){
-                                // necesito un contador ??? para sacar %s de asistencia
-                            };
-                            if(json_registros_obra[reg].asistencias[asistKey].actividad != "Falta" && json_registros_obra[reg].asistencias[asistKey].obra == obra_selected){                                
-                                esp_json[json_registros_obra[reg].trabajador_esp].monto += (json_registros_obra[reg].sueldo_semanal * 0.2) * 1.16;
 
+                            // para distribuir a donde fue 
+                            if(json_registros_obra[reg].asistencias[asistKey].obra  != obra_selected){
+                                trabajadores_json[reg][asistKey] = "otra obra";
+                            } else if(json_registros_obra[reg].asistencias[asistKey].actividad == "Falta"){
+                                trabajadores_json[reg][asistKey] = "Falta";
+                            } else {
+                                var proc = json_registros_obra[reg].asistencias[asistKey].subproceso.split("-");
+                                proc = proc[0];
+                                trabajadores_json[reg][asistKey] = proc;
+                            };
+                            
+                            // ---- 
+                            if(json_registros_obra[reg].asistencias[asistKey].actividad != "Falta" && json_registros_obra[reg].asistencias[asistKey].obra == obra_selected){     
+                                esp_json[json_registros_obra[reg].trabajador_esp].monto += (json_registros_obra[reg].sueldo_semanal * 0.2) * 1.16;
+                                trabajadores_json[reg].total += (json_registros_obra[reg].sueldo_semanal * 0.2) * 1.16
                                 if(json_registros_obra[reg].trabajador_jefe == "HEAD"){
                                     monto_admon += (json_registros_obra[reg].sueldo_semanal * 0.2) * 1.16;
                                 } else {
@@ -830,6 +908,7 @@ $('#' + id_ddl_week_dash_prod).change(function(){
                                 if(aux_proporcion > 0 && pago - aux > 0) {
                                     // carga social
                                     esp_json[json_registros_obra[reg].trabajador_esp].monto += ((pago/1.16) - aux) * (0.2 / aux_proporcion) * 1.16;
+                                    trabajadores_json[reg].total += ((pago/1.16) - aux) * (0.2 / aux_proporcion) * 1.16
 
                                     if(json_registros_obra[reg].trabajador_jefe == "HEAD"){
                                         monto_admon += ((pago/1.16) - aux) * (0.2 / aux_proporcion) * 1.16;
@@ -847,10 +926,10 @@ $('#' + id_ddl_week_dash_prod).change(function(){
             var diversos_nombres = [];
             var diversos_datos = [];
 
-            for(div in diversos_json){
-                if(diversos_json[div].monto > 0){
-                    diversos_nombres.push(diversos_json[div].nombre)
-                    diversos_datos.push(diversos_json[div].monto.toFixed(2));
+            for(div in diversos_data){
+                if(diversos_data[div].monto > 0){
+                    diversos_nombres.push(diversos_data[div].nombre)
+                    diversos_datos.push(diversos_data[div].monto.toFixed(2));
                 }
             }
 
@@ -993,6 +1072,78 @@ $('#' + id_ddl_week_dash_prod).change(function(){
             var ctx5 = document.getElementById(canvas_esp.id).getContext('2d');
             window.myPie = new Chart(ctx5, configDoug); 
 
+            // Tabla
+
+            var datos_personal = [];
+            for(trab in trabajadores_json){
+                diversos_text = "";
+                if(trabajadores_json[trab].total > 0){
+
+                    var total = formatMoney(trabajadores_json[trab].total);
+                    var diversos_total = formatMoney(trabajadores_json[trab].diversos);
+
+
+                    for(diver in trabajadores_json[trab].diversos_json){
+                        diversos_text += trabajadores_json[trab].diversos_json[diver].nombre + ": " + formatMoney(trabajadores_json[trab].diversos_json[diver].monto) + "\n";
+                    };
+                    datos_personal.push([
+                        trabajadores_json[trab].id,
+                        trabajadores_json[trab].nombre,
+                        trabajadores_json[trab].jefe,
+                        trabajadores_json[trab].puesto,
+                        trabajadores_json[trab].especialidad,
+                        trabajadores_json[trab].jueves,
+                        trabajadores_json[trab].viernes,
+                        trabajadores_json[trab].lunes,
+                        trabajadores_json[trab].martes,
+                        trabajadores_json[trab].miercoles,
+                        trabajadores_json[trab].horas_extra,
+                        diversos_total,
+                        diversos_text,
+                        "<button type='button' class='infoPersonal btn btn-dark'><i class='fas fa-info'></i></button>",
+                        total,
+                    ]);
+                };
+            };
+
+            tabla_trabajadores = $('#'+ id_dataTable_personal_dash_prod).DataTable({
+                destroy: true,
+                data: datos_personal,
+                language: idioma_espanol,
+                "columnDefs": [
+                    {
+                        targets: 0,
+                        className: 'dt-body-center'
+                    },
+                    {
+                        targets: 4,
+                        className: 'dt-body-center'
+                    },
+                    {
+                        targets: 10,
+                        className: 'dt-body-center'
+                    },
+                    {
+                        targets: 11,
+                        className: 'dt-body-center'
+                    },
+                    { "visible": false, "targets": [-3,-2] },
+                  ],
+                  dom: 'Bfrtip',
+                  buttons: [
+                    {extend: 'excelHtml5',
+                    title: "Personal_" + $('#' + id_ddl_obra_dash_prod + " option:selected").text() + "_" + $('#' + id_ddl_year_dash_prod + " option:selected").val() + "_" + $('#' + id_ddl_week_dash_prod + " option:selected").val(),
+                    exportOptions: {
+                        columns: [':visible']
+                    }},
+                  ],
+                  "paging":false,
+            });
+
+            $('#' + id_dataTable_personal_dash_prod + ' tbody').on( 'click', '.infoPersonal', function () {
+                var data = tabla_trabajadores.row( $(this).parents('tr') ).data();
+                alert(data[12]);
+            } );
             // aquí termina firebase
         });
     } else {
