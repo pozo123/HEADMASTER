@@ -665,7 +665,6 @@ $('#' + id_ddl_week_dash_prod).change(function(){
                     monto:0
                 };
             });
-
             snapshot.child("especialidades").forEach(function(espSnap){
                 esp_json[espSnap.key] = {
                     nombre: espSnap.val().clave,
@@ -704,6 +703,10 @@ $('#' + id_ddl_week_dash_prod).change(function(){
                     }
                 }
 
+                var prueba = {};
+
+
+
                 trabajadores_json[registro] = {
                     id: json_registros_obra[registro].trabajador_id_head,
                     nombre:  nombre,
@@ -717,8 +720,15 @@ $('#' + id_ddl_week_dash_prod).change(function(){
                     miercoles: "",
                     horas_extra: 0,
                     diversos: 0,
-                    diversos_json: diversos_data,
+                    diversos_json: {},
                     total: 0,
+                };
+
+                for(div1 in diversos_data){
+                    trabajadores_json[registro].diversos_json[div1] = {
+                        nombre:diversos_data[div1].nombre,
+                        monto:0
+                    };
                 };
             };
 
@@ -862,9 +872,9 @@ $('#' + id_ddl_week_dash_prod).change(function(){
                                 
                                 // sin iva
                                 var diverso_tipo = json_registros_obra[reg].diversos[div].tipo;
-                                console.log(trabajadores_json[reg].diversos_json);
-                                trabajadores_json[reg]["diversos_json"][diverso_tipo].monto += json_registros_obra[reg].diversos[div].cantidad;
                                 console.log(trabajadores_json[reg].nombre)
+                                console.log(trabajadores_json[reg].diversos_json);
+                                trabajadores_json[reg].diversos_json[diverso_tipo].monto += json_registros_obra[reg].diversos[div].cantidad;
                                 console.log(trabajadores_json[reg].diversos_json);
 
                                 //trabajadores_json[reg].diversos_json[].monto += json_registros_obra[reg].diversos[div].cantidad;
@@ -1127,7 +1137,7 @@ $('#' + id_ddl_week_dash_prod).change(function(){
                         targets: 11,
                         className: 'dt-body-center'
                     },
-                    { "visible": false, "targets": [-3,-2] },
+                    { "visible": false, "targets": -3 },
                   ],
                   dom: 'Bfrtip',
                   buttons: [
