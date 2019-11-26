@@ -30,6 +30,7 @@ var select_requisitos;
 var select_exclusiones;
 var flagCuantificacion;
 var datos_obraAdicionales;
+var no_adic;
 
 $('#' + id_tab_adicionales).click(function() {
   json_modalSuministros={};
@@ -132,6 +133,7 @@ $('#' + id_botonpdfAdicionales).click(function() {
     var docDescription = pdfDocDescriptionAdicionales(true);
     var pdfDocGenerator = pdfMake.createPdf(docDescription);
     pdfDocGenerator.open();
+    console.log(datosAdicionalAdicionales("url"));
   }
 });
 
@@ -140,9 +142,12 @@ $('#' + id_botonRegistrarAdicionales).click(function() {
     var obra = $('#'+ id_ddl_obraAdicionales + ' option:selected').val();
     var adicional = $('#'+ id_claveAdicionales).val();
     var json_adicional = {};
-    var solicitud_update = {};
-    var solicitud_path = rama_bd_obras + "/procesos/" + obra + "/procesos/ADIC/subprocesos" + adicional;
-    var storageRef = firebase.storage().ref(solicitud_path + "/" + adicional +"_formato.pdf");
+    var adicional_update = {};
+    var adicional_path = rama_bd_obras;
+    var path_adicional = "procesos/" + obra + "/procesos/ADIC";
+    var path_copeo = "copeo/" + obra + "/ADIC/" + adicional;
+    var path_insumos = "cuantificacion/" + obra + "/ADIC/" + adicional;
+    var storageRef = firebase.storage().ref(adicional_path + "/adicionales/propuestas/"+ obra +"/formatos/"+ adicional +".pdf");
     var docDescription = pdfDocDescriptionAdicionales(false);
     var pdfDocGenerator = pdfMake.createPdf(docDescription);
     pdfDocGenerator.download(adicional + '_formato.pdf');
@@ -171,23 +176,24 @@ $('#' + id_botonRegistrarAdicionales).click(function() {
           // For instance, get the download URL: https://firebasestorage.googleapis.com/...
           uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
             console.log('File available at', downloadURL);
-            json_adicional['url_pdf'] = downloadURL;
+            json_adicional['url_formato'] = downloadURL;
             //console.log(json_solicitud);
-            solicitud_update[obra + "/solicitudes/" + solicitud] = json_solicitud;
-            solicitud_update[obra + "/contador"] = cont_solicitudes+1;
-            solicitud_update[obra + "/listas/pendientes/" + solicitud] = true;
-            firebase.database().ref(solicitud_path).update(solicitud_update, function(error) {
+            adicional_update[path_adicional +"/subprocesos/" + adicional] = datosAdicionalAdicionales();
+            adicional_update[path_adicional +"/num_subprocesos"] = no_adic;
+            adicional_update[path_copeo] = json_modalCopeo;
+            adicional_update[path_insumos] = datosInsumosAdicionales();
+            firebase.database().ref(adicional_path).update(adicional_update, function(error) {
               if (error) {
                 // The write failed...
                 alert("¡Ups, hubo un error!");
               } else {
                 // Data saved successfully!
                 // PAD
-                pda("alta", solicitud_path, "");
+                // pda("alta", solicitud_path, "");
                 alert("¡Registro de solicitud exitoso!");
-                $('#' + id_boton_registrarSolicitudAdicional).prop('disabled', false);
-                resetForm1SolicitudAdicional();
-                $('#' + id_ddl_obraSolicitudAdicional).val("");
+                $('#' + id_botonRegistrarAdicionales).prop('disabled', false);
+                // resetForm1SolicitudAdicional();
+                $('#' + id_ddl_obraAdicionales).val("");
               }
             });
           });
@@ -280,7 +286,6 @@ function extraerCopeoInsumosCalculadoraAdicionales(clave_adic){
 
 function generaClaveAdicionales(id_item){
   firebase.database().ref(rama_bd_obras + "/procesos/" + $('#' + id_ddl_obraAdicionales + ' option:selected').val()+"/procesos/ADIC/num_subprocesos").on('value',function(snapshot){
-    var no_adic;
     var clave;
     if(snapshot.exists()){
       no_adic = snapshot.val();
@@ -532,4 +537,41 @@ function pdfDocDescriptionAdicionales(vista_previa){
   console.log(vista_previa, obra_ppto, clave_adic, titulo_ppto, nombre_ppto, atencion, json_modalSuministros, desplegar_indirectos, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, imagen_anexo, fecha_ppto);
   var docDescription = generaPresupuestoAdicional(vista_previa, datos_obraAdicionales, clave_adic, titulo_ppto, nombre_ppto, atencion, json_modalSuministros, desplegar_indirectos, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, imagen_anexo, fecha_ppto);
   return docDescription;
+}
+
+function datosAdicionalAdicionales(url){
+  var adicional = {
+    nombre: $('#'+id_nombreAdicionales).val(),
+    alcance: $('#'+id_tituloAdicionales).val(),
+    terminado: false,
+    categoria: "NA",
+    url_formato: url,
+    precio_venta: json_modalCalculadora.precio_venta,
+    costo_suministros:json_modalCalculadora.costo_suministros,
+    utilidad: json_modalCalculadora.utilidad,
+    precopeo: json_modalCalculadora.precopeo,
+    porcentaje_anticipo: $('#'+id_anticiposAdicionales).val(),
+    porcentaje_indirectos: json_modalCalculadora.indirectos,
+    porcentaje_impuestos: json_modalCalculadora.porcentaje_impuestos,
+    score: json_modalCalculadora.score
+  };
+  return adicional;
+}
+
+function datosInsumosAdicionales(){
+  var insumos = {
+    porcentaje_indirecto: $('#'+id_indirectosAdicionales).val(),
+    desplegar_indirectos: $('#'+id_cb_indirectosAdicionales).prop('checked'),
+    materiales:{},
+    materiales_nr: {}
+  };
+  var cont = 1;
+  for (key in json_modalSuministros){
+    if(json_modalSuministros[key]["catalogo"] !== "NA"){
+      insumos["materiales"][key] = json_modalSuministros[key];
+    } else {
+      insumos["materiales_nr"]["NR-"+ cont] = json_modalSuministros[key];
+      cont +=1;
+    }
+  }
 }
