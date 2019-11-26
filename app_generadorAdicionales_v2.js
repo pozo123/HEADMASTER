@@ -29,6 +29,8 @@ var json_exclusiones;
 var select_requisitos;
 var select_exclusiones;
 var flagCuantificacion;
+var datos_obraAdicionales;
+var no_adic;
 
 $('#' + id_tab_adicionales).click(function() {
   json_modalSuministros={};
@@ -51,6 +53,7 @@ $('#' + id_ddl_obraAdicionales).change(function(){
   llenaDdlAdicionalAdicionales(id_ddl_adicionalAdicionales);
   //llenaDdlSolicitudAdicionales(id_ddl_solicitudAdicionales);
   llenaDdlAtnGeneric(id_ddl_atencionAdicionales, $('#' + id_ddl_obraAdicionales + ' option:selected').val());
+  clienteDireccionObraGeneric($('#' + id_ddl_obraAdicionales + ' option:selected').val());
 });
 
 $('#' + id_ddl_adicionalAdicionales ).change(function(){
@@ -127,11 +130,75 @@ $('#' + id_estimacionesAdicionales).change(function(){
 // Metodo del boton para abrir el modal de calculadora
 $('#' + id_botonpdfAdicionales).click(function() {
   if (validateFormAdicionales()){
-    var pdfDocGenerator = generaPresupuestoAdicional(true);
-    var vista_previa = true;
-    var obra_ppto = {};
-    var clave_adic
-    pdfDocGenerator.open(vista_previa, obra_ppto, clave_adic, titulo_ppto, nombre_ppto, atencion, insumos_array, desplegar_indirectos, costo_directo, costo_indirecto, subtotal, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, imagen_anexo, fecha_ppto)
+    var docDescription = pdfDocDescriptionAdicionales(true);
+    var pdfDocGenerator = pdfMake.createPdf(docDescription);
+    pdfDocGenerator.open();
+    console.log(datosAdicionalAdicionales("url"));
+  }
+});
+
+$('#' + id_botonRegistrarAdicionales).click(function() {
+  if (validateFormAdicionales()){
+    var obra = $('#'+ id_ddl_obraAdicionales + ' option:selected').val();
+    var adicional = $('#'+ id_claveAdicionales).val();
+    var json_adicional = {};
+    var adicional_update = {};
+    var adicional_path = rama_bd_obras;
+    var path_adicional = "procesos/" + obra + "/procesos/ADIC";
+    var path_copeo = "copeo/" + obra + "/ADIC/" + adicional;
+    var path_insumos = "cuantificacion/" + obra + "/ADIC/" + adicional;
+    var storageRef = firebase.storage().ref(adicional_path + "/adicionales/propuestas/"+ obra +"/formatos/"+ adicional +".pdf");
+    var docDescription = pdfDocDescriptionAdicionales(false);
+    var pdfDocGenerator = pdfMake.createPdf(docDescription);
+    pdfDocGenerator.download(adicional + '_formato.pdf');
+    $('#' + id_botonRegistrarAdicionales).prop('disabled', true);
+
+    pdfDocGenerator.getBase64((data) => {
+      var uploadTask = storageRef.putString(data,'base64');
+      uploadTask.on('state_changed', function(snapshot){
+          // Observe state change events such as progress, pause, and resume
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case firebase.storage.TaskState.PAUSED: // or 'paused'
+              console.log('Upload is paused');
+              break;
+            case firebase.storage.TaskState.RUNNING: // or 'running'
+              console.log('Upload is running');
+              break;
+          }
+        }, function(error) {
+          // Handle unsuccessful uploads
+          console.log('Error al cargar el pdf');
+        }, function() {
+          // Handle successful uploads on complete
+          // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+          uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+            console.log('File available at', downloadURL);
+            json_adicional['url_formato'] = downloadURL;
+            //console.log(json_solicitud);
+            adicional_update[path_adicional +"/subprocesos/" + adicional] = datosAdicionalAdicionales();
+            adicional_update[path_adicional +"/num_subprocesos"] = no_adic;
+            adicional_update[path_copeo] = json_modalCopeo;
+            adicional_update[path_insumos] = datosInsumosAdicionales();
+            firebase.database().ref(adicional_path).update(adicional_update, function(error) {
+              if (error) {
+                // The write failed...
+                alert("¡Ups, hubo un error!");
+              } else {
+                // Data saved successfully!
+                // PAD
+                // pda("alta", solicitud_path, "");
+                alert("¡Registro de solicitud exitoso!");
+                $('#' + id_botonRegistrarAdicionales).prop('disabled', false);
+                // resetForm1SolicitudAdicional();
+                $('#' + id_ddl_obraAdicionales).val("");
+              }
+            });
+          });
+        });
+    });
   }
 });
 
@@ -219,7 +286,6 @@ function extraerCopeoInsumosCalculadoraAdicionales(clave_adic){
 
 function generaClaveAdicionales(id_item){
   firebase.database().ref(rama_bd_obras + "/procesos/" + $('#' + id_ddl_obraAdicionales + ' option:selected').val()+"/procesos/ADIC/num_subprocesos").on('value',function(snapshot){
-    var no_adic;
     var clave;
     if(snapshot.exists()){
       no_adic = snapshot.val();
@@ -395,5 +461,117 @@ function validateFormAdicionales(){
     return false;
   } else {
     return true;
+  }
+}
+
+function extraeListaGeneric(select, json_padre){
+  var aux = select.selected();
+  var json_resp={};
+  for(var i=0; i<aux.length; i++){
+    json_resp[aux[i]] = json_padre[aux[i]];
+  }
+  return json_resp;
+}
+
+function clienteDireccionObraGeneric(id_obra){
+  firebase.database().ref(rama_bd_obras + "/obras/" + id_obra).on('value',function(snapshot){
+    if(snapshot.exists()){
+      var obra = snapshot.val();
+      firebase.database().ref(rama_bd_clientes + "/despachos/" + obra.id_cliente + "/nombre").on('value',function(snapchild){
+        if(snapchild.exists()){
+          var cliente = snapchild.val();
+          datos_obraAdicionales = {
+            nombre: $('#'+id_ddl_obraAdicionales+' option:selected').text(),
+            direccion: obra.direccion,
+            cliente: cliente,
+          };
+        } else{
+          console.log("Error con el cliente");
+          datos_obraAdicionales = {
+            nombre: $('#'+id_ddl_obraAdicionales+' option:selected').text(),
+            direccion: {
+              calle: 'DIRECCION NO ESPECIFICADA',
+              ciudad: '',
+              colonia:'',
+              cp:'0000',
+              estado:'',
+              numero:''
+            },
+            cliente: cliente,
+          };
+        }
+      });
+    } else{
+      console.log("Error con la obra");
+      datos_obraAdicionales = {
+        nombre: $('#'+id_ddl_obraAdicionales+' option:selected').text(),
+        direccion: {
+          calle: 'DIRECCION NO ESPECIFICADA',
+          ciudad: '',
+          colonia:'',
+          cp:'0000',
+          estado:'',
+          numero:''
+        },
+        cliente: 'NO ESPECIFICADO',
+      };
+    }
+  });
+}
+
+function pdfDocDescriptionAdicionales(vista_previa){
+  var obra_ppto = {};
+  var clave_adic=$('#'+id_claveAdicionales).val();
+  var titulo_ppto=$('#'+id_tituloAdicionales).val();
+  var nombre_ppto=$('#'+id_nombreAdicionales).val();;
+  var atencion=$('#'+id_ddl_atencionAdicionales+' option:selected').text();
+  var desplegar_indirectos=$('#'+id_cb_indirectosAdicionales).prop('checked');
+  var anticipo=$('#'+id_anticiposAdicionales).val();
+  var exc_lista=extraeListaGeneric(select_exclusiones, json_exclusiones);
+  var reqs_lista=extraeListaGeneric(select_requisitos, json_requisitos);
+  var tiempoEntrega=$('#'+id_tiempoEntregaAdicionales).val();
+  var fisc_bool=$('#'+id_cb_fiscalesAdicionales).prop('checked');
+  var banc_bool=$('#'+id_cb_bancariosAdicionales).prop('checked');
+  var imagen_anexo="";
+  var fecha_ppto=new Date();
+  console.log(vista_previa, obra_ppto, clave_adic, titulo_ppto, nombre_ppto, atencion, json_modalSuministros, desplegar_indirectos, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, imagen_anexo, fecha_ppto);
+  var docDescription = generaPresupuestoAdicional(vista_previa, datos_obraAdicionales, clave_adic, titulo_ppto, nombre_ppto, atencion, json_modalSuministros, desplegar_indirectos, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, imagen_anexo, fecha_ppto);
+  return docDescription;
+}
+
+function datosAdicionalAdicionales(url){
+  var adicional = {
+    nombre: $('#'+id_nombreAdicionales).val(),
+    alcance: $('#'+id_tituloAdicionales).val(),
+    terminado: false,
+    categoria: "NA",
+    url_formato: url,
+    precio_venta: json_modalCalculadora.precio_venta,
+    costo_suministros:json_modalCalculadora.costo_suministros,
+    utilidad: json_modalCalculadora.utilidad,
+    precopeo: json_modalCalculadora.precopeo,
+    porcentaje_anticipo: $('#'+id_anticiposAdicionales).val(),
+    porcentaje_indirectos: json_modalCalculadora.indirectos,
+    porcentaje_impuestos: json_modalCalculadora.porcentaje_impuestos,
+    score: json_modalCalculadora.score
+  };
+  return adicional;
+}
+
+function datosInsumosAdicionales(){
+  var insumos = {
+    porcentaje_indirecto: $('#'+id_indirectosAdicionales).val(),
+    desplegar_indirectos: $('#'+id_cb_indirectosAdicionales).prop('checked'),
+    materiales:{},
+    materiales_nr: {}
+  };
+  var cont = 1;
+  for (key in json_modalSuministros){
+    if(json_modalSuministros[key]["catalogo"] !== "NA"){
+      insumos["materiales"][key] = json_modalSuministros[key];
+    } else {
+      insumos["materiales_nr"]["NR-"+ cont] = json_modalSuministros[key];
+      cont +=1;
+    }
   }
 }

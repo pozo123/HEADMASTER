@@ -147,6 +147,8 @@ Nota: Todo float se ingresa a 2 decimales.
                                     - fecha_final_teorica: timestamp (al dar de alta/edicion)
                                 - categoria: string (de db categorias)
                                 - terminado: boolean (definir manera de actualizar este valor. Empieza en false)
+                                - url_formato: string (solo en adicionales)
+                                - url_evidencia: string (solo en adicionales)
 
                                 - precio_venta: float
                                 - costo_suministros:float
@@ -158,6 +160,7 @@ Nota: Todo float se ingresa a 2 decimales.
                                 - score
                                     - horas_programadas: (en horas)
                                     - costo_hora: float (2 decimales)
+
         - equipos
             - obra
                 - iva:
@@ -191,7 +194,7 @@ Nota: Todo float se ingresa a 2 decimales.
                 - id_proceso
                     - id_subproceso
                         - porcentaje_indirecto: float
-                        - desplegar_indirecto: boolean
+                        - desplegar_indirectos: boolean
                         - materiales
                             - id_material
                                 - descripcion: string
@@ -225,6 +228,7 @@ Nota: Todo float se ingresa a 2 decimales.
                             - url_evidencia: string
                             - notas: string
                             - copeo:
+                                - impuestos: float (0 a 100)
                                 - num_entradas: int
                                 - entradas
                                     - entrada (num)
