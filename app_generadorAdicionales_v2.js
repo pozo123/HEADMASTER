@@ -44,6 +44,7 @@ $('#' + id_tab_adicionales).click(function() {
   cargarDdlExclusionesAdicionales();
   $('#' + id_ddl_obraAdicionales + ' option:selected').val("");
   resetAdicionales();
+  pruebaFirebaseStorage();
 });
 
 // ------------------------ FUNCIONES DEL FORM ---------------------------------
@@ -141,13 +142,16 @@ $('#' + id_botonRegistrarAdicionales).click(function() {
   if (validateFormAdicionales()){
     var obra = $('#'+ id_ddl_obraAdicionales + ' option:selected').val();
     var adicional = $('#'+ id_claveAdicionales).val();
+    var solicitud = $('#'+ id_ddl_solicitudAdicionales + ' option:selected').val();
     var json_adicional = {};
     var adicional_update = {};
-    var adicional_path = rama_bd_obras;
     var path_adicional = "procesos/" + obra + "/procesos/ADIC";
     var path_copeo = "copeo/" + obra + "/ADIC/" + adicional;
     var path_insumos = "cuantificacion/" + obra + "/ADIC/" + adicional;
-    var storageRef = firebase.storage().ref(adicional_path + "/adicionales/propuestas/"+ obra +"/formatos/"+ adicional +".pdf");
+    var path_propuesta = "adicionales/propuestas/" + adicional;
+    var path_lista_solicitudes = "adicionales/solicitudes/listas/";
+    var path_lista_propuesta = "adicionales/propuestas/listas/pendientes";
+    var storageRef = firebase.storage().ref(rama_bd_obras + "/adicionales/propuestas/"+ obra +"/formatos/"+ adicional +".pdf");
     var docDescription = pdfDocDescriptionAdicionales(false);
     var pdfDocGenerator = pdfMake.createPdf(docDescription);
     pdfDocGenerator.download(adicional + '_formato.pdf');
@@ -176,13 +180,18 @@ $('#' + id_botonRegistrarAdicionales).click(function() {
           // For instance, get the download URL: https://firebasestorage.googleapis.com/...
           uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
             console.log('File available at', downloadURL);
-            json_adicional['url_formato'] = downloadURL;
             //console.log(json_solicitud);
             adicional_update[path_adicional +"/subprocesos/" + adicional] = datosAdicionalAdicionales();
             adicional_update[path_adicional +"/num_subprocesos"] = no_adic;
             adicional_update[path_copeo] = json_modalCopeo;
             adicional_update[path_insumos] = datosInsumosAdicionales();
-            firebase.database().ref(adicional_path).update(adicional_update, function(error) {
+            adicional_update[path_propuesta] = datosPropuestaAdicionales(downloadURL);
+            adicional_update[path_lista_solicitudes + "/terminadas/" + solicitud] = null;
+            adicional_update[path_lista_solicitudes + "/concretadas/" + solicitud] = true;
+            adicional_update[path_lista_propuesta + "/" +adicional] = true;
+            console.log(adicional_update);
+            /*
+            firebase.database().ref(rama_bd_obras).update(adicional_update, function(error) {
               if (error) {
                 // The write failed...
                 alert("¡Ups, hubo un error!");
@@ -196,6 +205,7 @@ $('#' + id_botonRegistrarAdicionales).click(function() {
                 $('#' + id_ddl_obraAdicionales).val("");
               }
             });
+            */
           });
         });
     });
@@ -574,4 +584,34 @@ function datosInsumosAdicionales(){
       cont +=1;
     }
   }
+}
+
+function datosPropuestaAdicionales(url){
+  var propuesta = {
+    id_solicitud: $('#' + id_ddl_solicitudAdicionales).val(),
+    nombre: $('#'+id_nombreAdicionales).val(),
+    titulo: $('#'+id_tituloAdicionales).val(),
+    atencion: $('#'+id_ddl_atencionAdicionales).val(),
+    porcentaje_anticipo: $('#'+id_anticiposAdicionales).val(),
+    requisitos:extraeListaGeneric(select_requisitos, json_requisitos),
+    exlusiones:extraeListaGeneric(select_exclusiones, json_exclusiones),
+    tiempo_entrega: $('#'+id_tiempoEntregaAdicionales).val(),
+    datos_bancarios: $('#'+id_cb_bancariosAdicionales).prop('checked'),
+    datos_fiscales: $('#'+id_cb_fiscalesAdicionales).prop('checked'),
+    aprobada: false,
+    url_evidencia: url,
+  };
+}
+
+function pruebaFirebaseStorage(){
+  var storageRef = firebase.storage().ref("test/obras/adicionales/solicitudes/-LnFXIfIOVFk6o-ss4Cl/solicitudes");
+  // Now we get the references of these images
+  storageRef.listAll().then(function(result) {
+    result.items.forEach(function(imageRef) {
+      // And finally display them
+      console.log(imageRef);
+    });
+  }).catch(function(error) {
+    // Handle any errors
+  });
 }

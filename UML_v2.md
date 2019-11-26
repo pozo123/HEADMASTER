@@ -147,8 +147,6 @@ Nota: Todo float se ingresa a 2 decimales.
                                     - fecha_final_teorica: timestamp (al dar de alta/edicion)
                                 - categoria: string (de db categorias)
                                 - terminado: boolean (definir manera de actualizar este valor. Empieza en false)
-                                - url_formato: string (solo en adicionales)
-                                - url_evidencia: string (solo en adicionales)
 
                                 - precio_venta: float
                                 - costo_suministros:float
@@ -255,6 +253,8 @@ Nota: Todo float se ingresa a 2 decimales.
                             - id_solicitud: true
                         - pendientes
                             - id_solicitud: true
+                        - concretadas
+                            - id_solicitud: true
 
             - propuestas
                 - obra
@@ -275,11 +275,12 @@ Nota: Todo float se ingresa a 2 decimales.
                         - datos_fiscales: boolean
                         - aprobada: boolean
                         - url_evidencia: string
+                        - url_formato: string
                         - precio_venta_aprobado: float
                     - listas
                         - pendientes
                             - id_subproceso:
-                        - terminados
+                        - terminadas
                             - id_subproceso:
 
         - presupuesto: (adic o pc00. pc00-misc = "") (DEFINIR CON RAY)
