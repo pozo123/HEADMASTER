@@ -78,7 +78,6 @@ Nota: Todo float se ingresa a 2 decimales.
                     - comprobante_url: string
                     - folio: string
                     - formato: string
-                    - monto: float
                     - tipo_pago: string
                     - distribucion
                         - entradas (id generado "ANT-clave_proc o "EST_clave_proc")

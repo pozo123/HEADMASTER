@@ -103,7 +103,7 @@ for(i=actual_week;i>0;i--){
 // -------------
 
 $('#' + id_ddl_obra_dash_prod).change(function(){
-    firebase.database().ref(rama_bd_nomina + "/nomina").on("value", function(snapshot){
+    firebase.database().ref(rama_bd_nomina + "/nomina").once("value").then(function(snapshot){
         $('#' + id_ddl_week_dash_prod).val("SELECCIONA SEMANA");
         console.log("entro 1");
         json_procesos = {};

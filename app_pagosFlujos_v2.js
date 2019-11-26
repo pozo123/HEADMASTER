@@ -31,6 +31,8 @@ $('#' + id_tab_pagos_cliente).click(function() {
     );
 
     $('#' + id_ddl_obra_pagos_cliente).empty();
+    $('#' + id_div_distribucion_pagos_cliente).empty();
+
     var obra_select = document.getElementById(id_ddl_obra_pagos_cliente);
     
     var option1 = document.createElement('option');
@@ -54,9 +56,18 @@ $('#' + id_file_input_pagos_cliente).on("change", function(event){
 
 
 $('#' + id_ddl_obra_pagos_cliente).change(function(){
+    $('#' + id_div_distribucion_pagos_cliente).empty();
     createRowDist();
+    $('#' + id_span_monto_pagos_cliente).text("$0.00");
 });
+
+
 // Valid de formulario
+
+
+
+
+// reset form.
 
 // Sueldo
 
@@ -177,7 +188,7 @@ $(document).on('change','.procesoDistribuibleVacio', function(){
     col_tipo.appendChild(div_est_inline);
 
     var monto_parcial = document.createElement('input');
-    monto_parcial.className = "form-control";
+    monto_parcial.className = "form-control montoParcialprocDist";
     monto_parcial.type = "text";
     monto_parcial.placeholder = "Monto parcial";
 
@@ -197,10 +208,22 @@ $(document).on('change','.procesoDistribuibleVacio', function(){
 
 $(document).on('change','.procesoDistribuibleLleno', function(){
     if($("option:selected", this).val() == ""){
-        console.log(10);
         $('#' + this.parentElement.parentElement.id).empty();
+        getDistTotal();
     }
 });
+
+$(document).on('keypress','.montoParcialprocDist', function(e){
+    charactersAllowed("$1234567890,.-",e);
+});
+
+$(document).on('change','.montoParcialprocDist', function(e){
+    var deformat_monto = deformatMoney($(this).val());
+    $(this).val(formatMoney(deformat_monto));
+    getDistTotal();
+});
+
+
 
 function resetFormPagosCliente(){
     existe_pago = false;
@@ -214,3 +237,15 @@ function resetFormPagosCliente(){
     $('#' + id_file_label_pagos_cliente).attr("style", "color: black");
     $('#' + id_file_input_pagos_cliente).val("");
 };
+
+function getDistTotal(){
+    // hacer la suma.
+    var total = 0;
+    $( ".montoParcialprocDist" ).each(function() {
+        var parcial = deformatMoney($(this).val());
+        total += parcial;
+    });
+
+    console.log(total);
+    $('#' + id_span_monto_pagos_cliente).text(formatMoney(total));
+}
