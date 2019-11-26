@@ -245,7 +245,5 @@ function getDistTotal(){
         var parcial = deformatMoney($(this).val());
         total += parcial;
     });
-
-    console.log(total);
     $('#' + id_span_monto_pagos_cliente).text(formatMoney(total));
 }
