@@ -1330,7 +1330,7 @@ function actualizarTablaDatosNomina(){
                     dom: 'Bfrtip',
                     "columnDefs": [
                         { "width": "300px", "targets": 4 },
-                        { "visible": false, "targets": 0 },
+                        //{ "visible": false, "targets": 0 },
                         {
                             targets: [12,14,-2,-1],
                             className: 'bolded'

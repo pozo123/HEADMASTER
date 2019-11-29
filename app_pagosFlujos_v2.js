@@ -1,5 +1,6 @@
 var id_tab_pagos_cliente = "tabPagosCliente";
 var id_form_pagos_cliente = "formPagosCliente";
+var id_dataTable_pagos_cliente = "dataTablePagosCliente";
 
 var id_ddl_obra_pagos_cliente = "obraPagosCliente";
 var id_monto_pagos_cliente = "montoPagosCliente";
@@ -17,14 +18,13 @@ var id_div_distribucion_pagos_cliente = "distribucionPagosCliente"
 var id_button_guardar_pagos_cliente = "guardarPagoButton";
 var id_button_reset_pagos_cliente = "borrarPagoButton";
 
-var existe_pago = false;
-var id_pago_existente = "";
+var existe_pago_pagos_cliente = false;
+var id_pago_existente_pagos_cliente = "";
 
 var file_selected_pagos_cliente = "";
 
 $('#' + id_tab_pagos_cliente).click(function() {
-
-    resetFormPagosCliente();
+    resetFormPagosCliente(true);
 
     jQuery('#' + id_fecha_pagos_cliente).datetimepicker(
         {timepicker:false, weeks:true,format:'Y.m.d'}
@@ -56,50 +56,138 @@ $('#' + id_file_input_pagos_cliente).on("change", function(event){
 
 
 $('#' + id_ddl_obra_pagos_cliente).change(function(){
-    $('#' + id_div_distribucion_pagos_cliente).empty();
-    createRowDist();
-    $('#' + id_span_monto_pagos_cliente).text("$0.00");
+    resetFormPagosCliente(true);
 });
 
 
-// Valid de formulario
+// Validación de formulario. 
 
+function validateFormPagosFlujos(flag){
+    var valido = true;
 
+    if($('#' + id_ddl_obra_pagos_cliente).val() == ""){
+        valido = false;
+        alert("Selecciona la obra correspondiente");
+    } else if($('#' + id_monto_pagos_cliente).val() == "" || deformatMoney($('#' + id_monto_pagos_cliente).val()) == 0){
+        valido = false;
+        alert("Escribe el monto del pago correspondiente");
+    } else if($('#' + id_folio_pagos_cliente).val() == ""){
+        valido = false;
+        alert("Escribe el folio correspondiente");
+    } else if($('#' + id_fecha_pagos_cliente).val() == ""){
+        valido = false;
+        alert("Selecciona la fecha del pago");
+    } else if($('#' + id_concepto_pagos_cliente).val() == ""){
+        valido = false;
+        alert("Escribe el concepto correspondiente");
+    } else if(file_selected_pagos_cliente == "" && flag == false){
+        valido = false;
+        alert("Agrega un documento evidencia del pago");
+    } else if(Math.abs(getDistTotal() - deformatMoney($('#' + id_monto_pagos_cliente).val())) > 0.01){
+        valido = false;
+        alert("La suma de montos distribuible no es igual que el monto total del pago");
+    }
+    // cambiar
+    return true;
+}
 
-
-// reset form.
-
-// Sueldo
+// Caracteres permitidos para el campo de monto
 
 $('#' + id_monto_pagos_cliente).keypress(function(e){
     charactersAllowed("$1234567890,.",e);
 });
+
+// Se acciona al seleccionar el campo de Monto
 
 $('#' + id_monto_pagos_cliente).change(function(){
     var deformat_sueldo = deformatMoney($('#' + id_monto_pagos_cliente).val());
     $('#' + id_monto_pagos_cliente).val(formatMoney(deformat_sueldo));
 });
 
-// Folio
+// Caracteres permitidos para el campo de  Folio
 
 $('#' + id_folio_pagos_cliente).keypress(function(e){
     charactersAllowed("abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ1234567890´ _-",e);
 });
+
+
+// Se acciona al seleccionar el campo de Folio
 
 $('#' + id_folio_pagos_cliente).change(function(){
     var folio = deleteBlankSpaces(id_folio_pagos_cliente).toUpperCase();
     $('#' + id_folio_pagos_cliente).val(folio);
 });
 
-// ------------------ 
+// ------------------ Funcionalidad con los botones de guardar y borrar todo ---------------------------------
 
 $('#' + id_button_reset_pagos_cliente).click(function(){
-    resetFormPagosCliente();
+    resetFormPagosCliente(false);
 });
 
+// funcionalidad que guarda en la base de datos la información de pagos
+$('#' + id_button_guardar_pagos_cliente).click(function(){
+    var pago = {};
+    var listas = {};
+    if(validateFormPagosFlujos(existe_pago_pagos_cliente)){
+        if(existe_pago_pagos_cliente){
+            // funcionalidad si es edicion
 
+        } else {
+            // funcionalidad si es alta
+            var key = firebase.database().ref("dummy").push().key
 
-// funciones 
+            // subir archivo evidencia a firebase storage
+            var storageRef = firebase.storage().ref(rama_bd_pagos + "/" + key + "/" + file_selected_pagos_cliente.name);
+            var uploadTask = storageRef.put(file_selected_pagos_cliente);
+            uploadTask.on('state_changed', function(snapshot){
+                var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                    case firebase.storage.TaskState.PAUSED: // or 'paused'
+                    console.log('Upload is paused');
+                    break;
+                    case firebase.storage.TaskState.RUNNING: // or 'running'
+                    console.log('Upload is running');
+                    break;
+                }
+            }, function(error) {
+                // Handle unsuccessful uploads
+                console.log(error);
+            }, function() {
+                // Handle successful uploads on complete
+                // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+                uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                    
+                    pago = getDatosPagosCliente(downloadURL);
+
+                    // subir a firebase database el pago
+                    firebase.database().ref(rama_bd_pagos + "/pagos/" + key).set(pago);
+
+                    // listas
+                    
+                    listas["listas/obras/" + $('#' + id_ddl_obra_pagos_cliente + " option:selected").val() + "/" +  key] = true;
+                    listas["listas/fechas/" + aaaammdd(pago.fecha_pago) + "/" + key] = true;
+                    listas["listas/folios/" + pago.folio + "/" + key] = true;
+
+                    firebase.database().ref(rama_bd_pagos).update(listas);
+                    // pda
+                    pda("alta", rama_bd_pagos + "/pagos/" + key, "");
+
+                    alert("El pago se dio de alta con éxito");
+                    resetFormPagosCliente(false);
+                });
+            });
+        };
+    };
+});
+
+// ----------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------
+
+// funciones que crea nuevo rengón en la sección de distribución
 
 function createRowDist(key){
     if(key == null){
@@ -198,7 +286,6 @@ $(document).on('change','.procesoDistribuibleVacio', function(){
 
     row.appendChild(col_tipo);
     row.appendChild(col_monto);
-    console.log(row);
 
     $('.procesoDistribuibleVacio').addClass("procesoDistribuibleLleno");
     $('.procesoDistribuibleVacio').removeClass("procesoDistribuibleVacio");
@@ -213,6 +300,8 @@ $(document).on('change','.procesoDistribuibleLleno', function(){
     }
 });
 
+// Caracteres permitidos para los campos de montos parciales
+
 $(document).on('keypress','.montoParcialprocDist', function(e){
     charactersAllowed("$1234567890,.-",e);
 });
@@ -224,19 +313,32 @@ $(document).on('change','.montoParcialprocDist', function(e){
 });
 
 
+// Función para resetear el formulario. En este caso depende de un flag si se desea borrar el campo de obra.
 
-function resetFormPagosCliente(){
-    existe_pago = false;
-    id_pago_existente = "";
-    file_selected_pagos_cliente = "";
+function resetFormPagosCliente(obra_change){
+    $('#' + id_div_distribucion_pagos_cliente).empty();
+    createRowDist();
     
-    $('#' + id_div_distribucion_pagos_cliente).html('');
+    existe_pago_pagos_cliente = false;
+    id_pago_existente_pagos_cliente = "";
+    file_selected_pagos_cliente = "";
+    $('#' + id_span_monto_pagos_cliente).text("$0.00");
 
-    $('#' + id_form_pagos_cliente).trigger("reset");
+    if(!obra_change){
+        $('#' + id_ddl_obra_pagos_cliente).val("");
+    }
+    $('#' + id_monto_pagos_cliente).val("");
+    $('#' + id_fecha_pagos_cliente).val("");
+    $('#' + id_concepto_pagos_cliente).val("");
+    $('#' + id_folio_pagos_cliente).val("");
+
     $('#' + id_file_label_pagos_cliente).text("Archivo no seleccionado");
     $('#' + id_file_label_pagos_cliente).attr("style", "color: black");
     $('#' + id_file_input_pagos_cliente).val("");
 };
+
+
+// Método el cual obtiene la suma de los montos parciales
 
 function getDistTotal(){
     // hacer la suma.
@@ -246,4 +348,56 @@ function getDistTotal(){
         total += parcial;
     });
     $('#' + id_span_monto_pagos_cliente).text(formatMoney(total));
+    return total;
 }
+
+// Método que regresa json con los datos del pago actual
+
+function getDatosPagosCliente(urlFile){
+    var fecha_pago = $('#' + id_fecha_pagos_cliente).val().split('.');
+    var is_factura = document.getElementById(id_radio_factura_pagos_cliente).checked == true;
+
+    var tipo = "";
+    if(is_factura) {
+        tipo = "Factura";
+    } else {
+        tipo = "Recibo";
+    };
+    var json_datos = {
+        obra: $('#' + id_ddl_obra_pagos_cliente + " option:selected").val(),
+        concepto: $('#' + id_concepto_pagos_cliente).val(),
+        fecha_pago: new Date(fecha_pago[0], fecha_pago[1] - 1, fecha_pago[2]).getTime(),
+        comprobante_url: urlFile,
+        folio: $('#' + id_folio_pagos_cliente).val(),
+        tipo: tipo,    
+        distribucion: {}
+
+    };
+
+    $( ".montoParcialprocDist" ).each(function() {
+        var row = this.parentElement.parentElement;
+        var key = row.id
+        
+        var proc = row.childNodes[0].childNodes[0];
+        var anticipo = row.childNodes[1].childNodes[0].childNodes[0];
+        var monto_parcial = row.childNodes[2].childNodes[0];
+
+        var is_anticipo = $(anticipo).is(':checked');
+
+        var formato = "";
+
+        if(is_anticipo){
+            formato = "ANT";
+        } else {
+            formato = "EST";
+        }
+        
+        json_datos.distribucion[key] = {
+            clave_subproc: $("option:selected", proc).val(),
+            monto_parcial: deformatMoney($(monto_parcial).val()),
+            formato: formato,
+        }
+    });
+    return json_datos;
+
+};

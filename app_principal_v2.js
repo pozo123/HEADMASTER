@@ -25,6 +25,7 @@ var rama_bd_pda = version + "/pda";
 var rama_bd_datos_referencia = version + "/datos_referencia";
 var rama_bd_mano_obra= version + "/rrhh/mano_obra"
 var rama_bd_nomina = version + "/rrhh/nomina"
+var rama_bd_pagos = version + "/administracion/pagos"
 var rama_bd_info_web = "info_web";
 var rama_bd_insumos = version + "/insumos";
 

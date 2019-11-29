@@ -69,33 +69,28 @@ Nota: Todo float se ingresa a 2 decimales.
                 - clientes (id): true
 
     - administracion:
-        - flujos
-            - pagos
-                - pagos (firebase_id)
-                    - id_obra: string
-                    - concepto: string
-                    - fecha_pago: float (timestamp)
-                    - comprobante_url: string
-                    - folio: string
-                    - formato: string
-                    - tipo_pago: string
-                    - distribucion
-                        - entradas (id generado "ANT-clave_proc o "EST_clave_proc")
-                            - clave__subproc: string
-                            - formato: string
-                            - monto_pacial: float
+        - pagos
+            - pagos (firebase_id)
+                - id_obra: string
+                - concepto: string
+                - fecha_pago: float (timestamp)
+                - comprobante_url: string
+                - folio: string
+                - tipo_pago: string
+                - distribucion
+                    - entradas (firebase_id)
+                        - clave__subproc: string
+                        - formato: string
+                        - monto_pacial: float
             - obras
                 - obras (id_obra)
-                    - pagos
-                        - pagos_id: true
+                    - pagos_id: true
             - fechas
                 - aaaammdd
-                    - pagos
-                        - pagos_id: true
+                    - pagos_id: true
             - folios
                 - folio_pago: string (el mismo del pago)
-                    - pagos
-                        - pagos_id: true
+                    - pagos_id: true
 
     - obras
         - obras

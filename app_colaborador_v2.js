@@ -544,4 +544,4 @@ function highLightAllColaborador(){
     highLight(id_nombre_colaborador);
     highLight(id_paterno_colaborador);
     highLight(id_materno_colaborador);
-}
+};
