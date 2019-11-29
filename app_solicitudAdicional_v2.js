@@ -647,10 +647,12 @@ function uploadAllImagesGeneric(ruta, fotos_seleccionadas){
     var name_array;
     var metadata;
     var cont = 0;
+    var name_foto='';
     for(var i=0; i<fotos_seleccionadas.length; i++){
       name_array = fotos_seleccionadas[i].name.split(".");
       metadata = {contentType: 'image/'+ name_array[name_array.length-1],};
-      var uploadTask = storageRef.child(fotos_seleccionadas[i].name).put(fotos_seleccionadas[i], metadata);
+      name_foto = i<10?'0'+i+'_'+fotos_seleccionadas[i].name: i+'_'+fotos_seleccionadas[i].name;
+      var uploadTask = storageRef.child(name_foto).put(fotos_seleccionadas[i], metadata);
       uploadTask.on('state_changed', function(snapshot){
           // Observe state change events such as progress, pause, and resume
           // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded

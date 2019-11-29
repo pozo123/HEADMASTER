@@ -99,6 +99,8 @@ function modalSuministros(indirectos, supervisor, json_actuales){
     $('#' + id_div_preciosModalSuministros).addClass("hidden");
   }else{
     $('#' + id_div_preciosModalSuministros).removeClass("hidden");
+    $('#' + id_indirectosModalSuministros).prop('disabled', true);
+    $('#' + id_precioClienteModalSuministros).prop('disabled', true);
   }
   // Se despliega el modal
   $('#' + id_modalSuministros).modal('show');

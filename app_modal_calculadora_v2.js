@@ -32,7 +32,7 @@ var todosDefaultCalculadora;
 
 
 // --------------------- Método de inicialización -----------------------------
-function modalCalculadora(json_actuales, camposHabilitados){
+function modalCalculadora(json_actuales, camposHabilitados, flagPrecioVenta){
   cantProfitManda = true;
   horasScoreManda = true;
   copeoManda = true
@@ -42,7 +42,7 @@ function modalCalculadora(json_actuales, camposHabilitados){
 	var texto_default = "Valores generalmente usados para el calculo de presupuestos como son: precio por hora del área de proyectos, impuestos para la mano de obra y el porcentaje de costos indirectos."
 	$('#' + id_default_modalCalculadora).attr("data-content", texto_default);
 	resetFormModalCalculadora();
-  cargaCamposModalCalculadora(json_actuales);
+  cargaCamposModalCalculadora(json_actuales, flagPrecioVenta);
 
   $('#' + id_costo_copeoModalCalculadora).prop('disabled', !camposHabilitados);
   $('#' + id_costo_suministrosModalCalculadora).prop('disabled', !camposHabilitados);
@@ -71,6 +71,7 @@ $('#' + id_agregar_modalCalculadora).click(function(){
 		//Escribir los cambios en la base de datos
 		console.log(json_modalCalculadora);
 		alert("¡Calculos registrados!");
+    $('#' + id_modalCalculadora).modal('toggle');
 		//resetFormModalCalculadora();
 	}
 });
@@ -527,12 +528,19 @@ function actualizaCopeoCargaSocialModalCalculadora(){
 	}
 }
 
-function cargaCamposModalCalculadora(subproceso){
+function cargaCamposModalCalculadora(subproceso, flag){
   if (!jQuery.isEmptyObject(subproceso)){
     var costoScore = subproceso.score.horas_programadas*subproceso.score.costo_hora;
     var costoOperacion = (costoScore + subproceso.costo_suministros + (subproceso.precopeo*(1 + subproceso.porcentaje_impuestos*0.01)))*(1+ subproceso.porcentaje_indirectos*0.01);
 		var costoOperacionIndirectos = (costoScore + subproceso.costo_suministros + (subproceso.precopeo*(1 + subproceso.porcentaje_impuestos*0.01)))*(subproceso.porcentaje_indirectos*0.01);
-    var utilidadPorcentaje = subproceso.utilidad / costoOperacion * 100 ;
+    var utilidad = subproceso.utilidad;
+    var precio_venta = subproceso.precio_venta;
+    if(flag){
+      utilidad = precio_venta - costoOperacion;
+    } else {
+      precio_venta = costoOperacion + utilidad;
+    }
+    var utilidadPorcentaje = utilidad / costoOperacion * 100 ;
 		var copeoConCarga = subproceso.precopeo * (1+subproceso.porcentaje_impuestos*0.01);
 
     $('#' + id_horas_proyectoModalCalculadora ).val(subproceso.score.horas_programadas);
@@ -541,9 +549,9 @@ function cargaCamposModalCalculadora(subproceso){
     $('#' + id_costo_suministrosModalCalculadora).val(formatMoney(subproceso.costo_suministros));
     $('#' + id_costo_copeoModalCalculadora).val(formatMoney(subproceso.precopeo));
 		$('#' + id_costo_copeoCargaModalCalculadora).val(formatMoney(copeoConCarga));
-    $('#' + id_profit_cantidadModalCalculadora).val(formatMoney(subproceso.utilidad));
+    $('#' + id_profit_cantidadModalCalculadora).val(formatMoney(utilidad));
 		$('#' + id_profit_porcentajeModalCalculadora).val(utilidadPorcentaje.toFixed(2));
-    $('#' + id_precio_ventaModalCalculadora).val(formatMoney(costoOperacion + subproceso.utilidad));
+    $('#' + id_precio_ventaModalCalculadora).val(formatMoney(precio_venta));
 		$('#' + id_costo_operacionesModalCalculadora).val(formatMoney(costoOperacion));
 		$('#' + id_costos_indirectosModalCalculadora).val(formatMoney(costoOperacionIndirectos));
 

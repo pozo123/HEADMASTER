@@ -76,6 +76,7 @@ $('#' + id_ddl_solicitudAdicionales).change(function(){
   var clave_sol = $('#' + id_ddl_solicitudAdicionales + ' option:selected').val();
   llenarFormSolicitudAdicionales(clave_sol);
   flagCuantificacionAdicionales = false;
+  flagDownloadAdicionales = false;
 });
 
 $('#' + id_indirectosAdicionales).on("change", function(event){
@@ -109,13 +110,23 @@ $('#' + id_boton_calculadoraAdicionales).click(function() {
     json_modalCalculadora["utilidad"] = 0;
     json_modalCalculadora["precio_venta"] = 0;
   }
-  json_modalCalculadora["costo_suministros"] = calculaCostoSuministros();
+  var totales = calculaCostoSuministros();
+  json_modalCalculadora["costo_suministros"] = totales.costos;
   json_modalCalculadora["precopeo"] = calculaCostoCopeo();
   json_modalCalculadora["porcentaje_impuestos"] = extraeImpuesto();
+  json_modalCalculadora["precio_venta"] = parseFloat(totales.precio_venta + json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01)*(1+$('#'+ id_indirectosAdicionales).val()*0.01)).toFixed(2);
   //console.log(json_modalCalculadora);
 
-  modalCalculadora(json_modalCalculadora, false);
+  modalCalculadora(json_modalCalculadora, false, true);
 });
+
+$('#' + id_modalCalculadora).on('hidden.bs.modal', function () {
+    var porcentaje = 100 * (json_modalCalculadora["precio_venta"]-json_modalCalculadora["costo_suministros"]- json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01))/ (json_modalCalculadora["costo_suministros"]+json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01));
+    if(parseFloat(porcentaje).toFixed(2) !== $('#'+ id_indirectosAdicionales).val()){
+      $('#'+ id_indirectosAdicionales).val(parseFloat(porcentaje).toFixed(2));
+      actualizaPreciosClienteAdicionales();
+    }
+})
 
 $('#' + id_anticiposAdicionales).change(function(){
   if($('#' + id_anticiposAdicionales).val() == "" || $('#' + id_anticiposAdicionales).val() < 0){
@@ -134,103 +145,107 @@ $('#' + id_estimacionesAdicionales).change(function(){
 // Metodo del boton para abrir el modal de calculadora
 $('#' + id_botonpdfAdicionales).click(function() {
   if (validateFormAdicionales()){
-    if(!flagDownloadAdicionales){
-      flagDownloadAdicionales = true;
-      download_images_url=[];
-      var path = rama_bd_obras+"adicionales/solicitudes/"+$('#' + id_ddl_obraAdicionales+' option:selected').val()+"/solicitudesTerminadas/"+$('#'+id_ddl_solicitudAdicionales+' option:selected').val();
-      $('#' + id_botonpdfAdicionales).prop('disabled',true);
-      getAllFirebaseStorageGeneric(path).then(function(images_array){
-        //console.log(images_array);
-        downloadAllImagesGeneric(images_array).then(function(){
-          var docDescription = pdfDocDescriptionAdicionales(true, download_images_url);
-          var pdfDocGenerator = pdfMake.createPdf(docDescription);
-          pdfDocGenerator.open();
-          $('#' + id_botonpdfAdicionales).prop('disabled', false);
-        });
-      }).catch(function(error){
+    var path = rama_bd_obras+"/adicionales/solicitudes/"+$('#' + id_ddl_obraAdicionales+' option:selected').val()+"/solicitudesTerminadas/"+$('#'+id_ddl_solicitudAdicionales+' option:selected').val();
+    console.log(path);
+    $('#' + id_botonpdfAdicionales).prop('disabled',true);
+    getAllFirebaseStorageGeneric(path).then(function(images_array){
+      console.log(images_array);
+      downloadAllImagesGeneric(images_array).then(function(){
+        flagDownloadAdicionales = true;
+        var docDescription = pdfDocDescriptionAdicionales(true, download_images_url);
+        var pdfDocGenerator = pdfMake.createPdf(docDescription);
+        pdfDocGenerator.open();
         $('#' + id_botonpdfAdicionales).prop('disabled', false);
-        alert("Error descargar las imagenes de evidencia");
       });
-    } else {
-      var docDescription = pdfDocDescriptionAdicionales(true, download_images_url);
-      var pdfDocGenerator = pdfMake.createPdf(docDescription);
-      pdfDocGenerator.open();
-    }
+    }).catch(function(error){
+      $('#' + id_botonpdfAdicionales).prop('disabled', false);
+      alert("Error descargar las imagenes de evidencia");
+    });
   }
 });
 
 $('#' + id_botonRegistrarAdicionales).click(function() {
   if (validateFormAdicionales()){
+    var obra = $('#'+ id_ddl_obraAdicionales + ' option:selected').val();
+    var adicional = $('#'+ id_claveAdicionales).val();
+    var solicitud = $('#'+ id_ddl_solicitudAdicionales + ' option:selected').val();
+    var adicional_update = {};
+    var path_adicional = "procesos/" + obra + "/procesos/ADIC";
+    var path_copeo = "copeo/" + obra + "/ADIC/" + adicional;
+    var path_insumos = "cuantificacion/" + obra + "/ADIC/" + adicional;
+    var path_propuesta = "adicionales/propuestas/" + adicional;
+    var path_lista_solicitudes = "adicionales/solicitudes/listas/";
+    var path_lista_propuesta = "adicionales/propuestas/listas/pendientes";
+    var path_storage = rama_bd_obras+"/adicionales/solicitudes/"+$('#' + id_ddl_obraAdicionales+' option:selected').val()+"/solicitudesTerminadas/"+$('#'+id_ddl_solicitudAdicionales+' option:selected').val();
+    var storageRef = firebase.storage().ref(rama_bd_obras + "/adicionales/propuestas/"+ obra +"/formatos/"+ adicional +".pdf");
+    getAllFirebaseStorageGeneric(path_storage).then(function(images_array){
+      //console.log(images_array);
+      downloadAllImagesGeneric(images_array).then(function(){
+        flagDownloadAdicionales = true;
+        var docDescription = pdfDocDescriptionAdicionales(false, download_images_url);
+        var pdfDocGenerator = pdfMake.createPdf(docDescription);
+        pdfDocGenerator.download(adicional + '_formato.pdf');
+        $('#' + id_botonRegistrarAdicionales).prop('disabled', true);
 
-    //falta validacion de descarga
-      var obra = $('#'+ id_ddl_obraAdicionales + ' option:selected').val();
-      var adicional = $('#'+ id_claveAdicionales).val();
-      var solicitud = $('#'+ id_ddl_solicitudAdicionales + ' option:selected').val();
-      var adicional_update = {};
-      var path_adicional = "procesos/" + obra + "/procesos/ADIC";
-      var path_copeo = "copeo/" + obra + "/ADIC/" + adicional;
-      var path_insumos = "cuantificacion/" + obra + "/ADIC/" + adicional;
-      var path_propuesta = "adicionales/propuestas/" + adicional;
-      var path_lista_solicitudes = "adicionales/solicitudes/listas/";
-      var path_lista_propuesta = "adicionales/propuestas/listas/pendientes";
-      var storageRef = firebase.storage().ref(rama_bd_obras + "/adicionales/propuestas/"+ obra +"/formatos/"+ adicional +".pdf");
-      var docDescription = pdfDocDescriptionAdicionales(false, images_array);
-      var pdfDocGenerator = pdfMake.createPdf(docDescription);
-      pdfDocGenerator.download(adicional + '_formato.pdf');
-      $('#' + id_botonRegistrarAdicionales).prop('disabled', true);
-
-      pdfDocGenerator.getBase64((data) => {
-        var uploadTask = storageRef.putString(data,'base64');
-        uploadTask.on('state_changed', function(snapshot){
-            // Observe state change events such as progress, pause, and resume
-            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
-            switch (snapshot.state) {
-              case firebase.storage.TaskState.PAUSED: // or 'paused'
-                console.log('Upload is paused');
-                break;
-              case firebase.storage.TaskState.RUNNING: // or 'running'
-                console.log('Upload is running');
-                break;
-            }
-          }, function(error) {
-            // Handle unsuccessful uploads
-            console.log('Error al cargar el pdf');
-          }, function() {
-            // Handle successful uploads on complete
-            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-              console.log('File available at', downloadURL);
-              //console.log(json_solicitud);
-              adicional_update[path_adicional +"/subprocesos/" + adicional] = datosAdicionalAdicionales();
-              adicional_update[path_adicional +"/num_subprocesos"] = no_adic;
-              adicional_update[path_copeo] = json_modalCopeo;
-              adicional_update[path_insumos] = datosInsumosAdicionales();
-              adicional_update[path_propuesta] = datosPropuestaAdicionales(downloadURL);
-              adicional_update[path_lista_solicitudes + "/terminadas/" + solicitud] = null;
-              adicional_update[path_lista_solicitudes + "/concretadas/" + solicitud] = true;
-              adicional_update[path_lista_propuesta + "/" +adicional] = true;
-              console.log(adicional_update);
-              /*
-              firebase.database().ref(rama_bd_obras).update(adicional_update, function(error) {
-                if (error) {
-                  // The write failed...
-                  alert("¡Ups, hubo un error!");
-                } else {
-                  // Data saved successfully!
-                  // PAD
-                  // pda("alta", solicitud_path, "");
-                  alert("¡Registro de solicitud exitoso!");
-                  $('#' + id_botonRegistrarAdicionales).prop('disabled', false);
-                  // resetForm1SolicitudAdicional();
-                  $('#' + id_ddl_obraAdicionales).val("");
-                }
+        pdfDocGenerator.getBase64((data) => {
+          var uploadTask = storageRef.putString(data,'base64');
+          uploadTask.on('state_changed', function(snapshot){
+              // Observe state change events such as progress, pause, and resume
+              // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+              var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log('Upload is ' + progress + '% done');
+              switch (snapshot.state) {
+                case firebase.storage.TaskState.PAUSED: // or 'paused'
+                  console.log('Upload is paused');
+                  break;
+                case firebase.storage.TaskState.RUNNING: // or 'running'
+                  console.log('Upload is running');
+                  break;
+              }
+            }, function(error) {
+              // Handle unsuccessful uploads
+              console.log('Error al cargar el pdf');
+              alert('Error al cargar el pdf');
+              $('#' + id_botonRegistrarAdicionales).prop('disabled', false);
+            }, function() {
+              // Handle successful uploads on complete
+              // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+              uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                console.log('File available at', downloadURL);
+                //console.log(json_solicitud);
+                adicional_update[path_adicional +"/subprocesos/" + adicional] = datosAdicionalAdicionales();
+                adicional_update[path_adicional +"/num_subprocesos"] = no_adic;
+                adicional_update[path_copeo] = json_modalCopeo;
+                adicional_update[path_insumos] = datosInsumosAdicionales();
+                adicional_update[path_propuesta] = datosPropuestaAdicionales(downloadURL);
+                adicional_update[path_lista_solicitudes + "/terminadas/" + solicitud] = null;
+                adicional_update[path_lista_solicitudes + "/concretadas/" + solicitud] = true;
+                adicional_update[path_lista_propuesta + "/" +adicional] = true;
+                console.log(adicional_update);
+                /*
+                firebase.database().ref(rama_bd_obras).update(adicional_update, function(error) {
+                  if (error) {
+                    // The write failed...
+                    alert("¡Ups, hubo un error!");
+                  } else {
+                    // Data saved successfully!
+                    // PAD
+                    // pda("alta", solicitud_path, "");
+                    alert("¡Registro de solicitud exitoso!");
+                    $('#' + id_botonRegistrarAdicionales).prop('disabled', false);
+                    // resetForm1SolicitudAdicional();
+                    $('#' + id_ddl_obraAdicionales).val("");
+                  }
+                });
+                */
               });
-              */
             });
-          });
+        });
       });
+    }).catch(function(error){
+      $('#' + id_botonpdfAdicionales).prop('disabled', false);
+      alert("Error descargar las imagenes de evidencia");
+    });
   }
 });
 
@@ -252,8 +267,8 @@ function llenarFormSolicitudAdicionales(clave_sol){
       var aux = [];
       select_requisitos.selected(aux);
       select_exclusiones.selected(aux);
-      json_modalCopeo = solicitud.copeo;
-      json_modalSuministros = solicitud.cuantificacion;
+      json_modalCopeo = solicitud.copeo==undefined?{}:solicitud.copeo;
+      json_modalSuministros = solicitud.cuantificacion==undefined?{}:solicitud.cuantificacion;
       json_calculadoraAdicionales={};
       //console.log(json_modalCopeo, json_modalSuministros);
     }
@@ -418,10 +433,14 @@ function actualizaPreciosClienteAdicionales(){
 }
 
 function calculaCostoSuministros(){
-  var total = 0;
+  var total = {
+    costos: 0,
+    precio_venta: 0,
+  };
   if(!jQuery.isEmptyObject(json_modalSuministros)){
     for(key in json_modalSuministros){
-      total+= json_modalSuministros[key]["precio_cliente"] * json_modalSuministros[key]["cantidad"]
+      total.costos = total.costos + json_modalSuministros[key]["precio_lista"] * json_modalSuministros[key]["cantidad"];
+      total.precio_venta = total.precio_venta + json_modalSuministros[key]["precio_cliente"] * json_modalSuministros[key]["cantidad"];
     }
   }
   return total;
@@ -461,6 +480,7 @@ function resetAdicionales (){
  $('#' + id_cb_bancariosAdicionales ).prop('checked', false);
  $('#' + id_cb_fiscalesAdicionales ).prop('checked', false);
  flagCuantificacionAdicionales = false;
+ flagDownloadAdicionales = false;
  json_modalSuministros={};
  json_modalCopeo={};
  json_modalCalculadora={};
@@ -565,8 +585,11 @@ function pdfDocDescriptionAdicionales(vista_previa, images_array){
   var fisc_bool=$('#'+id_cb_fiscalesAdicionales).prop('checked');
   var banc_bool=$('#'+id_cb_bancariosAdicionales).prop('checked');
   var fecha_ppto=new Date();
+  var insumos = Object.assign({}, json_modalSuministros);
+  insumos["manoDeObra"]=manoDeObraAInsumoAdicionales();
+  console.log(insumos);
   //console.log(vista_previa, obra_ppto, clave_adic, titulo_ppto, nombre_ppto, atencion, json_modalSuministros, desplegar_indirectos, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, fecha_ppto);
-  var docDescription = generaPresupuestoAdicional(vista_previa, datos_obraAdicionales, clave_adic, titulo_ppto, nombre_ppto, atencion, json_modalSuministros, desplegar_indirectos, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, fecha_ppto, images_array);
+  var docDescription = generaPresupuestoAdicional(vista_previa, datos_obraAdicionales, clave_adic, titulo_ppto, nombre_ppto, atencion, insumos, desplegar_indirectos, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, fecha_ppto, images_array);
   return docDescription;
 }
 
@@ -628,24 +651,28 @@ function getAllFirebaseStorageGeneric(ruta){
   var storageRef = firebase.storage().ref(ruta);
   var images_url = [];
   var promise = new Promise(function(resolve, reject) {
-    // Now we get the references of these images
-    storageRef.listAll().then(function(result) {
-        var total = result.items.length;
-        var cont = 0;
-        result.items.forEach(function(imageRef) {
-          imageRef.getDownloadURL().then(function(url) {
-            images_url.push(url);
-            cont += 1;
-            if(cont == total){
-              resolve(images_url);
-            }
-          }).catch(function(error) {
-            reject(Error("Download fail"));
+    if(flagDownloadAdicionales){
+      resolve(images_url);
+    } else {
+      // Now we get the references of these images
+      storageRef.listAll().then(function(result) {
+          var total = result.items.length;
+          var cont = 0;
+          result.items.forEach(function(imageRef) {
+            imageRef.getDownloadURL().then(function(url) {
+              images_url.push(url);
+              cont += 1;
+              if(cont == total){
+                resolve(images_url);
+              }
+            }).catch(function(error) {
+              reject(Error("Download fail"));
+            });
           });
-        });
-    }).catch(function(error) {
-      reject(Error("Folder fail"));
-    });
+      }).catch(function(error) {
+        reject(Error("Folder fail"));
+      });
+    }
   });
   return promise;
 }
@@ -686,17 +713,33 @@ function downloadImageGeneric(download_url, index){
 function downloadAllImagesGeneric(download_array){
   var total = download_array.length;
   var promise = new Promise(function(resolve, reject) {
-    var cont = 0;
-    for (var i=0; i<download_array.length; i++){
-      downloadImageGeneric(download_array[i], i).then(function (imagen){
-        cont+=1;
-        if(cont == total){
-          resolve();
-        }
-      }).catch(function(error){
-        reject(Error("Download fail"));
-      });
+    if(flagDownloadAdicionales){ // Ya se descargaron las imagenes y no hay cambios
+      resolve();
+    } else { // Descargar imagnenes de firebase storage
+      download_images_url=[];
+      var cont = 0;
+      for (var i=0; i<download_array.length; i++){
+        downloadImageGeneric(download_array[i], i).then(function (imagen){
+          cont+=1;
+          if(cont == total){ // Descargas completas
+            resolve();
+          }
+        }).catch(function(error){
+          reject(Error("Download fail"));
+        });
+      }
     }
   });
   return promise;
+}
+
+function manoDeObraAInsumoAdicionales(){
+  var aux = {
+    unidad: "MO",
+    cantidad: 1,
+    descripcion: "MANO DE OBRA",
+    precio_lista: parseFloat(calculaCostoCopeo() * (1+json_modalCopeo.impuestos*0.01)).toFixed(2),
+    precio_cliente: parseFloat(calculaCostoCopeo() * (1+json_modalCopeo.impuestos*0.01) * (1+$('#'+id_indirectosAdicionales).val()*0.01) ).toFixed(2),
+  };
+  return aux;
 }

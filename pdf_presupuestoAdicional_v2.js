@@ -51,8 +51,8 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
         }
     }
 
-    var costo_directo = calculaCostoDirectoPdfPresupuestoAdicional();
-    var costo_indirecto = desplegar_indirectos?costo_directo*(1+$('#'+id_indirectosAdicionales).val()*0.01):0;
+    var costo_directo = calculaCostoDirectoPdfPresupuestoAdicional(insumos_json);
+    var costo_indirecto = desplegar_indirectos?costo_directo*($('#'+id_indirectosAdicionales).val()*0.01):0;
     var subtotal=costo_directo+costo_indirecto;
     //________________________________________________________________________________________
 
@@ -972,11 +972,11 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
     return pdfPresupuesto;
 }
 
-function calculaCostoDirectoPdfPresupuestoAdicional(){
+function calculaCostoDirectoPdfPresupuestoAdicional(insumos_json){
   var total = 0;
   var suministro={};
-  for (key in json_modalSuministros){
-    suministro = json_modalSuministros[key];
+  for (key in insumos_json){
+    suministro = insumos_json[key];
     if($('#'+id_cb_indirectosAdicionales).prop('checked')){
         total += suministro.precio_lista * suministro.cantidad;
     } else {
