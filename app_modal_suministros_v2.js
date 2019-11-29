@@ -295,8 +295,8 @@ function datosModalSuministros(){
     insumo_reg["descripcion"],
     json_unidades[insumo_reg["unidad"]]["nombre"],
     $('#'+id_precioListaModalSuministros).val(),
-    "<input type='number' class='indirectosModalSuministros form-control' id=indirectos"+ uid_existente_insumo +"ModalSuministros value=" + $('#'+id_indirectosModalSuministros).val() + ">",
-    "<input type='text' class='precioClienteModalSuministros form-control' id=precioCliente"+ uid_existente_insumo +"ModalSuministros value=" + $('#'+id_precioClienteModalSuministros).val() + ">",
+    $('#'+id_indirectosModalSuministros).val(),
+    $('#'+id_precioClienteModalSuministros).val(),
     "<input type='text' class='cantidadModalSuministros form-control' id=cantidad" + uid_existente_insumo + "ModalSuministros value=" + $('#'+id_cantidadModalSuministros).val() + ">",
     "<button type='button' class='eliminarModalSuministros btn btn-transparente'><i class='icono_rojo fas fa-times-circle'></i></button>"
   ]
@@ -324,7 +324,7 @@ function recuperaDatosModalSuministros(){
       descripcion: data[5],
       unidad: data[6],
       precio_lista: deformatMoney(data[7]),
-      precio_cliente: deformatMoney($('#precioCliente' + data[0] + 'ModalSuministros').val()),
+      precio_cliente: deformatMoney(data[9]),
       cantidad: parseFloat($('#cantidad' + data[0] + 'ModalSuministros').val()),
       desplegar: data[1],
     };
@@ -359,8 +359,8 @@ function fitDatosTablaModalSuministros(json_actuales){
       json_unidades[insumo_reg["unidad"]]["nombre"],
       //formatMoney(json_actuales[key]["precio_lista"]),
       formatMoney(json_precios[key]),
-      "<input type='number' class='indirectosModalSuministros form-control' id=indirectos"+ key +"ModalSuministros value=" + aux_indirectos + ">",
-      "<input type='text' class='precioClienteModalSuministros form-control' id=precioCliente"+ key +"ModalSuministros value=" + formatMoney(json_actuales[key]["precio_cliente"]) + ">",
+      aux_indirectos,
+      formatMoney(json_actuales[key]["precio_cliente"]),
       "<input type='number' class='cantidadModalSuministros form-control' id=cantidad"+ key +"ModalSuministros value=" + json_actuales[key]["cantidad"] + ">",
       "<button type='button' class='eliminarModalSuministros btn btn-transparente'><i class='icono_rojo fas fa-times-circle'></i></button>"
     ];
@@ -455,6 +455,11 @@ $(document).on('change','.cantidadModalSuministros', function(){
   }
 });
 
+//------------------------------ Cementerio -----------------------------------
+/*
+"<input type='number' class='indirectosModalSuministros form-control' id=indirectos"+ key +"ModalSuministros value=" + aux_indirectos + ">",
+"<input type='text' class='precioClienteModalSuministros form-control' id=precioCliente"+ key +"ModalSuministros value=" + formatMoney(json_actuales[key]["precio_cliente"]) + ">",
+
 // Metodo accionado cuando se hace cambia el valor de alguna celda indirectos
 $(document).on('change','.indirectosModalSuministros', function(){
   if(isNaN(parseFloat($(this).val()))){
@@ -495,3 +500,4 @@ $(document).on('focusout','.precioClienteModalSuministros', function(){
     $(this).val(formatMoney($(this).val()));
   }
 });
+*/
