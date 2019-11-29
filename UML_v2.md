@@ -223,7 +223,7 @@ Nota: Todo float se ingresa a 2 decimales.
                             - atencion: contacto_id
                             - terminada: boolean
                             - url_pdf : string
-                            - url_evidencia: string
+                            - storage_path: string
                             - notas: string
                             - copeo:
                                 - impuestos: float (0 a 100)

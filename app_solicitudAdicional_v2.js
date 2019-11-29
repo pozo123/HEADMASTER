@@ -458,6 +458,7 @@ function generaPDFsolicitudAdicional(vista_previa){
     fotos_seleccionadas.push(array_fotosAnexos[indices_seleccionados[i]]);
     leyendas_seleccionadas.push(array_leyendasAnexos[indices_seleccionados[i]]);
   }
+  console.log(fotos_seleccionadas[0]);
   //console.log(vista_previa, obra, solicitud, descripcion, atencion, json_anexos, anexos_seleccionados, otros, fotos_seleccionadas, leyendas_seleccionadas, fecha_pdf , colaborador);
   var pdfDocGenerator = pdfMake.createPdf(generaSolicitudAdic(vista_previa, obra, solicitud, descripcion, atencion, json_anexos, anexos_seleccionados, otros, fotos_seleccionadas, leyendas_seleccionadas, fecha_pdf , colaborador));
   return pdfDocGenerator;
@@ -494,8 +495,8 @@ $('#' + id_boton_descargarPDFSolicitudAdicional).click(function() {
     var storageRef = firebase.storage().ref(solicitud_path + uid_obra + "/solicitudes/" + $('#' + id_ddl_solicitud2SolicitudAdicional).val() +".pdf");
     // Get the download URL
     storageRef.getDownloadURL().then(function(url) {
-    //console.log(url);
-    window.open(url);
+      //console.log(url);
+      window.open(url);
 
     }).catch(function(error) {
       // A full list of error codes is available at
@@ -548,7 +549,7 @@ $('#' + id_boton_carga2FotoSolicitudAdicional).click(function() {
   var reader = new FileReader();
   reader.readAsDataURL(fotoSeleccionada);
   reader.onloadend = function () {
-      array_fotosEvidencias.push({url: reader.result, file: fotoSeleccionada});
+      array_fotosEvidencias.push({url: reader.result, file: fotoSeleccionada,});
       //console.log(imagenes_anexos);
   }
   cargaImagenDdlSolicitudAdicional(id_imagenes2SolicitudAdicional, selectImagenes2);
@@ -598,6 +599,182 @@ $('#' + id_boton_copeoSolicitudAdicional).click(function() {
     modalCopeo(json_modalCopeo, true); // resultado en json_modalCopeo
   }
 });
+
+// Metodo del boton para terminar una solicitud adicional
+$('#' + id_boton_terminarSolicitudAdicional).click(function() {
+  if(validateForm2SolicitudAdicional()){
+    var obra = $('#'+ id_ddl_obra2SolicitudAdicional + ' option:selected').val();
+    var solicitud = $('#'+ id_ddl_solicitud2SolicitudAdicional + ' option:selected').val();
+    var solicitud_update = {};
+    var solicitud_path = rama_bd_obras + "/adicionales/solicitudes/" + obra;
+    var storage_path = solicitud_path + "/solicitudesTerminadas/"+ solicitud;
+    var fotos_seleccionadas = obtenerFotosSolicitudTerminada();
+
+    $('#' + id_boton_terminarSolicitudAdicional).prop('disabled', true);
+    uploadAllImagesGeneric(storage_path, fotos_seleccionadas).then(function (url_array){
+      solicitud_update["solicitudes/" + solicitud + "/terminada"] = true;
+      solicitud_update["solicitudes/" + solicitud + "/storage_path"] = storage_path;
+      solicitud_update["solicitudes/" + solicitud + "/notas"] = $('#' + id_notasSolicitudAdicional).val();
+      solicitud_update["solicitudes/" + solicitud + "/copeo"] = json_modalCopeo;
+      solicitud_update["solicitudes/" + solicitud + "/cuantificacion"] = json_modalSuministros;
+      solicitud_update["listas/pendientes/" + solicitud] = null;
+      solicitud_update["listas/terminadas/" + solicitud] = true;
+      console.log(solicitud_update);
+      firebase.database().ref(solicitud_path).update(solicitud_update, function(error) {
+        if (error) {
+          // The write failed...
+          alert("¡Ups, hubo un error!");
+        } else {
+          // Data saved successfully!
+          // PAD
+          pda("modificacion", solicitud_path, registro_antiguo);
+          alert("¡Registro de solicitud exitoso!");
+          $('#' + id_boton_terminarSolicitudAdicional).prop('disabled', false);
+          resetForm2SolicitudAdicional();
+          $('#' + id_ddl_obra2SolicitudAdicional).val("");
+          json_modalCopeo = {};
+          json_modalSuministros = {};
+        }
+      });
+    });
+  }
+});
+
+function uploadAllImagesGeneric(ruta, fotos_seleccionadas){
+  var storageRef = firebase.storage().ref(ruta);
+  var images_url = [];
+  var promise = new Promise(function(resolve, reject) {
+    var name_array;
+    var metadata;
+    var cont = 0;
+    for(var i=0; i<fotos_seleccionadas.length; i++){
+      name_array = fotos_seleccionadas[i].name.split(".");
+      metadata = {contentType: 'image/'+ name_array[name_array.length-1],};
+      var uploadTask = storageRef.child(fotos_seleccionadas[i].name).put(fotos_seleccionadas[i], metadata);
+      uploadTask.on('state_changed', function(snapshot){
+          // Observe state change events such as progress, pause, and resume
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case firebase.storage.TaskState.PAUSED: // or 'paused'
+              console.log('Upload is paused');
+              break;
+            case firebase.storage.TaskState.RUNNING: // or 'running'
+              console.log('Upload is running');
+              break;
+          }
+      }, function(error) {
+        // Handle unsuccessful uploads
+        console.log('Error al cargar la imagen');
+        reject(Error("Upload fail"));
+      }, function() {
+        // Handle successful uploads on complete
+        cont+=1;
+        if(cont==fotos_seleccionadas.length){
+          resolve(images_url);
+        }
+      });
+    }
+  });
+  return promise;
+}
+
+//-------------------------FUNCIONES NECESARIAS -------------------------------
+// Metodo para resetear el form 2
+function resetForm2SolicitudAdicional(){
+  //$('#'+id_ddl_obra2SolicitudAdicional ).val("");
+  $('#' + id_ddl_solicitud2SolicitudAdicional).val("");
+  $('#' + id_evidenciaInputSolicitudAdicional).text("Archivo no seleccionado");
+  $('#' + id_imagenesSolicitudAdicional).empty();
+  $('#' + id_notasSolicitudAdicional).val("");
+}
+
+// Metodo para llenar el ddl solicitudes cuando se selecciona una obra
+function llenaDdlSolicitudSolicitudAdicional(id_objeto){
+    $('#' + id_objeto).empty();
+    var select = document.getElementById(id_objeto);
+    var option = document.createElement('option');
+    option.style = "display:none";
+    option.text = option.value = "";
+    select.appendChild(option);
+    var solicitud;
+    firebase.database().ref(rama_bd_obras + "/adicionales/solicitudes/"+ uid_obra+"/listas/pendientes").on('child_added',function(snapshot){
+      option = document.createElement('option');
+      option.value = snapshot.key;
+      option.text = snapshot.key;
+      select.appendChild(option);
+    });
+}
+
+// Metodo para generar el pdf de una solicitud
+// vista_previa = boolean (true: no parece logo, false: aparece logo)
+function generaPDFsolicitudTerminada(){
+  var indices_seleccionados = selectImagenes2.selected();
+  var fotos_seleccionadas=[];
+  for(i=0; i<indices_seleccionados.length; i++){
+    fotos_seleccionadas.push(array_fotosEvidencias[indices_seleccionados[i]]);
+  }
+  var pdfDocGenerator = pdfMake.createPdf(generaSolicitudTerminada(fotos_seleccionadas));
+  return pdfDocGenerator;
+}
+
+// Metodo para obtener las fotos seleccionadas
+function obtenerFotosSolicitudTerminada(){
+  var indices_seleccionados = selectImagenes2.selected();
+  var fotos_seleccionadas=[];
+  for(var i=0; i<indices_seleccionados.length; i++){
+    fotos_seleccionadas.push(array_fotosEvidencias[indices_seleccionados[i]].file);
+  }
+  return fotos_seleccionadas;
+}
+
+// Metodo para validar todos los campos del form 2
+function validateForm2SolicitudAdicional(){
+  if($('#' + id_ddl_obra2SolicitudAdicional  + " option:selected").val() == ""){
+      alert("Selecciona una obra.");
+      highLightColor(id_ddl_obraSolicitudAdicional,"#FF0000");
+      return false;
+  }  else if($('#' + id_ddl_solicitud2SolicitudAdicional  + " option:selected").val() == ""){
+      alert("Selecciona una solicitud");
+      highLightColor(id_ddl_solicitudSolicitudAdicional,"#FF0000");
+      return false;
+  } else if(selectImagenes2.selected().length == 0){
+      alert("Agrega las imagenes del documento de solicitud formado");
+      return false;
+  } else {
+      return true;
+  }
+}
+
+
+//------------------------Cementerio ------------------------------
+/*
+// Metodo para llenar el formulario de una solicitud ya registrada
+function llenaFormSolicitudSolicitudAdicional(solicitud_id){
+  firebase.database().ref(rama_bd_obras + "/adicionales/solicitudes/"+ uid_obra +"/"+ solicitud_id).on('value',function(snapshot){
+    if(snapshot.exists()){
+      var solicitud = snapshot.val();
+      var anexos_aux = [];
+      $('#'+id_descripcionSolicitudAdicional).val(solicitud.descripcion);
+
+      for(key in solicitud.anexos_tipo){
+        anexos_aux.push(key);
+      }
+      selectAnexos.set(anexos_aux);
+
+      $('#' + id_imagenesSolicitudAdicional).empty();
+      var select = document.getElementById(id_imagenesSolicitudAdicional);
+      var option;
+      for(key in solicitud.anexos_imag){
+        option = document.createElement('option');
+        option.value = snapChild.key;
+        option.text = snapChild.key;
+        select.appendChild(option);
+      }
+    }
+  });
+}
 
 // Metodo del boton para terminar una solicitud adicional
 $('#' + id_boton_terminarSolicitudAdicional).click(function() {
@@ -663,90 +840,4 @@ $('#' + id_boton_terminarSolicitudAdicional).click(function() {
     });
   }
 });
-
-//-------------------------FUNCIONES NECESARIAS -------------------------------
-// Metodo para resetear el form 2
-function resetForm2SolicitudAdicional(){
-  //$('#'+id_ddl_obra2SolicitudAdicional ).val("");
-  $('#' + id_ddl_solicitud2SolicitudAdicional).val("");
-  $('#' + id_evidenciaInputSolicitudAdicional).text("Archivo no seleccionado");
-  $('#' + id_imagenesSolicitudAdicional).empty();
-  $('#' + id_notasSolicitudAdicional).val("");
-}
-
-// Metodo para llenar el ddl solicitudes cuando se selecciona una obra
-function llenaDdlSolicitudSolicitudAdicional(id_objeto){
-    $('#' + id_objeto).empty();
-    var select = document.getElementById(id_objeto);
-    var option = document.createElement('option');
-    option.style = "display:none";
-    option.text = option.value = "";
-    select.appendChild(option);
-    var solicitud;
-    firebase.database().ref(rama_bd_obras + "/adicionales/solicitudes/"+ uid_obra+"/listas/pendientes").on('child_added',function(snapshot){
-      option = document.createElement('option');
-      option.value = snapshot.key;
-      option.text = snapshot.key;
-      select.appendChild(option);
-    });
-}
-
-// Metodo para generar el pdf de una solicitud
-// vista_previa = boolean (true: no parece logo, false: aparece logo)
-function generaPDFsolicitudTerminada(){
-  var indices_seleccionados = selectImagenes2.selected();
-  var fotos_seleccionadas=[];
-  for(i=0; i<indices_seleccionados.length; i++){
-    fotos_seleccionadas.push(array_fotosEvidencias[indices_seleccionados[i]]);
-  }
-  var pdfDocGenerator = pdfMake.createPdf(generaSolicitudTerminada(fotos_seleccionadas));
-  return pdfDocGenerator;
-}
-
-// Metodo para validar todos los campos del form 2
-function validateForm2SolicitudAdicional(){
-  if($('#' + id_ddl_obra2SolicitudAdicional  + " option:selected").val() == ""){
-      alert("Selecciona una obra.");
-      highLightColor(id_ddl_obraSolicitudAdicional,"#FF0000");
-      return false;
-  }  else if($('#' + id_ddl_solicitud2SolicitudAdicional  + " option:selected").val() == ""){
-      alert("Selecciona una solicitud");
-      highLightColor(id_ddl_solicitudSolicitudAdicional,"#FF0000");
-      return false;
-  } else if(selectImagenes2.selected().length == 0){
-      alert("Agrega las imagenes del documento de solicitud formado");
-      return false;
-  } else {
-      return true;
-  }
-}
-
-
-//------------------------Cementerio ------------------------------
-/*
-// Metodo para llenar el formulario de una solicitud ya registrada
-function llenaFormSolicitudSolicitudAdicional(solicitud_id){
-  firebase.database().ref(rama_bd_obras + "/adicionales/solicitudes/"+ uid_obra +"/"+ solicitud_id).on('value',function(snapshot){
-    if(snapshot.exists()){
-      var solicitud = snapshot.val();
-      var anexos_aux = [];
-      $('#'+id_descripcionSolicitudAdicional).val(solicitud.descripcion);
-
-      for(key in solicitud.anexos_tipo){
-        anexos_aux.push(key);
-      }
-      selectAnexos.set(anexos_aux);
-
-      $('#' + id_imagenesSolicitudAdicional).empty();
-      var select = document.getElementById(id_imagenesSolicitudAdicional);
-      var option;
-      for(key in solicitud.anexos_imag){
-        option = document.createElement('option');
-        option.value = snapChild.key;
-        option.text = snapChild.key;
-        select.appendChild(option);
-      }
-    }
-  });
-}
 */
