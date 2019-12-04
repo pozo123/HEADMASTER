@@ -13,7 +13,10 @@ var id_ddl_clasificacionInsumos = "ddl_clasificacionInsumos";
 var id_ddl_categoriaInsumos = "ddl_categoriaInsumos";
 var id_ddl_proveedorInsumos = "ddl_proveedorInsumos";
 var id_precioInsumos = "precioInsumos";
+var id_precioFinalInsumos = "precioFinalInsumos";
+var id_descuentoInsumos = "descuentoInsumos";
 var id_fecha_cotizacionInsumos = "fechaCotizacionInsumos";
+var id_fecha_ingresoCotizacionInsumos = "fechaIngresoCotizacionInsumos";
 var id_botonAgregarProveedorInsumos = "botonAgregarProveedorInsumos";
 var id_dataTableProveedoresInsumos = "dataTableProveedoresInsumos";
 
@@ -53,6 +56,9 @@ $('#' + id_tab_insumo).click(function() {
     resetFormInsumo();
     // Con las líneas siguiente se genera el cuadro para las fechas en el HTML
     jQuery('#' + id_fecha_cotizacionInsumos).datetimepicker(
+        {timepicker:false, weeks:true,format:'Y.m.d'}
+    );
+    jQuery('#' + id_fecha_ingresoCotizacionInsumos).datetimepicker(
         {timepicker:false, weeks:true,format:'Y.m.d'}
     );
     firebase.database().ref(rama_bd_insumos + "/marcas").orderByChild('nombre').on('value',function(snapshot){
@@ -206,17 +212,30 @@ $('#' + id_precioInsumos).keypress(function(e){
     charactersAllowed("0123456789.",e);
 });
 
+$('#' + id_precioInsumos).change(function(){
+  if($('#'+id_descuentoInsumos).val() == ""){
+		$('#' + id_descuentoInsumos).val(0);
+	}
+  $('#' + id_precioFinalInsumos).val(formatMoney($('#' + id_precioInsumos).val() * (1-$('#' + id_descuentoInsumos).val()*0.01)));
+});
+
 $('#' + id_precioInsumos).focus(function(){
   if($('#'+id_precioInsumos).val() !== ""){
 		$('#' + id_precioInsumos).val(deformatMoney($('#' + id_precioInsumos).val()));
 	}
-
 });
 
 $('#' + id_precioInsumos).focusout(function(){
   if($('#'+id_precioInsumos).val() !== ""){
 		$('#' + id_precioInsumos).val(formatMoney($('#' + id_precioInsumos).val()));
 	}
+});
+
+$('#' + id_descuentoInsumos).change(function(){
+  if($('#'+id_descuentoInsumos).val() == ""){
+		$('#' + id_descuentoInsumos).val(0);
+	}
+  $('#' + id_precioFinalInsumos).val(formatMoney(deformatMoney($('#' + id_precioInsumos).val()) * (1 - $('#' + id_descuentoInsumos).val()*0.01)));
 });
 
 // ----------------------- FUNCIONES NECESARIAS ----------------------------
@@ -238,7 +257,10 @@ function resetFormInsumo(){
 function resetProveedorInsumo(){
   $('#' + id_ddl_proveedorInsumos).val("");
   $('#' + id_precioInsumos).val("");
-  $('#' + id_fecha_cotizacionInsumos).val("")
+  $('#' + id_precioFinalInsumos).val("");
+  $('#' + id_descuentoInsumos).val("");
+  $('#' + id_fecha_cotizacionInsumos).val("");
+  $('#' + id_fecha_ingresoCotizacionInsumos).val("")
 }
 
 //Validar que no esté vacío nungún campo

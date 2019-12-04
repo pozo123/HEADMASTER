@@ -173,10 +173,10 @@ $('#' + id_botonRegistrarAdicionales).click(function() {
     var path_adicional = "procesos/" + obra + "/procesos/ADIC";
     var path_copeo = "copeo/" + obra + "/ADIC/" + adicional;
     var path_insumos = "cuantificacion/" + obra + "/ADIC/" + adicional;
-    var path_propuesta = "adicionales/propuestas/" + adicional;
-    var path_lista_solicitudes = "adicionales/solicitudes/listas/";
-    var path_lista_propuesta = "adicionales/propuestas/listas/pendientes";
-    var path_storage = rama_bd_obras+"/adicionales/solicitudes/"+$('#' + id_ddl_obraAdicionales+' option:selected').val()+"/solicitudesTerminadas/"+$('#'+id_ddl_solicitudAdicionales+' option:selected').val();
+    var path_propuesta = "adicionales/propuestas/" + obra + "/propuestas/" + adicional;
+    var path_lista_solicitudes = "adicionales/solicitudes/" + obra + "/listas/";
+    var path_lista_propuesta = "adicionales/propuestas/" + obra + "/listas/pendientes";
+    var path_storage = rama_bd_obras+"/adicionales/solicitudes/"+ obra +"/solicitudesTerminadas/"+ solicitud;
     var storageRef = firebase.storage().ref(rama_bd_obras + "/adicionales/propuestas/"+ obra +"/formatos/"+ adicional +".pdf");
     getAllFirebaseStorageGeneric(path_storage).then(function(images_array){
       //console.log(images_array);
@@ -213,7 +213,7 @@ $('#' + id_botonRegistrarAdicionales).click(function() {
               uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
                 console.log('File available at', downloadURL);
                 //console.log(json_solicitud);
-                adicional_update[path_adicional +"/subprocesos/" + adicional] = datosAdicionalAdicionales();
+                adicional_update[path_adicional +"/subprocesos/" + adicional] = datosAdicionalAdicionales(downloadURL);
                 adicional_update[path_adicional +"/num_subprocesos"] = no_adic;
                 adicional_update[path_copeo] = json_modalCopeo;
                 adicional_update[path_insumos] = datosInsumosAdicionales();
@@ -222,7 +222,6 @@ $('#' + id_botonRegistrarAdicionales).click(function() {
                 adicional_update[path_lista_solicitudes + "/concretadas/" + solicitud] = true;
                 adicional_update[path_lista_propuesta + "/" +adicional] = true;
                 console.log(adicional_update);
-                /*
                 firebase.database().ref(rama_bd_obras).update(adicional_update, function(error) {
                   if (error) {
                     // The write failed...
@@ -230,14 +229,13 @@ $('#' + id_botonRegistrarAdicionales).click(function() {
                   } else {
                     // Data saved successfully!
                     // PAD
-                    // pda("alta", solicitud_path, "");
+                    pda("alta", path_adicional, "");
                     alert("¡Registro de solicitud exitoso!");
                     $('#' + id_botonRegistrarAdicionales).prop('disabled', false);
                     // resetForm1SolicitudAdicional();
                     $('#' + id_ddl_obraAdicionales).val("");
                   }
                 });
-                */
               });
             });
         });
@@ -605,7 +603,7 @@ function datosAdicionalAdicionales(url){
     utilidad: json_modalCalculadora.utilidad,
     precopeo: json_modalCalculadora.precopeo,
     porcentaje_anticipo: $('#'+id_anticiposAdicionales).val(),
-    porcentaje_indirectos: json_modalCalculadora.indirectos,
+    porcentaje_indirectos: json_modalCalculadora.porcentaje_indirectos,
     porcentaje_impuestos: json_modalCalculadora.porcentaje_impuestos,
     score: json_modalCalculadora.score
   };
@@ -621,13 +619,14 @@ function datosInsumosAdicionales(){
   };
   var cont = 1;
   for (key in json_modalSuministros){
-    if(json_modalSuministros[key]["catalogo"] !== "NA"){
+    if(json_modalSuministros[key]["catalogo"] !== "NR"){
       insumos["materiales"][key] = json_modalSuministros[key];
     } else {
       insumos["materiales_nr"]["NR-"+ cont] = json_modalSuministros[key];
       cont +=1;
     }
   }
+  return insumos;
 }
 
 function datosPropuestaAdicionales(url){
@@ -645,6 +644,7 @@ function datosPropuestaAdicionales(url){
     aprobada: false,
     url_evidencia: url,
   };
+  return propuesta;
 }
 
 function getAllFirebaseStorageGeneric(ruta){
@@ -735,7 +735,7 @@ function downloadAllImagesGeneric(download_array){
 
 function manoDeObraAInsumoAdicionales(){
   var aux = {
-    unidad: "MO",
+    unidad: "Jor",
     cantidad: 1,
     descripcion: "MANO DE OBRA",
     precio_lista: parseFloat(calculaCostoCopeo() * (1+json_modalCopeo.impuestos*0.01)).toFixed(2),

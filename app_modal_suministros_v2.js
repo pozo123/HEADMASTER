@@ -12,10 +12,12 @@ var id_buscaCatalogoModalSuministros = "buscaCatalogoModalSuministros";
 var id_catalogoModalSuministros = "catalogoModalSuministros";
 var id_descripcionModalSuministros = "descripcionModalSuministros";
 var id_cantidadModalSuministros = "cantidadModalSuministros";
+var id_unidadModalSuministros = "unidadModalSuministros";
 var id_div_preciosModalSuministros = "div_preciosModalSuministros";
 var id_precioListaModalSuministros = "precioListaModalSuministros";
 var id_indirectosModalSuministros = "indirectosModalSuministros";
 var id_precioClienteModalSuministros = "precioClienteModalSuministros";
+var id_cb_sinRegistroModalSuministros = "cb_sinRegistroAdicionales";
 // botones del form
 var id_boton_agregarModalSuministros = "botonAgregarModalSuministros";
 var id_boton_limpiarModalSuministros = "botonLimpiarFiltrosModalSuministros";
@@ -27,6 +29,7 @@ var json_precios; // almacena el precio maximo de los insumos
 var p_indirectos; // almacena el porcentaje de costos indirectos default
 var supervisorFlag; // boolean que indica si el usuario es un supervisor, sirve para discriminar la vista del form
 var json_modalSuministros; // almacenara los datos ingresados en el modal
+var cont_nr;
 
 // --------------------- Método de inicialización -----------------------------
 // Metodo de inicializacion del modal
@@ -41,6 +44,7 @@ function modalSuministros(indirectos, supervisor, json_actuales){
   base_insumos={};
   base_filtrados={};
   filtros={};
+  cont_nr=0;
   //json_modalSuministros={};
   // Se cargan los datos de las marcas para los filtros
   firebase.database().ref(rama_bd_insumos + "/marcas").orderByChild('nombre').on('value',function(snapshot){
@@ -107,6 +111,25 @@ function modalSuministros(indirectos, supervisor, json_actuales){
 }
 
 //------------------ FUNCIONES DEL FORMULARIO----------------------------------
+// Metodo accionado al cambiar el estado del checkbox
+$('#'+id_cb_sinRegistroModalSuministros ).change(function (){
+  if($('#'+id_cb_sinRegistroModalSuministros ).prop('checked')){
+    limpiaAgregarModalSuministros();
+    $('#' + id_unidadModalSuministros).prop('disabled', false);
+    $('#' + id_precioListaModalSuministros).prop('disabled', false);
+    $('#' + id_descripcionModalSuministros).prop('disabled', false);
+    $('#' + id_catalogoModalSuministros).val("NR");
+    $('#' + id_indirectosModalSuministros).val(parseFloat(p_indirectos).toFixed(2));
+    uid_existente_insumo = "NR-"+cont_nr;
+  }else{
+    limpiaAgregarModalSuministros();
+    $('#' + id_unidadModalSuministros).prop('disabled', true);
+    $('#' + id_precioListaModalSuministros).prop('disabled', true);
+    $('#' + id_descripcionModalSuministros).prop('disabled', true);
+    $('#' + id_indirectosModalSuministros).val("");
+  }
+});
+
 // Metodo para el boton que limpia los filtros
 $('#' + id_boton_limpiarModalSuministros).click(function() {
   limpiaFiltrosModalSuministros();
@@ -121,6 +144,9 @@ $('#' + id_boton_agregarModalSuministros).click(function() {
       limpiaAgregarModalSuministros();
     } else {
       alert("El insumo ya ha sido seleccionado antes");
+    }
+    if($('#'+id_cb_sinRegistroModalSuministros ).prop('checked')){
+      cont_nr+=1;
     }
   }
 });
@@ -149,6 +175,33 @@ $('#'+id_indirectosModalSuministros ).change(function (){
 $('#'+id_indirectosModalSuministros  ).focusout(function (){
 	if($('#'+id_indirectosModalSuministros  ).val() !== ""){
 		$('#'+id_indirectosModalSuministros  ).val(parseFloat($('#'+id_indirectosModalSuministros ).val()).toFixed(2));
+	}
+});
+
+// Metodo para restringir los caracteres del campo precio cliente
+$('#'+id_precioListaModalSuministros  ).keypress(function(e){
+    charactersAllowed("0123456789.",e);
+});
+
+// Metodo accionado cuando el precio cliente es modificado
+$('#'+id_precioListaModalSuministros).change(function (){
+		if($('#'+id_precioListaModalSuministros).val() == ""){
+			$('#'+id_precioListaModalSuministros).val(formatMoney(0));
+		}
+    $('#'+id_precioClienteModalSuministros).val( formatMoney($('#'+id_precioListaModalSuministros).val() * (1 + $('#'+id_indirectosModalSuministros).val() * 0.01)));
+});
+
+// Metodo accionado cuando precio cliente es enfocado
+$('#'+id_precioListaModalSuministros).focus(function (){
+	if($('#'+id_precioListaModalSuministros).val() !== ""){
+		$('#'+id_precioListaModalSuministros).val(deformatMoney($('#'+id_precioListaModalSuministros ).val()));
+	}
+});
+
+// Metodo accionado cuando precio cliente pierde enfoque
+$('#'+id_precioListaModalSuministros  ).focusout(function (){
+	if($('#'+id_precioListaModalSuministros  ).val() !== ""){
+		$('#'+id_precioListaModalSuministros  ).val(formatMoney($('#'+id_precioListaModalSuministros ).val()));
 	}
 });
 
@@ -249,6 +302,7 @@ function limpiaAgregarModalSuministros(){
   $('#'+id_precioListaModalSuministros ).val("");
   $('#'+id_indirectosModalSuministros  ).val("");
   $('#'+id_precioClienteModalSuministros  ).val("");
+  $('#'+id_unidadModalSuministros  ).val("");
 }
 
 // Metodo para validar los datos del form
@@ -287,15 +341,15 @@ function validateagregarModalSuministros(){
 // Metodo para crear un reglon para la tabla seleccionados con el nuevo insumo
 function datosModalSuministros(){
   var insumo=[];
-  var insumo_reg = base_insumos[uid_existente_insumo];
+  var insumo_reg = $('#'+id_cb_sinRegistroModalSuministros).prop('checked')?{}:base_insumos[uid_existente_insumo];
   insumo=[
     uid_existente_insumo,
     true,
     "<button type='button' class='desplegarModalSuministros btn btn-transparente'><i class='icono_verde fas fa-check-circle'></i></button>",
-    insumo_reg["catalogo"],
-    json_marcas[insumo_reg["marca"]]["nombre"],
-    insumo_reg["descripcion"],
-    json_unidades[insumo_reg["unidad"]]["nombre"],
+    $('#'+id_catalogoModalSuministros).val(),//insumo_reg["catalogo"],
+    $('#'+id_cb_sinRegistroModalSuministros).prop('checked')?"NR":json_marcas[insumo_reg["marca"]]["nombre"],
+    $('#'+id_descripcionModalSuministros).val(),//insumo_reg["descripcion"],
+    $('#'+id_unidadModalSuministros).val(),//json_unidades[insumo_reg["unidad"]]["nombre"],
     $('#'+id_precioListaModalSuministros).val(),
     $('#'+id_indirectosModalSuministros).val(),
     $('#'+id_precioClienteModalSuministros).val(),
@@ -323,6 +377,7 @@ function recuperaDatosModalSuministros(){
   tabla_selectosModalSuministros.rows().iterator('row', function(context, index){
     var data = this.row(index).data();
     insumosSuministros[data[0]]={
+      catalogo: data[3],
       descripcion: data[5],
       unidad: data[6],
       precio_lista: deformatMoney(data[7]),
@@ -342,7 +397,7 @@ function fitDatosTablaModalSuministros(json_actuales){
   var aux = [];
   var insumo_reg={};
   var icono="";
-  var aux_indirectos;
+  //var aux_indirectos;
   for (key in json_actuales){
     insumo_reg=base_insumos[key];
     if(json_actuales[key]["desplegar"]){
@@ -350,22 +405,40 @@ function fitDatosTablaModalSuministros(json_actuales){
     }else{
       icono = "'icono_rojo fas fa-times-circle'"
     }
-    aux_indirectos = json_actuales[key]["precio_lista"]!==0?parseFloat((json_actuales[key]["precio_cliente"]/json_actuales[key]["precio_lista"]-1)*100).toFixed(2):p_indirectos;
-    aux = [
-      key,
-      json_actuales[key]["desplegar"],
-      "<button type='button' class='desplegarModalSuministros btn btn-transparente'><i class="+icono+"></i></button>",
-      insumo_reg["catalogo"],
-      json_marcas[insumo_reg["marca"]]["nombre"],
-      insumo_reg["descripcion"],
-      json_unidades[insumo_reg["unidad"]]["nombre"],
-      //formatMoney(json_actuales[key]["precio_lista"]),
-      formatMoney(json_precios[key]),
-      aux_indirectos,
-      formatMoney(json_actuales[key]["precio_cliente"]),
-      "<input type='number' class='cantidadModalSuministros form-control' id=cantidad"+ key +"ModalSuministros value=" + json_actuales[key]["cantidad"] + ">",
-      "<button type='button' class='eliminarModalSuministros btn btn-transparente'><i class='icono_rojo fas fa-times-circle'></i></button>"
-    ];
+    //aux_indirectos = json_actuales[key]["precio_lista"]!==0?parseFloat((json_actuales[key]["precio_cliente"]/json_actuales[key]["precio_lista"]-1)*100).toFixed(2):p_indirectos;
+    if(key.slice(0,3)!=="NR-"){
+      aux = [
+        key,
+        json_actuales[key]["desplegar"],
+        "<button type='button' class='desplegarModalSuministros btn btn-transparente'><i class="+icono+"></i></button>",
+        insumo_reg["catalogo"],
+        json_marcas[insumo_reg["marca"]]["nombre"],
+        insumo_reg["descripcion"],
+        json_unidades[insumo_reg["unidad"]]["nombre"],
+        //formatMoney(json_actuales[key]["precio_lista"]),
+        formatMoney(json_precios[key]),
+        p_indirectos,
+        formatMoney(json_actuales[key]["precio_cliente"]),
+        "<input type='number' class='cantidadModalSuministros form-control' id=cantidad"+ key +"ModalSuministros value=" + json_actuales[key]["cantidad"] + ">",
+        "<button type='button' class='eliminarModalSuministros btn btn-transparente'><i class='icono_rojo fas fa-times-circle'></i></button>"
+      ];
+    }else{
+      aux = [
+        key,
+        json_actuales[key]["desplegar"],
+        "<button type='button' class='desplegarModalSuministros btn btn-transparente'><i class="+icono+"></i></button>",
+        json_actuales[key]["catalogo"],
+        "SM",
+        json_actuales[key]["descripcion"],
+        json_actuales[key]["unidad"],
+        //formatMoney(json_actuales[key]["precio_lista"]),
+        formatMoney(json_actuales[key]["precio_lista"]),
+        p_indirectos,
+        formatMoney(json_actuales[key]["precio_cliente"]),
+        "<input type='number' class='cantidadModalSuministros form-control' id=cantidad"+ key +"ModalSuministros value=" + json_actuales[key]["cantidad"] + ">",
+        "<button type='button' class='eliminarModalSuministros btn btn-transparente'><i class='icono_rojo fas fa-times-circle'></i></button>"
+      ];
+    }
     array_datos.push(aux);
   }
   return array_datos;
@@ -410,6 +483,7 @@ $(document).on('click','.agregarModalSuministros', function(){
   $('#' + id_precioListaModalSuministros).val(data[6]);
   $('#' + id_indirectosModalSuministros).val(parseFloat(p_indirectos).toFixed(2));
   $('#' + id_precioClienteModalSuministros).val( formatMoney( deformatMoney(data[6]) * (1 + p_indirectos*0.01) ) );
+  $('#' + id_unidadModalSuministros).val(data[5]);
 });
 
 // Metodo para crear la tabla seleccionados

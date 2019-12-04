@@ -253,25 +253,26 @@ Nota: Todo float se ingresa a 2 decimales.
 
             - propuestas
                 - obra
-                    - id_subproceso
-                        - id_solicitud
-                        - nombre: string
-                        - titulo: string
-                        - atencion: string
-                        - porcentaje_anticipo: float
-                        - requisitos:
-                            - id_requisito
-                                - info: string
-                        - exlusiones:
-                            - id_exlusion  
-                                - info: string
-                        - tiempo_entrega: string
-                        - datos_bancarios: boolean
-                        - datos_fiscales: boolean
-                        - aprobada: boolean
-                        - url_evidencia: string
-                        - url_formato: string
-                        - precio_venta_aprobado: float
+                    - propuestas
+                        - id_subproceso
+                            - id_solicitud
+                            - nombre: string
+                            - titulo: string
+                            - atencion: string
+                            - porcentaje_anticipo: float
+                            - requisitos:
+                                - id_requisito
+                                    - info: string
+                            - exlusiones:
+                                - id_exlusion  
+                                    - info: string
+                            - tiempo_entrega: string
+                            - datos_bancarios: boolean
+                            - datos_fiscales: boolean
+                            - aprobada: boolean
+                            - url_evidencia: string
+                            - url_formato: string
+                            - precio_venta_aprobado: float
                     - listas
                         - pendientes
                             - id_subproceso:
@@ -530,13 +531,15 @@ Nota: Todo float se ingresa a 2 decimales.
     - insumos
           - productos
               - id_producto
-                  - descripcion
-                  - catalogo
-                  - catfabric
-                  - marca
-                  - unidad
-                  - clasificacion
-                  - categoria
+                  - descripcion: string
+                  - catalogo: integer
+                  - sat : string
+                  - unidad: id_unidad
+                  - categoria: id_categoria
+                  - familia: id_familia
+                  - subfamilia: id_subfamilia
+                  - marcas
+                      - id_marca: nombre
           - proveedores
               - proveedor
                   - razon_social: string
@@ -567,11 +570,19 @@ Nota: Todo float se ingresa a 2 decimales.
                       - id_producto
                           - precio: float
                           - fecha: timestamp
+                          - marcas
+                              - id_marca:
+                                  - nombre: string
+                                  - id_catalogoProveedor: string
               - productos
                   - id_producto
                       - id_proveedores
                           - precio: float
                           - fecha: timestamp
+                          - marcas
+                              - id_marca
+                                  - nombre: string
+                                  - id_catalogoProveedor: string
               - categorias
                   - categoria  
                       - id_producto: true

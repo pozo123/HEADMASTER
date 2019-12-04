@@ -559,28 +559,44 @@
                                   <label for="catalogoModalInsumosProveedor">Catálogo</label>
                                   <input type="text" id="catalogoModalSuministros" class="form-control" placeholder="Catálogo" disabled="true">
                               </div>
-                              <div class="col-lg-7">
+                              <div class="col-lg-9">
                                   <label for="descripcionModalInsumosProveedor">Descripción</label>
                                   <input type="text" id="descripcionModalSuministros" class="form-control" placeholder="Descripción" disabled="true">
-                              </div>
-                              <div class="col-lg-2">
-                                  <label for="descripcionModalInsumosProveedor">Cantidad</label>
-                                  <input type="text" id="cantidadModalSuministros" class="form-control" placeholder="Cantidad">
                               </div>
                           </div>
                           </br>
                           <div class="form-row align-items-center" id="div_preciosModalSuministros">
                               <div class="col-lg-4">
-                                  <label for="catalogoModalInsumosProveedor">Precio de lista</label>
+                                  <label for="precioListaModalSuministros">Precio de lista</label>
                                   <input type="text" id="precioListaModalSuministros" class="form-control" placeholder="Precio de lista" disabled="true">
                               </div>
                               <div class="col-lg-4">
-                                  <label for="descripcionModalInsumosProveedor">Porcentaje Indirectos</label>
+                                  <label for="indirectosModalSuministros">Porcentaje Indirectos</label>
                                   <input type="text" id="indirectosModalSuministros" class="form-control" placeholder="% indirectos">
                               </div>
                               <div class="col-lg-4">
-                                  <label for="precioModalInsumosProveedor">Precio cliente</label>
+                                  <label for="precioClienteModalSuministros">Precio cliente</label>
                                   <input type="text" id="precioClienteModalSuministros" class="form-control" placeholder="Precio cliente">
+                              </div>
+                          </div>
+                          </br>
+                          <div class="form-row align-items-center">
+                              <div class="col-lg-2"></div>
+                              <div class="col-lg-4">
+                                  <label for="unidadModalSuministros">Unidad</label>
+                                  <input type="text" id="unidadModalSuministros" class="form-control" placeholder="Unidad" disabled="true">
+                              </div>
+                              <div class="col-lg-4">
+                                  <label for="descripcionModalInsumosProveedor">Cantidad</label>
+                                  <input type="text" id="cantidadModalSuministros" class="form-control" placeholder="Cantidad">
+                              </div>
+                          </div>
+                          </br>
+                          <div class="form-row align-items-center">
+                              <div class="col-lg-4"></div>
+                              <div class="col-lg-4">
+                                  <input type="checkbox" class="custom-control-input" id="cb_sinRegistroAdicionales">
+                                  <label class="custom-control-label" for="cb_sinRegistroAdicionales">Agregar insumo sin registro</label>
                               </div>
                           </div>
                           </br>
@@ -3378,61 +3394,97 @@
                                          <form id="formInsumos" action="#" onsubmit="return false;">
                                              <br/>
                                              <div class="form-row">
-                                                 <div class="form-group col-md-2">
-                                                     <label for="catalogoInsumos">Catálogo:</label>
-                                                     <input type="text" name="" id="catalogoInsumos" class="form-control" placeholder="Catálogo">
-                                                 </div>
-                                                 <div class="form-group col-md-10">
+                                                 <div class="form-group col-md-12">
                                                      <label for="descripcionInsumos">Descripción:</label>
                                                      <input type="text" name="" id="descripcionInsumos" class="form-control" placeholder="Descripción">
                                                  </div>
                                              </div>
+                                             <br/>
                                              <div class="form-row">
                                                <div class="form-group col-md-4">
-                                                   <label for="catfabricInsumos">Catfabric:</label>
-                                                   <input type="text" name="" id="catfabricInsumos" class="form-control" placeholder="Catfabric">
+                                                   <label for="ddl_categoriaInsumos">Categoría:</label>
+                                                   <select id ="ddl_categoriaInsumos" class="form-control"></select>
                                                </div>
+                                               <div class="form-group col-md-4">
+                                                   <label for="ddl_clasificacionInsumos">Familia:</label>
+                                                   <select id ="ddl_clasificacionInsumos" class="form-control"></select>
+                                               </div>
+                                               <div class="form-group col-md-4">
+                                                   <label for="ddl_clasificacionInsumos">Subfamilia:</label>
+                                                   <select id ="ddl_clasificacionInsumos" class="form-control"></select>
+                                               </div>
+                                             </div>
+                                             <div class="form-row">
+                                               <div class="form-group col-md-2"></div>
+                                               <div class="form-group col-md-4">
+                                                   <label for="ddl_unidadInsumos">Unidad:</label>
+                                                   <select id ="ddl_unidadInsumos" class="form-control"></select>
+                                               </div>
+                                               <div class="form-group col-md-4">
+                                                   <label for="ddl_marcaInsumos">Marcas:</label>
+                                                   <select id ="ddl_marcaInsumos" class="form-control"></select>
+                                               </div>
+                                             </div>
+                                             <div class="form-row">
+                                               <div class="form-group col-md-4">
+                                                   <label for="catalogoInsumos">Libre:</label>
+                                                   <input type="text" name="" id="catalogoInsumos" class="form-control" placeholder="Digitos libres">
+                                               </div>
+                                               <div class="form-group col-md-4">
+                                                   <label for="catalogoInsumos">Catálogo:</label>
+                                                   <input type="text" name="" id="catalogoInsumos" class="form-control" placeholder="Catálogo" disabled="true">
+                                               </div>
+                                               <div class="form-group col-md-4">
+                                                   <label for="catfabricInsumos">Numero SAT:</label>
+                                                   <input type="text" name="" id="catfabricInsumos" class="form-control" placeholder="Numero SAT">
+                                               </div>
+                                             </div>
+
+                                             </br>
+                                             <h3>Proveedores </h3>
+                                             <div class="form-row">
+                                               <div class="form-group col-md-1"></div>
+                                               <div class="form-group col-md-10">
+                                                   <label for="ddl_proveedorInsumos">Proveedor:</label>
+                                                   <select id ="ddl_proveedorInsumos" class="form-control"></select>
+                                               </div>
+                                             </div>
+                                             </br>
+                                             <div class="form-row">
+                                               <div class="form-group col-md-4">
+                                                   <label for="precioInsumos">Precio:</label>
+                                                   <input type="text" name="" id="precioInsumos" class="form-control" placeholder="Precio">
+                                               </div>
+                                               <div class="form-group col-md-4">
+                                                   <label for="descuentoInsumos">Descuento (%):</label>
+                                                   <input type="number" name="" id="descuentoInsumos" class="form-control" placeholder="Porcentaje">
+                                               </div>
+                                               <div class="form-group col-md-4">
+                                                   <label for="precioFinalInsumos">Precio Final:</label>
+                                                   <input type="text" name="" id="precioFinalInsumos" class="form-control" placeholder="Precio Final" disabled="true">
+                                               </div>
+                                             </div>
+                                             </br>
+                                             <div class="form-row">
+                                               <div class="form-group col-md-2"></div>
                                                <div class="form-group col-md-4">
                                                    <label for="ddl_marcaInsumos">Marca:</label>
                                                    <select id ="ddl_marcaInsumos" class="form-control"></select>
                                                </div>
                                                <div class="form-group col-md-4">
-                                                   <label for="ddl_unidadInsumos">Unidad:</label>
-                                                   <select id ="ddl_unidadInsumos" class="form-control"></select>
+                                                   <label for="precioInsumos">Catalogo proveedor:</label>
+                                                   <input type="text" name="" id="precioInsumos" class="form-control" placeholder="Catálogo">
                                                </div>
                                              </div>
-                                             <br/>
-                                             <div class="form-row">
-                                               <div class="form-group col-md-2"></div>
-                                               <div class="form-group col-md-4">
-                                                   <label for="ddl_clasificacionInsumos">Clasificación:</label>
-                                                   <select id ="ddl_clasificacionInsumos" class="form-control"></select>
-                                               </div>
-                                               <div class="form-group col-md-4">
-                                                   <label for="ddl_categoriaInsumos">Categoría:</label>
-                                                   <select id ="ddl_categoriaInsumos" class="form-control"></select>
-                                               </div>
-                                             </div>
-                                             </br>
-                                             <h3>Proveedores </h3>
-                                             <div class="form-row">
-                                               <div class="form-group col-md-1"></div>
-                                               <div class="form-group col-md-7">
-                                                   <label for="ddl_proveedorInsumos">Proveedor:</label>
-                                                   <select id ="ddl_proveedorInsumos" class="form-control"></select>
-                                               </div>
-                                               <div class="form-group col-md-3">
-                                                   <label for="precioInsumos">Precio:</label>
-                                                   <input type="text" name="" id="precioInsumos" class="form-control" placeholder="Precio">
-                                               </div>
-                                             </div>
-                                             </br>
                                              <div class="form-row align-items-center">
-                                                 <div class="col-lg-3 col-sm-12"></div>
+                                                 <div class="col-lg-2 col-sm-12"></div>
+                                                 <div class="col-lg-3 col-sm-12">
+                                                     <label for="fechaIngresoCotizacionInsumos">Ingreso de cotización:</label>
+                                                     <input class="form-control" type="text" id="fechaIngresoCotizacionInsumos" placeholder="" readonly="readonly">
+                                                 </div>
+                                                 <div class="col-lg-2 col-sm-12"></div>
                                                  <div class="col-lg-3 col-sm-12">
                                                      <label for="fechaCotizacionInsumos">Vencimiento de cotización:</label>
-                                                 </div>
-                                                 <div class="col-lg-3 col-sm-12">
                                                      <input class="form-control" type="text" id="fechaCotizacionInsumos" placeholder="" readonly="readonly">
                                                  </div>
                                              </div>
