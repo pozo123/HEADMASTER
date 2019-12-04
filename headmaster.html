@@ -1098,34 +1098,29 @@
                     <li>
                         <a href="#pageDashboard" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Dashboard</a>
                         <ul class="collapse list-unstyled" id="pageDashboard">
-                            <li class="tab administracion hidden" id="tabDashProd"><a href="#" onclick="openTabs('tabDashProd','dashboardProduccion')">Producción</a></li>
+                            <li class="tab administracion hidden" id="tabDashProd"><a href="#" onclick="openTabs('tabDashProd','dashboardProduccion')">Dash - Producción</a></li>
                         </ul>
                     </li>
                     <li class="administracion hidden">
                         <a href="#pageAdministracion" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Administración</a>
                         <ul class="collapse list-unstyled" id="pageAdministracion">
+                            <a href="#pageAltas" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Altas</a>
+                            <ul class="collapse list-unstyled" id="pageAltas">
+                                <li class="tab administracion hidden" id="tabColaboradorHEAD"><a href="#" onclick="openTabs('tabColaboradorHEAD','colaboradorHEAD')">Alta y Edición - Colaboradores HEAD</a></li>
+                                <li class="tab administracion hidden" id="tabAltaCliente"><a href="#" onclick="openTabs('tabAltaCliente','altaCliente')">Alta y Edición - Despachos (Clientes)</a></li>
+                                <li class="tab administracion hidden" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Alta y Edición - Obras</a></li>
+                                <li class="tab administracion hidden" id="tabAltaProcesos"><a href="#" onclick="openTabs('tabAltaProcesos','altaProcesos')">Alta y Edición - Procesos</a></li>
+                            </ul>
+                            <a href="#pageDefiniciones" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Definiciones</a>
+                            <ul class="collapse list-unstyled" id="pageDefiniciones">
+                                <li class="tab administracion hidden" id="tabEspecialidades"><a href="#" onclick="openTabs('tabEspecialidades','especialidadesHEAD')">Definición - Especialidades</a></li>
+                                <li class="tab administracion hidden" id="tabPuestos"><a href="#" onclick="openTabs('tabPuestos','puestosHEAD')">Definición - Puestos</a></li>
+                            </ul>
+                            <li class="tab" id="tabCalculadora"><a href="#" onclick="openTabs('tabCalculadora','calculadora')">Calculadora Kaizen</a></li>
+                            <li class="tab" id="tabGeneradorAdic"><a href="#" onclick="openTabs('tabGeneradorAdic','generadorAdicionales')">Generador de Adicionales</a></li>
                             <li class="tab administracion hidden" id="tabPagosCliente"><a href="#" onclick="openTabs('tabPagosCliente','pagosCliente')">Pagos por parte Cliente</a></li>
                         </ul>
-                    </li>
-                    <li class="administracion hidden">
-                        <a href="#pageColaborador" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Colaboradores HEAD</a>
-                        <ul class="collapse list-unstyled" id="pageColaborador">
-                            <li class="tab" id="tabColaboradorHEAD"><a href="#" onclick="openTabs('tabColaboradorHEAD','colaboradorHEAD')">Alta y Edición - Colaboradores HEAD</a></li>
-                        </ul>
-                    </li>
-                    <li class="administracion hidden">
-                        <a href="#pageCliente" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Despachos (Clientes)</a>
-                        <ul class="collapse list-unstyled" id="pageCliente">
-                            <li class="tab" id="tabAltaCliente"><a href="#" onclick="openTabs('tabAltaCliente','altaCliente')">Alta y Edición - Despachos</a></li>
-                        </ul>
-                    </li>
-                    <li class="rrhh hidden">
-                        <a href="#pageManoObra" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Mano de Obra</a>
-                        <ul class="collapse list-unstyled" id="pageManoObra">
-                            <li class="tab" id="tabEspecialidades"><a href="#" onclick="openTabs('tabEspecialidades','especialidadesHEAD')">Definición - Especialidades</a></li>
-                            <li class="tab" id="tabPuestos"><a href="#" onclick="openTabs('tabPuestos','puestosHEAD')">Definición - Puestos</a></li>
-                            <li class="tab" id="tabTrabajadores"><a href="#" onclick="openTabs('tabTrabajadores','trabajadoresProduccion')">Trabajadores de obra</a></li>
-                        </ul>
+                        
                     </li>
                     <li class="rrhh hidden">
                         <a href="#pageNomina" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Nómina</a>
@@ -1133,15 +1128,7 @@
                             <li class="tab" id="tabDatosNomina"><a href="#" onclick="openTabs('tabDatosNomina','datosNomina')">Asistencias, Horas Extra y Diversos</a></li>
                             <li class="tab" id="tabDiversos"><a href="#" onclick="openTabs('tabDiversos','diversos')">Definición - Diversos</a></li>
                             <li class="tab" id="tabPagosNomina"><a href="#" onclick="openTabs('tabPagosNomina','pagosNomina')">Pagos Nómina</a></li>
-                        </ul>
-                    </li>
-                    <li class = "administracion hidden">
-                        <a href="#pageObra" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Obras</a>
-                        <ul class="collapse list-unstyled" id="pageObra">
-                            <li class="tab" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Alta y Edición - Obras</a></li>
-                            <li class="tab" id="tabAltaProcesos"><a href="#" onclick="openTabs('tabAltaProcesos','altaProcesos')">Alta y Edición - Procesos</a></li>
-                            <li class="tab" id="tabCalculadora"><a href="#" onclick="openTabs('tabCalculadora','calculadora')">Calculadora Kaizen</a></li>
-                            <li class="tab" id="tabGeneradorAdic"><a href="#" onclick="openTabs('tabGeneradorAdic','generadorAdicionales')">Generador de Adicionales</a></li>
+                            <li class="tab administracion hidden" id="tabTrabajadores"><a href="#" onclick="openTabs('tabTrabajadores','trabajadoresProduccion')">Trabajadores de obra</a></li>
                         </ul>
                     </li>
                     <li class = "administracion produccion hidden">
@@ -3894,29 +3881,36 @@
                                         <br/>
                                     </div>
                                     <div class= "col-lg-2"></div>
-                                    <div class = "tableWrapper container_reporte_nomina">
-                                        <table id="dataTablePagosCliente" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
-                                            <thead>
-                                                <tr>
-                                                    <th>Id_proveedor</th>
-                                                    <th>RFC</th>
-                                                    <th>Razón Social</th>
-                                                    <th>Dirección</th>
-                                                    <th>Insumos</th>
-                                                    <th>Editar</th>
-                                                </tr>
-                                            </thead>
-                                            <tfoot>
-                                                <tr>
-                                                    <th>Id_proveedor</th>
-                                                    <th>RFC</th>
-                                                    <th>Razón Social</th>
-                                                    <th>Dirección</th>
-                                                    <th>Insumos</th>
-                                                    <th>Editar</th>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
+                                    <div class="col-12 container_reporte_nomina" id="containerResumenPagosCliente">
+                                        <div class="row">
+                                            <div class="container-fluid" style="text-align:center">
+                                                <br/>
+                                                <h6>Total pagado:<span id="totalResumenPagosCliente" style="font-weight: bold"></span></h6>
+                                                <h6>Presupuesto de Instalaciones: <span id="" style="font-weight: bold">Aún no disponible</span></h6>
+                                                <h6>Saldo Total: <span id="" style="font-weight: bold">Aún no disponible</span></h6>
+                                                <br/>
+                                                <h6>Total cobrado por concepto de anticipo:<span id="antResumenPagosCliente" style="font-weight: bold"></span></h6>
+                                                <h6>Total cobrado por concepto de estimación:<span id="estResumenPagosCliente" style="font-weight: bold"></span></h6>
+                                            </div>
+                                        </div>
+                                        <div class = "tableWrapper">
+                                            <table id="dataTablePagosCliente" style="margin-left:auto;margin-right:auto; width:100%" class="display">
+                                                <thead>
+                                                    <tr>
+                                                        <th>timestamps</th>
+                                                        <th>Fecha de pago</th>
+                                                        <th>Concepto</th>
+                                                        <th>Folio</th>
+                                                        <th>Tipo</th>
+                                                        <th>Monto</th>
+                                                        <th>EST/ANT</th>
+                                                        <th>Evidencia</th>
+                                                        <th>Editar</th>
+                                                        <th>Eliminar</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

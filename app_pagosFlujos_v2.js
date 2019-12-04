@@ -2,6 +2,11 @@ var id_tab_pagos_cliente = "tabPagosCliente";
 var id_form_pagos_cliente = "formPagosCliente";
 var id_dataTable_pagos_cliente = "dataTablePagosCliente";
 
+var id_div_resumen_pagos_cliente = "containerResumenPagosCliente";
+var id_total_resumen_pagos_cliente= "totalResumenPagosCliente";
+var id_est_resumen_pagos_cliente = "estResumenPagosCliente";
+var id_ant_resumen_pagos_cliente = "antResumenPagosCliente";
+
 var id_ddl_obra_pagos_cliente = "obraPagosCliente";
 var id_monto_pagos_cliente = "montoPagosCliente";
 var id_fecha_pagos_cliente = "fechaPagosCliente";
@@ -22,9 +27,12 @@ var existe_pago_pagos_cliente = false;
 var id_pago_existente_pagos_cliente = "";
 
 var file_selected_pagos_cliente = "";
+var optionsPagoCliente =  {year: 'numeric', month: '2-digit', day: '2-digit'};
+
+var procesos = {};
 
 $('#' + id_tab_pagos_cliente).click(function() {
-    resetFormPagosCliente(true);
+    resetFormPagosCliente(false);
 
     jQuery('#' + id_fecha_pagos_cliente).datetimepicker(
         {timepicker:false, weeks:true,format:'Y.m.d'}
@@ -56,7 +64,18 @@ $('#' + id_file_input_pagos_cliente).on("change", function(event){
 
 
 $('#' + id_ddl_obra_pagos_cliente).change(function(){
-    resetFormPagosCliente(true);
+    firebase.database().ref(rama_bd_obras + "/procesos/" + $('#' + id_ddl_obra_pagos_cliente + " option:selected").val() + "/procesos").once('value').then(function(snapshot){
+        snapshot.forEach(function(procSnap){
+            if(procSnap.key != "PC00"){
+                procSnap.child("subprocesos").forEach(function(subprocSnap){
+                    procesos[subprocSnap.key] = subprocSnap.val().nombre;
+                });
+            };
+        });  
+        resetFormPagosCliente(true);
+        tablaYResumenPagosCliente();
+        $('#' + id_div_resumen_pagos_cliente).removeClass('hidden');
+    });
 });
 
 
@@ -131,7 +150,77 @@ $('#' + id_button_guardar_pagos_cliente).click(function(){
     if(validateFormPagosFlujos(existe_pago_pagos_cliente)){
         if(existe_pago_pagos_cliente){
             // funcionalidad si es edicion
+            // dos partes, si el usuario ingresa archivo evidencia
+            // caso: no eligio archivo.
 
+            if(file_selected_pagos_cliente == ""){
+                console.log(1);
+                firebase.database().ref(rama_bd_pagos + "/pagos/" + id_pago_existente_pagos_cliente).once("value").then(function(snapshot){
+                    var registroPrevio = snapshot.val();
+                    pago = getDatosPagosCliente(registroPrevio.comprobante_url);
+                    firebase.database().ref(rama_bd_pagos + "/pagos/" + id_pago_existente_pagos_cliente).update(pago);
+
+                    // listas
+                    listas["listas/obras/" + registroPrevio.obra+ "/" +  id_pago_existente_pagos_cliente] = null;
+                    listas["listas/fechas/" + aaaammdd(registroPrevio.fecha_pago) + "/" + id_pago_existente_pagos_cliente] = null;
+                    listas["listas/folios/" + registroPrevio.folio + "/" + id_pago_existente_pagos_cliente] = null;
+
+                    listas["listas/obras/" + $('#' + id_ddl_obra_pagos_cliente + " option:selected").val() + "/" +  id_pago_existente_pagos_cliente] = true;
+                    listas["listas/fechas/" + aaaammdd(pago.fecha_pago) + "/" + id_pago_existente_pagos_cliente] = true;
+                    listas["listas/folios/" + pago.folio + "/" + id_pago_existente_pagos_cliente] = true;
+
+                    firebase.database().ref(rama_bd_pagos).update(listas);
+                    // pda
+                    pda("modificacion", rama_bd_pagos + "/pagos/" + id_pago_existente_pagos_cliente, registroPrevio);
+                    alert("Se realizó la edición de manera correcta (no se editó el documento evidencia).");
+                    resetFormPagosCliente(true);
+                });
+
+            } else { // caso si eligió archivo
+                var storageRef = firebase.storage().ref(rama_bd_pagos + "/" + id_pago_existente_pagos_cliente + "/" + file_selected_pagos_cliente.name);
+                var uploadTask = storageRef.put(file_selected_pagos_cliente);
+
+                uploadTask.on('state_changed', function(snapshot){
+                    var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                    switch (snapshot.state) {
+                        case firebase.storage.TaskState.PAUSED: // or 'paused'
+                        console.log('Upload is paused');
+                        break;
+                        case firebase.storage.TaskState.RUNNING: // or 'running'
+                        console.log('Upload is running');
+                        break;
+                    }
+                }, function(error) {
+                    // Handle unsuccessful uploads
+                    console.log(error);
+                }, function() {
+                    // Handle successful uploads on complete
+                    // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+                    uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                        firebase.database().ref(rama_bd_pagos + "/pagos/" + id_pago_existente_pagos_cliente).once("value").then(function(snapshot){
+                            var registroPrevio = snapshot.val();
+                            pago = getDatosPagosCliente(downloadURL);
+                            firebase.database().ref(rama_bd_pagos + "/pagos/" + id_pago_existente_pagos_cliente).update(pago);
+        
+                            // listas
+                            listas["listas/obras/" + registroPrevio.obra+ "/" +  id_pago_existente_pagos_cliente] = null;
+                            listas["listas/fechas/" + aaaammdd(registroPrevio.fecha_pago) + "/" + id_pago_existente_pagos_cliente] = null;
+                            listas["listas/folios/" + registroPrevio.folio + "/" + id_pago_existente_pagos_cliente] = null;
+        
+                            listas["listas/obras/" + $('#' + id_ddl_obra_pagos_cliente + " option:selected").val() + "/" +  id_pago_existente_pagos_cliente] = true;
+                            listas["listas/fechas/" + aaaammdd(pago.fecha_pago) + "/" + id_pago_existente_pagos_cliente] = true;
+                            listas["listas/folios/" + pago.folio + "/" + id_pago_existente_pagos_cliente] = true;
+        
+                            firebase.database().ref(rama_bd_pagos).update(listas);
+                            // pda
+                            pda("modificacion", rama_bd_pagos + "/pagos/" + id_pago_existente_pagos_cliente, registroPrevio);
+                            alert("Se realizó la edición de manera correcta.");
+                            resetFormPagosCliente(true);
+                        });
+                    });
+                });
+            }
         } else {
             // funcionalidad si es alta
             var key = firebase.database().ref("dummy").push().key
@@ -172,9 +261,8 @@ $('#' + id_button_guardar_pagos_cliente).click(function(){
                     firebase.database().ref(rama_bd_pagos).update(listas);
                     // pda
                     pda("alta", rama_bd_pagos + "/pagos/" + key, "");
-
                     alert("El pago se dio de alta con éxito");
-                    resetFormPagosCliente(false);
+                    resetFormPagosCliente(true);
                 });
             });
         };
@@ -201,31 +289,25 @@ function createRowDist(key){
     option.text = option.value = "";
     proceso.appendChild(option);
 
-    firebase.database().ref(rama_bd_obras + "/procesos/" + $('#' + id_ddl_obra_pagos_cliente + " option:selected").val() + "/procesos").once('value').then(function(snapshot){
-        snapshot.forEach(function(procSnap){
-            if(procSnap.key != "PC00"){
-                procSnap.child("subprocesos").forEach(function(subprocSnap){
-                    option = document.createElement('option');
-                    option.value = subprocSnap.key;
-                    option.text = "(" +  subprocSnap.key + ") " +subprocSnap.val().nombre;
-                    proceso.appendChild(option);
-                });
-            };
-        });  
-        
-        var col = document.createElement('div');
-        col.className = "form-group col-4";
-        col.appendChild(proceso);
-        
-        var row = document.createElement('div');
-        row.className = "form-row";
-        row.id = key;
-        row.append(col);
+    for(proc in procesos){
+        option = document.createElement('option');
+        option.value = proc;
+        option.text = "(" + proc + ") " + procesos[proc];
+        proceso.appendChild(option);
+    };
+    
+    var col = document.createElement('div');
+    col.className = "form-group col-4";
+    col.appendChild(proceso);
+    
+    var row = document.createElement('div');
+    row.className = "form-row";
+    row.id = key;
+    row.append(col);
 
-        var div_distribuible = document.getElementById(id_div_distribucion_pagos_cliente);
-        div_distribuible.appendChild(row);
-    });
-};
+    var div_distribuible = document.getElementById(id_div_distribucion_pagos_cliente);
+    div_distribuible.appendChild(row);
+    };
 
 $(document).on('change','.procesoDistribuibleVacio', function(){
     var row = this.parentElement.parentElement;
@@ -295,7 +377,7 @@ $(document).on('change','.procesoDistribuibleVacio', function(){
 
 $(document).on('change','.procesoDistribuibleLleno', function(){
     if($("option:selected", this).val() == ""){
-        $('#' + this.parentElement.parentElement.id).empty();
+        $('#' + this.parentElement.parentElement.id).remove();
         getDistTotal();
     }
 });
@@ -326,6 +408,7 @@ function resetFormPagosCliente(obra_change){
 
     if(!obra_change){
         $('#' + id_ddl_obra_pagos_cliente).val("");
+        $('#' + id_div_resumen_pagos_cliente).addClass('hidden');
     }
     $('#' + id_monto_pagos_cliente).val("");
     $('#' + id_fecha_pagos_cliente).val("");
@@ -363,13 +446,14 @@ function getDatosPagosCliente(urlFile){
     } else {
         tipo = "Recibo";
     };
+
     var json_datos = {
         obra: $('#' + id_ddl_obra_pagos_cliente + " option:selected").val(),
         concepto: $('#' + id_concepto_pagos_cliente).val(),
         fecha_pago: new Date(fecha_pago[0], fecha_pago[1] - 1, fecha_pago[2]).getTime(),
         comprobante_url: urlFile,
         folio: $('#' + id_folio_pagos_cliente).val(),
-        tipo: tipo,    
+        tipo: tipo,  
         distribucion: {}
 
     };
@@ -399,5 +483,246 @@ function getDatosPagosCliente(urlFile){
         }
     });
     return json_datos;
-
 };
+
+function tablaYResumenPagosCliente(){
+    
+    // necesito generar array con datos de firebase database para luego crear la tabla
+    firebase.database().ref(rama_bd_pagos + "/pagos").on("value", function(snapshot){
+        var datos = [];
+        var total_pagado = 0;
+        var total_est = 0;
+        var total_ant = 0;
+
+
+        snapshot.forEach(function(pagoSnap){
+            var key = pagoSnap.key;
+            var pago = pagoSnap.val();
+
+            // si el pago se realizó a dicha obra.
+            if(pago.obra == $('#' + id_ddl_obra_pagos_cliente + " option:selected").val()){
+                var monto = 0;
+                var formato = "";
+                var is_ant = false;
+                var is_est = false;
+                pagoSnap.child("distribucion").forEach(function(distSnap){
+                    monto += distSnap.val().monto_parcial;
+                    total_pagado += distSnap.val().monto_parcial;
+
+                    if(distSnap.val().formato == "ANT"){
+                        total_ant += distSnap.val().monto_parcial;
+                        is_ant = true;
+                    } else {
+                        total_est += distSnap.val().monto_parcial;
+                        is_est = true;
+                    };
+                });
+
+                if(is_ant && is_est){
+                    formato = "Ambos"
+                } else if(is_ant){
+                    formato = "ANT";
+                } else if(is_est){
+                    formato = "EST";
+                }
+                // llenar array
+
+                datos.push([
+                    pago.fecha_pago + "_" + pago.folio,
+                    new Date(pago.fecha_pago).toLocaleDateString("es-ES", optionsPagoCliente),
+                    pago.concepto,
+                    pago.folio,
+                    pago.tipo,
+                    formatMoney(monto),
+                    formato,
+                    "<button type='button' class='btn btn-dark' onclick='showFile(" + "\`" + pago.comprobante_url + "\`" + ")'><i class='fas fa-file'></i></button>",
+                    "<button type='button' class='btn btn-info' onclick='fillData(" + "\`" + key + "\`" + ")'><i class='fas fa-edit'></i></button>",
+                    "<button type='button' class='btn btn-danger' onclick='deletePago(" + "\`" + key + "\`" + ")'><i class='fas fa-trash'></i></button>",
+                ]);
+            };
+        });
+
+        // completar filas del resumen a falta de tener funcionalidad de pptos.
+
+        $('#' + id_est_resumen_pagos_cliente).text(formatMoney(total_est));
+        $('#' + id_ant_resumen_pagos_cliente).text(formatMoney(total_ant))
+        $('#' + id_total_resumen_pagos_cliente).text(formatMoney(total_pagado));
+
+
+        // generar tabla
+
+        tabla_pagos = $('#'+ id_dataTable_pagos_cliente).DataTable({
+            destroy: true,
+            "order": [[ 0, "desc" ]],
+            data: datos,
+            language: idioma_espanol,
+            "columnDefs": [
+                {
+                    targets: 3,
+                    className: 'dt-body-center'
+                },
+                {
+                    targets: 4,
+                    className: 'dt-body-center'
+                },
+                {
+                    targets: 5,
+                    className: 'dt-body-center'
+                },
+                {
+                    targets: -3,
+                    className: 'dt-body-center'
+                },
+                {
+                    targets: -2,
+                    className: 'dt-body-center'
+                },
+                {
+                    targets: -1,
+                    className: 'dt-body-center'
+                },
+                { "visible": false, "targets": 0 },
+              ],
+              dom: 'Bfrtip',
+              buttons: [
+                {extend: 'excelHtml5',
+                title: "Pagos_" + $('#' + id_ddl_obra_pagos_cliente + " option:selected").text(),
+                exportOptions: {
+                    columns: [':visible']
+                }},
+              ],
+              //"paging":false,
+        });
+    });
+};
+
+
+// función para obtener los datos del pago y colocarlos en el formulario. Necesito consultar la base de datos porque en la 
+// tabla no cuento con los datos de distribucion
+
+function fillData(key){
+    resetFormPagosCliente(true);
+    id_pago_existente_pagos_cliente = key;
+    existe_pago_pagos_cliente = true;
+    
+    firebase.database().ref(rama_bd_pagos + "/pagos/" + key).once("value").then(function(snapshot){
+        var pago = snapshot.val();
+        var distribucion = pago.distribucion;
+
+        $('#' + id_ddl_obra_pagos_cliente).val(pago.obra);
+        $('#' + id_folio_pagos_cliente).val(pago.folio);
+        $('#' + id_concepto_pagos_cliente).val(pago.concepto);
+
+        // fecha
+        var fecha_string = new Date(pago.fecha_pago);
+        $('#' + id_fecha_pagos_cliente).val(fecha_string.getFullYear() + "." + ("0" + (fecha_string.getMonth() + 1)).slice(-2)  + "." + ("0" + fecha_string.getDate()).slice(-2));
+
+        // tipo de pago
+        pago.tipo == "Factura" ? $("#" + id_radio_factura_pagos_cliente).prop('checked', true) : $("#" + id_radio_recibo_pagos_cliente).prop('checked', true);
+        // montos y distribucion
+        var monto = 0;
+        for(dist in distribucion){
+            monto += distribucion[dist].monto_parcial;
+            // eliminar anteriores
+            $('.procesoDistribuibleVacio').parent().parent().remove();
+            
+            // fila en distribucion
+            createRowDist(dist);
+            var row = document.getElementById(dist);
+            
+            //
+            var ant_radio_input = document.createElement('input');
+            var ant_radio_label = document.createElement('label');
+        
+            ant_radio_input.className = "form-check-input";
+            ant_radio_input.type = "radio"
+            ant_radio_input.value = "ANT";
+            ant_radio_input.name = row.id;
+        
+            ant_radio_label.className = "form-check-label";
+            ant_radio_label.innerHTML = "Anticipo"
+        
+            var div_ant_inline = document.createElement('div');
+            div_ant_inline.className = "form-check form-check-inline";
+            div_ant_inline.appendChild(ant_radio_input);
+            div_ant_inline.appendChild(ant_radio_label)
+        
+            var col_tipo = document.createElement('div');
+            col_tipo.className = "form-group col-4 text-center";
+            col_tipo.appendChild(div_ant_inline)
+        
+            // est
+        
+            var est_radio_input = document.createElement('input');
+            var est_radio_label = document.createElement('label');
+        
+            est_radio_input.className = "form-check-input";
+            est_radio_input.type = "radio"
+            est_radio_input.value = "EST";
+            est_radio_input.name = row.id;
+        
+            est_radio_label.className = "form-check-label";
+            est_radio_label.innerHTML = "Estimación"
+        
+            var div_est_inline = document.createElement('div');
+            div_est_inline.className = "form-check form-check-inline";
+            div_est_inline.appendChild(est_radio_input);
+            div_est_inline.appendChild(est_radio_label)
+        
+            var col_tipo = document.createElement('div');
+            col_tipo.className = "form-group col-4 text-center";
+            col_tipo.appendChild(div_ant_inline);
+            col_tipo.appendChild(div_est_inline);
+        
+            var monto_parcial = document.createElement('input');
+            monto_parcial.className = "form-control montoParcialprocDist";
+            monto_parcial.type = "text";
+            monto_parcial.placeholder = "Monto parcial";
+        
+            var col_monto = document.createElement('div');
+            col_monto.className = "form-group col-4";
+            col_monto.appendChild(monto_parcial);
+        
+            row.appendChild(col_tipo);
+            row.appendChild(col_monto);
+
+            $(row.childNodes[0].childNodes[0]).val(distribucion[dist].clave_subproc);
+            $(monto_parcial).val(formatMoney(distribucion[dist].monto_parcial));
+
+            distribucion[dist].formato == "ANT" ? $(ant_radio_input).prop('checked', true) : $(est_radio_input).prop('checked', true);
+
+            $('.procesoDistribuibleVacio').addClass("procesoDistribuibleLleno");
+            $('.procesoDistribuibleVacio').removeClass("procesoDistribuibleVacio");
+
+            createRowDist();
+        };
+
+        $('#' + id_monto_pagos_cliente).val(formatMoney(monto));
+        getDistTotal();
+    });
+};
+
+function deletePago(key){
+    var r = confirm("¿Estás seguro de eliminar el pago seleccionado?");
+    if(r == true){
+        // Delete the file
+        // Create a reference to the file to delete
+        firebase.database().ref(rama_bd_pagos + "/pagos/" + key).once("value").then(function(snapshot){
+        // File deleted successfully
+            var registroPrevio = snapshot.val();
+            var listas = {};
+            firebase.database().ref(rama_bd_pagos + "/pagos/" + key).set(null);
+
+            // listas
+            listas["listas/obras/" + registroPrevio.obra+ "/" +  key] = null;
+            listas["listas/fechas/" + aaaammdd(registroPrevio.fecha_pago) + "/" + key] = null;
+            listas["listas/folios/" + registroPrevio.folio + "/" + key] = null;
+
+            firebase.database().ref(rama_bd_pagos).update(listas);
+            // pda
+            pda("eliminación", rama_bd_pagos + "/pagos/" + key, registroPrevio);
+            alert("Pago eliminado correctamente");
+
+        });
+    }
+}
