@@ -422,7 +422,7 @@ function actualizarTablaCol(){
             } else if (credenciales == 1){
                 credenciales_text = "Director General";
             } else if (credenciales == 2){
-                credenciales_text = "Gerente de área";
+                credenciales_text = "Líder de área";
             } else if (credenciales == 3){
                 credenciales_text = "Colaborador HEAD";
             };

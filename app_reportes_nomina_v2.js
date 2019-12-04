@@ -647,8 +647,6 @@ function reporteProcesoObraReporteNomina(){
                         ]);
                     };
                 };
-                console.log(json_procesos)
-                console.log(datos_proceso);
                  tabla_reporte_obra_nomina = $('#'+ id_dataTable_reporte_proceso_reporte_nomina).DataTable({
                     destroy: true,
                     data: datos_proceso,

@@ -149,5 +149,9 @@ function deformatMoney(string){
     return parseFloat(sin_comas.replace("$",""));
 }
 
+function showFile(link){
+    window.open(link, '_blank');
+};
+
 
   

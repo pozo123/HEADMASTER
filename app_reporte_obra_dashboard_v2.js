@@ -872,10 +872,7 @@ $('#' + id_ddl_week_dash_prod).change(function(){
 
                                 // sin iva
                                 var diverso_tipo = json_registros_obra[reg].diversos[div].tipo;
-                                console.log(trabajadores_json[reg].nombre)
-                                console.log(trabajadores_json[reg].diversos_json);
                                 trabajadores_json[reg].diversos_json[diverso_tipo].monto += json_registros_obra[reg].diversos[div].cantidad;
-                                console.log(trabajadores_json[reg].diversos_json);
 
                                 //trabajadores_json[reg].diversos_json[].monto += json_registros_obra[reg].diversos[div].cantidad;
                                 trabajadores_json[reg].diversos += json_registros_obra[reg].diversos[div].cantidad;
