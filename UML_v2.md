@@ -71,12 +71,12 @@ Nota: Todo float se ingresa a 2 decimales.
     - administracion:
         - pagos
             - pagos (firebase_id)
-                - id_obra: string
+                - obra: string (firebase_id)
                 - concepto: string
                 - fecha_pago: float (timestamp)
                 - comprobante_url: string
                 - folio: string
-                - tipo_pago: string
+                - tipo: string
                 - distribucion
                     - entradas (firebase_id)
                         - clave__subproc: string
