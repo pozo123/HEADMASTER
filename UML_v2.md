@@ -550,19 +550,30 @@ Nota: Todo float se ingresa a 2 decimales.
                         - nombre: string
                         - telefono: string
                         - correo: string
+          - categorias
+              - id_categoria
+                  - nombre: string
+                  - codigo: stirng
+                  - familias
+                      - id_familia
+                          - nombre: string
+                          - codigo: string
+                          - subfamilias:
+                              - id_subfamilia
+                                  -nombre: string
+                                  - codigo: string
           - marcas
               - id_marca
                   - nombre: string
-          - categoria
-              - id_categoria
-                  - nombre: string
-          - clasificacion
-              - id_clasificacion
-                  - nombre: string
+                  - codigo: string
           - unidades
               - id_unidad
                   - nombre: string
-
+                  - codigo: string
+          - clasificacion
+              - id_clasificacion
+                  - nombre: string
+                  - codigo: string
 
           - listas
               - proveedores
@@ -584,17 +595,17 @@ Nota: Todo float se ingresa a 2 decimales.
                                   - nombre: string
                                   - id_catalogoProveedor: string
               - categorias
-                  - categoria  
-                      - id_producto: true
+                  - id_categoria
+                      - id_familia
+                          - id_subfamilia
+                              -id_producto: true
               - marcas
                   - marca
-                      - id_producto: true
-              - clasificaciones
-                  - clasificacion
                       - id_producto: true
               - unidades
                   - unidad
                       - id_producto: true
+
     - matriciales
         - obras
             - obra (firebase_id)

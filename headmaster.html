@@ -1136,7 +1136,7 @@
                             <li class="tab" id="tabGeneradorAdic"><a href="#" onclick="openTabs('tabGeneradorAdic','generadorAdicionales')">Generador de Adicionales</a></li>
                             <li class="tab administracion hidden" id="tabPagosCliente"><a href="#" onclick="openTabs('tabPagosCliente','pagosCliente')">Pagos por parte Cliente</a></li>
                         </ul>
-                        
+
                     </li>
                     <li class="rrhh hidden">
                         <a href="#pageNomina" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Nómina</a>
@@ -1157,7 +1157,7 @@
                     <li class = "administracion compras hidden">
                         <a href="#pageSuministros" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Suministros</a>
                         <ul class="collapse list-unstyled" id="pageSuministros">
-                            <li class="tab" id="tabDefinicionesSuministros"><a href="#" onclick="openTabs('tabDefinicionesSuministros','definicionesSuministros')">Marcas, Categorias, Clasificaciones y Unidades</a></li>
+                            <li class="tab" id="tabDefinicionesSuministros"><a href="#" onclick="openTabs('tabDefinicionesSuministros','definicionesSuministros')">Categorias, Familias, Subfamilais, Marcas y Unidades</a></li>
                             <li class="tab" id="tabAltaInsumos"><a href="#" onclick="openTabs('tabAltaInsumos','altaInsumos')">Alta - Insumos</a></li>
                             <li class="tab" id="tabAltaProveedores"><a href="#" onclick="openTabs('tabAltaProveedores','altaProveedores')">Alta - Proveedores</a></li>
                         </ul>
@@ -2848,183 +2848,69 @@
                                  <div class= "row">
                                      <div class="col-lg-1"></div>
                                      <div class="col-lg-10">
-                                         <h3> Marcas </h3>
+                                         <h3> Campos </h3>
+                                           </br>
+                                           <div class= "form-group">
+                                               <form id="formDefinicionesSuministros" action="#" onsubmit="return false;">
+                                                   <div class="form-group text-center">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="tipoDefiniciones" id="rb_categoriaDefinicionesSuministros" value="categoria" checked>
+                                                            <label class="form-check-label" for="rb_categoriaDefinicionesSuministros">Categoría</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="tipoDefiniciones" id="rb_familiaDefinicionesSuministros" value="familia">
+                                                            <label class="form-check-label" for="rb_familiaDefinicionesSuministros">Familia</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="tipoDefiniciones" id="rb_subfamiliaDefinicionesSuministros" value="subfamilia">
+                                                            <label class="form-check-label" for="rb_subfamiliaDefinicionesSuministros">Subfamilia</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="tipoDefiniciones" id="rb_marcaDefinicionesSuministros" value="marca">
+                                                            <label class="form-check-label" for="rb_marcaDefinicionesSuministros">Marca</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="tipoDefiniciones" id="rb_unidadDefinicionesSuministros" value="unidad">
+                                                            <label class="form-check-label" for="rb_unidadDefinicionesSuministros">Unidad</label>
+                                                        </div>
+                                                    </div>
+                                                   <div class="form-row">
+                                                     <div class="form-group col-md-6" id="div_ddl_categoriaDefincionesSuministros">
+                                                         <label for="ddl_categoriaDefincionesSuministros">Categoría:</label>
+                                                         <select id="ddl_categoriaDefincionesSuministros" class="form-control"></select>
+                                                     </div>
+                                                     <div class="form-group col-md-6" id="div_ddl_familiaDefincionesSuministros">
+                                                         <label for="ddl_familiaDefincionesSuministros">Familia:</label>
+                                                         <select id="ddl_familiaDefincionesSuministros" class="form-control"></select>
+                                                     </div>
+                                                   </div>
+                                                   <div class="form-row">
+                                                       <div class="form-group col-md-9">
+                                                           <label for="nombreMarcaSuministros">Nombre:</label>
+                                                           <input type="text" name="" id="nombreDefinicionesSuministros" class="form-control" placeholder="Ejemplo: Siemens">
+                                                       </div>
+                                                       <div class="form-group col-md-3">
+                                                           <label for="nombreMarcaSuministros">Codigo:</label>
+                                                           <input type="text" name="" id="codigoDefinicionesSuministros" class="form-control" placeholder="Código" disabled="true">
+                                                       </div>
+                                                   </div>
+                                                   <br/>
+                                                   <div class="form-row">
+                                                       <div class= "col-6">
+                                                           <button id="boton_agregarDefinicionesSuministros" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                                       </div>
+                                                       <div class= "col-6">
+                                                           <button id="boton_borrarDefinicionesSuministros" type="button" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                       </div>
+                                                   </div>
+                                               </form>
+                                               <br/>
+                                           </div>
                                          </br>
-                                         <div class= "row">
-                                             <div class= "col-md-6">
-                                                 <form id="formMarcasSuministros" action="#" onsubmit="return false;">
-                                                     <div class="form-row">
-                                                         <div class="form-group col-md-12">
-                                                             <label for="nombreMarcaSuministros">Marca:</label>
-                                                             <input type="text" name="" id="nombreMarcaSuministros" class="form-control" placeholder="Ejemplo: Siemens">
-                                                         </div>
-                                                     </div>
-                                                     <br/>
-                                                     <div class="form-row">
-                                                         <div class= "col-6">
-                                                             <button id="boton_agregarMarcaSuministros" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
-                                                         </div>
-                                                         <div class= "col-6">
-                                                             <button id="boton_borrarMarcaSuministros" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
-                                                         </div>
-                                                     </div>
-                                                 </form>
-                                                 <br/>
-                                             </div>
-                                             <div class= "col-md-6">
-                                                 <div class = "tableWrapper">
-                                                     <table id="dataTableMarcasSuministros" class="display" style="width:100%">
-                                                         <thead>
-                                                             <tr>
-                                                                 <th>ID_marca</th>
-                                                                 <th>Marca</th>
-                                                                 <th>Editar</th>
-                                                             </tr>
-                                                         </thead>
-                                                         <tfoot>
-                                                             <tr>
-                                                                 <th>ID_marca</th>
-                                                                 <th>Marca</th>
-                                                                 <th>Editar</th>
-                                                             </tr>
-                                                         </tfoot>
-                                                     </table>
-                                                 </div>
-                                             </div>
-                                         </div>
-                                         </br>
-                                         <h3> Categorías </h3>
-                                         </br>
-                                         <div class= "row">
-                                             <div class= "col-md-6">
-                                                 <form id="formCategoriasSuministros" action="#" onsubmit="return false;">
-                                                     <div class="form-row">
-                                                         <div class="form-group col-md-12">
-                                                             <label for="nombreCategoriaSuministros">Categoría:</label>
-                                                             <input type="text" name="" id="nombreCategoriaSuministros" class="form-control" placeholder="Ejemplo: Electrico">
-                                                         </div>
-                                                     </div>
-                                                     <br/>
-                                                     <div class="form-row">
-                                                         <div class= "col-6">
-                                                             <button id="boton_agregarCategoriaSuministros" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
-                                                         </div>
-                                                         <div class= "col-6">
-                                                             <button id="boton_borrarCategoriaSuministros" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
-                                                         </div>
-                                                     </div>
-                                                 </form>
-                                                 <br/>
-                                             </div>
-                                             <div class= "col-md-6">
-                                                 <div class = "tableWrapper">
-                                                     <table id="dataTableCategoriaSuministros" class="display" style="width:100%">
-                                                         <thead>
-                                                             <tr>
-                                                                 <th>ID_categoria</th>
-                                                                 <th>Categoría</th>
-                                                                 <th>Editar</th>
-                                                             </tr>
-                                                         </thead>
-                                                         <tfoot>
-                                                             <tr>
-                                                                 <th>ID_categoria</th>
-                                                                 <th>Categoría</th>
-                                                                 <th>Editar</th>
-                                                             </tr>
-                                                         </tfoot>
-                                                     </table>
-                                                 </div>
-                                             </div>
-                                         </div>
-                                         </br>
-                                         <h3> Clasificaciones </h3>
-                                         </br>
-                                         <div class= "row">
-                                             <div class= "col-md-6">
-                                                 <form id="formClasificacionesSuministros" action="#" onsubmit="return false;">
-                                                     <div class="form-row">
-                                                         <div class="form-group col-md-12">
-                                                             <label for="nombreClasificacionSuministros">Clasificación:</label>
-                                                             <input type="text" name="" id="nombreClasificacionSuministros" class="form-control" placeholder="Ejemplo: Poliducto">
-                                                         </div>
-                                                     </div>
-                                                     <br/>
-                                                     <div class="form-row">
-                                                         <div class= "col-6">
-                                                             <button id="boton_agregarClasificacionSuministros" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
-                                                         </div>
-                                                         <div class= "col-6">
-                                                             <button id="boton_borrarClasificacionSuministros" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
-                                                         </div>
-                                                     </div>
-                                                 </form>
-                                                 <br/>
-                                             </div>
-                                             <div class= "col-md-6">
-                                                 <div class = "tableWrapper">
-                                                     <table id="dataTableClasificacionSuministros" class="display" style="width:100%">
-                                                         <thead>
-                                                             <tr>
-                                                                 <th>ID_clasificacion</th>
-                                                                 <th>Clasificación</th>
-                                                                 <th>Editar</th>
-                                                             </tr>
-                                                         </thead>
-                                                         <tfoot>
-                                                             <tr>
-                                                                 <th>ID_clasificacion</th>
-                                                                 <th>Clasificación</th>
-                                                                 <th>Editar</th>
-                                                             </tr>
-                                                         </tfoot>
-                                                     </table>
-                                                 </div>
-                                             </div>
-                                         </div>
-                                         </br>
-                                         <h3> Unidades </h3>
-                                         </br>
-                                         <div class= "row">
-                                             <div class= "col-md-6">
-                                                 <form id="formUnidadesSuministros" action="#" onsubmit="return false;">
-                                                     <div class="form-row">
-                                                         <div class="form-group col-md-12">
-                                                             <label for="nombreUnidadSuministros">Unidad:</label>
-                                                             <input type="text" name="" id="nombreUnidadSuministros" class="form-control" placeholder="Ejemplo: Pza">
-                                                         </div>
-                                                     </div>
-                                                     <br/>
-                                                     <div class="form-row">
-                                                         <div class= "col-6">
-                                                             <button id="boton_agregarUnidadSuministros" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
-                                                         </div>
-                                                         <div class= "col-6">
-                                                             <button id="boton_borrarUnidadSuministros" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
-                                                         </div>
-                                                     </div>
-                                                 </form>
-                                                 <br/>
-                                             </div>
-                                             <div class= "col-md-6">
-                                                 <div class = "tableWrapper">
-                                                     <table id="dataTableUnidadSuministros" class="display" style="width:100%">
-                                                         <thead>
-                                                             <tr>
-                                                                 <th>ID_unidad</th>
-                                                                 <th>Unidad</th>
-                                                                 <th>Editar</th>
-                                                             </tr>
-                                                         </thead>
-                                                         <tfoot>
-                                                             <tr>
-                                                                 <th>ID_unidad</th>
-                                                                 <th>Unidad</th>
-                                                                 <th>Editar</th>
-                                                             </tr>
-                                                         </tfoot>
-                                                     </table>
-                                                 </div>
+                                         <div>
+                                             <div class = "tableWrapper">
+                                                 <table id="dataTableDefinicionesSuministros" class="display" style="width:100%">
+                                                 </table>
                                              </div>
                                          </div>
                                      </div>
