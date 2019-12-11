@@ -128,6 +128,7 @@ $('#' + id_nombre_cliente).change(function(){
 $('#' + id_telefono_cliente).keypress(function(e){
     charactersAllowed("1234567890",e);
 });
+
 $('#' + id_telefono_cliente).change(function(){
     var telefono = "" + $('#' + id_telefono_cliente).val()
     if(telefono.length > 0){
@@ -154,6 +155,7 @@ $('#' + id_telefono_cliente).focus(function(){
 $('#' + id_estado_cliente).keypress(function(e){
     charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZáéíóú´",e);
 });
+
 $('#' + id_estado_cliente).change(function(){
     var estado_array = deleteBlankSpaces(id_estado_cliente).split(" ");
     var estado = "";
@@ -202,7 +204,6 @@ $('#' + id_calle_cliente).change(function(){
     $('#' + id_calle_cliente).val(calle);
 });
 
-
 $('#' + id_codigo_postal_cliente).keypress(function(e){
     charactersAllowed("1234567890",e);
 });
@@ -230,15 +231,19 @@ $('#' + id_num_interior_cliente).change(function(){
 $('#' + id_clave_cliente).on("cut copy paste",function(e) {
    e.preventDefault();
 });
+
 $('#' + id_nombre_cliente).on("cut copy paste",function(e) {
     e.preventDefault();
  });
+
  $('#' + id_telefono_cliente).on("cut copy paste",function(e) {
     e.preventDefault();
  });
+
  $('#' + id_estado_cliente).on("cut copy paste",function(e) {
     e.preventDefault();
  });
+
  $('#' + id_ciudad_cliente).on("cut copy paste",function(e) {
     e.preventDefault();
  });
@@ -246,9 +251,11 @@ $('#' + id_nombre_cliente).on("cut copy paste",function(e) {
  $('#' + id_codigo_postal_cliente).on("cut copy paste",function(e) {
     e.preventDefault();
  });
+
  $('#' + id_num_exterior_cliente).on("cut copy paste",function(e) {
     e.preventDefault();
  });
+
  $('#' + id_num_interior_cliente).on("cut copy paste",function(e) {
     e.preventDefault();
  });
@@ -334,7 +341,7 @@ function actualizarTablaCliente(){
                 {
                     "targets": 0,
                     "data": null,
-                    "defaultContent": "<button type='button' class='editar btn btn-info'><i class='fas fa-edit'></i></button>"
+                    "defaultContent": "<button type='button' class='editar_cliente btn btn-info'><i class='fas fa-edit'></i></button>"
                 },
                 { "width": "225px", "targets": 5 },
                 { "width": "100px", "targets": 3 },
@@ -356,11 +363,12 @@ function actualizarTablaCliente(){
               ]
         });
 
-        $('#' + id_dataTable_cliente + ' tbody').on( 'click', '.editar', function () {
+        $('#' + id_dataTable_cliente + ' tbody').on( 'click', '.editar_cliente', function () {
             highLightAllCliente();
             var data = tabla_cliente.row( $(this).parents('tr') ).data();
             resetFormCliente();
             existe_cliente = true;
+            console.log(data);
             uid_existente = data[1];
             var direccion = data[2].split("/");
             
@@ -637,7 +645,7 @@ function actualizarTablaContactoCliente(){
                 "<button type='button' class='eliminar_contacto btn btn-danger'><i class='fas fa-trash-alt'></i></button>", 
             ])  ;        
         });
-        tabla_cliente = $('#'+ id_dataTable_contacto_cliente).DataTable({
+        tabla_contacto = $('#'+ id_dataTable_contacto_cliente).DataTable({
             destroy: true,
             data: datosContactoCliente,
             language: idioma_espanol,
@@ -659,8 +667,7 @@ function actualizarTablaContactoCliente(){
         });
 
         $('#' + id_dataTable_contacto_cliente + ' tbody').on( 'click', '.editar_contacto', function () {
-            
-            var data = tabla_cliente.row( $(this).parents('tr') ).data();
+            var data = tabla_contacto.row( $(this).parents('tr') ).data();
             
             highLightAllContactoCliente();
             resetFormContactoCliente();
@@ -678,7 +685,7 @@ function actualizarTablaContactoCliente(){
 
         $('#' + id_dataTable_contacto_cliente + ' tbody').on( 'click', '.eliminar_contacto', function () {
             
-            var data = tabla_cliente.row( $(this).parents('tr') ).data();
+            var data = tabla_contacto.row( $(this).parents('tr') ).data();
             id_contacto_cliente_existente = data[0];
 
             firebase.database().ref(rama_bd_clientes + "/contactos/" + id_cliente_cliente_existente + "/" + id_contacto_cliente_existente).set(null);

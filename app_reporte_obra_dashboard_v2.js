@@ -665,6 +665,8 @@ $('#' + id_ddl_week_dash_prod).change(function(){
                     monto:0
                 };
             });
+
+            console.log(diversos_data)
             snapshot.child("especialidades").forEach(function(espSnap){
                 esp_json[espSnap.key] = {
                     nombre: espSnap.val().clave,
@@ -703,10 +705,6 @@ $('#' + id_ddl_week_dash_prod).change(function(){
                     }
                 }
 
-                var prueba = {};
-
-
-
                 trabajadores_json[registro] = {
                     id: json_registros_obra[registro].trabajador_id_head,
                     nombre:  nombre,
@@ -724,9 +722,9 @@ $('#' + id_ddl_week_dash_prod).change(function(){
                     total: 0,
                 };
 
-                for(div1 in diversos_data){
-                    trabajadores_json[registro].diversos_json[div1] = {
-                        nombre:diversos_data[div1].nombre,
+                for(div in diversos_data){
+                    trabajadores_json[registro].diversos_json[div] = {
+                        nombre: diversos_data[div].nombre,
                         monto:0
                     };
                 };
@@ -869,11 +867,11 @@ $('#' + id_ddl_week_dash_prod).change(function(){
                             aux += json_registros_obra[reg].diversos[div].cantidad;
                             if(json_registros_obra[reg].diversos[div].obra == obra_selected){
                                 esp_json[json_registros_obra[reg].trabajador_esp].monto += json_registros_obra[reg].diversos[div].cantidad * 1.16;
-
                                 // sin iva
                                 var diverso_tipo = json_registros_obra[reg].diversos[div].tipo;
                                 trabajadores_json[reg].diversos_json[diverso_tipo].monto += json_registros_obra[reg].diversos[div].cantidad;
-
+                                
+                                diversos_data[diverso_tipo].monto += json_registros_obra[reg].diversos[div].cantidad * 1.16;
                                 //trabajadores_json[reg].diversos_json[].monto += json_registros_obra[reg].diversos[div].cantidad;
                                 trabajadores_json[reg].diversos += json_registros_obra[reg].diversos[div].cantidad;
 
@@ -887,7 +885,7 @@ $('#' + id_ddl_week_dash_prod).change(function(){
                             }
                         }
                     };
-
+                    
                     if(json_registros_obra[reg].asistencias){
                         for(asistKey in json_registros_obra[reg].asistencias){
 

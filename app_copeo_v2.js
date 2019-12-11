@@ -739,6 +739,7 @@ function actualizarTablaCopeo(){
     //console.log(datos_obra);
     tabla_copeo = $('#'+ id_dataTable_copeo).DataTable({
 				"fnRowCallback": function (row, data, index_table) {
+
 							if ( index_table==0) {
 									$(row).css('font-weight', 'bold');
                   $(row).css('font-style', 'italic');
