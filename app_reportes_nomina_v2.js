@@ -10,7 +10,13 @@ var id_ddl_year_reporte_nomina = "yearDdlReporteNomina";
 var id_ddl_week_reporte_nomina = "weekDdlReporteNomina";
 var id_ddl_obra_reporte_nomina = "obraDdlReporteNomina";
 
+var id_div_global_reporte_nomina = "containerGlobalReporteNomina";
+var id_div_semanal_reporte_nomina = "containerSemanalReporteNomina";
+var id_div_obra_reporte_nomina = "containerObraReporteNomina";
+
 $('#' + id_tab_reporte_nomina).click(function(){
+    $('#' + id_div_semanal_reporte_nomina).addClass("hidden");
+    $('#' + id_div_obra_reporte_nomina).addClass("hidden");
 /*     firebase.database().ref("version2/info_web").set({
         info_web: 4.01,
         formatos: "dummy",
@@ -234,6 +240,8 @@ function tableReporteGlobalReporteNomina(){
                 ],
             });
         });
+
+        $('#' + id_div_global_reporte_nomina).removeClass("hidden");
     });
 
 };
@@ -314,7 +322,8 @@ function reporteSemanalReporteNomina(){
                             formatMoney(json_datos[key].horas_extra),
                             formatMoney(json_datos[key].diversos),
                             formatMoney(json_datos[key].nomina + json_datos[key].horas_extra + json_datos[key].diversos),
-                            formatMoney(iva + json_datos[key].carga_social),
+                            formatMoney(json_datos[key].carga_social),
+                            formatMoney(iva),
                             formatMoney(json_datos[key].nomina + json_datos[key].horas_extra + json_datos[key].diversos + iva + json_datos[key].carga_social),
                         ]);
                     };
@@ -333,11 +342,6 @@ function reporteSemanalReporteNomina(){
                             className: 'bolded'
                         },
                         { targets: "_all", className: 'dt-body-center'},
-                        { "visible": false, "targets": 1 },
-                        { "visible": false, "targets": 2 },
-                        { "visible": false, "targets": 3 },
-                        { "visible": false, "targets": 4 },
-                        { "visible": false, "targets": 5 },
                     ],
                     buttons: [
                         {extend: 'excelHtml5',
@@ -387,6 +391,8 @@ function reporteSemanalReporteNomina(){
                 window.myPie = new Chart(ctx, config);
             });
         });
+
+       $('#' + id_div_semanal_reporte_nomina).removeClass("hidden");
     });
 };
 
@@ -551,6 +557,8 @@ function reporteObraReporteNomina(){
                 }},
             ],
         });
+
+        $('#' + id_div_obra_reporte_nomina).removeClass("hidden");
     });
 }
 
@@ -673,6 +681,5 @@ function reporteProcesoObraReporteNomina(){
                 }); 
             });
         };
-
     });
-}
+};

@@ -153,7 +153,11 @@ Nota: Todo float se ingresa a 2 decimales.
                                 - score
                                     - horas_programadas: (en horas)
                                     - costo_hora: float (2 decimales)
-
+        - contratos (no lo llamo pptos porque debe existir otra rama que se llame pptos)
+            - id_obra
+                - monto_autorizado: float
+                - fecha_autorizacion: timestamps
+                - url_file: string
         - equipos
             - obra
                 - iva:
@@ -297,6 +301,9 @@ Nota: Todo float se ingresa a 2 decimales.
             - obras_no_activas
                 - id_obra
                     - nombre: string
+            - clientes
+                - id_cliente
+                    - id_obra:true
 
             - fechas_obra_inicio:
                 - programada
