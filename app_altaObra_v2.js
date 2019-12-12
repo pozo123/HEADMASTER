@@ -110,6 +110,11 @@ $('#' + id_agregar_obra).click(function() {
               obra_update["listas/fechas_obra_fin/programada/" + datos_obra.fechas.fecha_final_teorica + "/" + uid_existente] = true;
               obra_update["listas/fechas_obra_fin/programada/" + registro_antiguo.fechas.fecha_final_teorica + "/" + uid_existente] = null;
             }
+
+            // agregar lista de clientes
+            obra_update["listas/clientes/" + registro_antiguo.id_cliente + "/" + uid_existente] = null;
+            obra_update["listas/clientes/" + datos_obra.id_cliente + "/" + uid_existente] = true;
+
             firebase.database().ref(rama_bd_obras).update(obra_update);
 
             // PAD
@@ -134,6 +139,7 @@ $('#' + id_agregar_obra).click(function() {
             obra_paths["listas/obras_activas/" + regKey + "/nombre"] = datos_obra.nombre;
             obra_paths["listas/fechas_obra_inicio/programada/" + fechas.inicio + "/" + regKey] = true;
             obra_paths["listas/fechas_obra_fin/programada/" + fechas.final + "/" + regKey] = true;
+            obra_paths["listas/clientes/" + datos_obra.id_cliente + "/" + regKey] = true;
             //console.log(obra_paths);
             firebase.database().ref(rama_bd_obras).update(obra_paths);
 

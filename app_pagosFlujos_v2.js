@@ -3,6 +3,7 @@ var id_form_pagos_cliente = "formPagosCliente";
 var id_dataTable_pagos_cliente = "dataTablePagosCliente";
 
 var id_div_resumen_pagos_cliente = "containerResumenPagosCliente";
+
 var id_total_resumen_pagos_cliente= "totalResumenPagosCliente";
 var id_est_resumen_pagos_cliente = "estResumenPagosCliente";
 var id_ant_resumen_pagos_cliente = "antResumenPagosCliente";
@@ -154,7 +155,6 @@ $('#' + id_button_guardar_pagos_cliente).click(function(){
             // caso: no eligio archivo.
 
             if(file_selected_pagos_cliente == ""){
-                console.log(1);
                 firebase.database().ref(rama_bd_pagos + "/pagos/" + id_pago_existente_pagos_cliente).once("value").then(function(snapshot){
                     var registroPrevio = snapshot.val();
                     pago = getDatosPagosCliente(registroPrevio.comprobante_url);

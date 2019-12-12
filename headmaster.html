@@ -1110,6 +1110,8 @@
                         </div>
                     </div>
                 </ul>
+
+
                 <ul class="list-unstyled components">
                     <li>
                         <a href="#pageDashboard" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Dashboard</a>
@@ -1147,7 +1149,7 @@
                             <li class="tab administracion hidden" id="tabTrabajadores"><a href="#" onclick="openTabs('tabTrabajadores','trabajadoresProduccion')">Trabajadores de obra</a></li>
                         </ul>
                     </li>
-                    <li class = "administracion produccion hidden">
+                    <li class = "produccion hidden">
                         <a href="#pageProduccion" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Producción</a>
                         <ul class="collapse list-unstyled" id="pageProduccion">
                             <li class="tab" id="tabCopeo"><a href="#" onclick="openTabs('tabCopeo','copeo')">Copeo</a></li>
@@ -1166,6 +1168,7 @@
                         <a href="#pageReportes" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Reportes</a>
                         <ul class="collapse list-unstyled" id="pageReportes">
                             <li class="tab administracion rrhh hidden" id="tabReporteNomina"><a href="#" onclick="openTabs('tabReporteNomina','reporteNomina')">Mano de obra</a></li>
+                            <li class="tab administracion hidden" id="tabReportePagos"><a href="#" onclick="openTabs('tabReportePagos','reportePagos')">Pagos recibidos</a></li>
                         </ul>
                     </li>
                     <li>
@@ -3579,120 +3582,284 @@
                                  </div>
                              </div>
                          </div>
+                         
                         <!-- Reporte Nómina -->
                         <div id="reporteNomina" class = "tabcontent hidden">
-                            <div class= "container-fluid">
-                                <h3>Resumen global</h3>
-                                <div class = "row">
-                                    <div class = "col">
-                                        <div class = "tableWrapper">
-                                            <table id="dataTableGlobalReporteNomina" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Obra</th>
-                                                        <th>Nómina</th>
-                                                        <th>% Nómina</th>
-                                                        <th>Horas Extra</th>
-                                                        <th>% Horas Extra</th>
-                                                        <th>Pagos Diversos</th>
-                                                        <th>% Diversos</th>
-                                                        <th>Subtotal</th>
-                                                        <th>IVA</th>
-                                                        <th>Carga social</th>
-                                                        <th>Total</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
+                            <h3> Reporte de nómina, global y por obra</h3>
+                            <p>Los datos son desde la semana 29 incluyendo semana 14 y 15</p>
+                            <div class="container-fluid hidden" id="containerGlobalReporteNomina">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-header text-white" style="background-color: #283655;">
+                                                <span style ="font-size: 1.2em;">Resumen global</span>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="container-fluid" id="">
+                                                    <div class="row fadeInDown">
+                                                        <div class = "col-lg-12 container_reporte_nomina" style = "height: 100%;">
+                                                            <table id="dataTableGlobalReporteNomina" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Obra</th>
+                                                                        <th>Nómina ($)</th>
+                                                                        <th>Nómina (%)</th>
+                                                                        <th>Horas extra ($)</th>
+                                                                        <th>Horas extra (%)</th>
+                                                                        <th>Pagos diversos ($)</th>
+                                                                        <th>Pagos diversos (%)</th>
+                                                                        <th>Subtotal</th>
+                                                                        <th>Carga Social</th>
+                                                                        <th>IVA</th>
+                                                                        <th>TOTAL</th>
+                                                                    </tr>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <br/>
-                                <h3>Resumen semanal</h3>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="yearDdlReporteNomina">Año:</label>
-                                        <select id="yearDdlReporteNomina" class="form-control"></select>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="weekDdlReporteNomina">Semana:</label>
-                                        <select id="weekDdlReporteNomina" class="form-control"></select>
-                                    </div>
-                                </div>
-                                <div class = "row">
-                                    <div class= "col-lg-6 container_reporte_nomina">
-                                        <div class = "tableWrapper">
-                                            <table id="dataTableSemanalReporteNomina" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Obra</th>
-                                                        <th>Nómina</th>
-                                                        <th>Horas Extra</th>
-                                                        <th>Pagos Diversos</th>
-                                                        <th>Subtotal</th>
-                                                        <th>Impuestos laborales</th>
-                                                        <th>Total</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card">
+                                            <div class="card-header text-white" style="background-color: #530e0e;">
+                                                <span style ="font-size: 1.2em;">Resumen Semanal</span>
+                                            </div>
+                                            <div class="card-body" >
+                                                <div class="row fadeInDown">
+                                                    <div class="form-group col-lg-3">
+                                                        <label for="yearDdlReporteNomina">Año:</label>
+                                                        <select id ="yearDdlReporteNomina" class="form-control"></select>
+                                                    </div>
+                                                    <div class="form-group col-lg-3">
+                                                        <label for="weekDdlReporteNomina">Semana:</label>
+                                                        <select id ="weekDdlReporteNomina" class="form-control"></select>
+                                                    </div>
+                                                </div>
+                                                <div class="container-fluid hidden" id="containerSemanalReporteNomina">
+                                                    <div class="row fadeInDown">
+                                                        <div class = "col-lg-12 container_reporte_nomina" style = "height: 100%;">
+                                                            <table id="dataTableSemanalReporteNomina" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Obra</th>
+                                                                        <th>Nómina</th>
+                                                                        <th>Horas extra</th>
+                                                                        <th>Pagos diversos</th>
+                                                                        <th>Subtotal</th>
+                                                                        <th>Carga social</th>
+                                                                        <th>IVA</th>
+                                                                        <th>TOTAL</th>
+                                                                    </tr>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                        <div class = "col-lg-12 container_reporte_nomina" style = "height: 100%;">
+                                                            <div id="pieSemanalReporteNomina" style = "min-width: 600px;"></div>
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class= "col-lg-6" id = "pieSemanalReporteNomina">
-                                            <canvas id="" style = "min-height: 350px; min-width: 350;"></canvas>
                                     </div>
                                 </div>
                                 <br/>
-                                <h3>Resumen por obra</h3>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="obraDdlReporteNomina">Obra:</label>
-                                        <select id="obraDdlReporteNomina" class="form-control"></select>
-                                    </div>
-                                </div>
-                                <div class = "row">
-                                    <div class = "col">
-                                        <div class = "tableWrapper">
-                                            <table id="dataTableObraReporteNomina" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Año_Sem</th>
-                                                        <th>Año</th>
-                                                        <th>Semana</th>
-                                                        <th>Nómina</th>
-                                                        <th>% Nómina</th>
-                                                        <th>Horas Extra</th>
-                                                        <th>% Horas Extra</th>
-                                                        <th>Pagos Diversos</th>
-                                                        <th>% Diversos</th>
-                                                        <th>Subtotal</th>
-                                                        <th>IVA</th>
-                                                        <th>Carga social</th>
-                                                        <th>Total</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card">
+                                            <div class="card-header text-white" style="background-color: #075016;">
+                                                <span style ="font-size: 1.2em;">Resumen por obra</span>
+                                            </div>
+                                            <div class="card-body ">
+                                                <div class="row fadeInDown">
+                                                    <div class="form-group col-lg-3">
+                                                        <label for="obraDdlReporteNomina">Obra:</label>
+                                                        <select id ="obraDdlReporteNomina" class="form-control"></select>
+                                                    </div>
+                                                </div>
+                                                <div class="container-fluid hidden" id="containerObraReporteNomina">
+                                                    <div class="row fadeInDown">
+                                                        <div class = "col-lg-12 container_reporte_nomina" style = "height: 100%;">
+                                                            <table id="dataTableObraReporteNomina" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>ID</th>
+                                                                        <th>Año</th>
+                                                                        <th>Nómina ($)</th>
+                                                                        <th>Nómina (%)</th>
+                                                                        <th>Horas extra ($)</th>
+                                                                        <th>Horas extra (%)</th>
+                                                                        <th>Pagos diversos ($)</th>
+                                                                        <th>Pagos diversos (%)</th>
+                                                                        <th>Subtotal</th>
+                                                                        <th>Carga social</th>
+                                                                        <th>IVA</th>
+                                                                        <th>TOTAL</th>
+                                                                    </tr>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                        <br/>
+                                                        <div class = "col-lg-12 container_reporte_nomina" style = "height: 100%;">
+                                                            <table id="dataTableProcesosReporteNomina" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Proceso</th>
+                                                                        <th>Nómina ($)</th>
+                                                                        <th>Nómina (%)</th>
+                                                                        <th>Horas extra ($)</th>
+                                                                        <th>Horas extra (%)</th>
+                                                                        <th>Pagos diversos ($)</th>
+                                                                        <th>Pagos diversos (%)</th>
+                                                                        <th>Subtotal</th>
+                                                                        <th>Carga social</th>
+                                                                        <th>IVA </th>
+                                                                        <th>TOTAL</th>
+                                                                    </tr>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class = "row">
-                                    <div class = "col">
-                                        <div class = "tableWrapper">
-                                            <table id="dataTableProcesosReporteNomina" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Proceso</th>
-                                                        <th>Nómina</th>
-                                                        <th>% Nómina</th>
-                                                        <th>Horas Extra</th>
-                                                        <th>% Horas Extra</th>
-                                                        <th>Pagos Diversos</th>
-                                                        <th>% Diversos</th>
-                                                        <th>Subtotal</th>
-                                                        <th>IVA</th>
-                                                        <th>Carga social</th>
-                                                        <th>Total</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
+                                <br/>
+                            </div>
+                        </div>
+                        <!-- Reporte Pagos-->
+                        <div id="reportePagos" class = "tabcontent hidden">
+                            <h1>Pagos recibidos </h1>
+                            <p>Página para realizar consultas de los pagos recibidos por parte de los clientes</p>
+                            <div class= "container-fluid hidden" id = "containerReportePagos">
+                                <div class= "row align-items-center">
+                                    <div class= "col-lg-12">
+                                        <div class = "row">
+                                            <div class = "col-lg-7">
+                                                <form id="formReportePagos" action="#" onsubmit="return false;">
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6">
+                                                            <label for="clienteReportePagos">Cliente:</label>
+                                                            <select id="clienteReportePagos" class="form-control"></select>
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                                <label for="obraReportePagos">Obra:</label>
+                                                                <select id="obraReportePagos" class="form-control"></select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6">
+                                                            <label for="fechaInicioReportePagos">De:</label>
+                                                            <input class="form-control" type="text" id="fechaInicioReportePagos" placeholder="" readonly="readonly">
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <label for="fechaFinReportePagos">a:</label>
+                                                            <input class="form-control" type="text" id="fechaFinReportePagos" placeholder="" readonly="readonly">
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                    <br/>
+                                                    <div class="form-row">
+                                                        <div class= "col-6">
+                                                            <button id="generarButtonReportePagos" type="button" class="btn btn-outline-success btn-block">Generar</button>
+                                                        </div>
+                                                        <div class= "col-6">
+                                                            <button id="resetButtonReportePagos" type="button" class="btn btn-outline-danger btn-block">Reset</button>
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                </form>
+                                            </div>
+                                            <div class = "col-lg-5">
+                                                <div class="card hidden" style = "height: 100%;" id = "containerResumenReportePagos">
+                                                    <div class="card-header text-white" style="background-color: rgb(38, 0, 82);">
+                                                        <span style ="font-size: 1.2em;">Resumen</span>
+                                                    </div>
+                                                    <div class="card-body fadeInDown">
+                                                        <div class="container-fluid" style="text-align:center">
+                                                            <br/>
+                                                            <h6>Total cobrado: <span id="totalResumenReportePagos" style="font-weight: bold"></span></h6>
+                                                            <br/>
+                                                            <h6>Anticipos cobrados: <span id="antResumenReportePagos" style="font-weight: bold"></span></h6>
+                                                            <h6>Estimaciones cobradas: <span id="estResumenReportePagos" style="font-weight: bold"></span></h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                    </div>
+                                </div>
+                                <div class="row hidden" id = "divTableResumenGeneralReportePagos">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-header text-white" style="background-color: #00521f;">
+                                                <span style ="font-size: 1.2em;">Pagos recibidos con los filtros seleccionados</span>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="container-fluid">
+                                                    <div class="row fadeInDown">
+                                                        <div class = "col-lg-12 container_reporte_nomina" style = "height: 100%;">
+                                                            <table id="dataTableResumenGeneralReportePagos" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Obra</th>
+                                                                        <th>timestamps</th>
+                                                                        <th>Fecha de pago</th>
+                                                                        <th>Concepto</th>
+                                                                        <th>Folio</th>
+                                                                        <th>Tipo</th>
+                                                                        <th>Monto</th>
+                                                                        <th>EST/ANT</th>
+                                                                        <th>Evidencia</th>
+                                                                    </tr>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="row hidden" id = "divTableResumenProcReportePagos">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-header text-white" style="background-color: #4d0000;">
+                                                <span style ="font-size: 1.2em;">Distribución por proceso</span>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="container-fluid">
+                                                    <div class="row fadeInDown">
+                                                        <div class = "col-lg-12 container_reporte_nomina" style = "height: 100%;">
+                                                            <table id="dataTableResumenProcReportePagos" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>aux</th>
+                                                                        <th>Proceso</th>
+                                                                        <th>Entrada</th>
+                                                                        <th>Folio</th>
+                                                                        <th>Formato</th>
+                                                                        <th>Monto parcial</th>
+                                                                        <th>Monto TOTAL</th>
+                                                                    </tr>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -3835,7 +4002,7 @@
                                         <br/>
                                     </div>
                                     <div class= "col-lg-2"></div>
-                                    <div class="col-12 container_reporte_nomina" id="containerResumenPagosCliente">
+                                    <div class="col-12 container_reporte_nomina hidden" id="containerResumenPagosCliente">
                                         <div class="row">
                                             <div class="container-fluid" style="text-align:center">
                                                 <br/>
@@ -3953,6 +4120,7 @@
         <script src="pdf_solicitudAdicionalT_v2.js"></script>
         <script src="app_pagosFlujos_v2.js"></script>
         <script src="app_reporte_obra_dashboard_v2.js"></script>
+        <script src="app_reportes_pagos_v2.js"></script>
         <script src="pdf_presupuestoAdicional_v2.js"></script>
 
         <!-- Excel to Json-->
