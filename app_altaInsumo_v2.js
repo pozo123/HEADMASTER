@@ -2,23 +2,28 @@
 var id_tab_insumo = "tabAltaInsumos";
 var id_form_insumo = "formInsumos";
 var id_dataTable_insumo = "dataTableInsumos";
+var id_dataTableProveedoresInsumos = "dataTableProveedoresInsumos";
 
 //Definición de variables del formulario
-var id_catalogoInsumos = "catalogoInsumos";
+
 var id_descripcionInsumos = "descripcionInsumos";
-var id_catfabricInsumos = "catfabricInsumos";
-var id_ddl_marcaInsumos = "ddl_marcaInsumos";
-var id_ddl_unidadInsumos = "ddl_unidadInsumos";
-var id_ddl_clasificacionInsumos = "ddl_clasificacionInsumos";
 var id_ddl_categoriaInsumos = "ddl_categoriaInsumos";
+var id_ddl_familiaInsumos = "ddl_familiaInsumos";
+var id_ddl_subfamiliaInsumos = "ddl_subfamiliaInsumos";
+var id_ddl_unidadInsumos = "ddl_unidadInsumos";
+var id_libreInsumos = "libreInsumos";
+var id_catalogoInsumos = "catalogoInsumos";
+var id_satInsumos = "satInsumos";
+
 var id_ddl_proveedorInsumos = "ddl_proveedorInsumos";
 var id_precioInsumos = "precioInsumos";
-var id_precioFinalInsumos = "precioFinalInsumos";
 var id_descuentoInsumos = "descuentoInsumos";
-var id_fecha_cotizacionInsumos = "fechaCotizacionInsumos";
+var id_precioFinalInsumos = "precioFinalInsumos";
+var id_ddl_marcaProveedorInsumos = "ddl_marcaProveedorInsumos";
+var id_catalogoProveedorInsumos = "catalogoProveedorInsumos";
 var id_fecha_ingresoCotizacionInsumos = "fechaIngresoCotizacionInsumos";
+var id_fecha_cotizacionInsumos = "fechaCotizacionInsumos";
 var id_botonAgregarProveedorInsumos = "botonAgregarProveedorInsumos";
-var id_dataTableProveedoresInsumos = "dataTableProveedoresInsumos";
 
 var id_boton_AgregarInsumos = "botonAgregarInsumos";
 var id_boton_BorrarInsumos = "botonBorrarInsumos";
@@ -38,7 +43,6 @@ var tabla_proveedorInsumo;
 
 var marcas;
 var categorias;
-var clasificaciones;
 var unidades;
 var proveedores;
 
@@ -55,15 +59,15 @@ $('#' + id_tab_insumo).click(function() {
     registro_antiguo = {};
     resetFormInsumo();
     // Con las líneas siguiente se genera el cuadro para las fechas en el HTML
-    jQuery('#' + id_fecha_cotizacionInsumos).datetimepicker(
+    jQuery('#' + id_fecha_ingresoCotizacionInsumos).datetimepicker(
         {timepicker:false, weeks:true,format:'Y.m.d'}
     );
-    jQuery('#' + id_fecha_ingresoCotizacionInsumos).datetimepicker(
+    jQuery('#' + id_fecha_cotizacionInsumos).datetimepicker(
         {timepicker:false, weeks:true,format:'Y.m.d'}
     );
     firebase.database().ref(rama_bd_insumos + "/marcas").orderByChild('nombre').on('value',function(snapshot){
       marcas = snapshot;
-      llenaDdlGeneric(id_ddl_marcaInsumos, marcas, "nombre");
+      llenaDdlGeneric(id_ddl_marcaProveedorInsumos, marcas, "nombre");
     });
     firebase.database().ref(rama_bd_insumos + "/unidades").orderByChild('nombre').on('value',function(snapshot){
       unidades = snapshot;
@@ -73,16 +77,36 @@ $('#' + id_tab_insumo).click(function() {
       categorias = snapshot;
       llenaDdlGeneric(id_ddl_categoriaInsumos, categorias, "nombre");
     });
-    firebase.database().ref(rama_bd_insumos + "/clasificaciones").orderByChild('nombre').on('value',function(snapshot){
-      clasificaciones = snapshot;
-      llenaDdlGeneric(id_ddl_clasificacionInsumos,clasificaciones, "nombre");
-    });
     firebase.database().ref(rama_bd_insumos + "/proveedores").orderByChild('razon_social').on('value',function(snapshot){
       proveedores = snapshot;
       llenaDdlGeneric(id_ddl_proveedorInsumos, proveedores, "razon_social");
     });
     actualizarTablaInsumos();
     actualizarTablaProveedoresInsumo();
+});
+
+//Funcionalidad del boton 'Borrar todo'
+$('#' + id_boton_BorrarInsumos).click(function() {
+  resetFormInsumo();
+  existe_insumo=false;
+  existe_proveedor=false;
+  actualizarTablaProveedoresInsumo();
+});
+
+$('#' + id_botonAgregarProveedorInsumos).click(function() {
+  if(validateProveedorInsumo()){
+    if(!existeProveedorInsumos($('#'+id_ddl_proveedorInsumos+' option:selected').val(), $('#'+id_ddl_marcaProveedorInsumos+' option:selected').val())){
+      if(existe_proveedor){
+        tabla_proveedorInsumo.row(existe_proveedor_index).data(altaProveedorInsumo()).draw();
+      }else{
+        tabla_proveedorInsumo.row.add(altaProveedorInsumo()).draw();
+      }
+      resetProveedorInsumo();
+      existe_proveedor= false;
+    } else {
+      alert("Este producto ya tiene un registro para este proveedor con la misma marca");
+    }
+  }
 });
 
 //Funcionalidad del boton 'Registrar/Editar'
@@ -94,117 +118,133 @@ $('#' + id_boton_AgregarInsumos).click(function() {
     //console.log(datos_insumo);
     //console.log(proveedores_json);
     //Decidir si editar o dar de alta
-    if (existe_insumo){ //editar
-      //console.log("Editar");
-        firebase.database().ref(rama_bd_insumos + "/productos/" + uid_existente).once("value").then(function(snapshot){
-            var registro_antiguo = snapshot.val();
-            var insumo_update = {};
-            //Actualizar los campos de la obra
-            var path_insumo = "productos/" + uid_existente;
-            insumo_update[path_insumo] = datos_insumo;
+    existeInsumo($('#'+id_catalogoInsumos).val()).then(function(catalogoExistente){
+      if(!catalogoExistente){
+        if (existe_insumo){ //editar
+          //console.log("Editar");
+          firebase.database().ref(rama_bd_insumos + "/productos/" + uid_existente).once("value").then(function(snapshot){
+              var registro_antiguo = snapshot.val();
+              var insumo_update = {};
+              //Actualizar los campos de la obra
+              var path_insumo = "productos/" + uid_existente;
+              insumo_update[path_insumo] = datos_insumo;
 
-            if(registro_antiguo.marca !== datos_insumo.marca){
-              insumo_update["listas/marcas/" + registro_antiguo.marca +"/"+ uid_existente] = null;
-              insumo_update["listas/marcas/" + datos_insumo.marca +"/"+ uid_existente] = true;
-            }
-            if(registro_antiguo.unidad !== datos_insumo.unidad){
-              insumo_update["listas/unidades/" + registro_antiguo.unidad +"/"+ uid_existente] = null;
-              insumo_update["listas/unidades/" + datos_insumo.unidad +"/"+ uid_existente] = true;
-            }
-            if(registro_antiguo.clasificacion !== datos_insumo.clasificacion){
-              insumo_update["listas/clasificaciones/" + registro_antiguo.clasificacion +"/"+ uid_existente] = null;
-              insumo_update["listas/clasificaciones/" + datos_insumo.clasificacion +"/"+ uid_existente] = true;
-            }
-            if(registro_antiguo.categoria !== datos_insumo.categoria){
-              insumo_update["listas/categorias/" + registro_antiguo.categoria +"/"+ uid_existente] = null;
-              insumo_update["listas/categorias/" + datos_insumo.categoria +"/"+ uid_existente] = true;
-            }
-            insumo_update["listas/productos/" + uid_existente] = proveedores_json;
-            for(key in proveedores_json){
-              insumo_update["listas/proveedores/" + key + "/"+ uid_existente ] = proveedores_json[key];
-            }
-            //console.log(registro_proveedores);
-            for (key in registro_proveedores){
-              if(proveedores_json[key] == undefined){
-                insumo_update["listas/proveedores/" + key + "/"+ uid_existente ] = null;
+              if(registro_antiguo.unidad !== datos_insumo.unidad){
+                insumo_update["listas/unidades/" + registro_antiguo.unidad +"/"+ uid_existente] = null;
+                insumo_update["listas/unidades/" + datos_insumo.unidad +"/"+ uid_existente] = true;
               }
-            }
+              if(registro_antiguo.categoria !== datos_insumo.categoria || registro_antiguo.familia !== datos_insumo.familia || registro_antiguo.subfamilia !== datos_insumo.subfamilia){
+                insumo_update["listas/categorias/" + registro_antiguo.categoria +"/"+ registro_antiguo.familia +"/"+ registro_antiguo.subfamilia +"/"+ uid_existente] = null;
+                insumo_update["listas/categorias/" + datos_insumo.categoria +"/"+ datos_insumo.familia +"/"+ datos_insumo.subfamilia +"/"+ uid_existente] = true;
+              }
 
-            //console.log(insumo_update);
-            firebase.database().ref(rama_bd_insumos).update(insumo_update);
+              insumo_update["listas/productos/" + uid_existente] = proveedores_json;
 
-            // PAD
-            pda("modificacion", rama_bd_insumos + "/" + path_insumo, registro_antiguo);
-            alert("¡Edición exitosa!");
-            resetFormInsumo();
-        });
-    } else { //dar de alta
-      //console.log("Dar de alta");
-        firebase.database().ref(rama_bd_insumos + "/productos").push(datos_insumo).then(function(snapshot){
-            var regKey = snapshot.key;
-            var insumo_update = {};
-            var marca = $('#' + id_ddl_marcaInsumos + ' option:selected').val();
-            var unidad = $('#' + id_ddl_unidadInsumos + ' option:selected').val();
-            var clasificacion = $('#' + id_ddl_clasificacionInsumos + ' option:selected').val();
-            var categoria = $('#' + id_ddl_categoriaInsumos + ' option:selected').val();
-            // Actualizar listas
-            insumo_update["listas/unidades/" + unidad +"/"+ regKey] = true;
-            insumo_update["listas/marcas/" + marca +"/"+ regKey] = true;
-            insumo_update["listas/clasificaciones/" + clasificacion +"/"+ regKey] = true;
-            insumo_update["listas/categorias/" + categoria +"/"+ regKey] = true;
-            insumo_update["listas/productos/" + regKey ] = proveedores_json;
-            for(key in proveedores_json){
-              insumo_update["listas/proveedores/" + key + "/"+ regKey ] = proveedores_json[key];
-            }
+              //console.log(registro_proveedores);
+              for (key in registro_proveedores){
+                if(proveedores_json[key] == undefined){
+                  insumo_update["listas/proveedores/" + key + "/"+ uid_existente ] = null;
+                  for (key2 in registro_proveedores[key]){
+                    insumo_update["listas/marcas/" + key2 +"/"+ uid_existente] = null;
+                  }
+                } else {
+                  for (key2 in registro_proveedores[key]){
+                    if(proveedores_json[key][key2] == undefined){
+                      insumo_update["listas/marcas/" + key2 +"/"+ uid_existente] = null;
+                    }
+                  }
+                }
+              }
 
-            //console.log(insumo_update);
-            firebase.database().ref(rama_bd_insumos).update(insumo_update);
+              for(key in proveedores_json){
+                for (key2 in proveedores_json[key]){
+                  insumo_update["listas/proveedores/" + key + "/"+ uid_existente + "/"+ key2 ] = proveedores_json[key][key2];
+                  insumo_update["listas/marcas/" + key2 +"/"+ uid_existente] = true;
+                }
+              }
+              console.log(insumo_update);
+              firebase.database().ref(rama_bd_insumos).update(insumo_update);
 
-            // PAD
-            pda("alta", rama_bd_insumos + "/productos/" + regKey, "");
-            alert("¡Alta exitosa!");
-            resetFormInsumo();
-        });
-    };
+              // PAD
+              pda("modificacion", rama_bd_insumos + "/" + path_insumo, registro_antiguo);
+              alert("¡Edición exitosa!");
+              resetFormInsumo();
+              actualizarTablaProveedoresInsumo();
+          });
+        } else { //dar de alta
+          //console.log("Dar de alta");
+          firebase.database().ref(rama_bd_insumos + "/productos").push(datos_insumo).then(function(snapshot){
+              var regKey = snapshot.key;
+              var insumo_update = {};
+              var unidad = $('#' + id_ddl_unidadInsumos + ' option:selected').val();
+              var categoria = $('#' + id_ddl_categoriaInsumos + ' option:selected').val();
+              var familia = $('#' + id_ddl_familiaInsumos + ' option:selected').val();
+              var subfamilia = $('#' + id_ddl_subfamiliaInsumos + ' option:selected').val();
+              // Actualizar listas
+              insumo_update["listas/unidades/" + unidad +"/"+ regKey] = true;
+              insumo_update["listas/categorias/" + categoria +"/"+ familia +"/"+ subfamilia +"/"+ regKey] = true;
+              insumo_update["listas/productos/" + regKey ] = proveedores_json;
+              for(key in proveedores_json){
+                for (key2 in proveedores_json[key]){
+                  insumo_update["listas/proveedores/" + key + "/"+ regKey + "/"+ key2 ] = proveedores_json[key][key2];
+                  insumo_update["listas/marcas/" + key2 +"/"+ regKey] = true;
+                }
+              }
+
+              console.log(insumo_update);
+              firebase.database().ref(rama_bd_insumos).update(insumo_update);
+
+              // PAD
+              pda("alta", rama_bd_insumos + "/productos/" + regKey, "");
+              alert("¡Alta exitosa!");
+              resetFormInsumo();
+              actualizarTablaProveedoresInsumo();
+          });
+        };
+      } else {
+          alert("Ya existe un producto registrado con ese número de catálogo");
+      }
+    });
   };
 });
-//Funcionalidad del boton 'Borrar todo'
-$('#' + id_boton_BorrarInsumos).click(function() {
-  resetFormInsumo();
-  existe_insumo=false;
-  existe_proveedor=false;
+
+// ----------------------- VALIDACIÓN DE FORMULARIO ----------------------------
+$('#' + id_ddl_categoriaInsumos).change(function(){
+  $('#'+id_ddl_subfamiliaInsumos).empty();
+  llenaDdlGeneric(id_ddl_familiaInsumos, categorias.child($('#'+id_ddl_categoriaInsumos+' option:selected').val()+'/familias'), "nombre");
+  $('#'+id_catalogoInsumos).val(generaCodigoCatalogoInsumos());
 });
 
-$('#' + id_botonAgregarProveedorInsumos).click(function() {
-  if(validateProveedorInsumo()){
-    if(existe_proveedor){
-      tabla_proveedorInsumo.row(existe_proveedor_index).data(altaProveedorInsumo()).draw();
-    }else{
-      tabla_proveedorInsumo.row.add(altaProveedorInsumo()).draw();
-    }
-    resetProveedorInsumo();
-    existe_proveedor= false;
-  }
+$('#' + id_ddl_familiaInsumos).change(function(){
+  llenaDdlGeneric(id_ddl_subfamiliaInsumos, categorias.child($('#'+id_ddl_categoriaInsumos+' option:selected').val()+'/familias/' + $('#'+id_ddl_familiaInsumos+' option:selected').val()+'/subfamilias'), "nombre");
+  $('#'+id_catalogoInsumos).val(generaCodigoCatalogoInsumos());
 });
 
-// ----------------------- VALIDACIÓN DE FORMULARIO ------------------------
-$('#' + id_catalogoInsumos).keypress(function(e){
-    charactersAllowed(" 0123456789",e)
+$('#' + id_ddl_subfamiliaInsumos).change(function(){
+  $('#'+id_catalogoInsumos).val(generaCodigoCatalogoInsumos());
+});
+
+$('#' + id_libreInsumos).keypress(function(){
+  $('#'+id_catalogoInsumos).val(generaCodigoCatalogoInsumos());
+});
+
+$('#' + id_libreInsumos).change(function(){
+  $('#'+id_catalogoInsumos).val(generaCodigoCatalogoInsumos());
 });
 
 $('#' + id_descripcionInsumos).change(function(){
-    $('#' + id_descripcionInsumos).val($('#' + id_descripcionInsumos).val().toUpperCase());
+  $('#' + id_descripcionInsumos).val($('#' + id_descripcionInsumos).val().toUpperCase());
 });
 
 $('#' + id_descripcionInsumos).keypress(function(e){
     charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_0123456789áéíóú/",e)
 });
 
-$('#' + id_catfabricInsumos).change(function(){
-    $('#' + id_catfabricInsumos).val($('#' + id_catfabricInsumos).val().toUpperCase());
+$('#' + id_satInsumos).change(function(){
+    $('#' + id_satInsumos).val($('#' + id_satInsumos).val().toUpperCase());
 });
 
-$('#' + id_catfabricInsumos).keypress(function(e){
+$('#' + id_satInsumos).keypress(function(e){
     charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-/0123456789",e)
 });
 
@@ -238,77 +278,100 @@ $('#' + id_descuentoInsumos).change(function(){
   $('#' + id_precioFinalInsumos).val(formatMoney(deformatMoney($('#' + id_precioInsumos).val()) * (1 - $('#' + id_descuentoInsumos).val()*0.01)));
 });
 
+$('#' + id_libreInsumos).keypress(function(e){
+    charactersAllowed(" 0123456789",e)
+});
+
 // ----------------------- FUNCIONES NECESARIAS ----------------------------
 //Borrar la información de todos los campos
 function resetFormInsumo(){
-  $('#' + id_catalogoInsumos).val("");
   $('#' + id_descripcionInsumos).val("");
-  $('#' + id_catfabricInsumos).val("");
-  $('#' + id_ddl_marcaInsumos).val("");
-  $('#' + id_ddl_unidadInsumos).val("");
-  $('#' + id_ddl_clasificacionInsumos).val("");
   $('#' + id_ddl_categoriaInsumos).val("");
+  $('#' + id_ddl_familiaInsumos).val("");
+  $('#' + id_ddl_subfamiliaInsumos).val("");
+  $('#' + id_ddl_unidadInsumos).val("");
+  $('#' + id_libreInsumos).val("");
+  $('#' + id_catalogoInsumos).val("");
+  $('#' + id_satInsumos).val("");
   existe_insumo=false;
   uid_existente="NOHAY";
   resetProveedorInsumo();
-  actualizarTablaProveedoresInsumo();
+  // actualizarTablaProveedoresInsumo();
 }
 
 function resetProveedorInsumo(){
   $('#' + id_ddl_proveedorInsumos).val("");
+  $('#' + id_ddl_marcaProveedorInsumos).val("");
   $('#' + id_precioInsumos).val("");
-  $('#' + id_precioFinalInsumos).val("");
   $('#' + id_descuentoInsumos).val("");
+  $('#' + id_precioFinalInsumos).val("");
+  $('#' + id_catalogoProveedorInsumos).val("");
   $('#' + id_fecha_cotizacionInsumos).val("");
   $('#' + id_fecha_ingresoCotizacionInsumos).val("")
 }
 
 //Validar que no esté vacío nungún campo
 function validateFormInsumo(){
-    if ($('#' + id_catalogoInsumos).val() == ""){
-        alert("Escribe el número de catálogo");
-        highLightColor(id_catalogoInsumos,"#FF0000");
-        return false;
-    } else if($('#' + id_descripcionInsumos).val() == ""){
+    if($('#' + id_descripcionInsumos).val() == ""){
         alert("Escribe la descripcion del producto");
         highLightColor(id_descripcionInsumos,"#FF0000");
         return false;
-    } else if($('#' + id_catfabricInsumos).val() == ""){
-        alert("Escribe el catfabric del producto");
-        highLightColor(id_catfabricInsumos,"#FF0000");
-        return false;
-    } else if($('#' + id_ddl_marcaInsumos + 'option:selected').val() == ""){
-        alert("Selecciona una marca para el producto.");
-        highLightColor(id_ddl_marcaInsumos,"#FF0000");
-        return false;
-    } else if($('#' + id_ddl_unidadInsumos + 'option:selected').val() == ""){
-        alert("Selecciona una unidad para el producto.");
-        highLightColor(id_ddl_unidadInsumos,"#FF0000");
-        return false;
-    } else if($('#' + id_ddl_clasificacionInsumos + 'option:selected').val() == ""){
-        alert("Selecciona una clasificacion para el producto.");
-        highLightColor(id_ddl_clasificacionInsumos,"#FF0000");
-        return false;
-    } else if($('#' + id_ddl_categoriaInsumos + 'option:selected').val() == ""){
+    } else if($('#' + id_ddl_categoriaInsumos + ' option:selected').val() == ""){
         alert("Selecciona una categoría para el producto.");
         highLightColor(id_ddl_categoriaInsumos,"#FF0000");
         return false;
+    } else if($('#' + id_ddl_familiaInsumos + ' option:selected').val() == ""){
+        alert("Selecciona una familias para el producto.");
+        highLightColor(id_ddl_familiaInsumos,"#FF0000");
+        return false;
+    } else if($('#' + id_ddl_subfamiliaInsumos + ' option:selected').val() == ""){
+        alert("Selecciona una subfamilia para el producto.");
+        highLightColor(id_ddl_subfamiliaInsumos,"#FF0000");
+        return false;
+    } else if($('#' + id_ddl_unidadInsumos + ' option:selected').val() == ""){
+        alert("Selecciona una unidad para el producto.");
+        highLightColor(id_ddl_unidadInsumos,"#FF0000");
+        return false;
+    } else if ($('#' + id_libreInsumos).val() == ""){
+          alert("Escribe el número libre para el producto");
+          highLightColor(id_catalogoInsumos,"#FF0000");
+          return false;
+    } else if ($('#' + id_catalogoInsumos).val() == ""){
+          alert("Escribe el número de catálogo");
+          highLightColor(id_catalogoInsumos,"#FF0000");
+          return false;
     } else {
         return true;
     }
 }
 
 function validateProveedorInsumo(){
-  if ($('#' + id_ddl_proveedorInsumos + 'option:selected').val() == ""){
+  if ($('#' + id_ddl_proveedorInsumos + ' option:selected').val() == ""){
     alert("Selecciona un proveedor.");
     highLightColor(id_ddl_proveedorInsumos,"#FF0000");
     return false;
+  } else if($('#' + id_ddl_marcaProveedorInsumos+' option:selected').val() == ""){
+      alert("Selecciona una marca");
+      highLightColor(id_ddl_marcaProveedorInsumos,"#FF0000");
+      return false;
   } else if($('#' + id_precioInsumos).val() == ""){
       alert("Escribe el precio del proveedor para este producto");
       highLightColor(id_precioInsumos,"#FF0000");
       return false;
+  } else if($('#' + id_descuentoInsumos).val() == ""){
+      alert("Escribe el descuento del proveedor para este producto");
+      highLightColor(id_precioInsumos,"#FF0000");
+      return false;
+  } else if($('#' + id_precioFinalInsumos).val() == ""){
+      alert("Escribe el precio final para este producto");
+      highLightColor(id_precioInsumos,"#FF0000");
+      return false;
+  } else if($('#' + id_fecha_ingresoCotizacionInsumos).val() == ""){
+      alert("Escribe una fecha de ingreso para el precio");
+      highLightColor(fechaIngresoCotizacionInsumos,"#FF0000");
+      return false;
   } else if($('#' + id_fecha_cotizacionInsumos).val() == ""){
-      alert("Escribe una fecha de vigencia para el precio");
+      alert("Escribe una fecha de vigencia de la cotizacion");
       highLightColor(id_fecha_cotizacionInsumos,"#FF0000");
       return false;
   } else {
@@ -322,23 +385,28 @@ function altaProductoInsumo(){
   insumo = {
       descripcion: $('#' + id_descripcionInsumos).val(),
       catalogo: $('#' + id_catalogoInsumos).val(),
-      catfabric: $('#' + id_catfabricInsumos).val(),
-      marca: $('#' + id_ddl_marcaInsumos + ' option:selected').val(),
+      sat: $('#' + id_satInsumos).val(),
       unidad: $('#' + id_ddl_unidadInsumos + ' option:selected').val(),
-      clasificacion: $('#' + id_ddl_clasificacionInsumos + ' option:selected').val(),
-      categoria: $('#' + id_ddl_categoriaInsumos + ' option:selected').val()
+      categoria: $('#' + id_ddl_categoriaInsumos + ' option:selected').val(),
+      familia: $('#' + id_ddl_familiaInsumos + ' option:selected').val(),
+      subfamilia: $('#' + id_ddl_subfamiliaInsumos + ' option:selected').val(),
   };
   return insumo;
 };
 
 function altaProveedorInsumo(){
   var proveedor = [];
-  var icon_class = "'icono_rojo fas fa-times-circle'";
   proveedor = [
     $('#'+id_ddl_proveedorInsumos + ' option:selected').val(),
     $('#'+id_ddl_proveedorInsumos + ' option:selected').text(),
+    $('#'+id_ddl_marcaProveedorInsumos + ' option:selected').val(),
+    $('#'+id_ddl_marcaProveedorInsumos + ' option:selected').text(),
     $('#'+id_precioInsumos).val(),
+    $('#'+id_descuentoInsumos).val(),
+    // $('#'+id_precioFinalInsumos).val(),
+    $('#' + id_fecha_ingresoCotizacionInsumos).val(),
     $('#' + id_fecha_cotizacionInsumos).val(),
+    $('#'+id_catalogoProveedorInsumos).val(),
     "<button type='button' class='editarProveedoresInsumos btn btn-info'><i class='fas fa-edit'></i></button>",
     "<button type='button' class='eliminarProveedoresInsumos btn btn-transparent'><i class='icono_rojo fas fa-times-circle'></i></button>"
   ];
@@ -358,15 +426,15 @@ function actualizarTablaInsumos(){
                 insumoSnap.key,
                 insumo.catalogo,
                 insumo.descripcion,
-                insumo.catfabric,
-                insumo.marca,
-                marcas.val()[insumo.marca]["nombre"],
+                insumo.categoria,
+                categorias.val()[insumo.categoria]["nombre"],
+                insumo.familia,
+                categorias.val()[insumo.categoria]["familias"][insumo.familia]["nombre"],
+                insumo.subfamilia,
+                categorias.val()[insumo.categoria]["familias"][insumo.familia]["subfamilias"][insumo.subfamilia]["nombre"],
                 insumo.unidad,
                 unidades.val()[insumo.unidad]["nombre"],
-                insumo.clasificacion,
-                clasificaciones.val()[insumo.clasificacion]["nombre"],
-                insumo.categoria,
-                categorias.val()[insumo.categoria]["nombre"]
+                insumo.sat,
             ]);
         });
 
@@ -381,11 +449,7 @@ function actualizarTablaInsumos(){
                     targets: -2,
                     className: 'dt-body-center'
                 },
-                { "visible": false, "targets": 0 }, //campos auxiliares
-                { "visible": false, "targets": 4 },
-                { "visible": false, "targets": 6 },
-                { "visible": false, "targets": 8 },
-                { "visible": false, "targets": 10 },
+                { "visible": false, "targets": [0,3,5,7,9] }, //campos auxiliares
                 {
                     "targets": -1,
                     "data": null,
@@ -393,24 +457,6 @@ function actualizarTablaInsumos(){
                 }
               ]
         });
-        //Funcion para llenar los campos cuando se quiere editar desde las opciones de la tabla
-        /*
-        $('#' + id_dataTable_insumo + ' tbody').on( 'click', '.editar', function () {
-            highLightProductoInsumo();
-            var data = tabla_insumo.row( $(this).parents('tr') ).data();
-            resetFormInsumo();
-            existe_insumo = true;
-            uid_existente = data[0];
-            $('#' + id_catalogoInsumos ).val(data[1]);
-            $('#' + id_descripcionInsumos ).val(data[2]);
-            $('#' + id_catfabricInsumos ).val(data[3]);
-            $('#' + id_ddl_marcaInsumos ).val(data[4]);
-            $('#' + id_ddl_unidadInsumos ).val(data[6]);
-            $('#' + id_ddl_clasificacionInsumos ).val(data[8]);
-            $('#' + id_ddl_categoriaInsumos ).val(data[10]);
-            actualizarTablaProveedoresInsumo();
-        } );
-        */
     });
 }
 
@@ -420,38 +466,51 @@ $(document).on('click','.editarInsumo', function(){
     resetFormInsumo();
     existe_insumo = true;
     uid_existente = data[0];
-    $('#' + id_catalogoInsumos ).val(data[1]);
+    llenaDdlGeneric(id_ddl_familiaInsumos, categorias.child(data[3]+'/familias'), "nombre");
+    llenaDdlGeneric(id_ddl_subfamiliaInsumos, categorias.child(data[3]+'/familias/' + data[5] +'/subfamilias'), "nombre");
     $('#' + id_descripcionInsumos ).val(data[2]);
-    $('#' + id_catfabricInsumos ).val(data[3]);
-    $('#' + id_ddl_marcaInsumos ).val(data[4]);
-    $('#' + id_ddl_unidadInsumos ).val(data[6]);
-    $('#' + id_ddl_clasificacionInsumos ).val(data[8]);
-    $('#' + id_ddl_categoriaInsumos ).val(data[10]);
+    $('#' + id_ddl_categoriaInsumos ).val(data[3]);
+    $('#' + id_ddl_familiaInsumos ).val(data[5]);
+    $('#' + id_ddl_subfamiliaInsumos ).val(data[7]);
+    $('#' + id_ddl_unidadInsumos ).val(data[9]);
+    $('#' + id_catalogoInsumos ).val(data[1]);
+    $('#' + id_satInsumos ).val(data[11]);
+    $('#' + id_libreInsumos ).val(data[1].slice(-2));
     actualizarTablaProveedoresInsumo();
 });
 
 function actualizarTablaProveedoresInsumo(){
-    firebase.database().ref(rama_bd_insumos + "/listas/productos/"+uid_existente).on("value",function(snapshot){
+    firebase.database().ref(rama_bd_insumos + "/listas/productos/"+uid_existente).once("value",function(snapshot){
         if (snapshot.exists()){
           registro_proveedores = snapshot.val();
         } else {
           registro_proveedores = {};
         }
         var datos_proveedores = [];
+        var fecha_in;
+        var fecha_cot;
         snapshot.forEach(function(proveedorSnap){
             var uid = proveedorSnap.key;
             var proveedor = proveedorSnap.val();
-            fecha = new Date(proveedor.fecha);
-            datos_proveedores.push([
-                uid,
-                proveedores.val()[uid]["razon_social"],
-                formatMoney(proveedor.precio),
-                fecha.getFullYear() +"."+ ("0" + (fecha.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha.getDate()).slice(-2),
-                "<button type='button' class='editarProveedoresInsumos btn btn-info'><i class='fas fa-edit'></i></button>",
-                "<button type='button' class='eliminarProveedoresInsumos btn btn-transparent'><i class='icono_rojo fas fa-times-circle'></i></button>"
-            ]);
+            for(key in proveedor){
+              fecha_in = new Date(proveedor[key].fecha_ingreso);
+              fecha_cot = new Date(proveedor[key].fecha_cotizacion);
+              datos_proveedores.push([
+                  uid,
+                  proveedores.val()[uid]["razon_social"],
+                  key,
+                  marcas.val()[key]["nombre"],
+                  formatMoney(proveedor[key].precio),
+                  proveedor[key].descuento,
+                  fecha_in.getFullYear() +"."+ ("0" + (fecha_in.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha_in.getDate()).slice(-2),
+                  fecha_cot.getFullYear() +"."+ ("0" + (fecha_cot.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha_cot.getDate()).slice(-2),
+                  proveedor[key].catalogo_proveedor,
+                  "<button type='button' class='editarProveedoresInsumos btn btn-info'><i class='fas fa-edit'></i></button>",
+                  "<button type='button' class='eliminarProveedoresInsumos btn btn-transparent'><i class='icono_rojo fas fa-times-circle'></i></button>"
+              ]);
+            }
         });
-
+        // console.log(datos_proveedores);
         tabla_proveedorInsumo = $('#'+ id_dataTableProveedoresInsumos).DataTable({
             destroy: true,
             data: datos_proveedores,
@@ -463,34 +522,9 @@ function actualizarTablaProveedoresInsumo(){
                     targets: -2,
                     className: 'dt-body-center'
                 },
-                { "visible": false, "targets": 0 } //campos auxiliares
+                { "visible": false, "targets": [0,2] } //campos auxiliares
               ]
         });
-        //Funcion para llenar los campos cuando se quiere editar desde las opciones de la tabla
-        /*
-        $('#' + id_dataTableProveedoresInsumos + ' tbody').on( 'click', '.editar', function () {
-            highLightProveedorInsumo();
-            var data = tabla_proveedorInsumo.row( $(this).parents('tr') ).data();
-            resetProveedorInsumo();
-            existe_proveedor = true;
-            uid_existente_proveedor = data[0];
-            existe_proveedor_index = tabla_proveedorInsumo.row(this).index();
-            $('#' + id_ddl_proveedorInsumos).val(data[0]);
-            $('#' + id_precioInsumos).val(data[2]);
-            $('#' + id_fecha_cotizacionInsumos).val(data[3]);
-        } );
-
-        $('#' + id_dataTableProveedoresInsumos + ' tbody').on( 'click', '.eliminar', function () {
-            console.log("Eliminar");
-            var data = tabla_proveedorInsumo.row( $(this).parents('tr') ).data();
-            if(existe_proveedor && data[0] == uid_existente_proveedor){
-              existe_proveedor = false;
-              uid_existente_proveedor = "";
-              existe_proveedor_index = -1;
-            }
-            tabla_proveedorInsumo.row( $(this).parents('tr') ).remove().draw();
-        } );
-        */
     });
 }
 
@@ -500,10 +534,15 @@ $(document).on('click','.editarProveedoresInsumos', function(){
     resetProveedorInsumo();
     existe_proveedor = true;
     uid_existente_proveedor = data[0];
-    existe_proveedor_index = tabla_proveedorInsumo.row(this).index();
+    existe_proveedor_index = tabla_proveedorInsumo.row( $(this).parents('tr') ).index();
     $('#' + id_ddl_proveedorInsumos).val(data[0]);
-    $('#' + id_precioInsumos).val(data[2]);
-    $('#' + id_fecha_cotizacionInsumos).val(data[3]);
+    $('#' + id_precioInsumos).val(data[4]);
+    $('#' + id_descuentoInsumos).val(data[5]);
+    $('#' + id_precioFinalInsumos).val(formatMoney(deformatMoney(data[4])*(1- data[5]*0.01)) );
+    $('#' + id_ddl_marcaProveedorInsumos).val(data[2]);
+    $('#' + id_catalogoProveedorInsumos).val(data[8]);
+    $('#' + id_fecha_cotizacionInsumos).val(data[6]);
+    $('#' + id_fecha_ingresoCotizacionInsumos).val(data[7]);
 });
 
 $(document).on('click','.eliminarProveedoresInsumos', function(){
@@ -519,32 +558,47 @@ $(document).on('click','.eliminarProveedoresInsumos', function(){
 
 function recuperaDatosProveedoresInsumo(){
   var proveedoresInsumo = {};
+  var marcaInsumo = {};
   $('#' + id_dataTableProveedoresInsumos).DataTable().rows().iterator('row', function(context, index){
     var data = this.row(index).data();
     //console.log(data);
-    var f_cotizacion = data[3].split('.');
-    proveedoresInsumo[data[0]]={
-      precio: deformatMoney(data[2]),
-      fecha: new Date(f_cotizacion[0], f_cotizacion[1] - 1, f_cotizacion[2]).getTime()
+    var f_ingreso = data[6].split('.');
+    var f_cotizacion = data[7].split('.');
+    marcaInsumo = {
+      precio: deformatMoney(data[4]),
+      descuento: data[5],
+      fecha_ingreso: new Date(f_ingreso[0], f_ingreso[1] - 1, f_ingreso[2]).getTime(),
+      fecha_cotizacion: new Date(f_cotizacion[0], f_cotizacion[1] - 1, f_cotizacion[2]).getTime(),
+      catalogo_proveedor: data[8]
     };
+    if(proveedoresInsumo[data[0]] == undefined){
+      proveedoresInsumo[data[0]]={};
+      proveedoresInsumo[data[0]][data[2]] = marcaInsumo;
+    }else{
+      proveedoresInsumo[data[0]][data[2]] = marcaInsumo;
+    }
   });
   return proveedoresInsumo;
 }
 
 function highLightProductoInsumo(){
-  highLight(id_catalogoInsumos);
   highLight(id_descripcionInsumos);
-  highLight(id_catfabricInsumos);
-  highLight(id_ddl_marcaInsumos);
-  highLight(id_ddl_unidadInsumos);
-  highLight(id_ddl_clasificacionInsumos);
   highLight(id_ddl_categoriaInsumos);
+  highLight(id_ddl_familiaInsumos);
+  highLight(id_ddl_subfamiliaInsumos);
+  highLight(id_ddl_unidadInsumos);
+  highLight(id_catalogoInsumos);
+  highLight(id_libreInsumos);
+  highLight(id_satInsumos);
 }
 
 function highLightProveedorInsumo(){
   highLight(id_ddl_proveedorInsumos);
   highLight(id_precioInsumos);
-  highLight(id_fecha_cotizacionInsumos);
+  highLight(id_descuentoInsumos);
+  highLight(id_precioFinalInsumos);
+  highLight(id_ddl_marcaProveedorInsumos);
+  highLight(id_catalogoProveedorInsumos);
 }
 
 function llenaDdlGeneric(item_id, snap, nombre){
@@ -561,4 +615,72 @@ function llenaDdlGeneric(item_id, snap, nombre){
     option.text = snapChild.val()[nombre];
     select.appendChild(option);
   });
+}
+
+function generaCodigoCatalogoInsumos(){
+  var codigo = "";
+  cat = $('#'+id_ddl_categoriaInsumos+' option:selected').val();
+  fam = $('#'+id_ddl_familiaInsumos+' option:selected').val();
+  sub = $('#'+id_ddl_subfamiliaInsumos+' option:selected').val();
+  libre = $('#'+id_libreInsumos).val()
+  if(cat !== ""){
+    codigo = codigo + categorias.val()[cat]["codigo"];
+    if(fam !== "" && fam !== undefined){
+      codigo = codigo + categorias.val()[cat]["familias"][fam]["codigo"];
+      if(sub !== "" && sub !== undefined){
+        codigo = codigo + categorias.val()[cat]["familias"][fam]["subfamilias"][sub]["codigo"]+libre;
+      }
+    }
+  }
+  return codigo;
+}
+
+function existeInsumo(catalogo){
+  var promise = new Promise(function(resolve, reject) {
+    firebase.database().ref(rama_bd_insumos + "/productos").orderByChild("catalogo").equalTo(catalogo).once("value",function(snapshot){
+      var respuesta;
+      if(snapshot.exists()){
+        if(existe_insumo){
+          var aux = snapshot.val();
+          var cont = 0;
+          for (key in aux){
+            if(key !== uid_existente){
+              respuesta=true;
+            } else {
+              respuesta=false;
+            }
+            cont += 1;
+          }
+          if(cont >1){
+            respuesta=true;
+          }
+        } else {
+          respuesta=true;
+        }
+      }else{
+        respuesta=false;
+      }
+      resolve(respuesta);
+    }).catch(function(error){
+      reject(Error("No se pudo acceder a la base de datos"));
+    });;
+  });
+  return promise;
+}
+
+function existeProveedorInsumos(proveedor, marca){
+  var respuesta = false;
+  $('#' + id_dataTableProveedoresInsumos).DataTable().rows().iterator('row', function(context, index){
+    var data = this.row(index).data();
+    if(data[0] == proveedor && data[2] == marca){
+      if(existe_proveedor){
+        if(index !== existe_proveedor_index){
+          respuesta=true;
+        }
+      }else{
+        respuesta=true;
+      }
+    }
+  });
+  return respuesta;
 }

@@ -538,8 +538,6 @@ Nota: Todo float se ingresa a 2 decimales.
                   - categoria: id_categoria
                   - familia: id_familia
                   - subfamilia: id_subfamilia
-                  - marcas
-                      - id_marca: nombre
           - proveedores
               - proveedor
                   - razon_social: string
@@ -570,30 +568,26 @@ Nota: Todo float se ingresa a 2 decimales.
               - id_unidad
                   - nombre: string
                   - codigo: string
-          - clasificacion
-              - id_clasificacion
-                  - nombre: string
-                  - codigo: string
 
           - listas
               - proveedores
                   - proveedor
                       - id_producto
-                          - precio: float
-                          - fecha: timestamp
-                          - marcas
-                              - id_marca:
-                                  - nombre: string
-                                  - id_catalogoProveedor: string
+                          - id_marca
+                              - precio: float
+                              - descuento: float
+                              - fecha_ingreso: timestamp
+                              - fecha_cotizacion: timestamp
+                              - catalogoProveedor: string
               - productos
                   - id_producto
                       - id_proveedores
-                          - precio: float
-                          - fecha: timestamp
-                          - marcas
-                              - id_marca
-                                  - nombre: string
-                                  - id_catalogoProveedor: string
+                          - id_marca
+                              - precio: float
+                              - descuento: float
+                              - fecha_ingreso: timestamp
+                              - fecha_cotizacion: timestamp
+                              - catalogoProveedor: string
               - categorias
                   - id_categoria
                       - id_familia

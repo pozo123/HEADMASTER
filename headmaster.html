@@ -3279,37 +3279,33 @@
                                                    <select id ="ddl_categoriaInsumos" class="form-control"></select>
                                                </div>
                                                <div class="form-group col-md-4">
-                                                   <label for="ddl_clasificacionInsumos">Familia:</label>
-                                                   <select id ="ddl_clasificacionInsumos" class="form-control"></select>
+                                                   <label for="ddl_familiaInsumos">Familia:</label>
+                                                   <select id ="ddl_familiaInsumos" class="form-control"></select>
                                                </div>
                                                <div class="form-group col-md-4">
-                                                   <label for="ddl_clasificacionInsumos">Subfamilia:</label>
-                                                   <select id ="ddl_clasificacionInsumos" class="form-control"></select>
+                                                   <label for="ddl_subfamiliaInsumos">Subfamilia:</label>
+                                                   <select id ="ddl_subfamiliaInsumos" class="form-control"></select>
                                                </div>
                                              </div>
                                              <div class="form-row">
-                                               <div class="form-group col-md-2"></div>
+                                               <div class="form-group col-md-4"></div>
                                                <div class="form-group col-md-4">
                                                    <label for="ddl_unidadInsumos">Unidad:</label>
                                                    <select id ="ddl_unidadInsumos" class="form-control"></select>
-                                               </div>
-                                               <div class="form-group col-md-4">
-                                                   <label for="ddl_marcaInsumos">Marcas:</label>
-                                                   <select id ="ddl_marcaInsumos" class="form-control"></select>
                                                </div>
                                              </div>
                                              <div class="form-row">
                                                <div class="form-group col-md-4">
                                                    <label for="catalogoInsumos">Libre:</label>
-                                                   <input type="text" name="" id="catalogoInsumos" class="form-control" placeholder="Digitos libres">
+                                                   <input type="text" name="" id="libreInsumos" class="form-control" placeholder="Digitos libres (2)" maxlength="2">
                                                </div>
                                                <div class="form-group col-md-4">
                                                    <label for="catalogoInsumos">Catálogo:</label>
                                                    <input type="text" name="" id="catalogoInsumos" class="form-control" placeholder="Catálogo" disabled="true">
                                                </div>
                                                <div class="form-group col-md-4">
-                                                   <label for="catfabricInsumos">Numero SAT:</label>
-                                                   <input type="text" name="" id="catfabricInsumos" class="form-control" placeholder="Numero SAT">
+                                                   <label for="satInsumos">Numero SAT:</label>
+                                                   <input type="text" name="" id="satInsumos" class="form-control" placeholder="Numero SAT">
                                                </div>
                                              </div>
 
@@ -3341,12 +3337,12 @@
                                              <div class="form-row">
                                                <div class="form-group col-md-2"></div>
                                                <div class="form-group col-md-4">
-                                                   <label for="ddl_marcaInsumos">Marca:</label>
-                                                   <select id ="ddl_marcaInsumos" class="form-control"></select>
+                                                   <label for="ddl_marcaProveedorInsumos">Marca:</label>
+                                                   <select id ="ddl_marcaProveedorInsumos" class="form-control"></select>
                                                </div>
                                                <div class="form-group col-md-4">
-                                                   <label for="precioInsumos">Catalogo proveedor:</label>
-                                                   <input type="text" name="" id="precioInsumos" class="form-control" placeholder="Catálogo">
+                                                   <label for="catalogoProveedorInsumos">Catalogo proveedor:</label>
+                                                   <input type="text" name="" id="catalogoProveedorInsumos" class="form-control" placeholder="Catálogo">
                                                </div>
                                              </div>
                                              <div class="form-row align-items-center">
@@ -3370,82 +3366,102 @@
                                                  </div>
                                              </div>
                                              </br>
-                                             <div class = "tableWrapper">
-                                                 <table id="dataTableProveedoresInsumos" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
-                                                     <thead>
-                                                         <tr>
-                                                             <th>Id_proveedor</th>
-                                                             <th>Proveedor</th>
-                                                             <th>Precio</th>
-                                                             <th>Fecha</th>
-                                                             <th>Editar</th>
-                                                             <th>Eliminar</th>
-                                                         </tr>
-                                                     </thead>
-                                                     <tfoot>
-                                                         <tr>
-                                                             <th>Id_proveedor</th>
-                                                             <th>Proveedor</th>
-                                                             <th>Precio</th>
-                                                             <th>Fecha</th>
-                                                             <th>Editar</th>
-                                                             <th>Eliminar</th>
-                                                         </tr>
-                                                     </tfoot>
-                                                 </table>
-                                             </div>
-                                             </br>
-                                             </br>
-                                             <div class="form-row">
-                                                 <div class= "col-6">
-                                                     <button id="botonAgregarInsumos" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
-                                                 </div>
-                                                 <div class= "col-6">
-                                                     <button id="botonBorrarInsumos" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
-                                                 </div>
-                                             </div>
                                          </form>
-                                         <br/>
                                      </div>
+                                     <div class= "col-lg-12">
+                                         <div class = "tableWrapper">
+                                             <table id="dataTableProveedoresInsumos" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                                 <thead>
+                                                     <tr>
+                                                         <th>Id_proveedor</th>
+                                                         <th>Proveedor</th>
+                                                         <th>Marca</th>
+                                                         <th>Marca</th>
+                                                         <th>Precio</th>
+                                                         <th>Descuento</th>
+                                                         <th>Fecha ingreso</th>
+                                                         <th>Fecha vencimiento</th>
+                                                         <th>Catalogo proveedor</th>
+                                                         <th>Editar</th>
+                                                         <th>Eliminar</th>
+                                                     </tr>
+                                                 </thead>
+                                                 <tfoot>
+                                                     <tr>
+                                                         <th>Id_proveedor</th>
+                                                         <th>Proveedor</th>
+                                                         <th>Marca</th>
+                                                         <th>Marca</th>
+                                                         <th>Precio</th>
+                                                         <th>Descuento</th>
+                                                         <th>Fecha ingreso</th>
+                                                         <th>Fecha vencimiento</th>
+                                                         <th>Catalogo proveedor</th>
+                                                         <th>Editar</th>
+                                                         <th>Eliminar</th>
+                                                     </tr>
+                                                 </tfoot>
+                                             </table>
+                                         </div>
+                                     </div>
+                                     </br>
                                      <div class= "col-lg-2"></div>
-                                     <div class = "tableWrapper">
-                                         <table id="dataTableInsumos" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
-                                             <thead>
-                                                 <tr>
-                                                     <th>Id_insumo</th>
-                                                     <th>Catálogo</th>
-                                                     <th>Descripción</th>
-                                                     <th>Catfabric</th>
-                                                     <th>Marca</th>
-                                                     <th>Marca</th>
-                                                     <th>Unidad</th>
-                                                     <th>Unidad</th>
-                                                     <th>Clasificación</th>
-                                                     <th>Clasificación</th>
-                                                     <th>Categoría</th>
-                                                     <th>Categoría</th>
-                                                     <th>Editar</th>
-                                                 </tr>
-                                             </thead>
-                                             <tfoot>
-                                                 <tr>
-                                                     <th>Id_insumo</th>
-                                                     <th>Catálogo</th>
-                                                     <th>Descripción</th>
-                                                     <th>Catfabric</th>
-                                                     <th>Marca</th>
-                                                     <th>Marca</th>
-                                                     <th>Unidad</th>
-                                                     <th>Unidad</th>
-                                                     <th>Clasificación</th>
-                                                     <th>Clasificación</th>
-                                                     <th>Categoría</th>
-                                                     <th>Categoría</th>
-                                                     <th>Editar</th>
-                                                 </tr>
-                                             </tfoot>
-                                         </table>
+                                     <div class= "col-lg-8">
+                                         <div class="form-row">
+                                             <div class= "col-6">
+                                                 <button id="botonAgregarInsumos" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                             </div>
+                                             <div class= "col-6">
+                                                 <button id="botonBorrarInsumos" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                             </div>
+                                         </div>
                                      </div>
+                                     </br>
+                                     </br>
+                                     </br>
+                                     </br>
+                                     </br>
+                                     </br>
+                                     <div class= "col-lg-12">
+                                         <div class = "tableWrapper">
+                                             <table id="dataTableInsumos" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                                 <thead>
+                                                     <tr>
+                                                         <th>Id_insumo</th>
+                                                         <th>Catálogo</th>
+                                                         <th>Descripción</th>
+                                                         <th>Categoría</th>
+                                                         <th>Categoría</th>
+                                                         <th>Familia</th>
+                                                         <th>Familia</th>
+                                                         <th>Subfamilia</th>
+                                                         <th>Subfamilia</th>
+                                                         <th>Unidad</th>
+                                                         <th>Unidad</th>
+                                                         <th>No. SAT</th>
+                                                         <th>Editar</th>
+                                                     </tr>
+                                                 </thead>
+                                                 <tfoot>
+                                                     <tr>
+                                                         <th>Id_insumo</th>
+                                                         <th>Catálogo</th>
+                                                         <th>Descripción</th>
+                                                         <th>Categoría</th>
+                                                         <th>Categoría</th>
+                                                         <th>Familia</th>
+                                                         <th>Familia</th>
+                                                         <th>Subfamilia</th>
+                                                         <th>Subfamilia</th>
+                                                         <th>Unidad</th>
+                                                         <th>Unidad</th>
+                                                         <th>No. SAT</th>
+                                                         <th>Editar</th>
+                                                     </tr>
+                                                 </tfoot>
+                                             </table>
+                                         </div>
+                                      </div>
                                  </div>
                              </div>
                          </div>
