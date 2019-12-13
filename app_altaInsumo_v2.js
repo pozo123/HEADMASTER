@@ -50,14 +50,15 @@ jQuery.datetimepicker.setLocale('es');
 
 //Dar formato a los elementos existentes
 $('#' + id_tab_insumo).click(function() {
-    uid_existente="NOHAY";
+    // inicializar variables
+    uid_existente="NOHAY"; // se eligió este valor para evitar problemas con la consulta firebase
     existe_insumo=false;
     existe_proveedor=false;
     uid_existente_proveedor="";
     existe_proveedor_index=-1;
     registro_proveedores={};
     registro_antiguo = {};
-    resetFormInsumo();
+    resetFormInsumo(); // limpiar formulario
     // Con las líneas siguiente se genera el cuadro para las fechas en el HTML
     jQuery('#' + id_fecha_ingresoCotizacionInsumos).datetimepicker(
         {timepicker:false, weeks:true,format:'Y.m.d'}
@@ -65,6 +66,7 @@ $('#' + id_tab_insumo).click(function() {
     jQuery('#' + id_fecha_cotizacionInsumos).datetimepicker(
         {timepicker:false, weeks:true,format:'Y.m.d'}
     );
+    // Recuperar la información necesaria de la base de datos
     firebase.database().ref(rama_bd_insumos + "/marcas").orderByChild('nombre').on('value',function(snapshot){
       marcas = snapshot;
       llenaDdlGeneric(id_ddl_marcaProveedorInsumos, marcas, "nombre");
@@ -81,6 +83,7 @@ $('#' + id_tab_insumo).click(function() {
       proveedores = snapshot;
       llenaDdlGeneric(id_ddl_proveedorInsumos, proveedores, "razon_social");
     });
+    // Inicializar las tablas
     actualizarTablaInsumos();
     actualizarTablaProveedoresInsumo();
 });
@@ -93,15 +96,16 @@ $('#' + id_boton_BorrarInsumos).click(function() {
   actualizarTablaProveedoresInsumo();
 });
 
+// Funcionalidad del boton 'Registrar proveedor'
 $('#' + id_botonAgregarProveedorInsumos).click(function() {
-  if(validateProveedorInsumo()){
-    if(!existeProveedorInsumos($('#'+id_ddl_proveedorInsumos+' option:selected').val(), $('#'+id_ddl_marcaProveedorInsumos+' option:selected').val())){
-      if(existe_proveedor){
+  if(validateProveedorInsumo()){ // validar la información del formulario
+    if(!existeProveedorInsumos($('#'+id_ddl_proveedorInsumos+' option:selected').val(), $('#'+id_ddl_marcaProveedorInsumos+' option:selected').val())){ // validar que no exista dubla proveedor-marca
+      if(existe_proveedor){ // editar
         tabla_proveedorInsumo.row(existe_proveedor_index).data(altaProveedorInsumo()).draw();
-      }else{
+      }else{ // agregar renglon
         tabla_proveedorInsumo.row.add(altaProveedorInsumo()).draw();
       }
-      resetProveedorInsumo();
+      resetProveedorInsumo(); // limpiar formulario
       existe_proveedor= false;
     } else {
       alert("Este producto ya tiene un registro para este proveedor con la misma marca");
@@ -111,24 +115,21 @@ $('#' + id_botonAgregarProveedorInsumos).click(function() {
 
 //Funcionalidad del boton 'Registrar/Editar'
 $('#' + id_boton_AgregarInsumos).click(function() {
-  //Validar datos ingresados
-  if (validateFormInsumo()){
+  if (validateFormInsumo()){ // validar datos ingresados
     var datos_insumo = altaProductoInsumo();
     var proveedores_json = recuperaDatosProveedoresInsumo();
     //console.log(datos_insumo);
     //console.log(proveedores_json);
-    //Decidir si editar o dar de alta
-    existeInsumo($('#'+id_catalogoInsumos).val()).then(function(catalogoExistente){
-      if(!catalogoExistente){
-        if (existe_insumo){ //editar
-          //console.log("Editar");
-          firebase.database().ref(rama_bd_insumos + "/productos/" + uid_existente).once("value").then(function(snapshot){
+    existeInsumo($('#'+id_catalogoInsumos).val()).then(function(catalogoExistente){ // validar que no exista otro insumo con el mismo número de catálogo
+      if(!catalogoExistente){ // número de catálogo disponible
+        if (existe_insumo){ // editar insumo
+          firebase.database().ref(rama_bd_insumos + "/productos/" + uid_existente).once("value").then(function(snapshot){ // recuperar registro antiguo
               var registro_antiguo = snapshot.val();
               var insumo_update = {};
-              //Actualizar los campos de la obra
+              // Actualizar los campos del insumo
               var path_insumo = "productos/" + uid_existente;
               insumo_update[path_insumo] = datos_insumo;
-
+              // Actualizar las listas
               if(registro_antiguo.unidad !== datos_insumo.unidad){
                 insumo_update["listas/unidades/" + registro_antiguo.unidad +"/"+ uid_existente] = null;
                 insumo_update["listas/unidades/" + datos_insumo.unidad +"/"+ uid_existente] = true;
@@ -140,22 +141,22 @@ $('#' + id_boton_AgregarInsumos).click(function() {
 
               insumo_update["listas/productos/" + uid_existente] = proveedores_json;
 
-              //console.log(registro_proveedores);
+              // Eliminar los registros de las listas de cada proveedor y marca
               for (key in registro_proveedores){
-                if(proveedores_json[key] == undefined){
+                if(proveedores_json[key] == undefined){ // eliminar los existentes
                   insumo_update["listas/proveedores/" + key + "/"+ uid_existente ] = null;
                   for (key2 in registro_proveedores[key]){
                     insumo_update["listas/marcas/" + key2 +"/"+ uid_existente] = null;
                   }
                 } else {
-                  for (key2 in registro_proveedores[key]){
+                  for (key2 in registro_proveedores[key]){ // eliminar las marcas existentes de ese proveedor
                     if(proveedores_json[key][key2] == undefined){
                       insumo_update["listas/marcas/" + key2 +"/"+ uid_existente] = null;
                     }
                   }
                 }
               }
-
+              // Agregar los registros a las listas de cada proveedor y marca
               for(key in proveedores_json){
                 for (key2 in proveedores_json[key]){
                   insumo_update["listas/proveedores/" + key + "/"+ uid_existente + "/"+ key2 ] = proveedores_json[key][key2];
@@ -163,17 +164,16 @@ $('#' + id_boton_AgregarInsumos).click(function() {
                 }
               }
               console.log(insumo_update);
-              firebase.database().ref(rama_bd_insumos).update(insumo_update);
+              firebase.database().ref(rama_bd_insumos).update(insumo_update); // guardar los cambios en la base de datos
 
               // PAD
-              pda("modificacion", rama_bd_insumos + "/" + path_insumo, registro_antiguo);
+              pda("modificacion", rama_bd_insumos + "/" + path_insumo, registro_antiguo); // crear una pista de auditoria
               alert("¡Edición exitosa!");
-              resetFormInsumo();
-              actualizarTablaProveedoresInsumo();
+              resetFormInsumo(); // limpiar formulario
+              actualizarTablaProveedoresInsumo(); // limpiar tabla de proveedores
           });
-        } else { //dar de alta
-          //console.log("Dar de alta");
-          firebase.database().ref(rama_bd_insumos + "/productos").push(datos_insumo).then(function(snapshot){
+        } else { // dar de alta insumo
+          firebase.database().ref(rama_bd_insumos + "/productos").push(datos_insumo).then(function(snapshot){ // agregar el insumo a la base de datos
               var regKey = snapshot.key;
               var insumo_update = {};
               var unidad = $('#' + id_ddl_unidadInsumos + ' option:selected').val();
@@ -192,13 +192,13 @@ $('#' + id_boton_AgregarInsumos).click(function() {
               }
 
               console.log(insumo_update);
-              firebase.database().ref(rama_bd_insumos).update(insumo_update);
+              firebase.database().ref(rama_bd_insumos).update(insumo_update); // guardar las listas en la base de datos
 
               // PAD
-              pda("alta", rama_bd_insumos + "/productos/" + regKey, "");
+              pda("alta", rama_bd_insumos + "/productos/" + regKey, ""); // crear una pista de auditoria
               alert("¡Alta exitosa!");
-              resetFormInsumo();
-              actualizarTablaProveedoresInsumo();
+              resetFormInsumo(); // limpiar el formulario
+              actualizarTablaProveedoresInsumo(); // limpiar la tabla de proveedores
           });
         };
       } else {
@@ -209,49 +209,66 @@ $('#' + id_boton_AgregarInsumos).click(function() {
 });
 
 // ----------------------- VALIDACIÓN DE FORMULARIO ----------------------------
+// Función para llenar el ddl familia y actualizar el número de catálogo cuando
+// se selecciona una categoría
 $('#' + id_ddl_categoriaInsumos).change(function(){
   $('#'+id_ddl_subfamiliaInsumos).empty();
   llenaDdlGeneric(id_ddl_familiaInsumos, categorias.child($('#'+id_ddl_categoriaInsumos+' option:selected').val()+'/familias'), "nombre");
   $('#'+id_catalogoInsumos).val(generaCodigoCatalogoInsumos());
 });
 
+// Función para llenar el ddl subfamilia y actualizar el número de catálogo
+// cuando se selecciona una subfamilia
 $('#' + id_ddl_familiaInsumos).change(function(){
   llenaDdlGeneric(id_ddl_subfamiliaInsumos, categorias.child($('#'+id_ddl_categoriaInsumos+' option:selected').val()+'/familias/' + $('#'+id_ddl_familiaInsumos+' option:selected').val()+'/subfamilias'), "nombre");
   $('#'+id_catalogoInsumos).val(generaCodigoCatalogoInsumos());
 });
 
+// Función para actualizar el número de catálogo cuando se selecciona una
+// subfamilia
 $('#' + id_ddl_subfamiliaInsumos).change(function(){
   $('#'+id_catalogoInsumos).val(generaCodigoCatalogoInsumos());
 });
 
+// Función para actualizar el número de catálogo cuando se presiona una tecla en
+// el campo libre
 $('#' + id_libreInsumos).keypress(function(){
   $('#'+id_catalogoInsumos).val(generaCodigoCatalogoInsumos());
 });
 
+// Funcion para actualizar el número de catálogo cuando cambia el valor del
+// campo libre
 $('#' + id_libreInsumos).change(function(){
   $('#'+id_catalogoInsumos).val(generaCodigoCatalogoInsumos());
 });
 
+// Función para homologar todas los caracteres del campo descripción a mayúsculas
 $('#' + id_descripcionInsumos).change(function(){
   $('#' + id_descripcionInsumos).val($('#' + id_descripcionInsumos).val().toUpperCase());
 });
 
+// Función para delimitar los caracteres permitidos en el campo descripción
 $('#' + id_descripcionInsumos).keypress(function(e){
     charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_0123456789áéíóú/",e)
 });
 
+// Función para homologar todas los caracteres del campo numero SAT a mayúsculas
 $('#' + id_satInsumos).change(function(){
     $('#' + id_satInsumos).val($('#' + id_satInsumos).val().toUpperCase());
 });
 
+// Función para delimitar los caracteres permitidos en el campo numero SAT
 $('#' + id_satInsumos).keypress(function(e){
     charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-/0123456789",e)
 });
 
+// Función para delimitar los caracteres permitidos en el campo precio
 $('#' + id_precioInsumos).keypress(function(e){
     charactersAllowed("0123456789.",e);
 });
 
+// Función para actualizar el precio final cuando se cambia el monto en el campo
+// precio
 $('#' + id_precioInsumos).change(function(){
   if($('#'+id_descuentoInsumos).val() == ""){
 		$('#' + id_descuentoInsumos).val(0);
@@ -259,18 +276,22 @@ $('#' + id_precioInsumos).change(function(){
   $('#' + id_precioFinalInsumos).val(formatMoney($('#' + id_precioInsumos).val() * (1-$('#' + id_descuentoInsumos).val()*0.01)));
 });
 
+// Función para quitar el signo de pesos cuando se selecciona el campo precio
 $('#' + id_precioInsumos).focus(function(){
   if($('#'+id_precioInsumos).val() !== ""){
 		$('#' + id_precioInsumos).val(deformatMoney($('#' + id_precioInsumos).val()));
 	}
 });
 
+// Función para agregar el signo de pesos cuando se deselecciona el campo precio
 $('#' + id_precioInsumos).focusout(function(){
   if($('#'+id_precioInsumos).val() !== ""){
 		$('#' + id_precioInsumos).val(formatMoney($('#' + id_precioInsumos).val()));
 	}
 });
 
+// Funcion para actualizar el precio final cuando se cambia el monto en el campo
+// descuento
 $('#' + id_descuentoInsumos).change(function(){
   if($('#'+id_descuentoInsumos).val() == ""){
 		$('#' + id_descuentoInsumos).val(0);
@@ -278,12 +299,14 @@ $('#' + id_descuentoInsumos).change(function(){
   $('#' + id_precioFinalInsumos).val(formatMoney(deformatMoney($('#' + id_precioInsumos).val()) * (1 - $('#' + id_descuentoInsumos).val()*0.01)));
 });
 
+// Función para delimitar los caracteres permitidos en el campo libre
 $('#' + id_libreInsumos).keypress(function(e){
     charactersAllowed(" 0123456789",e)
 });
 
 // ----------------------- FUNCIONES NECESARIAS ----------------------------
-//Borrar la información de todos los campos
+// Función para borrar la información de los campos del formulario del insumo
+// y reiniciar variables auxiliares
 function resetFormInsumo(){
   $('#' + id_descripcionInsumos).val("");
   $('#' + id_ddl_categoriaInsumos).val("");
@@ -299,6 +322,8 @@ function resetFormInsumo(){
   // actualizarTablaProveedoresInsumo();
 }
 
+// Función para borrar la información de los campos del formulario del proveedor
+// y reiniciar variables auxiliares
 function resetProveedorInsumo(){
   $('#' + id_ddl_proveedorInsumos).val("");
   $('#' + id_ddl_marcaProveedorInsumos).val("");
@@ -308,9 +333,12 @@ function resetProveedorInsumo(){
   $('#' + id_catalogoProveedorInsumos).val("");
   $('#' + id_fecha_cotizacionInsumos).val("");
   $('#' + id_fecha_ingresoCotizacionInsumos).val("")
+  existe_proveedor=false;
+  existe_proveedor_index = -1;
+  uid_existente_proveedor = "";
 }
 
-//Validar que no esté vacío nungún campo
+// Función para verificar que la información del insumo está completa
 function validateFormInsumo(){
     if($('#' + id_descripcionInsumos).val() == ""){
         alert("Escribe la descripcion del producto");
@@ -345,6 +373,7 @@ function validateFormInsumo(){
     }
 }
 
+// Función para verificar que la información del proveedor está completa
 function validateProveedorInsumo(){
   if ($('#' + id_ddl_proveedorInsumos + ' option:selected').val() == ""){
     alert("Selecciona un proveedor.");
@@ -379,7 +408,7 @@ function validateProveedorInsumo(){
   }
 }
 
-//Construir el JSON de direccion para la obra
+// Función para generar el json para un insumo con la información del formulario
 function altaProductoInsumo(){
   var insumo = {};
   insumo = {
@@ -394,6 +423,8 @@ function altaProductoInsumo(){
   return insumo;
 };
 
+// Función para generar el array con la información del formulario para agregar un
+// proveedor a la tabla
 function altaProveedorInsumo(){
   var proveedor = [];
   proveedor = [
@@ -413,7 +444,7 @@ function altaProveedorInsumo(){
   return proveedor;
 }
 
-// función que actualiza la tabla (revisar librería DataTable para ver funcionalidad)
+// Función que actualiza la tabla (revisar librería DataTable para ver funcionalidad)
 // se utiliza on "value" para que en cada movimiento en la base de datos "colaboradores", la tabla se actualize
 // automáticamente.
 function actualizarTablaInsumos(){
@@ -460,6 +491,8 @@ function actualizarTablaInsumos(){
     });
 }
 
+// Funcion para editar un registro de insumo
+// Llena todos los campos del formulario con los datos de la tabla
 $(document).on('click','.editarInsumo', function(){
     highLightProductoInsumo();
     var data = tabla_insumo.row( $(this).parents('tr') ).data();
@@ -479,6 +512,7 @@ $(document).on('click','.editarInsumo', function(){
     actualizarTablaProveedoresInsumo();
 });
 
+// Función para actualizar y configurar la tabla de proveedores
 function actualizarTablaProveedoresInsumo(){
     firebase.database().ref(rama_bd_insumos + "/listas/productos/"+uid_existente).once("value",function(snapshot){
         if (snapshot.exists()){
@@ -519,7 +553,7 @@ function actualizarTablaProveedoresInsumo(){
             "columnDefs": [
                 { "width": "150px", "targets": 2 },
                 {
-                    targets: -2,
+                    targets: [-1,-2],
                     className: 'dt-body-center'
                 },
                 { "visible": false, "targets": [0,2] } //campos auxiliares
@@ -528,6 +562,8 @@ function actualizarTablaProveedoresInsumo(){
     });
 }
 
+// Función para editar un registro proveedor-marca
+// Llena todos los campos del formulario con los datos de la tabla
 $(document).on('click','.editarProveedoresInsumos', function(){
     highLightProveedorInsumo();
     var data = tabla_proveedorInsumo.row( $(this).parents('tr') ).data();
@@ -545,33 +581,35 @@ $(document).on('click','.editarProveedoresInsumos', function(){
     $('#' + id_fecha_ingresoCotizacionInsumos).val(data[7]);
 });
 
+// Función para eliminar un renglón de tabla al hacer clic en el icono rojo
 $(document).on('click','.eliminarProveedoresInsumos', function(){
     //console.log("Eliminar");
     var data = tabla_proveedorInsumo.row( $(this).parents('tr') ).data();
-    if(existe_proveedor && data[0] == uid_existente_proveedor){
+    if(existe_proveedor && data[0] == uid_existente_proveedor){ // revisar si se estaba editando
       existe_proveedor = false;
       uid_existente_proveedor = "";
       existe_proveedor_index = -1;
     }
-    tabla_proveedorInsumo.row( $(this).parents('tr') ).remove().draw();
+    tabla_proveedorInsumo.row( $(this).parents('tr') ).remove().draw(); // eliminar renglón
 });
 
+// Funcion para extraer todos los datos de la tabla proveedores
 function recuperaDatosProveedoresInsumo(){
   var proveedoresInsumo = {};
   var marcaInsumo = {};
-  $('#' + id_dataTableProveedoresInsumos).DataTable().rows().iterator('row', function(context, index){
+  $('#' + id_dataTableProveedoresInsumos).DataTable().rows().iterator('row', function(context, index){ // recorrer todos los renglones
     var data = this.row(index).data();
     //console.log(data);
     var f_ingreso = data[6].split('.');
     var f_cotizacion = data[7].split('.');
-    marcaInsumo = {
+    marcaInsumo = { // generar el json con los campos correspondientes
       precio: deformatMoney(data[4]),
       descuento: data[5],
       fecha_ingreso: new Date(f_ingreso[0], f_ingreso[1] - 1, f_ingreso[2]).getTime(),
       fecha_cotizacion: new Date(f_cotizacion[0], f_cotizacion[1] - 1, f_cotizacion[2]).getTime(),
       catalogo_proveedor: data[8]
     };
-    if(proveedoresInsumo[data[0]] == undefined){
+    if(proveedoresInsumo[data[0]] == undefined){ // crear el json para el proveedor si está vacío
       proveedoresInsumo[data[0]]={};
       proveedoresInsumo[data[0]][data[2]] = marcaInsumo;
     }else{
@@ -581,6 +619,7 @@ function recuperaDatosProveedoresInsumo(){
   return proveedoresInsumo;
 }
 
+// Funcion para resaltar los campos del formulario correspondientes solo al insumo
 function highLightProductoInsumo(){
   highLight(id_descripcionInsumos);
   highLight(id_ddl_categoriaInsumos);
@@ -592,6 +631,7 @@ function highLightProductoInsumo(){
   highLight(id_satInsumos);
 }
 
+// Funcion para resaltar los campos del formulario correspondientes al proveedor
 function highLightProveedorInsumo(){
   highLight(id_ddl_proveedorInsumos);
   highLight(id_precioInsumos);
@@ -601,6 +641,7 @@ function highLightProveedorInsumo(){
   highLight(id_catalogoProveedorInsumos);
 }
 
+// Funcion generica para llenar un ddl con un snap y el nombre del campo deseado
 function llenaDdlGeneric(item_id, snap, nombre){
   // Llenado del ddl de marca
   $('#' + item_id).empty();
@@ -617,6 +658,7 @@ function llenaDdlGeneric(item_id, snap, nombre){
   });
 }
 
+// Funcion para generar el numero de catalogo con los campos del formulario
 function generaCodigoCatalogoInsumos(){
   var codigo = "";
   cat = $('#'+id_ddl_categoriaInsumos+' option:selected').val();
@@ -635,27 +677,28 @@ function generaCodigoCatalogoInsumos(){
   return codigo;
 }
 
+// Función para verificar si ya existe un insumo con el mismo número de catálogo
 function existeInsumo(catalogo){
   var promise = new Promise(function(resolve, reject) {
-    firebase.database().ref(rama_bd_insumos + "/productos").orderByChild("catalogo").equalTo(catalogo).once("value",function(snapshot){
+    firebase.database().ref(rama_bd_insumos + "/productos").orderByChild("catalogo").equalTo(catalogo).once("value",function(snapshot){ // extraer todos los insumos con ese catalogo
       var respuesta;
-      if(snapshot.exists()){
-        if(existe_insumo){
+      if(snapshot.exists()){ // si existen insumos con ese catalogo
+        if(existe_insumo){ // si se esta editando un registro
           var aux = snapshot.val();
           var cont = 0;
           for (key in aux){
-            if(key !== uid_existente){
-              respuesta=true;
+            if(key !== uid_existente){ // si el insumo no corresponde al que se esta editando
+              respuesta=true; // existe otro insumo con ese numero de catalogo
             } else {
-              respuesta=false;
+              respuesta=false; // el insumo es el mismo al que se está editando
             }
             cont += 1;
           }
-          if(cont >1){
+          if(cont >1){ // si más de un insumo con ese numero de catalogo
             respuesta=true;
           }
         } else {
-          respuesta=true;
+          respuesta=true; // existe otro insumo con ese numero de catalogo
         }
       }else{
         respuesta=false;
@@ -668,17 +711,18 @@ function existeInsumo(catalogo){
   return promise;
 }
 
+// Funcion para verificar si ya existe una dubla proveedor-marca en la tabla
 function existeProveedorInsumos(proveedor, marca){
   var respuesta = false;
-  $('#' + id_dataTableProveedoresInsumos).DataTable().rows().iterator('row', function(context, index){
+  $('#' + id_dataTableProveedoresInsumos).DataTable().rows().iterator('row', function(context, index){ //recorrer todos los renglones
     var data = this.row(index).data();
-    if(data[0] == proveedor && data[2] == marca){
-      if(existe_proveedor){
-        if(index !== existe_proveedor_index){
-          respuesta=true;
+    if(data[0] == proveedor && data[2] == marca){ // checar si coinciden proveedor y marca
+      if(existe_proveedor){ // checar si se está editando un registro
+        if(index !== existe_proveedor_index){ // si no corresponde al registro que se está editando
+          respuesta=true; // si existe otro insumo con el mismo numero de catálogo
         }
       }else{
-        respuesta=true;
+        respuesta=true; // el catalogo encontrado es de un insumo existente
       }
     }
   });

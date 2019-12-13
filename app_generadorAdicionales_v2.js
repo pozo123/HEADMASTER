@@ -34,7 +34,9 @@ var datos_obraAdicionales;
 var no_adic;
 var download_images_url;
 
+// Función para incializar esta página
 $('#' + id_tab_adicionales).click(function() {
+  // Inicializar variables auxiliares
   json_modalSuministros={};
   json_modalCopeo={};
   json_modalCalculadora={};
@@ -43,15 +45,15 @@ $('#' + id_tab_adicionales).click(function() {
   flagCuantificacionAdicionales = false;
   flagDownloadAdicionales = false;
   download_images_url=[];
-  ddlObrasActivasGeneric(id_ddl_obraAdicionales);
-  cargarDdlRequisitosAdicionales();
-  cargarDdlExclusionesAdicionales();
+  ddlObrasActivasGeneric(id_ddl_obraAdicionales); // llenar el ddl obras
+  cargarDdlRequisitosAdicionales(); // llenar el ddl requisitos adicionales
+  cargarDdlExclusionesAdicionales(); // llenar el ddl exclusiones
   $('#' + id_ddl_obraAdicionales + ' option:selected').val("");
-  resetAdicionales();
+  resetAdicionales(); // limpiar formulario
 });
 
 // ------------------------ FUNCIONES DEL FORM ---------------------------------
-
+// Funcion para llenar los ddls correspondientes cuando se selecciona un obra
 $('#' + id_ddl_obraAdicionales).change(function(){
   resetAdicionales();
   llenaDdlAdicionalAdicionales(id_ddl_adicionalAdicionales);
@@ -60,6 +62,7 @@ $('#' + id_ddl_obraAdicionales).change(function(){
   clienteDireccionObraGeneric($('#' + id_ddl_obraAdicionales + ' option:selected').val());
 });
 
+// Función para llenar el formulario cuando se selecciona un adicional
 $('#' + id_ddl_adicionalAdicionales ).change(function(){
   if($('#' + id_ddl_adicionalAdicionales + ' option:selected').val() == "-NUEVO-"){
     llenaDdlSolicitudAdicionales(id_ddl_solicitudAdicionales);
@@ -72,6 +75,7 @@ $('#' + id_ddl_adicionalAdicionales ).change(function(){
   }
 });
 
+// Función para llenar el formulario cuando se selecciona una solicitud
 $('#' + id_ddl_solicitudAdicionales).change(function(){
   var clave_sol = $('#' + id_ddl_solicitudAdicionales + ' option:selected').val();
   llenarFormSolicitudAdicionales(clave_sol);
@@ -79,6 +83,7 @@ $('#' + id_ddl_solicitudAdicionales).change(function(){
   flagDownloadAdicionales = false;
 });
 
+// Funcionalidad del campo porcentale indirectos
 $('#' + id_indirectosAdicionales).on("change", function(event){
     if($('#' + id_indirectosAdicionales).val() == ""){
       $('#' + id_indirectosAdicionales).val(0);
@@ -88,11 +93,11 @@ $('#' + id_indirectosAdicionales).on("change", function(event){
 
 // Metodo del boton para abrir el modal de cuantificacion
 $('#' + id_boton_suministrosAdicionales).click(function() {
-  if($('#' + id_ddl_adicionalAdicionales + ' option:selected').val() && !flagCuantificacionAdicionales){
+  if($('#' + id_ddl_adicionalAdicionales + ' option:selected').val() && !flagCuantificacionAdicionales){ // actualizar los precios finales con los indirectos
     actualizaPreciosClienteAdicionales();
   }
-  modalSuministros(parseFloat($('#' + id_indirectosAdicionales).val()).toFixed(2), false, json_modalSuministros);
-  flagCuantificacionAdicionales = true;
+  modalSuministros(parseFloat($('#' + id_indirectosAdicionales).val()).toFixed(2), false, json_modalSuministros); // desplegar modal
+  flagCuantificacionAdicionales = true; // actualizar bandera de porcentaje indirectos
 });
 
 // Metodo del boton para abrir el modal de cuantificacion
@@ -102,7 +107,7 @@ $('#' + id_boton_copeoAdicionales).click(function() {
 
 // Metodo del boton para abrir el modal de calculadora
 $('#' + id_boton_calculadoraAdicionales).click(function() {
-  if(jQuery.isEmptyObject(json_modalCalculadora)){
+  if(jQuery.isEmptyObject(json_modalCalculadora)){ // crear el json en caso de no existir
     json_modalCalculadora["score"]={};
     json_modalCalculadora["score"]["horas_programadas"] = 0;
     json_modalCalculadora["score"]["costo_hora"] = 1300;
@@ -110,16 +115,18 @@ $('#' + id_boton_calculadoraAdicionales).click(function() {
     json_modalCalculadora["utilidad"] = 0;
     json_modalCalculadora["precio_venta"] = 0;
   }
+  // actualizar variables
   var totales = calculaCostoSuministros();
   json_modalCalculadora["costo_suministros"] = totales.costos;
   json_modalCalculadora["precopeo"] = calculaCostoCopeo();
   json_modalCalculadora["porcentaje_impuestos"] = extraeImpuesto();
   json_modalCalculadora["precio_venta"] = parseFloat(totales.precio_venta + json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01)*(1+$('#'+ id_indirectosAdicionales).val()*0.01)).toFixed(2);
   //console.log(json_modalCalculadora);
-
-  modalCalculadora(json_modalCalculadora, false, true);
+  modalCalculadora(json_modalCalculadora, false, true); // desplegar modal
 });
 
+// Función para actualizar el campo porcentaje indirectos y los precios finales
+// cuando se cierra el modal calculadora
 $('#' + id_modalCalculadora).on('hidden.bs.modal', function () {
     var porcentaje = 100 * (json_modalCalculadora["precio_venta"]-json_modalCalculadora["costo_suministros"]- json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01))/ (json_modalCalculadora["costo_suministros"]+json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01));
     if(parseFloat(porcentaje).toFixed(2) !== $('#'+ id_indirectosAdicionales).val()){
@@ -128,6 +135,7 @@ $('#' + id_modalCalculadora).on('hidden.bs.modal', function () {
     }
 })
 
+// Función para actualizar el campo estimaciones cuando cambia el campo anticipos
 $('#' + id_anticiposAdicionales).change(function(){
   if($('#' + id_anticiposAdicionales).val() == "" || $('#' + id_anticiposAdicionales).val() < 0){
     $('#' + id_anticiposAdicionales).val(0);
@@ -135,6 +143,7 @@ $('#' + id_anticiposAdicionales).change(function(){
     $('#' + id_estimacionesAdicionales).val(100 - $('#' + id_anticiposAdicionales).val());
 });
 
+// Función para actualizar el campo anticipos cuando cambia el campo estimaciones
 $('#' + id_estimacionesAdicionales).change(function(){
   if($('#' + id_estimacionesAdicionales).val() == ""  || $('#' + id_estimacionesAdicionales).val() < 0){
     $('#' + id_estimacionesAdicionales).val(0);
@@ -142,7 +151,8 @@ $('#' + id_estimacionesAdicionales).change(function(){
   $('#' + id_anticiposAdicionales).val(100 - $('#' + id_estimacionesAdicionales).val());
 });
 
-// Metodo del boton para abrir el modal de calculadora
+// Función para generar una vista previa del pdf al hacer clic en el boton
+// vista previa
 $('#' + id_botonpdfAdicionales).click(function() {
   if (validateFormAdicionales()){
     var path = rama_bd_obras+"/adicionales/solicitudes/"+$('#' + id_ddl_obraAdicionales+' option:selected').val()+"/solicitudesTerminadas/"+$('#'+id_ddl_solicitudAdicionales+' option:selected').val();
@@ -164,6 +174,7 @@ $('#' + id_botonpdfAdicionales).click(function() {
   }
 });
 
+// Funcion para registrar un adicional
 $('#' + id_botonRegistrarAdicionales).click(function() {
   if (validateFormAdicionales()){
     var obra = $('#'+ id_ddl_obraAdicionales + ' option:selected').val();
@@ -180,15 +191,15 @@ $('#' + id_botonRegistrarAdicionales).click(function() {
     var storageRef = firebase.storage().ref(rama_bd_obras + "/adicionales/propuestas/"+ obra +"/formatos/"+ adicional +".pdf");
     getAllFirebaseStorageGeneric(path_storage).then(function(images_array){
       //console.log(images_array);
-      downloadAllImagesGeneric(images_array).then(function(){
+      downloadAllImagesGeneric(images_array).then(function(){ // descargar todas las imagenes evidencia de la solicitud
         flagDownloadAdicionales = true;
-        var docDescription = pdfDocDescriptionAdicionales(false, download_images_url);
+        var docDescription = pdfDocDescriptionAdicionales(false, download_images_url); // generar la descripcion del pdf
         var pdfDocGenerator = pdfMake.createPdf(docDescription);
-        pdfDocGenerator.download(adicional + '_formato.pdf');
+        pdfDocGenerator.download(adicional + '_formato.pdf'); // descargar el archivo
         $('#' + id_botonRegistrarAdicionales).prop('disabled', true);
 
         pdfDocGenerator.getBase64((data) => {
-          var uploadTask = storageRef.putString(data,'base64');
+          var uploadTask = storageRef.putString(data,'base64'); // subir el pdf a la base de datos
           uploadTask.on('state_changed', function(snapshot){
               // Observe state change events such as progress, pause, and resume
               // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
@@ -213,6 +224,7 @@ $('#' + id_botonRegistrarAdicionales).click(function() {
               uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
                 console.log('File available at', downloadURL);
                 //console.log(json_solicitud);
+                // Generar el json para actualizar los campos en la base de datos
                 adicional_update[path_adicional +"/subprocesos/" + adicional] = datosAdicionalAdicionales(downloadURL);
                 adicional_update[path_adicional +"/num_subprocesos"] = no_adic;
                 adicional_update[path_copeo] = json_modalCopeo;
@@ -222,6 +234,7 @@ $('#' + id_botonRegistrarAdicionales).click(function() {
                 adicional_update[path_lista_solicitudes + "/concretadas/" + solicitud] = true;
                 adicional_update[path_lista_propuesta + "/" +adicional] = true;
                 console.log(adicional_update);
+                // Subir los cambios a la base de datos
                 firebase.database().ref(rama_bd_obras).update(adicional_update, function(error) {
                   if (error) {
                     // The write failed...
@@ -248,7 +261,8 @@ $('#' + id_botonRegistrarAdicionales).click(function() {
 });
 
 //---------------------------FUNCIONES NECESARIAS ------------------------------
-
+// Funcion para llenar los campos correspondientes del formulario dada una
+// solicitud
 function llenarFormSolicitudAdicionales(clave_sol){
   firebase.database().ref(rama_bd_obras + "/adicionales/solicitudes/" + $('#' + id_ddl_obraAdicionales + ' option:selected').val()+"/solicitudes/" + clave_sol).on('value',function(snapshot){
     var solicitud;
@@ -273,6 +287,7 @@ function llenarFormSolicitudAdicionales(clave_sol){
   });
 }
 
+// Función para llenar el formulario con los datos de una propuesta guardada
 function llenarFormPropuestaAdicionales(clave_adic){
   firebase.database().ref(rama_bd_obras + "/adicionales/propuestas/" + $('#' + id_ddl_obraAdicionales + ' option:selected').val()+"/" + clave_adic).on('value',function(snapshot){
     var propuesta;
@@ -305,6 +320,8 @@ function llenarFormPropuestaAdicionales(clave_adic){
   });
 }
 
+// Funcion para recuperar los datos de copeo, cuantificacion y calculadora de la
+// base de datos
 function extraerCopeoInsumosCalculadoraAdicionales(clave_adic){
   firebase.database().ref(rama_bd_obras + "/copeo/" + $('#' + id_ddl_obraAdicionales + ' option:selected').val()+"/ADIC/" + clave_adic).on('value',function(snapshot){
     if(snapshot.exists()){
@@ -329,16 +346,17 @@ function extraerCopeoInsumosCalculadoraAdicionales(clave_adic){
   });
 }
 
+// Funcion para generar la clave de un nuevo adicional
 function generaClaveAdicionales(id_item){
   firebase.database().ref(rama_bd_obras + "/procesos/" + $('#' + id_ddl_obraAdicionales + ' option:selected').val()+"/procesos/ADIC/num_subprocesos").on('value',function(snapshot){
     var clave;
-    if(snapshot.exists()){
+    if(snapshot.exists()){ // verificar si hay adicionales previos
       no_adic = snapshot.val();
-    }else{
+    }else{ // inicializar la cuenta
       no_adic = 0;
     }
-    no_adic += 1;
-    if(no_adic<10){
+    no_adic += 1; // número del adicional nuevo
+    if(no_adic<10){ // darle formato a la clave
       clave = "ADIC-0" + no_adic;
     }else{
       clave = "ADIC-" + no_adic;
@@ -347,6 +365,7 @@ function generaClaveAdicionales(id_item){
   });
 }
 
+// Funcion para cargar los datos al ddl de adicionales
 function llenaDdlAdicionalAdicionales(id_objeto){
     $('#' + id_objeto).empty();
     var select = document.getElementById(id_objeto);
@@ -366,6 +385,7 @@ function llenaDdlAdicionalAdicionales(id_objeto){
     });
 }
 
+// Funcion para cargar los datos al ddl de solicitudes
 function llenaDdlSolicitudAdicionales(id_objeto){
     $('#' + id_objeto).empty();
     var select = document.getElementById(id_objeto);
@@ -382,6 +402,7 @@ function llenaDdlSolicitudAdicionales(id_objeto){
     });
 }
 
+// Funcion para cargar los datos al ddl de requisitos
 function cargarDdlRequisitosAdicionales(){
   $('#' + id_ddl_requisitosAdicionales).empty();
   var requisito;
@@ -403,6 +424,7 @@ function cargarDdlRequisitosAdicionales(){
   });
 }
 
+// Funcion para cargar los datos al ddl de exclusiones
 function cargarDdlExclusionesAdicionales(){
   $('#' + id_ddl_exclusionesAdicionales).empty();
   var exclusion;
@@ -424,12 +446,15 @@ function cargarDdlExclusionesAdicionales(){
   });
 }
 
+// Función para actualizar los precios finales en el json de suministros de
+// acuerdo al porcentaje de indirectos
 function actualizaPreciosClienteAdicionales(){
   for(key in json_modalSuministros){
     json_modalSuministros[key]["precio_cliente"] = parseFloat(json_modalSuministros[key]["precio_lista"] * (1+$('#' + id_indirectosAdicionales).val() * 0.01)).toFixed(2);
   }
 }
 
+// Funcion para calcular el costo total interno de los suministros
 function calculaCostoSuministros(){
   var total = {
     costos: 0,
@@ -444,6 +469,7 @@ function calculaCostoSuministros(){
   return total;
 }
 
+// Función para calcular el costo total del copeo (sin carga social)
 function calculaCostoCopeo(){
   var total = 0;
   if(!jQuery.isEmptyObject(json_modalCopeo)){
@@ -454,6 +480,7 @@ function calculaCostoCopeo(){
   return total;
 }
 
+// Función para recuperar el monto de impuestos del json copeo
 function extraeImpuesto(){
   var cargaSocial=0;
   if(!jQuery.isEmptyObject(json_modalCopeo)){
@@ -462,6 +489,7 @@ function extraeImpuesto(){
   return cargaSocial;
 }
 
+// Funcion para limpiar el formulario
 function resetAdicionales (){
  //$('#' + id_ddl_obraAdicionales + ' option:selected').val("");
  $('#' + id_ddl_adicionalAdicionales ).empty();
@@ -484,6 +512,7 @@ function resetAdicionales (){
  json_modalCalculadora={};
 };
 
+// Funcion para verificar los datos del formulario
 function validateFormAdicionales(){
   if($('#' + id_ddl_obraAdicionales  + " option:selected").val() == ""){
     alert("Selecciona una obra");
@@ -514,6 +543,7 @@ function validateFormAdicionales(){
   }
 }
 
+// Función para extrer los elementos seleccionados de un select
 function extraeListaGeneric(select, json_padre){
   var aux = select.selected();
   var json_resp={};
@@ -523,11 +553,12 @@ function extraeListaGeneric(select, json_padre){
   return json_resp;
 }
 
+// Función para extraer la dirección de una obra de la base de datos.
 function clienteDireccionObraGeneric(id_obra){
-  firebase.database().ref(rama_bd_obras + "/obras/" + id_obra).on('value',function(snapshot){
+  firebase.database().ref(rama_bd_obras + "/obras/" + id_obra).on('value',function(snapshot){ // recuperar info de obra
     if(snapshot.exists()){
       var obra = snapshot.val();
-      firebase.database().ref(rama_bd_clientes + "/despachos/" + obra.id_cliente + "/nombre").on('value',function(snapchild){
+      firebase.database().ref(rama_bd_clientes + "/despachos/" + obra.id_cliente + "/nombre").on('value',function(snapchild){ // recuperar info de cliente
         if(snapchild.exists()){
           var cliente = snapchild.val();
           datos_obraAdicionales = {
@@ -535,8 +566,7 @@ function clienteDireccionObraGeneric(id_obra){
             direccion: obra.direccion,
             cliente: cliente,
           };
-        } else{
-          //console.log("Error con el cliente");
+        } else{ // establecer default en caso de error en la consulta
           datos_obraAdicionales = {
             nombre: $('#'+id_ddl_obraAdicionales+' option:selected').text(),
             direccion: {
@@ -549,10 +579,10 @@ function clienteDireccionObraGeneric(id_obra){
             },
             cliente: cliente,
           };
+          //console.log("Error con el cliente")
         }
       });
-    } else{
-      //console.log("Error con la obra");
+    } else{ // establecer default en caso de error en la consulta
       datos_obraAdicionales = {
         nombre: $('#'+id_ddl_obraAdicionales+' option:selected').text(),
         direccion: {
@@ -565,10 +595,13 @@ function clienteDireccionObraGeneric(id_obra){
         },
         cliente: 'NO ESPECIFICADO',
       };
+      //console.log("Error con la obra");
     }
   });
 }
 
+// Función para recuperar los datos del formulario necesarios para generar el
+// objeto para describir el pdf
 function pdfDocDescriptionAdicionales(vista_previa, images_array){
   var obra_ppto = {};
   var clave_adic=$('#'+id_claveAdicionales).val();
@@ -591,6 +624,8 @@ function pdfDocDescriptionAdicionales(vista_previa, images_array){
   return docDescription;
 }
 
+// Función para generar el json del adicional correspondiente a los datos
+// ingresados en el fomrulario
 function datosAdicionalAdicionales(url){
   var adicional = {
     nombre: $('#'+id_nombreAdicionales).val(),
@@ -610,6 +645,8 @@ function datosAdicionalAdicionales(url){
   return adicional;
 }
 
+// Función para generar el json de los insumos correspondientes a los datos
+// ingresados en el fomrulario
 function datosInsumosAdicionales(){
   var insumos = {
     porcentaje_indirecto: $('#'+id_indirectosAdicionales).val(),
@@ -629,6 +666,8 @@ function datosInsumosAdicionales(){
   return insumos;
 }
 
+// Función para generar el json de la propuesta del adicional correspondiente a
+// los datos ingresados en el fomrulario
 function datosPropuestaAdicionales(url){
   var propuesta = {
     id_solicitud: $('#' + id_ddl_solicitudAdicionales).val(),
@@ -647,6 +686,7 @@ function datosPropuestaAdicionales(url){
   return propuesta;
 }
 
+// Función para obtener los url de todas las imagenes guardadas en una ruta
 function getAllFirebaseStorageGeneric(ruta){
   var storageRef = firebase.storage().ref(ruta);
   var images_url = [];
@@ -677,6 +717,7 @@ function getAllFirebaseStorageGeneric(ruta){
   return promise;
 }
 
+// Funcion para transformar un arrayBuffer a base64
 function _arrayBufferToBase64( buffer ) {
     var binary = '';
     var bytes = new Uint8Array( buffer );
@@ -687,6 +728,8 @@ function _arrayBufferToBase64( buffer ) {
     return window.btoa( binary );
 }
 
+// Función para descargar una imagen del storage a partir de un array de urls y
+// su índice correspondiente
 function downloadImageGeneric(download_url, index){
   //console.log("Donwload image");
   var promise = new Promise(function(resolve, reject) {
@@ -710,10 +753,13 @@ function downloadImageGeneric(download_url, index){
   return promise;
 }
 
+// Función para descargar todas las imágenes de un array con sus respectivas url
+// Al editar esta función y todas las involucradas, tener cuidado con la
+// sincronía y el uso de las promesas
 function downloadAllImagesGeneric(download_array){
   var total = download_array.length;
   var promise = new Promise(function(resolve, reject) {
-    if(flagDownloadAdicionales){ // Ya se descargaron las imagenes y no hay cambios
+    if(flagDownloadAdicionales){ // Si ya se descargaron las imagenes y no hay cambios, no volver a descargarlas
       resolve();
     } else { // Descargar imagnenes de firebase storage
       download_images_url=[];
@@ -733,6 +779,7 @@ function downloadAllImagesGeneric(download_array){
   return promise;
 }
 
+// Función para generar el json de la mano de obra como insumo
 function manoDeObraAInsumoAdicionales(){
   var aux = {
     unidad: "Jor",
