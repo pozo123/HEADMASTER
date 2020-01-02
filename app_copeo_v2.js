@@ -662,6 +662,7 @@ function actualizarTablaCopeo(){
     											clave_proceso,
     											"",
                           entradaSnap.key,
+                          entradaCopeo.nombre,
                           formatMoney(subtotal),
                           "",
                           formatMoney(costoTotal),
@@ -676,6 +677,7 @@ function actualizarTablaCopeo(){
                         clave_obra,
                         clave_proceso,
                         clave_sub,
+                        "",
                         "",
                         formatMoney(subtotal_subproceso),
                         cargaSocial+"%",
@@ -694,6 +696,7 @@ function actualizarTablaCopeo(){
                     clave_obra,
                     clave_proceso,
                     clave_sub,
+                    "",
                     "",
                     formatMoney(0),
                     "",
@@ -714,6 +717,7 @@ function actualizarTablaCopeo(){
             "",
             "",
             "",
+            "",
             formatMoney(costoTotal_proceso),
             "",
             ""
@@ -729,6 +733,7 @@ function actualizarTablaCopeo(){
       clave_obra,
       "",
       $('#'+id_ddl_obraCopeo+' option:selected').text(),
+      "",
       "",
       "",
       "",
@@ -761,15 +766,12 @@ function actualizarTablaCopeo(){
           {extend: 'excelHtml5',
           title: "Copeo_" + $('#' + id_ddl_obraCopeo + ' option:selected').text().replace(/ /g, "_"),
           exportOptions: {
-              columns: [':visible']
+              columns: [2,3,4,5,6,7]
           }},
         ],
         "paging":false,
-        "autoWidth": false,
+        "autoWidth": true,
         "columnDefs": [
-            { "width": "120px", "targets": 2 },
-            { "width": "80px", "targets": 3 },
-            { "width": "80px", "targets": 5 },
             {
                 targets: -2,
                 className: 'dt-body-center'
@@ -799,8 +801,8 @@ $(document).on('click','.editarCopeo', function(){
   resetFormCopeo_entrada();
   $('#'+id_ddl_procesoCopeo).val(data[1]);
   llenaDdlSubprocesoCopeo(data[0], data[1]);
-  $('#'+id_ddl_subprocesoCopeo).val(data[8]);
-  llenaDdlEntradaCopeo(data[0], data[1], data[8]);
+  $('#'+id_ddl_subprocesoCopeo).val(data[9]);
+  llenaDdlEntradaCopeo(data[0], data[1], data[9]);
   $('#'+id_ddl_entradaCopeo).val(data[3]);
-  cargaCamposCopeo(data[0], data[1], data[8], data[3]);
+  cargaCamposCopeo(data[0], data[1], data[9], data[3]);
 });

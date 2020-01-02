@@ -21,18 +21,18 @@ var id_reset_form_colaborador = "borrarButtonColaborador";
 var id_agregar_colaborador = "agregarButtonColaborador";
 
 // variables globales
-var select;
+var select_colaborador;
 var existe_colaborador = false;
 var uid_existente = "";
 var tabla_colaborador;
 
 
 // Lo necesario para inicializar la pestaña (se hace al seleccionar la pestaña)
-// se inicializa el select con librería slim Select
+// se inicializa el select_colaborador con librería slim Select
 // se resetea el formulario (ver en funciones)
 // se llena la tabla con todos los colaboradores
 $('#' + id_tab_colaborador).click(function() {
-    select = new SlimSelect({
+    select_colaborador = new SlimSelect({
         select: '#' + id_select_areas_colaborador,
         placeholder: 'Elige las áreas correspondientes',
     });
@@ -109,8 +109,8 @@ $('#' + id_email_colaborador).change(function(){
             for(key in areas){
                 areas_array.push(key);
             }
-            select.set(areas_array);
 
+            select_colaborador.set(areas_array);
             if(areas.proyectos){
                 if(especialidad.ie){
                     document.getElementById(id_ie_checkbox_colaborador).checked = true;
@@ -267,7 +267,7 @@ $('#' + id_materno_colaborador).change(function(){
 });
 
 $('#' + id_select_areas_colaborador).change(function(){
-    if(select.selected().includes("proyectos")){
+    if(select_colaborador.selected().includes("proyectos")){
         $('#' + id_group_checkbox_ie).removeClass("hidden");
         $('#' + id_group_checkbox_ihs).removeClass("hidden");
     } else {
@@ -311,7 +311,7 @@ function resetFormColaborador(emailReset){
     $('#' + id_paterno_colaborador).val("");
     $('#' + id_materno_colaborador).val("");
 
-    select.set([]);
+    select_colaborador.set([]);
     document.getElementById(id_lider_checkbox_colaborador).checked = false;
     document.getElementById(id_password_colaborador).disabled = false;
     document.getElementById(id_ie_checkbox_colaborador).checked = false;
@@ -341,10 +341,10 @@ function validateFormCol(){
     } else if($('#' + id_paterno_colaborador).val() == ""){
         alert("Escribe el apellido paterno del colaborador.");
         return false;
-    }  else if(select.selected().length == 0){
+    }  else if(select_colaborador.selected().length == 0){
         alert("Ningún área fue seleccionada");
         return false;
-    } else if (select.selected().includes("proyectos") && !document.getElementById(id_ie_checkbox_colaborador).checked && !document.getElementById(id_ihs_checkbox_colaborador).checked){
+    } else if (select_colaborador.selected().includes("proyectos") && !document.getElementById(id_ie_checkbox_colaborador).checked && !document.getElementById(id_ihs_checkbox_colaborador).checked){
         alert("Si el usuario tiene el área proyectos, se debe indicar su especialidad");
         return false;
     } else {
@@ -358,12 +358,12 @@ function agregar_colaborador(habilitado){
     var areas = {};
     var especialidad = {};
     
-    for(var i=0; i<select.selected().length; i++){
-        areas[select.selected()[i]] = true;
+    for(var i=0; i<select_colaborador.selected().length; i++){
+        areas[select_colaborador.selected()[i]] = true;
     }
     
 
-    if(select.selected().includes("proyectos")){
+    if(select_colaborador.selected().includes("proyectos")){
         if(document.getElementById(id_ie_checkbox_colaborador).checked) {
             especialidad["ie"] = true;
         }
@@ -499,7 +499,7 @@ function actualizarTablaCol(){
             }
         
             var areas_array = data[5].split("\n");
-            select.set(areas_array);
+            select_colaborador.set(areas_array);
             
             var especialidad_array = data[6].toLowerCase().split("\n");
             for(i=0;i<areas_array.length;i++){
