@@ -32,13 +32,8 @@ $(document).ready(function() {
 });
 
 $('#' + btn_iniciar_sesion).click(function () { 
-
-
     var userEmail = document.getElementById(id_loginEmail).value;
     var userPass = document.getElementById(id_password).value;
-
-    console.log(userPass);
-    
     firebase.auth().signInWithEmailAndPassword(userEmail, userPass).catch(function(error) {
         // Handle Errors here.
         var errorCode = error.code;

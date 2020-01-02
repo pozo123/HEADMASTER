@@ -114,14 +114,12 @@ Nota: Todo float se ingresa a 2 decimales.
                     - fecha_inicio_teorica: timestamp (al dar de alta/edicion)
                     - fecha_final_real: timestamp
                     - fecha_final_teorica: timestamp (al dar de alta/edicion)
-                - supervisores (solo pueden ser colaboradores con área de producción)
-                    - supervisor (uid)
-                        - nombre
-                        - activo: bool
-                        - fechas (lista ya que puede haber varios ingresos)
-                            - fecha_ingreso (aaaammdd)
-                                - fecha_ingreso: timestamp
-                                - fecha_salida: timestamp
+        - supervisores (solo pueden ser colaboradores con área de producción)
+            - id_obra
+                - supervisor (uid)
+                    - nombre: string
+                    - email: string
+                    - nickname: string
         - procesos
             - id_obra
                 - num_procesos: int (se inicializa en 0)
