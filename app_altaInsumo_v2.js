@@ -214,32 +214,32 @@ $('#' + id_boton_AgregarInsumos).click(function() {
 $('#' + id_ddl_categoriaInsumos).change(function(){
   $('#'+id_ddl_subfamiliaInsumos).empty();
   llenaDdlGeneric(id_ddl_familiaInsumos, categorias.child($('#'+id_ddl_categoriaInsumos+' option:selected').val()+'/familias'), "nombre");
-  $('#'+id_catalogoInsumos).val(generaCodigoCatalogoInsumos());
+  $('#'+id_catalogoInsumos).val(generaCodigoCatalogoInsumos(id_ddl_categoriaInsumos, id_ddl_familiaInsumos, id_ddl_subfamiliaInsumos, id_libreInsumos));
 });
 
 // Función para llenar el ddl subfamilia y actualizar el número de catálogo
 // cuando se selecciona una subfamilia
 $('#' + id_ddl_familiaInsumos).change(function(){
   llenaDdlGeneric(id_ddl_subfamiliaInsumos, categorias.child($('#'+id_ddl_categoriaInsumos+' option:selected').val()+'/familias/' + $('#'+id_ddl_familiaInsumos+' option:selected').val()+'/subfamilias'), "nombre");
-  $('#'+id_catalogoInsumos).val(generaCodigoCatalogoInsumos());
+  $('#'+id_catalogoInsumos).val(generaCodigoCatalogoInsumos(id_ddl_categoriaInsumos, id_ddl_familiaInsumos, id_ddl_subfamiliaInsumos, id_libreInsumos));
 });
 
 // Función para actualizar el número de catálogo cuando se selecciona una
 // subfamilia
 $('#' + id_ddl_subfamiliaInsumos).change(function(){
-  $('#'+id_catalogoInsumos).val(generaCodigoCatalogoInsumos());
+  $('#'+id_catalogoInsumos).val(generaCodigoCatalogoInsumos(id_ddl_categoriaInsumos, id_ddl_familiaInsumos, id_ddl_subfamiliaInsumos, id_libreInsumos));
 });
 
 // Función para actualizar el número de catálogo cuando se presiona una tecla en
 // el campo libre
 $('#' + id_libreInsumos).keypress(function(){
-  $('#'+id_catalogoInsumos).val(generaCodigoCatalogoInsumos());
+  $('#'+id_catalogoInsumos).val(generaCodigoCatalogoInsumos(id_ddl_categoriaInsumos, id_ddl_familiaInsumos, id_ddl_subfamiliaInsumos, id_libreInsumos));
 });
 
 // Funcion para actualizar el número de catálogo cuando cambia el valor del
 // campo libre
 $('#' + id_libreInsumos).change(function(){
-  $('#'+id_catalogoInsumos).val(generaCodigoCatalogoInsumos());
+  $('#'+id_catalogoInsumos).val(generaCodigoCatalogoInsumos(id_ddl_categoriaInsumos, id_ddl_familiaInsumos, id_ddl_subfamiliaInsumos, id_libreInsumos));
 });
 
 // Función para homologar todas los caracteres del campo descripción a mayúsculas
@@ -659,12 +659,12 @@ function llenaDdlGeneric(item_id, snap, nombre){
 }
 
 // Funcion para generar el numero de catalogo con los campos del formulario
-function generaCodigoCatalogoInsumos(){
+function generaCodigoCatalogoInsumos(item_cat, item_fam, item_sub, item_libre){
   var codigo = "";
-  cat = $('#'+id_ddl_categoriaInsumos+' option:selected').val();
-  fam = $('#'+id_ddl_familiaInsumos+' option:selected').val();
-  sub = $('#'+id_ddl_subfamiliaInsumos+' option:selected').val();
-  libre = $('#'+id_libreInsumos).val()
+  cat = $('#'+item_cat+' option:selected').val();
+  fam = $('#'+item_fam+' option:selected').val();
+  sub = $('#'+item_sub+' option:selected').val();
+  libre = $('#'+item_libre).val()
   if(cat !== ""){
     codigo = codigo + categorias.val()[cat]["codigo"];
     if(fam !== "" && fam !== undefined){

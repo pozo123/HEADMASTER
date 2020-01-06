@@ -512,12 +512,12 @@
                                   <select id="ddl_buscaCategoriaModalSuministros" class="form-control"></select>
                               </div>
                               <div class="col-lg-4">
-                                  <label for="ddl_buscaMarcaModalSuministros">Marca</label>
-                                  <select id="ddl_buscaMarcaModalSuministros" class="form-control"></select>
+                                  <label for="ddl_buscaFamiliaModalSuministros">Familia</label>
+                                  <select id="ddl_buscaFamiliaModalSuministros" class="form-control"></select>
                               </div>
                               <div class="col-lg-4">
-                                  <label for="ddl_buscaClasificacionModalSuministros">Clasificacion</label>
-                                  <select id="ddl_buscaClasificacionModalSuministros" class="form-control"></select>
+                                  <label for="ddl_buscaSubfamiliaModalSuministros">Subfamilia</label>
+                                  <select id="ddl_buscaSubfamiliaModalSuministros" class="form-control"></select>
                               </div>
                           </div>
                           </br>
@@ -542,10 +542,11 @@
                                   <thead>
                                       <tr>
                                           <th>Id_producto</th>
-                                          <th>Catalogo</th>
-                                          <th>Marca</th>
-                                          <th>Clasificacion</th>
-                                          <th>Descripcion</th>
+                                          <th>Catálogo</th>
+                                          <th>Descripción</th>
+                                          <th>Categoría</th>
+                                          <th>Familia</th>
+                                          <th>Subfamilia</th>
                                           <th>Unidad</th>
                                           <th>Precio</th>
                                           <th>Agregar</th>
@@ -556,11 +557,11 @@
                           </br>
                           <div class="form-row align-items-center">
                               <div class="col-lg-3">
-                                  <label for="catalogoModalInsumosProveedor">Catálogo</label>
+                                  <label for="catalogoModalSuministros">Catálogo</label>
                                   <input type="text" id="catalogoModalSuministros" class="form-control" placeholder="Catálogo" disabled="true">
                               </div>
                               <div class="col-lg-9">
-                                  <label for="descripcionModalInsumosProveedor">Descripción</label>
+                                  <label for="descripcionModalSuministros">Descripción</label>
                                   <input type="text" id="descripcionModalSuministros" class="form-control" placeholder="Descripción" disabled="true">
                               </div>
                           </div>
@@ -587,12 +588,12 @@
                                   <input type="text" id="unidadModalSuministros" class="form-control" placeholder="Unidad" disabled="true">
                               </div>
                               <div class="col-lg-4">
-                                  <label for="descripcionModalInsumosProveedor">Cantidad</label>
+                                  <label for="cantidadModalSuministros">Cantidad</label>
                                   <input type="text" id="cantidadModalSuministros" class="form-control" placeholder="Cantidad">
                               </div>
                           </div>
                           </br>
-                          <div class="form-row align-items-center">
+                          <div class="form-row align-items-center" id="div_cb_ModalSuministros">
                               <div class="col-lg-4"></div>
                               <div class="col-lg-4">
                                   <input type="checkbox" class="custom-control-input" id="cb_sinRegistroAdicionales">
@@ -616,7 +617,6 @@
                                           <th>Desplegar</th>
                                           <th>Desplegar</th>
                                           <th>Catalogo</th>
-                                          <th>Marca</th>
                                           <th>Descripcion</th>
                                           <th>Unidad</th>
                                           <th>Precio</th>
@@ -892,16 +892,16 @@
                         <div class="container-fluid">
                           <div class="form-row align-items-center">
                               <div class="col-lg-4">
-                                  <label for="ddl_buscaCategoriaModalInsumosProveedor">Categoria</label>
+                                  <label for="ddl_buscaCategoriaModalInsumosProveedor">Categoría</label>
                                   <select id="ddl_buscaCategoriaModalInsumosProveedor" class="form-control"></select>
                               </div>
                               <div class="col-lg-4">
-                                  <label for="ddl_buscaMarcaModalInsumosProveedor">Marca</label>
-                                  <select id="ddl_buscaMarcaModalInsumosProveedor" class="form-control"></select>
+                                  <label for="ddl_buscaFamiliaModalInsumosProveedor">Familia</label>
+                                  <select id="ddl_buscaFamiliaModalInsumosProveedor" class="form-control"></select>
                               </div>
                               <div class="col-lg-4">
-                                  <label for="ddl_buscaClasificacionModalInsumosProveedor">Clasificacion</label>
-                                  <select id="ddl_buscaClasificacionModalInsumosProveedor" class="form-control"></select>
+                                  <label for="ddl_buscaSubfamiliaModalInsumosProveedor">Subfamilia</label>
+                                  <select id="ddl_buscaSubfamiliaModalInsumosProveedor" class="form-control"></select>
                               </div>
                           </div>
                           </br>
@@ -928,11 +928,11 @@
                                           <th>Id_producto</th>
                                           <th>Catalogo</th>
                                           <th>Descripcion</th>
-                                          <th>Catfabric</th>
-                                          <th>Marca</th>
-                                          <th>Clasificacion</th>
                                           <th>Categoria</th>
+                                          <th>Familia</th>
+                                          <th>Subfamilia</th>
                                           <th>Unidad</th>
+                                          <th>Numero SAT</th>
                                           <th>Agregar</th>
                                       </tr>
                                   </thead>
@@ -944,22 +944,47 @@
                                   <label for="catalogoModalInsumosProveedor">Catálogo</label>
                                   <input type="text" id="catalogoModalInsumosProveedor" class="form-control" placeholder="Catálogo" disabled="true">
                               </div>
-                              <div class="col-lg-6">
+                              <div class="col-lg-9">
                                   <label for="descripcionModalInsumosProveedor">Descripción</label>
                                   <input type="text" id="descripcionModalInsumosProveedor" class="form-control" placeholder="Descripción" disabled="true">
                               </div>
-                              <div class="col-lg-3">
-                                  <label for="precioModalInsumosProveedor">Precio</label>
-                                  <input type="text" id="precioModalInsumosProveedor" class="form-control" placeholder="Precio">
-                              </div>
                           </div>
                           </br>
+                          <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="precioModalInsumosProveedor">Precio:</label>
+                                <input type="text" name="" id="precioModalInsumosProveedor" class="form-control" placeholder="Precio">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="descuentoModalInsumosProveedor">Descuento (%):</label>
+                                <input type="number" name="" id="descuentoModalInsumosProveedor" class="form-control" placeholder="Porcentaje">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="precioFinalModalInsumosProveedor">Precio Final:</label>
+                                <input type="text" name="" id="precioFinalModalInsumosProveedor" class="form-control" placeholder="Precio Final" disabled="true">
+                            </div>
+                          </div>
+                          </br>
+                          <div class="form-row">
+                            <div class="form-group col-md-2"></div>
+                            <div class="form-group col-md-4">
+                                <label for="ddl_marcaModalInsumosProveedor">Marca:</label>
+                                <select id ="ddl_marcaModalInsumosProveedor" class="form-control"></select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="catalogoProveedorModalInsumosProveedor">Catalogo proveedor:</label>
+                                <input type="text" name="" id="catalogoProveedorModalInsumosProveedor" class="form-control" placeholder="Catálogo">
+                            </div>
+                          </div>
                           <div class="form-row align-items-center">
-                              <div class="col-lg-3 col-sm-12"></div>
+                              <div class="col-lg-2 col-sm-12"></div>
+                              <div class="col-lg-3 col-sm-12">
+                                  <label for="fechaIngresoCotizacionModalInsumosProveedor">Ingreso de cotización:</label>
+                                  <input class="form-control" type="text" id="fechaIngresoCotizacionModalInsumosProveedor" placeholder="" readonly="readonly">
+                              </div>
+                              <div class="col-lg-2 col-sm-12"></div>
                               <div class="col-lg-3 col-sm-12">
                                   <label for="fechaCotizacionModalInsumosProveedor">Vencimiento de cotización:</label>
-                              </div>
-                              <div class="col-lg-3 col-sm-12">
                                   <input class="form-control" type="text" id="fechaCotizacionModalInsumosProveedor" placeholder="" readonly="readonly">
                               </div>
                           </div>
@@ -978,10 +1003,14 @@
                                       <tr>
                                           <th>Id_producto</th>
                                           <th>Catalogo</th>
-                                          <th>Descripcion</th>
+                                          <th>Descripción</th>
+                                          <th>Marca</th>
                                           <th>Marca</th>
                                           <th>Precio</th>
-                                          <th>Vencimiento</th>
+                                          <th>Descuento</th>
+                                          <th>Fecha ingreso</th>
+                                          <th>Fecha vencimiento</th>
+                                          <th>Catalogo proveedor</th>
                                           <th>Editar</th>
                                           <th>Eliminar</th>
                                       </tr>
@@ -2685,6 +2714,15 @@
                                  <div class="row align-items-center">
                                      <div class="col-lg-1"></div>
                                      <div class="col-lg-10">
+                                          <div class="form-row">
+                                              <div class="form-group col-md-5">
+                                                  <label for="ddl_accionAdicionales">Acción:</label>
+                                                  <select id="ddl_accionAdicionales" class="form-control"></select>
+                                              </div>
+                                          </div>
+                                          <br>
+                                          <hr class="style2">
+                                          <br>
                                          <form id="formGeneradorAdic" action="#" onsubmit="return false;">
                                             <br/>
                                             <div class="form-row">
@@ -2709,6 +2747,12 @@
                                                     <label for="ddl_solicitudAdicionales">Solicitud: </label>
                                                     <select id="ddl_solicitudAdicionales" class="form-control"></select>
                                                 </div>
+                                            </div>
+                                            <div class="form-row">
+                                              <div class="form-group col-md-12">
+                                                  <label for="notasAdicionales">Notas del supervisor:</label>
+                                                  <textarea class="form-control" rows="3" id="notasAdicionales" disabled="true"></textarea>
+                                              </div>
                                             </div>
                                             </br>
                                             <h3>Header</h3>
@@ -2742,10 +2786,6 @@
                                                   </div>
                                                 </div>
                                                 </br>
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" class="custom-control-input" id="cb_indirectosAdicionales">
-                                                    <label class="custom-control-label" for="cb_indirectosAdicionales">Desplegar costos indirectos</label>
-                                                </div>
                                             </div>
                                             </br>
                                             <h4>Copeo</h4>
@@ -2810,10 +2850,17 @@
                                                 <input type="checkbox" class="custom-control-input" id="cb_bancariosAdicionales">
                                                 <label class="custom-control-label" for="cb_bancariosAdicionales">Agregar datos bancarios</label>
                                             </div>
-
                                             <div class="custom-control custom-checkbox">
                                                 <input type="checkbox" class="custom-control-input" id="cb_fiscalesAdicionales">
                                                 <label class="custom-control-label" for="cb_fiscalesAdicionales">Agregar datos fiscales</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="cb_ivaAdicionales">
+                                                <label class="custom-control-label" for="cb_ivaAdicionales">Agregar información para IVA exento</label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="cb_indirectosAdicionales">
+                                                <label class="custom-control-label" for="cb_indirectosAdicionales">Desplegar costos indirectos</label>
                                             </div>
                                             <br/>
                                             <br/>
@@ -2838,6 +2885,81 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                          </form>
+                                          <form action="#" onsubmit="return false;" id="formGeneradorAdic2" class="hidden">
+                                              <div class="form-row" >
+                                                  <div class="form-group col-md-6">
+                                                      <label for="ddl_obra2Adicionales">Obra:</label>
+                                                      <select id="ddl_obra2Adicionales" class="form-control"></select>
+                                                  </div>
+                                                  <div class="form-group col-md-6">
+                                                      <label for="ddl_adicional2Adicionales">Adicional:</label>
+                                                      <select id="ddl_adicional2Adicionales" class="form-control"></select>
+                                                  </div>
+                                               </div>
+                                              <br/>
+                                              <div class="form-row">
+                                                  <div class= "col-lg-4"></div>
+                                                  <div class= "col-lg-4">
+                                                      <button id="botonDescargarPDFAdicionales" type="button"  class="btn btn-outline-info btn-block">Descargar PDF</button>
+                                                  </div>
+                                                  <div class= "col-lg-4"></div>
+                                              </div>
+                                              <div class="form-group">
+                                                  <label for="evidenciaInputAdicionales">Ingresar adicional firmado</label>
+                                                  <div class="custom-file">
+                                                      <input type="file" class="custom-file-input" id="evidenciaInputAdicionales" accept="image/*"/>
+                                                      <label class = "custom-file-label" id="evidenciaLabelAdicionales">Archivo no seleccionado</label>
+                                                  </div>
+                                              </div>
+                                              <div class="form-row">
+                                                  <div class= "col-lg-4"></div>
+                                                  <div class= "col-lg-4">
+                                                      <button id="botonCarga2FotoAdicionales" type="button"  class="btn btn-outline-dark btn-block" disabled = "true">Cargar foto</button>
+                                                  </div>
+                                                  <div class= "col-lg-4"></div>
+                                              </div>
+                                              </br>
+                                              </br>
+                                              <div class="form-row">
+                                                <div class="form-group col-md-3">
+                                                   <label>Imagenes seleccionadas</label>
+                                                </div>
+                                                <div class="form-group col-md-9">
+                                                    <select id="imagenes2Adicionales" multiple>
+                                                    </select>
+                                                </div>
+                                              </div>
+                                              </br>
+                                              <div class="form-row align-items-center">
+                                                  <div class="col-lg-2 col-sm-12"></div>
+                                                  <div class="col-lg-3 col-sm-12">
+                                                      <label for="fechaInicioAdicionales">Fecha de inicio:</label>
+                                                      <input class="form-control" type="text" id="fechaInicioAdicionales" placeholder="" readonly="readonly">
+                                                  </div>
+                                                  <div class="col-lg-2 col-sm-12"></div>
+                                                  <div class="col-lg-3 col-sm-12">
+                                                      <label for="fechaTerminacionAdicionales">Fecha de terminación:</label>
+                                                      <input class="form-control" type="text" id="fechaTerminacionAdicionales" placeholder="" readonly="readonly">
+                                                  </div>
+                                              </div>
+                                              </br>
+                                              <div class="form-row">
+                                                <div class="col-lg-4"></div>
+                                                <div class="col-lg-4">
+                                                  <label for="precioVentaAdicionales">Precio de venta aprobado:</label>
+                                                  <input type="text" id="precioVentaAdicionales"class="form-control" placeholder="Precio de venta">
+                                                </div>
+                                              </div>
+                                              </br>
+                                              </br>
+                                              </br>
+                                              <div class="form-row">
+                                                  <div class= "col-lg-4"></div>
+                                                  <div class= "col-lg-4">
+                                                      <button id="botonTerminarAdicionales" type="button" class="btn btn-outline-success btn-block">Terminar adicional</button>
+                                                  </div>
+                                              </div>
                                           </form>
                                       </div>
                                   </div>
@@ -3582,7 +3704,7 @@
                                  </div>
                              </div>
                          </div>
-                         
+
                         <!-- Reporte Nómina -->
                         <div id="reporteNomina" class = "tabcontent hidden">
                             <h3> Reporte de nómina, global y por obra</h3>

@@ -490,6 +490,7 @@ function resetFormCalculadora_subproceso(){
   $('#' + id_costo_horaScoreCalculadora).val("");
   $('#' + id_indirectosCalculadora).val("");
   $('#' + id_impuestosCalculadora).val("");
+	$('#' + id_costos_indirectosCalculadora).val("");
 }
 
 function returnToDefaultCalculadora(){

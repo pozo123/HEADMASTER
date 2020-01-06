@@ -260,6 +260,7 @@ Nota: Todo float se ingresa a 2 decimales.
                     - propuestas
                         - id_subproceso
                             - id_solicitud
+                            - notas: string
                             - nombre: string
                             - titulo: string
                             - atencion: string
@@ -277,6 +278,55 @@ Nota: Todo float se ingresa a 2 decimales.
                             - url_evidencia: string
                             - url_formato: string
                             - precio_venta_aprobado: float
+                            - cuatificacion: (las últimas tres son estructuras listas para jalar cuando se autorice el adicional)
+                                - porcentaje_indirecto: float
+                                - desplegar_indirectos: boolean
+                                - materiales
+                                    - id_material
+                                        - descripcion: string
+                                        - unidad: string
+                                        - precio_lista: float
+                                        - precio_cliente: float
+                                        - cantidad: integer
+                                        - desplegar: boolean
+                                - materiales_nr
+                                    - id_consecutivo
+                                        - descripcion: string
+                                        - unidad: string
+                                        - precio_lista: float
+                                        - precio_cliente: float
+                                        - cantidad: integer
+                                        - desplegar: boolean
+                            - copeo:
+                                - impuestos: float (0 a 100)
+                                - num_entradas: int
+                                - entradas
+                                    - entrada (num)
+                                        - nombre: string
+                                        - alcance: string
+                                        - subtotal: float
+                                        - cuadrilla:
+                                            - id_puesto
+                                                - cantidad: int
+                                                - sueldo_diario: float (sin impuestos)
+                                        - multiplicadores
+                                            - dias: float
+                                            - unidades: float
+                            - proceso:
+                                - nombre: string
+                                - alcance: string
+                                - categoria: string (de db categorias)
+                                - terminado: boolean (definir manera de actualizar este valor. Empieza en false)
+                                - precio_venta: float
+                                - costo_suministros:float
+                                - utilidad: float
+                                - precopeo: float
+                                - porcentaje_anticipo: float
+                                - porcentaje_indirectos: float
+                                - porcentaje_impuestos: float
+                                - score
+                                    - horas_programadas: (en horas)
+                                    - costo_hora: float (2 decimales)
                     - listas
                         - pendientes
                             - id_subproceso:

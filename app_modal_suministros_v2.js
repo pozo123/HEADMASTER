@@ -5,9 +5,9 @@ var id_dataTable_selectModalSuministros = "dataTableSeleccionadosModalSuministro
 var id_dataTable_busquedaModalSuministros = "dataTableBusquedaModalSuministros";
 
 // elementos del form
-var id_ddl_buscaMarcaModalSuministros = "ddl_buscaMarcaModalSuministros";
-var id_ddl_buscaClasificacionModalSuministros = "ddl_buscaClasificacionModalSuministros";
 var id_ddl_buscaCategoriaModalSuministros = "ddl_buscaCategoriaModalSuministros";
+var id_ddl_buscaFamiliaModalSuministros = "ddl_buscaFamiliaModalSuministros";
+var id_ddl_buscaSubfamiliaModalSuministros = "ddl_buscaSubfamiliaModalSuministros";
 var id_buscaCatalogoModalSuministros = "buscaCatalogoModalSuministros";
 var id_catalogoModalSuministros = "catalogoModalSuministros";
 var id_descripcionModalSuministros = "descripcionModalSuministros";
@@ -18,6 +18,7 @@ var id_precioListaModalSuministros = "precioListaModalSuministros";
 var id_indirectosModalSuministros = "indirectosModalSuministros";
 var id_precioClienteModalSuministros = "precioClienteModalSuministros";
 var id_cb_sinRegistroModalSuministros = "cb_sinRegistroAdicionales";
+var id_div_cb_ModalSuministros = "div_cb_ModalSuministros";
 // botones del form
 var id_boton_agregarModalSuministros = "botonAgregarModalSuministros";
 var id_boton_limpiarModalSuministros = "botonLimpiarFiltrosModalSuministros";
@@ -50,19 +51,13 @@ function modalSuministros(indirectos, supervisor, json_actuales){
   firebase.database().ref(rama_bd_insumos + "/marcas").orderByChild('nombre').on('value',function(snapshot){
     marcas = snapshot;
     json_marcas=marcas.val();
-    llenaDdlGeneric(id_ddl_buscaMarcaModalSuministros, marcas, "nombre");
+    // llenaDdlGeneric(id_ddl_buscaMarcaModalSuministros, marcas, "nombre");
   });
   // Se cargan los datos de las categorias para los filtros
   firebase.database().ref(rama_bd_insumos + "/categorias").orderByChild('nombre').on('value',function(snapshot){
     categorias = snapshot;
     json_categorias=categorias.val();
     llenaDdlGeneric(id_ddl_buscaCategoriaModalSuministros, categorias, "nombre");
-  });
-  // Se cargan los datos de las clasificaciones para los filtros
-  firebase.database().ref(rama_bd_insumos + "/clasificaciones").orderByChild('nombre').on('value',function(snapshot){
-    clasificaciones = snapshot;
-    json_clasificaciones=clasificaciones.val();
-    llenaDdlGeneric(id_ddl_buscaClasificacionModalSuministros, clasificaciones, "nombre");
   });
   // Se cargan los datos de las unidades para los filtros
   firebase.database().ref(rama_bd_insumos + "/unidades").orderByChild('nombre').on('value',function(snapshot){
@@ -84,8 +79,10 @@ function modalSuministros(indirectos, supervisor, json_actuales){
         produc = productos[key];
         maximo = 0;
         for(key2 in produc){
-          if(produc[key2]["precio"] > maximo){
-            maximo = produc[key2]["precio"];
+          for(key3 in produc[key2]){
+            if(produc[key2][key3]["precio"] > maximo){
+              maximo = produc[key2][key3]["precio"];
+            }
           }
         }
         json_precios[key] = maximo;
@@ -101,8 +98,10 @@ function modalSuministros(indirectos, supervisor, json_actuales){
   // Se despliegan (o no) los campos de precios
   if(supervisorFlag){
     $('#' + id_div_preciosModalSuministros).addClass("hidden");
+    $('#' + id_div_cb_ModalSuministros).addClass("hidden");
   }else{
     $('#' + id_div_preciosModalSuministros).removeClass("hidden");
+    $('#' + id_div_cb_ModalSuministros).removeClass("hidden");
     $('#' + id_indirectosModalSuministros).prop('disabled', true);
     $('#' + id_precioClienteModalSuministros).prop('disabled', true);
   }
@@ -233,19 +232,10 @@ $('#'+id_precioClienteModalSuministros  ).focusout(function (){
 });
 
 //------------------------------- FILTROS -------------------------------------
-// Metodo accionado cuando se filtra por marca
-$('#' + id_ddl_buscaMarcaModalSuministros).change(function(){
-  if($('#' + id_ddl_buscaMarcaModalSuministros+' option:selected').val() == ""){
-    delete filtros["marca"];
-  } else {
-    filtros["marca"]= $('#' + id_ddl_buscaMarcaModalSuministros+' option:selected').val();
-  }
-  base_filtrados = filtraGeneric(base_insumos, filtros);
-  actualizarTablaModalSuministros(base_filtrados);
-});
-
 // Metodo accionado cuando se filtra por categoria
 $('#' + id_ddl_buscaCategoriaModalSuministros).change(function(){
+  $('#'+id_ddl_buscaSubfamiliaModalSuministros).empty();
+  llenaDdlGeneric(id_ddl_buscaFamiliaModalSuministros, categorias.child($('#'+id_ddl_buscaCategoriaModalSuministros+' option:selected').val()+'/familias'), "nombre");
   if($('#' + id_ddl_buscaCategoriaModalSuministros+' option:selected').val() == ""){
     delete filtros["categoria"];
   } else {
@@ -255,12 +245,24 @@ $('#' + id_ddl_buscaCategoriaModalSuministros).change(function(){
   actualizarTablaModalSuministros(base_filtrados);
 });
 
-// Metodo accionado cuando se filtra por clasificacion
-$('#' + id_ddl_buscaClasificacionModalSuministros).change(function(){
-  if($('#' + id_ddl_buscaClasificacionModalSuministros +' option:selected').val() == ""){
-    delete filtros["clasificacion"];
+// Metodo accionado cuando se filtra por marca
+$('#' + id_ddl_buscaFamiliaModalSuministros).change(function(){
+  llenaDdlGeneric(id_ddl_buscaSubfamiliaModalSuministros, categorias.child($('#'+id_ddl_buscaCategoriaModalSuministros+' option:selected').val()+'/familias/' + $('#'+id_ddl_buscaFamiliaModalSuministros+' option:selected').val()+'/subfamilias'), "nombre");
+  if($('#' + id_ddl_buscaFamiliaModalSuministros+' option:selected').val() == ""){
+    delete filtros["familia"];
   } else {
-    filtros["clasificacion"]=$('#' + id_ddl_buscaClasificacionModalSuministros+' option:selected').val();
+    filtros["familia"]= $('#' + id_ddl_buscaFamiliaModalSuministros+' option:selected').val();
+  }
+  base_filtrados = filtraGeneric(base_insumos, filtros);
+  actualizarTablaModalSuministros(base_filtrados);
+});
+
+// Metodo accionado cuando se filtra por clasificacion
+$('#' + id_ddl_buscaSubfamiliaModalSuministros).change(function(){
+  if($('#' + id_ddl_buscaSubfamiliaModalSuministros +' option:selected').val() == ""){
+    delete filtros["subfamilia"];
+  } else {
+    filtros["subfamilia"]=$('#' + id_ddl_buscaSubfamiliaModalSuministros+' option:selected').val();
   }
   base_filtrados = filtraGeneric(base_insumos, filtros);
   actualizarTablaModalSuministros(base_filtrados);
@@ -280,16 +282,16 @@ $('#' + id_buscaCatalogoModalSuministros).change(function(){
 // ----------------------Funciones necesarias ----------------------------------
 // Metodo para vaciar los filtros
 function resetModalSuministros(){
-  $('#'+id_ddl_buscaMarcaModalSuministros).empty();
-  $('#'+id_ddl_buscaClasificacionModalSuministros).empty();
   $('#'+id_ddl_buscaCategoriaModalSuministros).empty();
+  $('#'+id_ddl_buscaFamiliaModalSuministros).empty();
+  $('#'+id_ddl_buscaSubfamiliaModalSuministros).empty();
 }
 
 // Metodo para limpiar los filtros
 function limpiaFiltrosModalSuministros(){
-  $('#'+id_ddl_buscaMarcaModalSuministros).val("");
-  $('#'+id_ddl_buscaClasificacionModalSuministros).val("");
   $('#'+id_ddl_buscaCategoriaModalSuministros).val("");
+  $('#'+id_ddl_buscaFamiliaModalSuministros).val("");
+  $('#'+id_ddl_buscaSubfamiliaModalSuministros).val("");
   $('#'+id_buscaCatalogoModalSuministros).val("");
   filtros={};
 }
@@ -347,7 +349,7 @@ function datosModalSuministros(){
     true,
     "<button type='button' class='desplegarModalSuministros btn btn-transparente'><i class='icono_verde fas fa-check-circle'></i></button>",
     $('#'+id_catalogoModalSuministros).val(),//insumo_reg["catalogo"],
-    $('#'+id_cb_sinRegistroModalSuministros).prop('checked')?"NR":json_marcas[insumo_reg["marca"]]["nombre"],
+    //$('#'+id_cb_sinRegistroModalSuministros).prop('checked')?"NR":json_marcas[insumo_reg["marca"]]["nombre"],
     $('#'+id_descripcionModalSuministros).val(),//insumo_reg["descripcion"],
     $('#'+id_unidadModalSuministros).val(),//json_unidades[insumo_reg["unidad"]]["nombre"],
     $('#'+id_precioListaModalSuministros).val(),
@@ -378,10 +380,10 @@ function recuperaDatosModalSuministros(){
     var data = this.row(index).data();
     insumosSuministros[data[0]]={
       catalogo: data[3],
-      descripcion: data[5],
-      unidad: data[6],
-      precio_lista: deformatMoney(data[7]),
-      precio_cliente: deformatMoney(data[9]),
+      descripcion: data[4],
+      unidad: data[5],
+      precio_lista: deformatMoney(data[6]),
+      precio_cliente: deformatMoney(data[8]),
       cantidad: parseFloat($('#cantidad' + data[0] + 'ModalSuministros').val()),
       desplegar: data[1],
     };
@@ -412,7 +414,6 @@ function fitDatosTablaModalSuministros(json_actuales){
         json_actuales[key]["desplegar"],
         "<button type='button' class='desplegarModalSuministros btn btn-transparente'><i class="+icono+"></i></button>",
         insumo_reg["catalogo"],
-        json_marcas[insumo_reg["marca"]]["nombre"],
         insumo_reg["descripcion"],
         json_unidades[insumo_reg["unidad"]]["nombre"],
         //formatMoney(json_actuales[key]["precio_lista"]),
@@ -428,7 +429,6 @@ function fitDatosTablaModalSuministros(json_actuales){
         json_actuales[key]["desplegar"],
         "<button type='button' class='desplegarModalSuministros btn btn-transparente'><i class="+icono+"></i></button>",
         json_actuales[key]["catalogo"],
-        "SM",
         json_actuales[key]["descripcion"],
         json_actuales[key]["unidad"],
         //formatMoney(json_actuales[key]["precio_lista"]),
@@ -452,9 +452,10 @@ function actualizarTablaModalSuministros(datos){
     datos_suministros.push([
       key,
       datos[key]["catalogo"],
-      json_marcas[insumo["marca"]]["nombre"],
-      json_clasificaciones[insumo["clasificacion"]]["nombre"],
       datos[key]["descripcion"],
+      json_categorias[insumo["categoria"]]["nombre"],
+      json_categorias[insumo["categoria"]]["familias"][insumo["familia"]]["nombre"],
+      json_categorias[insumo["categoria"]]["familias"][insumo["familia"]]["subfamilias"][insumo["subfamilia"]]["nombre"],
       json_unidades[insumo["unidad"]]["nombre"],
       formatMoney(json_precios[key]),
       "<button type='button' class='agregarModalSuministros btn btn-transparente'><i class='icono_verde fas fa-check-circle'></i></button>",
@@ -464,12 +465,14 @@ function actualizarTablaModalSuministros(datos){
       destroy: true,
       data: datos_suministros,
       language: idioma_espanol,
+      "scrollX":true,
       //"autoWidth": false,
       "columnDefs": [
-          { "width": "120px", "targets": 4 },
+          { "width": "120px", "targets": 2 },
           { targets: [-1,-3], className: 'dt-body-center'},
-          { "visible": false, "targets": supervisorFlag?[0,6]:[0] }, //Campos auxiliares
-        ]
+          { "visible": false, "targets": supervisorFlag?[0,7]:[0] }, //Campos auxiliares
+        ],
+      "order": [[1, "asc"]]
   });
 }
 
@@ -478,12 +481,16 @@ $(document).on('click','.agregarModalSuministros', function(){
   var data = tabla_busquedaModalSuministros.row( $(this).parents('tr') ).data();
   uid_existente_insumo = data[0];
   $('#' + id_catalogoModalSuministros).val(data[1]);
-  $('#' + id_descripcionModalSuministros).val(data[4]);
+  $('#' + id_descripcionModalSuministros).val(data[2]);
   $('#' + id_cantidadModalSuministros).val(1);
-  $('#' + id_precioListaModalSuministros).val(data[6]);
+  $('#' + id_precioListaModalSuministros).val(data[7]);
   $('#' + id_indirectosModalSuministros).val(parseFloat(p_indirectos).toFixed(2));
-  $('#' + id_precioClienteModalSuministros).val( formatMoney( deformatMoney(data[6]) * (1 + p_indirectos*0.01) ) );
-  $('#' + id_unidadModalSuministros).val(data[5]);
+  $('#' + id_precioClienteModalSuministros).val( formatMoney( deformatMoney(data[7]) * (1 + p_indirectos*0.01) ) );
+  $('#' + id_unidadModalSuministros).val(data[6]);
+  $('#' + id_cb_sinRegistroModalSuministros).prop('checked', false)
+  $('#' + id_unidadModalSuministros).prop('disabled', true);
+  $('#' + id_precioListaModalSuministros).prop('disabled', true);
+  $('#' + id_descripcionModalSuministros).prop('disabled', true);
 });
 
 // Metodo para crear la tabla seleccionados
@@ -494,9 +501,9 @@ function creaTablaSelectosModalSuministros(datos){
       data: datos_suministros,
       language: idioma_espanol,
       "columnDefs": [
-          { "width": "120px", "targets": 4 },
+          { "width": "100px", "targets": 9 },
           { targets: [-1,-2,-3], className: 'dt-body-center'},
-          { "visible": false, "targets": supervisorFlag?[0,1,2,7,8,9]:[0,1] }, //Campos auxiliares
+          { "visible": false, "targets": supervisorFlag?[0,1,2,6,7,8]:[0,1] }, //Campos auxiliares
         ]
   });
 }

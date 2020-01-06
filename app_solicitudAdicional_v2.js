@@ -37,7 +37,7 @@ var fotoSeleccionada; // foto seleccionada para ser cargada
 var array_fotosAnexos; // arreglo de fotos como url
 var array_leyendasAnexos; // arreglo de las leyendas en paralelo
 var array_fotosEvidencias; // arreglo de fotos como url
-var indexSolicitudAdicional; // variable de control para los array de fotos
+var indexFotosArray; // variable de control para los array de fotos
 var json_anexos; // json de los anexos disponibles
 var cont_solicitudes; // total de solicitudes de la obra
 var colaborador; // nombre del colaborador que hace la solicitud
@@ -49,7 +49,7 @@ $('#' + id_tab_solicitudAdicional).click(function() {
     array_fotosAnexos=[];
     array_leyendasAnexos=[];
     array_fotosEvidencias=[];
-    indexSolicitudAdicional = 0;
+    indexFotosArray = 0;
     json_anexos={};
     cont_solicitudes = 0;
     colaborador = "";
@@ -71,7 +71,7 @@ $('#' + id_tab_solicitudAdicional).click(function() {
         select: '#' + id_imagenesSolicitudAdicional,
         placeholder: 'Imagenes seleccionadas',
     });
-    // Inicializaciopn del ddl de imagenes form 2
+    // Inicializacion del ddl de imagenes form 2
     $('#' + id_imagenes2SolicitudAdicional).empty();
     selectImagenes2 = new SlimSelect({
         select: '#' + id_imagenes2SolicitudAdicional,
@@ -87,6 +87,7 @@ $('#' + id_tab_solicitudAdicional).click(function() {
     $('#' + id_form_solicitudAdicional).removeClass("hidden");
     $('#' + id_ddl_obraSolicitudAdicional).val(0);
 });
+
 // Metodo para configurar la pagina cuando se selecciona una accion
 $('#' + id_ddl_accionSolicitudAdicional).change(function(){
   var opcion = $('#' + id_ddl_accionSolicitudAdicional+' option:selected').val();
@@ -94,7 +95,7 @@ $('#' + id_ddl_accionSolicitudAdicional).change(function(){
   array_fotosAnexos=[];
   array_leyendasAnexos=[];
   array_fotosEvidencias=[];
-  indexSolicitudAdicional = 0;
+  indexFotosArray = 0;
   cont_solicitudes = 0;
   colaborador = "";
   registro_antiguo={};
@@ -173,16 +174,16 @@ async function cargaImagenDdlSolicitudAdicional(id_ddl, id_slim_select){
   try {
     var select2 = document.getElementById(id_ddl);
     var option = document.createElement('option');
-    option.value = indexSolicitudAdicional;
+    option.value = indexFotosArray;
     option.text = fotoSeleccionada.name;
     if (await select2.appendChild(option)){
-      var seleccionadas = id_slim_select.selected().concat([indexSolicitudAdicional]);
+      var seleccionadas = id_slim_select.selected().concat([indexFotosArray]);
       id_slim_select.set(seleccionadas);
       //console.log("Termino");
     }else{
       console.log("Chale");
     }
-    indexSolicitudAdicional+=1;
+    indexFotosArray+=1;
   } catch (error){
     console.log(error);
   }
@@ -688,7 +689,7 @@ function resetForm2SolicitudAdicional(){
   //$('#'+id_ddl_obra2SolicitudAdicional ).val("");
   $('#' + id_ddl_solicitud2SolicitudAdicional).val("");
   $('#' + id_evidenciaInputSolicitudAdicional).text("Archivo no seleccionado");
-  $('#' + id_imagenesSolicitudAdicional).empty();
+  $('#' + id_imagenes2SolicitudAdicional).empty();
   $('#' + id_notasSolicitudAdicional).val("");
 }
 

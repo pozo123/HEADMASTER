@@ -1,10 +1,14 @@
+// elementos generales de la página
 var id_tab_adicionales = "tabGeneradorAdic";
-var id_form_adicionales = "formGeneradorAdic";
-
+var id_form_adicionales1 = "formGeneradorAdic";
+var id_form_adicionales2 = "formGeneradorAdic2";
+var id_ddl_accionAdicionales = "ddl_accionAdicionales";
+// elementos del primer form
 var id_ddl_obraAdicionales = "ddl_obraAdicionales";
 var id_ddl_adicionalAdicionales = "ddl_adicionalAdicionales";
 var id_claveAdicionales = "claveAdicionales";
 var id_ddl_solicitudAdicionales = "ddl_solicitudAdicionales";
+var id_notasAdicionales = "notasAdicionales";
 var id_nombreAdicionales = "nombreAdicionales";
 var id_tituloAdicionales = "tituloAdicionales";
 var id_ddl_atencionAdicionales = "ddl_atencionAdicionales";
@@ -20,10 +24,23 @@ var id_estimacionesAdicionales = "estimacionesAdicionales";
 var id_tiempoEntregaAdicionales = "tiempoEntregaAdicionales";
 var id_cb_bancariosAdicionales = "cb_bancariosAdicionales";
 var id_cb_fiscalesAdicionales = "cb_fiscalesAdicionales";
+var id_cb_ivaAdicionales = "cb_ivaAdicionales";
 var id_botonpdfAdicionales = "botonpdfAdicionales";
 var id_botonRegistrarAdicionales = "botonRegistrarAdicionales";
 var id_botonBorrarAdicionales = "botonBorrarAdicionales";
-
+// elementos del segundo form
+var id_ddl_obra2Adicionales ="ddl_obra2Adicionales";
+var id_ddl_adicional2Adicionales ="ddl_adicional2Adicionales";
+var id_botonDescargarPDFAdicionales = "botonDescargarPDFAdicionales";
+var id_evidenciaInputAdicionales ="evidenciaInputAdicionales";
+var id_evidenciaLabelAdicionales = "evidenciaLabelAdicionales";
+var id_botonCarga2FotoAdicionales = "botonCarga2FotoAdicionales";
+var id_imagenes2Adicionales ="imagenes2Adicionales";
+var id_fecha_inicioAdicionales ="fechaInicioAdicionales";
+var id_fecha_terminacionAdicionales ="fechaTerminacionAdicionales";
+var id_precioVentaAdicionales ="precioVentaAdicionales";
+var id_botonTerminarAdicionales ="botonTerminarAdicionales";
+// variables auxiliares
 var json_requisitos;
 var json_exclusiones;
 var select_requisitos;
@@ -33,6 +50,8 @@ var flagDownloadAdicionales;
 var datos_obraAdicionales;
 var no_adic;
 var download_images_url;
+
+var selectImagenesA;
 
 // Función para incializar esta página
 $('#' + id_tab_adicionales).click(function() {
@@ -44,19 +63,75 @@ $('#' + id_tab_adicionales).click(function() {
   json_exclusiones={};
   flagCuantificacionAdicionales = false;
   flagDownloadAdicionales = false;
+  registro_antiguo = null;
   download_images_url=[];
+  cargarDdlAccionAdicionales();
   ddlObrasActivasGeneric(id_ddl_obraAdicionales); // llenar el ddl obras
+  ddlObrasActivasGeneric(id_ddl_obra2Adicionales); // llenar el ddl obras
   cargarDdlRequisitosAdicionales(); // llenar el ddl requisitos adicionales
   cargarDdlExclusionesAdicionales(); // llenar el ddl exclusiones
   $('#' + id_ddl_obraAdicionales + ' option:selected').val("");
-  resetAdicionales(); // limpiar formulario
+  resetForm1Adicionales(); // limpiar formulario
+
+  array_fotosEvidencias=[];
+  indexFotosArray = 0;
+  $('#' + id_imagenes2Adicionales).empty();
+  selectImagenesA = new SlimSelect({
+      select: '#' + id_imagenes2Adicionales,
+      placeholder: 'Imagenes seleccionadas',
+  });
+
+  jQuery('#' + id_fecha_inicioAdicionales).datetimepicker(
+      {timepicker:false, weeks:true,format:'Y.m.d'}
+  );
+
+  jQuery('#' + id_fecha_terminacionAdicionales).datetimepicker(
+      {timepicker:false, weeks:true,format:'Y.m.d'}
+  );
 });
+
+// Metodo para configurar la pagina cuando se selecciona una accion
+$('#' + id_ddl_accionAdicionales).change(function(){
+  array_fotosEvidencias=[];
+  indexFotosArray = 0;
+  var opcion = $('#' + id_ddl_accionAdicionales+' option:selected').val();
+  if(opcion == 0){
+    $('#' + id_form_adicionales2).addClass("hidden");
+    $('#' + id_form_adicionales1).removeClass("hidden");
+    $('#'+id_ddl_obraAdicionales).val("");
+    resetForm1Adicionales();
+  }else{
+    $('#' + id_form_adicionales2).removeClass("hidden");
+    $('#' + id_form_adicionales1).addClass("hidden");
+    $('#'+id_ddl_obra2Adicionales).val("");
+    resetForm2Adicionales();
+  }
+});
+
+//=========================FUNCIONES EN COMUN =================================
+// Metodo para cargar las acciones en el ddl
+function cargarDdlAccionAdicionales(){
+  $('#' + id_ddl_accionAdicionales).empty();
+  var select = document.getElementById(id_ddl_accionAdicionales);
+  var option = document.createElement('option');
+  option.value = 0;
+  option.text = "DEFINIR ADICIONAL";
+  select.appendChild(option);
+  option = document.createElement('option');
+  option.value = 1;
+  option.text = "AUTORIZAR ADICIONAL";
+  select.appendChild(option);
+}
+
+//=============================================================================
+//========================== FORM DAR DE ALTA =================================
+//=============================================================================
 
 // ------------------------ FUNCIONES DEL FORM ---------------------------------
 // Funcion para llenar los ddls correspondientes cuando se selecciona un obra
 $('#' + id_ddl_obraAdicionales).change(function(){
-  resetAdicionales();
-  llenaDdlAdicionalAdicionales(id_ddl_adicionalAdicionales);
+  resetForm1Adicionales();
+  llenaDdlAdicionalAdicionales(id_ddl_obraAdicionales, id_ddl_adicionalAdicionales, true);
   //llenaDdlSolicitudAdicionales(id_ddl_solicitudAdicionales);
   llenaDdlAtnGeneric(id_ddl_atencionAdicionales, $('#' + id_ddl_obraAdicionales + ' option:selected').val());
   clienteDireccionObraGeneric($('#' + id_ddl_obraAdicionales + ' option:selected').val());
@@ -66,12 +141,15 @@ $('#' + id_ddl_obraAdicionales).change(function(){
 $('#' + id_ddl_adicionalAdicionales ).change(function(){
   if($('#' + id_ddl_adicionalAdicionales + ' option:selected').val() == "-NUEVO-"){
     llenaDdlSolicitudAdicionales(id_ddl_solicitudAdicionales);
+    $('#' + id_ddl_solicitudAdicionales).prop('disabled', false);
     generaClaveAdicionales(id_claveAdicionales);
+    registro_antiguo = null;
   }else{
     var clave_adic = $('#' + id_ddl_adicionalAdicionales + ' option:selected').val();
-    extraerCopeoInsumosCalculadoraAdicionales(clave_adic);
+    // extraerCopeoInsumosCalculadoraAdicionales(clave_adic);
     llenarFormPropuestaAdicionales(clave_adic);
     $('#' + id_ddl_solicitudAdicionales).prop('disabled', true);
+    $('#' + id_claveAdicionales).val(clave_adic);
   }
 });
 
@@ -182,13 +260,13 @@ $('#' + id_botonRegistrarAdicionales).click(function() {
     var solicitud = $('#'+ id_ddl_solicitudAdicionales + ' option:selected').val();
     var adicional_update = {};
     var path_adicional = "procesos/" + obra + "/procesos/ADIC";
-    var path_copeo = "copeo/" + obra + "/ADIC/" + adicional;
-    var path_insumos = "cuantificacion/" + obra + "/ADIC/" + adicional;
+    // var path_copeo = "copeo/" + obra + "/ADIC/" + adicional;
+    // var path_insumos = "cuantificacion/" + obra + "/ADIC/" + adicional;
     var path_propuesta = "adicionales/propuestas/" + obra + "/propuestas/" + adicional;
-    var path_lista_solicitudes = "adicionales/solicitudes/" + obra + "/listas/";
+    var path_lista_solicitudes = "adicionales/solicitudes/" + obra + "/listas";
     var path_lista_propuesta = "adicionales/propuestas/" + obra + "/listas/pendientes";
     var path_storage = rama_bd_obras+"/adicionales/solicitudes/"+ obra +"/solicitudesTerminadas/"+ solicitud;
-    var storageRef = firebase.storage().ref(rama_bd_obras + "/adicionales/propuestas/"+ obra +"/formatos/"+ adicional +".pdf");
+    var storageRef = firebase.storage().ref(rama_bd_obras + "/adicionales/propuestas/"+ obra + "/" + adicional +"/formato/"+ adicional +".pdf");
     getAllFirebaseStorageGeneric(path_storage).then(function(images_array){
       //console.log(images_array);
       downloadAllImagesGeneric(images_array).then(function(){ // descargar todas las imagenes evidencia de la solicitud
@@ -225,14 +303,18 @@ $('#' + id_botonRegistrarAdicionales).click(function() {
                 console.log('File available at', downloadURL);
                 //console.log(json_solicitud);
                 // Generar el json para actualizar los campos en la base de datos
+                if(registro_antiguo !== null){ // edicion
+                  adicional_update[path_adicional +"/num_subprocesos"] = no_adic;
+                  adicional_update[path_lista_solicitudes + "/terminadas/" + solicitud] = null;
+                  adicional_update[path_lista_solicitudes + "/concretadas/" + solicitud] = true;
+                  adicional_update[path_lista_propuesta + "/" +adicional] = true;
+                }
+                adicional_update[path_propuesta] = datosPropuestaAdicionales(downloadURL);
+                /*
                 adicional_update[path_adicional +"/subprocesos/" + adicional] = datosAdicionalAdicionales(downloadURL);
-                adicional_update[path_adicional +"/num_subprocesos"] = no_adic;
                 adicional_update[path_copeo] = json_modalCopeo;
                 adicional_update[path_insumos] = datosInsumosAdicionales();
-                adicional_update[path_propuesta] = datosPropuestaAdicionales(downloadURL);
-                adicional_update[path_lista_solicitudes + "/terminadas/" + solicitud] = null;
-                adicional_update[path_lista_solicitudes + "/concretadas/" + solicitud] = true;
-                adicional_update[path_lista_propuesta + "/" +adicional] = true;
+                */
                 console.log(adicional_update);
                 // Subir los cambios a la base de datos
                 firebase.database().ref(rama_bd_obras).update(adicional_update, function(error) {
@@ -242,10 +324,15 @@ $('#' + id_botonRegistrarAdicionales).click(function() {
                   } else {
                     // Data saved successfully!
                     // PAD
-                    pda("alta", path_adicional, "");
-                    alert("¡Registro de solicitud exitoso!");
+                    if(registro_antiguo !== null){ // edicion
+                      pda("modificacion", path_propuesta, registro_antiguo);
+                      alert("¡Edición exitosa!");
+                    } else {
+                      pda("alta", path_propuesta, "");
+                      alert("¡Registro de adicional exitoso!");
+                    }
                     $('#' + id_botonRegistrarAdicionales).prop('disabled', false);
-                    // resetForm1SolicitudAdicional();
+                    resetForm1SolicitudAdicionales();
                     $('#' + id_ddl_obraAdicionales).val("");
                   }
                 });
@@ -276,6 +363,7 @@ function llenarFormSolicitudAdicionales(clave_sol){
       $('#'+ id_tiempoEntregaAdicionales ).val("");
       $('#' + id_cb_bancariosAdicionales ).prop('checked', false);
       $('#' + id_cb_fiscalesAdicionales ).prop('checked', false);
+      $('#' + id_notasAdicionales).val(solicitud.notas);
       var aux = [];
       select_requisitos.selected(aux);
       select_exclusiones.selected(aux);
@@ -289,7 +377,8 @@ function llenarFormSolicitudAdicionales(clave_sol){
 
 // Función para llenar el formulario con los datos de una propuesta guardada
 function llenarFormPropuestaAdicionales(clave_adic){
-  firebase.database().ref(rama_bd_obras + "/adicionales/propuestas/" + $('#' + id_ddl_obraAdicionales + ' option:selected').val()+"/" + clave_adic).on('value',function(snapshot){
+  console.log(rama_bd_obras + "/adicionales/propuestas/" + $('#' + id_ddl_obraAdicionales + ' option:selected').val()+"/propuestas/" + clave_adic);
+  firebase.database().ref(rama_bd_obras + "/adicionales/propuestas/" + $('#' + id_ddl_obraAdicionales + ' option:selected').val() +"/propuestas/" + clave_adic).on('value',function(snapshot){
     var propuesta;
     if(snapshot.exists()){
       propuesta = snapshot.val();
@@ -298,9 +387,11 @@ function llenarFormPropuestaAdicionales(clave_adic){
       option.text = option.value = propuesta.id_solicitud;
       select.appendChild(option);
       $('#'+ id_ddl_solicitudAdicionales).val(propuesta.id_solicitud);
+      $('#'+ id_nombreAdicionales ).val(propuesta.notas);
       $('#'+ id_nombreAdicionales ).val(propuesta.nombre);
       $('#'+ id_tituloAdicionales ).val(propuesta.titulo);
       $('#'+ id_ddl_atencionAdicionales ).val(propuesta.atencion);
+      $('#'+ id_indirectosAdicionales ).val(propuesta.cuantificacion.porcentaje_indirecto);
       $('#'+ id_anticiposAdicionales ).val(propuesta.porcentaje_anticipo);
       $('#'+ id_estimacionesAdicionales ).val(100-propuesta.porcentaje_anticipo);
       $('#'+ id_tiempoEntregaAdicionales ).val(propuesta.tiempo_entrega);
@@ -310,38 +401,25 @@ function llenarFormPropuestaAdicionales(clave_adic){
       for (key in propuesta.requisitos){
         aux.push(key);
       }
-      select_requisitos.selected(aux);
+      select_requisitos.set(aux);
+      // console.log(aux);
       aux = [];
       for (key in propuesta.exclusiones){
         aux.push(key);
       }
-      select_exclusiones.selected(aux);
-    }
-  });
-}
-
-// Funcion para recuperar los datos de copeo, cuantificacion y calculadora de la
-// base de datos
-function extraerCopeoInsumosCalculadoraAdicionales(clave_adic){
-  firebase.database().ref(rama_bd_obras + "/copeo/" + $('#' + id_ddl_obraAdicionales + ' option:selected').val()+"/ADIC/" + clave_adic).on('value',function(snapshot){
-    if(snapshot.exists()){
-      json_modalCopeo = snapshot.val();
-    } else{
-      json_modalCopeo = {};
-    }
-  });
-  firebase.database().ref(rama_bd_obras + "/cuantificacion/" + $('#' + id_ddl_obraAdicionales + ' option:selected').val()+"/ADIC/" + clave_adic).on('value',function(snapshot){
-    if(snapshot.exists()){
-      json_modalSuministros = snapshot.val();
-    } else{
+      select_exclusiones.set(aux);
+      // console.log(aux);
+      json_modalCopeo = propuesta.copeo;
       json_modalSuministros = {};
-    }
-  });
-  firebase.database().ref(rama_bd_obras + "/calculadora/" + $('#' + id_ddl_obraAdicionales + ' option:selected').val()+"/ADIC/" + clave_adic).on('value',function(snapshot){
-    if(snapshot.exists()){
-      json_calculadoraAdicionales = snapshot.val();
-    } else{
-      json_calculadoraAdicionales = {};
+      for (key in propuesta.cuantificacion.materiales){
+        json_modalSuministros[key] = propuesta.cuantificacion.materiales[key];
+      }
+      for (key in propuesta.cuantificacion.materiales_nr){
+        json_modalSuministros[key] = propuesta.cuantificacion.materiales_nr[key];
+      }
+      json_modalCalculadora = propuesta.proceso;
+      registro_antiguo = propuesta;
+      // console.log(propuesta);
     }
   });
 }
@@ -366,18 +444,20 @@ function generaClaveAdicionales(id_item){
 }
 
 // Funcion para cargar los datos al ddl de adicionales
-function llenaDdlAdicionalAdicionales(id_objeto){
-    $('#' + id_objeto).empty();
-    var select = document.getElementById(id_objeto);
+function llenaDdlAdicionalAdicionales(id_obra_ddl, id_objeto_ddl, nuevo){
+    $('#' + id_objeto_ddl).empty();
+    var select = document.getElementById(id_objeto_ddl);
     var option = document.createElement('option');
     option.style = "display:none";
     option.text = option.value = "";
     select.appendChild(option);
-    option = document.createElement('option');
-    option.value = "-NUEVO-";
-    option.text = "-NUEVO-";
-    select.appendChild(option);
-    firebase.database().ref(rama_bd_obras + "/adicionales/propuestas/"+ $('#' + id_ddl_obraAdicionales + ' option:selected').val()+"/listas/pendientes").on('child_added',function(snapshot){
+    if(nuevo){
+      option = document.createElement('option');
+      option.value = "-NUEVO-";
+      option.text = "-NUEVO-";
+      select.appendChild(option);
+    }
+    firebase.database().ref(rama_bd_obras + "/adicionales/propuestas/"+ $('#' + id_obra_ddl + ' option:selected').val()+"/listas/pendientes").on('child_added',function(snapshot){
       option = document.createElement('option');
       option.value = snapshot.key;
       option.text = snapshot.key;
@@ -441,7 +521,7 @@ function cargarDdlExclusionesAdicionales(){
       //Llenado de la lista de puestos
       select_exclusiones = new SlimSelect({
           select: '#' + id_ddl_exclusionesAdicionales,
-          placeholder: 'Elige las exlusiones de este adicional',
+          placeholder: 'Elige las exclusiones de este adicional',
       });
   });
 }
@@ -490,21 +570,23 @@ function extraeImpuesto(){
 }
 
 // Funcion para limpiar el formulario
-function resetAdicionales (){
+function resetForm1Adicionales (){
  //$('#' + id_ddl_obraAdicionales + ' option:selected').val("");
  $('#' + id_ddl_adicionalAdicionales ).empty();
  $('#' + id_claveAdicionales ).val("");
  $('#' + id_ddl_solicitudAdicionales ).empty();
+ $('#' + id_notasAdicionales ).val("");
  $('#' + id_nombreAdicionales ).val("");
  $('#' + id_tituloAdicionales ).val("");
  $('#' + id_ddl_atencionAdicionales ).empty();
  $('#' + id_indirectosAdicionales).val(10);
- $('#' + id_cb_indirectosAdicionales ).prop('checked', false);
  $('#' + id_anticiposAdicionales ).val(100);
  $('#' + id_estimacionesAdicionales ).val(0);
  $('#' + id_tiempoEntregaAdicionales ).val("");
  $('#' + id_cb_bancariosAdicionales ).prop('checked', false);
  $('#' + id_cb_fiscalesAdicionales ).prop('checked', false);
+ $('#' + id_cb_ivaAdicionales ).prop('checked', false);
+ $('#' + id_cb_indirectosAdicionales ).prop('checked', false);
  flagCuantificacionAdicionales = false;
  flagDownloadAdicionales = false;
  json_modalSuministros={};
@@ -626,13 +708,12 @@ function pdfDocDescriptionAdicionales(vista_previa, images_array){
 
 // Función para generar el json del adicional correspondiente a los datos
 // ingresados en el fomrulario
-function datosAdicionalAdicionales(url){
+function datosAdicionalAdicionales(){
   var adicional = {
     nombre: $('#'+id_nombreAdicionales).val(),
     alcance: $('#'+id_tituloAdicionales).val(),
     terminado: false,
     categoria: "NA",
-    url_formato: url,
     precio_venta: json_modalCalculadora.precio_venta,
     costo_suministros:json_modalCalculadora.costo_suministros,
     utilidad: json_modalCalculadora.utilidad,
@@ -676,12 +757,15 @@ function datosPropuestaAdicionales(url){
     atencion: $('#'+id_ddl_atencionAdicionales).val(),
     porcentaje_anticipo: $('#'+id_anticiposAdicionales).val(),
     requisitos:extraeListaGeneric(select_requisitos, json_requisitos),
-    exlusiones:extraeListaGeneric(select_exclusiones, json_exclusiones),
+    exclusiones:extraeListaGeneric(select_exclusiones, json_exclusiones),
     tiempo_entrega: $('#'+id_tiempoEntregaAdicionales).val(),
     datos_bancarios: $('#'+id_cb_bancariosAdicionales).prop('checked'),
     datos_fiscales: $('#'+id_cb_fiscalesAdicionales).prop('checked'),
     aprobada: false,
     url_evidencia: url,
+    cuantificacion: datosInsumosAdicionales(),
+    copeo: json_modalCopeo,
+    proceso: datosAdicionalAdicionales()
   };
   return propuesta;
 }
@@ -696,6 +780,7 @@ function getAllFirebaseStorageGeneric(ruta){
     } else {
       // Now we get the references of these images
       storageRef.listAll().then(function(result) {
+          console.log(result);
           var total = result.items.length;
           var cont = 0;
           result.items.forEach(function(imageRef) {
@@ -789,4 +874,210 @@ function manoDeObraAInsumoAdicionales(){
     precio_cliente: parseFloat(calculaCostoCopeo() * (1+json_modalCopeo.impuestos*0.01) * (1+$('#'+id_indirectosAdicionales).val()*0.01) ).toFixed(2),
   };
   return aux;
+}
+
+//=============================================================================
+//====================== FORM SUMMIT ADICIONAL ================================
+//=============================================================================
+
+// Metodo accionado cuando se selecciona una obra en form 2
+$('#' + id_ddl_obra2Adicionales ).change(function(){
+  uid_obra = $('#' + id_ddl_obra2Adicionales +' option:selected').val();
+  resetForm2Adicionales();
+  llenaDdlAdicionalAdicionales(id_ddl_obra2Adicionales, id_ddl_adicional2Adicionales, false);
+});
+
+// Metodo accionado cuando se selecciona un adicional en form 2
+$('#' + id_ddl_adicional2Adicionales).change(function(){
+
+});
+
+// Metodo del boton para descargar el pdf de una solicitud registrada
+$('#' + id_botonDescargarPDFAdicionales).click(function() {
+  if($('#' + id_ddl_obra2Adicionales).val() !== "" && $('#' + id_ddl_adicional2Adicionales).val() !== ""){
+    var adicional_path = rama_bd_obras + "/adicionales/propuestas/";
+    // Create a reference to the file we want to download
+    console.log(adicional_path + uid_obra + "/" + $('#'+id_ddl_adicional2Adicionales).val() + "/formato/" + $('#'+id_ddl_adicional2Adicionales).val() + ".pdf");
+    var storageRef = firebase.storage().ref(adicional_path + uid_obra + "/" + $('#'+id_ddl_adicional2Adicionales).val() + "/formato/" + $('#'+id_ddl_adicional2Adicionales).val() + ".pdf");
+    // Get the download URL
+    storageRef.getDownloadURL().then(function(url) {
+      //console.log(url);
+      window.open(url);
+
+    }).catch(function(error) {
+      // A full list of error codes is available at
+      // https://firebase.google.com/docs/storage/web/handle-errors
+      switch (error.code) {
+        case 'storage/object-not-found':
+          // File doesn't exist
+          console.log("El archivo no existe");
+          break;
+
+        case 'storage/unauthorized':
+          // User doesn't have permission to access the object
+          console.log("Acceso denegado");
+          break;
+
+        case 'storage/canceled':
+          // User canceled the upload
+          console.log("Descarga cancelada");
+          break;
+
+        case 'storage/unknown':
+          // Unknown error occurred, inspect the server response
+          console.log("Error desconocido");
+          break;
+
+        default:
+          console.log("Hubo error");
+      }
+});
+  }else {
+    alert("Selecciona una obra y un adicional");
+  }
+});
+
+// Metodo para cargar una foto de evidencia seleccionada
+$('#' + id_evidenciaInputAdicionales).on("change", function(event){
+    fotoSeleccionada = event.target.files[0];
+    $('#' + id_evidenciaLabelAdicionales).text(fotoSeleccionada.name);
+    $('#' + id_botonCarga2FotoAdicionales).prop("disabled", false);
+    $('#' + id_botonCarga2FotoAdicionales).removeClass('btn-outline-dark');
+    $('#' + id_botonCarga2FotoAdicionales).addClass('btn-outline-success');
+});
+
+// Metodo del boton para cargar una imagen evidencia en el ddl.
+$('#' + id_botonCarga2FotoAdicionales).click(function() {
+  $('#' + id_evidenciaLabelAdicionales).text("Seleccionar una imagen");
+  $('#' + id_botonCarga2FotoAdicionales).prop("disabled", true);
+  $('#' + id_botonCarga2FotoAdicionales).removeClass('btn-outline-success');
+  $('#' + id_botonCarga2FotoAdicionales).addClass('btn-outline-dark');
+  var reader = new FileReader();
+  reader.readAsDataURL(fotoSeleccionada);
+  reader.onloadend = function () {
+      array_fotosEvidencias.push({url: reader.result, file: fotoSeleccionada,});
+      //console.log(imagenes_anexos);
+  }
+  cargaImagenDdlSolicitudAdicional(id_imagenes2Adicionales, selectImagenesA);
+});
+
+// Metodo accionado cuando el precio cliente es modificado
+$('#'+id_precioVentaAdicionales).change(function (){
+		if($('#'+id_precioVentaAdicionales).val() == ""){
+			$('#'+id_precioVentaAdicionales).val(formatMoney(0));
+		}
+});
+
+// Metodo accionado cuando precio cliente es enfocado
+$('#'+id_precioVentaAdicionales).focus(function (){
+	if($('#'+id_precioVentaAdicionales).val() !== ""){
+		$('#'+id_precioVentaAdicionales).val(deformatMoney($('#'+id_precioVentaAdicionales ).val()));
+	}
+});
+
+// Metodo accionado cuando precio cliente pierde enfoque
+$('#'+id_precioVentaAdicionales).focusout(function (){
+	if($('#'+id_precioVentaAdicionales).val() !== ""){
+		$('#'+id_precioVentaAdicionales).val(formatMoney($('#'+id_precioVentaAdicionales ).val()));
+	}
+});
+
+// Metodo del boton para terminar una solicitud adicional
+$('#' + id_botonTerminarAdicionales).click(function() {
+  if(validateForm2Adicionales()){
+    var obra = $('#'+ id_ddl_obra2Adicionales + ' option:selected').val();
+    var adicional = $('#'+ id_ddl_adicional2Adicionales + ' option:selected').val();
+    var adicional_update = {};
+    var propuesta_path = rama_bd_obras + "/adicionales/propuestas/" + obra + "/propuestas/"+ adicional;
+    var storage_path = rama_bd_obras + "/adicionales/propuestas/"+ obra + "/" + adicional +"/evidencia";
+    var fotos_seleccionadas = obtenerFotosAdicionalFirmado();
+    $('#' + id_botonTerminarAdicionales).prop('disabled', true);
+    firebase.database().ref(propuesta_path).once('value',function(snapshot){
+      if(snapshot.exists()){
+        var propuesta = datosAdicionalFirmado(snapshot);
+        uploadAllImagesGeneric(storage_path, fotos_seleccionadas).then(function (url_array){
+          adicional_update["adicionales/propuestas/" + obra + "/listas/pendientes/"+adicional] = null;
+          adicional_update["adicionales/propuestas/" + obra + "/listas/terminadas/"+adicional] = true;
+          adicional_update["procesos/" + obra + "/procesos/ADIC/subprocesos/"+adicional] = propuesta.proceso;
+          adicional_update["copeo/" + obra + "/ADIC/"+adicional] = propuesta.copeo;
+          adicional_update["cuantificacion/" + obra + "/ADIC/"+adicional] = propuesta.cuantificacion;
+          console.log(adicional_update);
+          firebase.database().ref(rama_bd_obras).update(adicional_update, function(error) {
+            if (error) {
+              // The write failed...
+              alert("¡Ups, hubo un error!");
+            } else {
+              // Data saved successfully!
+              // PAD
+              pda("alta", rama_bd_obras + "/procesos/" + obra + "/procesos/ADIC/subprocesos/"+adicional, "");
+              alert("¡Registro de adicional exitoso!");
+              $('#' + id_botonTerminarAdicionales).prop('disabled', false);
+              resetForm2Adicionales();
+              $('#' + id_ddl_obra2Adicionales).val("");
+            }
+          });
+        });
+      }
+    });
+  }
+});
+
+//-------------------------FUNCIONES NECESARIAS -------------------------------
+function resetForm2Adicionales(){
+  $('#' + id_ddl_adicional2Adicionales).val("");
+  $('#' + id_evidenciaInputAdicionales).text("Archivo no seleccionado");
+  $('#' + id_imagenes2Adicionales).empty();
+  $('#' + id_precioVentaAdicionales).val("");
+  $('#' + id_fecha_inicioAdicionales).val("");
+  $('#' + id_fecha_terminacionAdicionales).val("");
+}
+
+// Metodo para validar todos los campos del form 2
+function validateForm2Adicionales(){
+  if($('#' + id_ddl_obra2Adicionales + " option:selected").val() == ""){
+      alert("Selecciona una obra.");
+      highLightColor(id_ddl_obra2Adicionales,"#FF0000");
+      return false;
+  }  else if($('#' + id_ddl_adicional2Adicionales + " option:selected").val() == ""){
+      alert("Selecciona una solicitud");
+      highLightColor(id_ddl_adicional2Adicionales,"#FF0000");
+      return false;
+  } else if(selectImagenesA.selected().length == 0){
+      alert("Agrega las imagenes del documento de solicitud formado");
+      return false;
+  } else if($('#' + id_precioVentaAdicionales).val() == ""){
+      alert("Ingresa un precio de venta");
+      return false;
+  } else if($('#' + id_fecha_inicioAdicionales).val() == ""){
+      alert("Ingresa una fecha de inicio esperada");
+      return false;
+  } else if($('#' + id_fecha_terminacionAdicionales).val() == ""){
+      alert("Ingresa una fecha de terminación esperada");
+      return false;
+  } else {
+      return true;
+  }
+}
+
+// Metodo para obtener las fotos seleccionadas
+function obtenerFotosAdicionalFirmado(){
+  var indices_seleccionados = selectImagenesA.selected();
+  var fotos_seleccionadas=[];
+  for(var i=0; i<indices_seleccionados.length; i++){
+    fotos_seleccionadas.push(array_fotosEvidencias[indices_seleccionados[i]].file);
+  }
+  return fotos_seleccionadas;
+}
+
+function datosAdicionalFirmado(snap){
+  var propuesta = snap.val();
+  var f_inicio = $('#' + id_fecha_inicioAdicionales).val().split('.');
+  var f_final = $('#' + id_fecha_terminacionAdicionales).val().split('.');
+  fechas = {
+      fecha_inicio_teorica: new Date(f_inicio[0], f_inicio[1] - 1, f_inicio[2]).getTime(),
+      fecha_final_teorica: new Date(f_final[0], f_final[1] - 1, f_final[2]).getTime()
+  }
+  propuesta["proceso"]["precio_venta_aprobado"] = deformatMoney($('#'+id_precioVentaAdicionales).val());
+  propuesta["proceso"]["fechas"] = fechas;
+  return propuesta;
 }
