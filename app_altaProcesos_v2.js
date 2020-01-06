@@ -233,9 +233,9 @@ $('#' + id_nombre_proceso).keypress(function(e){
     charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_0123456789áéíóú",e)
 });
 
-$('#' + id_alcance_proceso).keypress(function(e){
+/* $('#' + id_alcance_proceso).keypress(function(e){
     charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_0123456789()áéíóú",e)
-});
+}); */
 //Funcionalidad del checkbox subproceso: Ocultar o mostrar la seccion de subprocesos.
 $('#' + id_checkbox_supbroceso ).change(function(){
     if ($('#' + id_checkbox_supbroceso ).prop("checked")){
