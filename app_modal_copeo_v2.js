@@ -7,6 +7,7 @@ var id_ddl_obraModalCopeo = "ddl_obraModalCopeo";
 var id_ddl_procesoModalCopeo = "ddl_procesoModalCopeo";
 var id_ddl_subprocesoModalCopeo = "ddl_subprocesoModalCopeo";
 var id_ddl_entradaModalCopeo = "ddl_entradaModalCopeo";
+var id_label_cargaSocialModalCopeo = "labelCargaSocialModalCopeo";
 var id_carga_socialModalCopeo = "cargaSocialModalCopeo";
 var id_diasModalCopeo = "diasModalCopeo";
 var id_multModalCopeo = "multModalCopeo";
@@ -17,6 +18,7 @@ var id_div_trabajadoresModalCopeo = "divTrabajadoresModalCopeo";
 var id_costo_unitarioModalCopeo = "costoUnitarioModalCopeo";
 var id_costo_copeoModalCopeo = "costoModalCopeo";
 var id_costo_copeo_CSModalCopeo = "costoCSModalCopeo";
+var id_div_totalCSModalCopeo = "divTotalCSModalCopeo";
 var id_seccion_subprocesoModalCopeo = "div_subprocesoModalCopeo";
 
 // botones del form
@@ -26,12 +28,14 @@ var id_sueldos_modalCopeo = "botonSueldosModalCopeo";
 
 // variables auxiliares
 var adicionalFlag; // determina si el el copeo de un adicional, para desplegar o no algunos elementos
+var cargaSocialFlag;
 var json_modalCopeo;
 
 // --------------------- Método de inicialización -----------------------------
 // Metodo de inicializacion del modal
-function modalCopeo(json_modalCopeoRegistrado, adicional){
+function modalCopeo(json_modalCopeoRegistrado, adicional, carga_social){
   adicionalFlag=adicional;
+  cargaSocialFlag=carga_social;
   puestos_array = [];
   json_modalCopeo = json_modalCopeoRegistrado;
   cargaListaTrabajadoresModalCopeo();
@@ -269,13 +273,18 @@ function resetFormModalCopeo (){
     $('#'+id_ddl_entradaModalCopeo).empty();
     $('#' + id_seccion_subprocesoModalCopeo).addClass('hidden');
   }
+  if(!cargaSocialFlag){ // no se muestra la carga social a los supervisores
+    $('#' + id_div_totalCSModalCopeo).addClass('hidden');
+    $('#' + id_carga_socialModalCopeo).addClass('hidden');
+    $('#' + id_label_cargaSocialModalCopeo).addClass('hidden');
+  }
   $('#'+id_ddl_entradaModalCopeo).val("");
   resetFormModalCopeo_entrada();
 }
 
 // Metodo para limpiar los datos del formulario
 function resetFormModalCopeo_entrada(){
-  $('#'+id_carga_socialModalCopeo).val("");
+  $('#'+id_carga_socialModalCopeo).val(cargaSocialFlag?"":34); // no se muestra la carga social a los supervisores
   $('#'+id_carga_socialModalCopeo).prop("disabled", true);
   $('#'+id_diasModalCopeo).val("5");
   $('#'+id_multModalCopeo).val("1");

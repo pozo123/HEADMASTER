@@ -594,10 +594,10 @@ $('#' + id_boton_copeoSolicitudAdicional).click(function() {
       if(snapshot.exists()){
         json_copeoRegistrado = snapshot.val();
       }
-      modalCopeo(json_copeoRegistrado, true); // resultado en json_modalCopeo
+      modalCopeo(json_copeoRegistrado, true, false); // resultado en json_modalCopeo
     });
   }else{
-    modalCopeo(json_modalCopeo, true); // resultado en json_modalCopeo
+    modalCopeo(json_modalCopeo, true, false); // resultado en json_modalCopeo
   }
 });
 

@@ -596,7 +596,7 @@ function cargaCamposSubprocesoProcesos(){
 // se utiliza on "value" para que en cada movimiento en la base de datos "obras/procesos/obra/procesos",
 //la tabla se actualize automáticamente.
 function actualizarTablaProcesos(){
-    firebase.database().ref(rama_bd_obras + "/procesos/" + $('#' + id_ddl_obraProcesos + " option:selected").val() + "/procesos").on("value",function(snapshot){
+    firebase.database().ref(rama_bd_obras + "/procesos/" + $('#' + id_ddl_obraProcesos + " option:selected").val() + "/procesos").once("value",function(snapshot){
         var datos_obra = [];
         var procesoIndex_array = [];
         var index = 0;

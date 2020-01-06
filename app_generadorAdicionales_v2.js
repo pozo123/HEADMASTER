@@ -12,10 +12,12 @@ var id_notasAdicionales = "notasAdicionales";
 var id_nombreAdicionales = "nombreAdicionales";
 var id_tituloAdicionales = "tituloAdicionales";
 var id_ddl_atencionAdicionales = "ddl_atencionAdicionales";
-var id_indirectosAdicionales = "indirectosAdicionales";
+var id_indirectosSuministrosAdicionales = "indirectosSuministrosAdicionales";
 var id_boton_suministrosAdicionales = "botonSuministrosAdicionales";
 var id_cb_indirectosAdicionales = "cb_indirectosAdicionales";
+var id_indirectosCopeoAdicionales = "indirectosCopeoAdicionales";
 var id_boton_copeoAdicionales = "botonCopeoAdicionales";
+var id_indirectosGlobalAdicionales = "indirectosGlobalAdicionales";
 var id_boton_calculadoraAdicionales = "botonCalculadoraAdicionales";
 var id_ddl_requisitosAdicionales = "ddl_requisitosAdicionales";
 var id_ddl_exclusionesAdicionales = "ddl_exclusionesAdicionales";
@@ -162,9 +164,9 @@ $('#' + id_ddl_solicitudAdicionales).change(function(){
 });
 
 // Funcionalidad del campo porcentale indirectos
-$('#' + id_indirectosAdicionales).on("change", function(event){
-    if($('#' + id_indirectosAdicionales).val() == ""){
-      $('#' + id_indirectosAdicionales).val(0);
+$('#' + id_indirectosSuministrosAdicionales).on("change", function(event){
+    if($('#' + id_indirectosSuministrosAdicionales).val() == ""){
+      $('#' + id_indirectosSuministrosAdicionales).val(0);
     }
     flagCuantificacionAdicionales = false;
 });
@@ -174,13 +176,13 @@ $('#' + id_boton_suministrosAdicionales).click(function() {
   if($('#' + id_ddl_adicionalAdicionales + ' option:selected').val() && !flagCuantificacionAdicionales){ // actualizar los precios finales con los indirectos
     actualizaPreciosClienteAdicionales();
   }
-  modalSuministros(parseFloat($('#' + id_indirectosAdicionales).val()).toFixed(2), false, json_modalSuministros); // desplegar modal
+  modalSuministros(parseFloat($('#' + id_indirectosSuministrosAdicionales).val()).toFixed(2), false, json_modalSuministros); // desplegar modal
   flagCuantificacionAdicionales = true; // actualizar bandera de porcentaje indirectos
 });
 
 // Metodo del boton para abrir el modal de cuantificacion
 $('#' + id_boton_copeoAdicionales).click(function() {
-  modalCopeo(json_modalCopeo, true);
+  modalCopeo(json_modalCopeo, true, true);
 });
 
 // Metodo del boton para abrir el modal de calculadora
@@ -198,7 +200,7 @@ $('#' + id_boton_calculadoraAdicionales).click(function() {
   json_modalCalculadora["costo_suministros"] = totales.costos;
   json_modalCalculadora["precopeo"] = calculaCostoCopeo();
   json_modalCalculadora["porcentaje_impuestos"] = extraeImpuesto();
-  json_modalCalculadora["precio_venta"] = parseFloat(totales.precio_venta + json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01)*(1+$('#'+ id_indirectosAdicionales).val()*0.01)).toFixed(2);
+  json_modalCalculadora["precio_venta"] = parseFloat(totales.precio_venta + json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01)*(1+$('#'+ id_indirectosSuministrosAdicionales).val()*0.01)).toFixed(2);
   //console.log(json_modalCalculadora);
   modalCalculadora(json_modalCalculadora, false, true); // desplegar modal
 });
@@ -207,8 +209,8 @@ $('#' + id_boton_calculadoraAdicionales).click(function() {
 // cuando se cierra el modal calculadora
 $('#' + id_modalCalculadora).on('hidden.bs.modal', function () {
     var porcentaje = 100 * (json_modalCalculadora["precio_venta"]-json_modalCalculadora["costo_suministros"]- json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01))/ (json_modalCalculadora["costo_suministros"]+json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01));
-    if(parseFloat(porcentaje).toFixed(2) !== $('#'+ id_indirectosAdicionales).val()){
-      $('#'+ id_indirectosAdicionales).val(parseFloat(porcentaje).toFixed(2));
+    if(parseFloat(porcentaje).toFixed(2) !== $('#'+ id_indirectosSuministrosAdicionales).val()){
+      $('#'+ id_indirectosSuministrosAdicionales).val(parseFloat(porcentaje).toFixed(2));
       actualizaPreciosClienteAdicionales();
     }
 })
@@ -391,7 +393,7 @@ function llenarFormPropuestaAdicionales(clave_adic){
       $('#'+ id_nombreAdicionales ).val(propuesta.nombre);
       $('#'+ id_tituloAdicionales ).val(propuesta.titulo);
       $('#'+ id_ddl_atencionAdicionales ).val(propuesta.atencion);
-      $('#'+ id_indirectosAdicionales ).val(propuesta.cuantificacion.porcentaje_indirecto);
+      $('#'+ id_indirectosSuministrosAdicionales ).val(propuesta.cuantificacion.porcentaje_indirecto);
       $('#'+ id_anticiposAdicionales ).val(propuesta.porcentaje_anticipo);
       $('#'+ id_estimacionesAdicionales ).val(100-propuesta.porcentaje_anticipo);
       $('#'+ id_tiempoEntregaAdicionales ).val(propuesta.tiempo_entrega);
@@ -530,7 +532,7 @@ function cargarDdlExclusionesAdicionales(){
 // acuerdo al porcentaje de indirectos
 function actualizaPreciosClienteAdicionales(){
   for(key in json_modalSuministros){
-    json_modalSuministros[key]["precio_cliente"] = parseFloat(json_modalSuministros[key]["precio_lista"] * (1+$('#' + id_indirectosAdicionales).val() * 0.01)).toFixed(2);
+    json_modalSuministros[key]["precio_cliente"] = parseFloat(json_modalSuministros[key]["precio_lista"] * (1+$('#' + id_indirectosSuministrosAdicionales).val() * 0.01)).toFixed(2);
   }
 }
 
@@ -579,7 +581,7 @@ function resetForm1Adicionales (){
  $('#' + id_nombreAdicionales ).val("");
  $('#' + id_tituloAdicionales ).val("");
  $('#' + id_ddl_atencionAdicionales ).empty();
- $('#' + id_indirectosAdicionales).val(10);
+ $('#' + id_indirectosSuministrosAdicionales).val(10);
  $('#' + id_anticiposAdicionales ).val(100);
  $('#' + id_estimacionesAdicionales ).val(0);
  $('#' + id_tiempoEntregaAdicionales ).val("");
@@ -614,7 +616,7 @@ function validateFormAdicionales(){
   } else if ($('#' + id_ddl_atencionAdicionales + ' option:selected').val() == "") {
     alert("Selecciona un contacto de atención");
     return false;
-  } else if ($('#' + id_indirectosAdicionales).val() == "") {
+  } else if ($('#' + id_indirectosSuministrosAdicionales).val() == "") {
     alert("Ingresa un porcentaje de costos indirectos");
     return false;
   } else if ($('#' + id_tiempoEntregaAdicionales).val() == "") {
@@ -688,7 +690,7 @@ function pdfDocDescriptionAdicionales(vista_previa, images_array){
   var obra_ppto = {};
   var clave_adic=$('#'+id_claveAdicionales).val();
   var titulo_ppto=$('#'+id_tituloAdicionales).val();
-  var nombre_ppto=$('#'+id_nombreAdicionales).val();;
+  var nombre_ppto=$('#'+id_nombreAdicionales).val();
   var atencion=$('#'+id_ddl_atencionAdicionales+' option:selected').text();
   var desplegar_indirectos=$('#'+id_cb_indirectosAdicionales).prop('checked');
   var anticipo=$('#'+id_anticiposAdicionales).val();
@@ -697,12 +699,13 @@ function pdfDocDescriptionAdicionales(vista_previa, images_array){
   var tiempoEntrega=$('#'+id_tiempoEntregaAdicionales).val();
   var fisc_bool=$('#'+id_cb_fiscalesAdicionales).prop('checked');
   var banc_bool=$('#'+id_cb_bancariosAdicionales).prop('checked');
+  var iva_bool=$('#'+id_cb_ivaAdicionales).prop('checked');
   var fecha_ppto=new Date();
   var insumos = Object.assign({}, json_modalSuministros);
   insumos["manoDeObra"]=manoDeObraAInsumoAdicionales();
   console.log(insumos);
   //console.log(vista_previa, obra_ppto, clave_adic, titulo_ppto, nombre_ppto, atencion, json_modalSuministros, desplegar_indirectos, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, fecha_ppto);
-  var docDescription = generaPresupuestoAdicional(vista_previa, datos_obraAdicionales, clave_adic, titulo_ppto, nombre_ppto, atencion, insumos, desplegar_indirectos, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, fecha_ppto, images_array);
+  var docDescription = generaPresupuestoAdicional(vista_previa, datos_obraAdicionales, clave_adic, titulo_ppto, nombre_ppto, atencion, insumos, desplegar_indirectos, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, iva_bool, fecha_ppto, images_array);
   return docDescription;
 }
 
@@ -730,7 +733,7 @@ function datosAdicionalAdicionales(){
 // ingresados en el fomrulario
 function datosInsumosAdicionales(){
   var insumos = {
-    porcentaje_indirecto: $('#'+id_indirectosAdicionales).val(),
+    porcentaje_indirecto: $('#'+id_indirectosSuministrosAdicionales).val(),
     desplegar_indirectos: $('#'+id_cb_indirectosAdicionales).prop('checked'),
     materiales:{},
     materiales_nr: {}
@@ -871,7 +874,7 @@ function manoDeObraAInsumoAdicionales(){
     cantidad: 1,
     descripcion: "MANO DE OBRA",
     precio_lista: parseFloat(calculaCostoCopeo() * (1+json_modalCopeo.impuestos*0.01)).toFixed(2),
-    precio_cliente: parseFloat(calculaCostoCopeo() * (1+json_modalCopeo.impuestos*0.01) * (1+$('#'+id_indirectosAdicionales).val()*0.01) ).toFixed(2),
+    precio_cliente: parseFloat(calculaCostoCopeo() * (1+json_modalCopeo.impuestos*0.01) * (1+$('#'+id_indirectosSuministrosAdicionales).val()*0.01) ).toFixed(2),
   };
   return aux;
 }

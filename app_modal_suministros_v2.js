@@ -154,6 +154,7 @@ $('#' + id_boton_agregarModalSuministros).click(function() {
 $('#' + id_boton_guardarModalSuministros).click(function() {
   json_modalSuministros = recuperaDatosModalSuministros();
   alert("¡Insumos registrados!");
+  $('#' + id_modalSuministros).modal('toggle');
   //console.log(json_modalSuministros);
 });
 

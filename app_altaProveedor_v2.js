@@ -300,7 +300,7 @@ function actualizarTablaProveedores(){
 
 function actualizarTablaContactosProveedor(){
     console.log("Actualizando tabla contactos");
-    firebase.database().ref(rama_bd_insumos + "/proveedores/"+ uid_existente +"/contacto").on("value",function(snapshot){
+    firebase.database().ref(rama_bd_insumos + "/proveedores/"+ uid_existente +"/contacto").once("value",function(snapshot){
         if (snapshot.exists()){
           registro_contactos = snapshot.val();
         } else {

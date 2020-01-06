@@ -1,4 +1,4 @@
-function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_ppto, nombre_ppto, atencion, insumos_json, desplegar_indirectos, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, fecha_ppto, imagenes_evidencia){
+function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_ppto, nombre_ppto, atencion, insumos_json, desplegar_indirectos, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, iva_bool, fecha_ppto, imagenes_evidencia){
     var obra = obra_ppto.nombre;
     var direccion = obra_ppto.direccion;
     var cliente = obra_ppto.cliente;
@@ -777,7 +777,7 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
             },
             '','',
         ],
-        [
+        iva_bool?[
             {
                 colSpan:6,
                 border: [false, false, false, false],
@@ -793,7 +793,7 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
                 fontSize: 8,
             },
             '','','','','',
-        ],
+        ]:[{colSpan: 6, border: [false, false, false, false], margin: [0,2], text: ""},'','','','',''],
 
         [
             {
@@ -924,7 +924,7 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
          aux = {
            image: imagenes_evidencia[i],
            alignment: 'center',
-           width: 530.00,
+           width: 520.00,
            border: [false, false, false, false],
         };
         imagenes_tabla.push([aux]);
