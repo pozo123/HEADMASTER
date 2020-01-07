@@ -143,11 +143,15 @@ Nota: Todo float se ingresa a 2 decimales.
 
                                 - precio_venta: float
                                 - costo_suministros:float
-                                - utilidad: float
+                                - utilidad: float (cantidad)
                                 - precopeo: float
                                 - porcentaje_anticipo: float
-                                - porcentaje_indirectos: float
-                                - porcentaje_impuestos: float
+                                - porcentaje_indirectos: float (oficina)
+                                - porcentaje_impuestos: float (precopeo)
+                                - utilidad_suministros: float (escondida) *solo en adicionales
+                                - utilidad_copeo: float (escondida) *solo en adicionales
+                                - utilidad_proyecto: float (escondida) *solo en adicionales
+                                - utilidad_global: float (desplegable) *solo en adicionales
                                 - score
                                     - horas_programadas: (en horas)
                                     - costo_hora: float (2 decimales)
@@ -317,11 +321,15 @@ Nota: Todo float se ingresa a 2 decimales.
                                 - terminado: boolean (definir manera de actualizar este valor. Empieza en false)
                                 - precio_venta: float
                                 - costo_suministros:float
-                                - utilidad: float
+                                - utilidad: float (cantidad)
                                 - precopeo: float
                                 - porcentaje_anticipo: float
-                                - porcentaje_indirectos: float
-                                - porcentaje_impuestos: float
+                                - porcentaje_indirectos: float (oficina)
+                                - porcentaje_impuestos: float (precopeo)
+                                - utilidad_suministros: float (escondida)
+                                - utilidad_copeo: float (escondida)
+                                - utilidad_proyecto: float (escondida)
+                                - utilidad_global: float (desplegable)
                                 - score
                                     - horas_programadas: (en horas)
                                     - costo_hora: float (2 decimales)

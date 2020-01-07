@@ -694,12 +694,12 @@
                                   <input type="text" id="costoCopeoModalCalculadora" class="form-control" placeholder="Costo de copeo">
                               </div>
                               <div class="col-lg-4">
-                                  <label for="costoCopeoCargaModalCalculadora">Precopeo con carga social:</label>
-                                  <input type="text" id="costoCopeoCargaModalCalculadora" class="form-control" placeholder="Copeo con carga social">
-                              </div>
-                              <div class="col-lg-4">
                                   <label for="impuestosModalCalculadora">Carga social:</label>
                                   <input type="text" id="impuestosModalCalculadora" class="form-control" placeholder="Porcentaje CS">
+                              </div>
+                              <div class="col-lg-4">
+                                  <label for="costoCopeoCargaModalCalculadora">Precopeo con carga social:</label>
+                                  <input type="text" id="costoCopeoCargaModalCalculadora" class="form-control" placeholder="Copeo con carga social">
                               </div>
                           </div>
                           <br>
@@ -712,6 +712,25 @@
                           </div>
                           <br>
                           <hr class="style2">
+                          <br>
+                          <div class="form-row align-items-center">
+                              <div class="col-lg-3">
+                                  <label for="utilidadSuministrosModalCalculadora">Utilidad suministros (%):</label>
+                                  <input type="number" id="utilidadSuministrosModalCalculadora" class="form-control" placeholder="Porcentaje">
+                              </div>
+                              <div class="col-lg-3">
+                                  <label for="utilidadCopeoModalCalculadora">Utilidad MO (%):</label>
+                                  <input type="number" id="utilidadCopeoModalCalculadora" class="form-control" placeholder="Porcentaje">
+                              </div>
+                              <div class="col-lg-3">
+                                  <label for="utilidadProyectosModalCalculadora">Utilidad proyectos (%):</label>
+                                  <input type="number" id="utilidadProyectosModalCalculadora" class="form-control" placeholder="Porcentaje">
+                              </div>
+                              <div class="col-lg-3">
+                                  <label for="utilidadDesplegadaModalCalculadora">Utilidad desplegada (%):</label>
+                                  <input type="number" id="utilidadDesplegadaModalCalculadora" class="form-control" placeholder="Porcentaje">
+                              </div>
+                          </div>
                           <br>
                           <div class="form-row align-items-center">
                               <div class="col-lg-4">
@@ -2777,8 +2796,8 @@
                                             </br>
                                             <h4>Suministros</h4>
                                             <div class="form-group">
-                                                <div class="col-lg-4">
-                                                    <label for="indirectosAdicionales">Porcentaje indirectos:</label>
+                                                <div class="col-lg-4 hidden">
+                                                    <label for="indirectosAdicionales">Utilidad insumos (%):</label>
                                                     <input type="number" id="indirectosSuministrosAdicionales"class="form-control" placeholder="Indirectos">
                                                 </div>
                                                 <div class="row">
@@ -2791,10 +2810,6 @@
                                             </br>
                                             <h4>Copeo</h4>
                                             <div class="form-group">
-                                                <div class="col-lg-4">
-                                                    <label for="indirectosAdicionales">Porcentaje indirectos:</label>
-                                                    <input type="number" id="indirectosCopeoAdicionales"class="form-control" placeholder="Indirectos">
-                                                </div>
                                                 <div class="row">
                                                   <div class="col-lg-4"></div>
                                                   <div class="col-lg-4">
@@ -2805,10 +2820,6 @@
                                             <br/>
                                             <h4>Calculadora</h4>
                                             <div class="form-group">
-                                                <div class="col-lg-4">
-                                                    <label for="indirectosAdicionales">Porcentaje indirectos:</label>
-                                                    <input type="number" id="indirectosGlobalAdicionales"class="form-control" placeholder="Indirectos">
-                                                </div>
                                                 <div class="row">
                                                   <div class="col-lg-4"></div>
                                                   <div class="col-lg-4">
@@ -2867,7 +2878,7 @@
                                                 <input type="checkbox" class="custom-control-input" id="cb_ivaAdicionales">
                                                 <label class="custom-control-label" for="cb_ivaAdicionales">Agregar información para IVA exento</label>
                                             </div>
-                                            <div class="custom-control custom-checkbox">
+                                            <div class="custom-control custom-checkbox hidden">
                                                 <input type="checkbox" class="custom-control-input" id="cb_indirectosAdicionales">
                                                 <label class="custom-control-label" for="cb_indirectosAdicionales">Desplegar costos indirectos</label>
                                             </div>

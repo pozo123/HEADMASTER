@@ -1,4 +1,4 @@
-function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_ppto, nombre_ppto, atencion, insumos_json, desplegar_indirectos, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, iva_bool, fecha_ppto, imagenes_evidencia){
+function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_ppto, nombre_ppto, atencion, insumos_json, porcentaje_indirecto, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, iva_bool, fecha_ppto, imagenes_evidencia){
     var obra = obra_ppto.nombre;
     var direccion = obra_ppto.direccion;
     var cliente = obra_ppto.cliente;
@@ -50,10 +50,6 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
             alignment: 'left',
         }
     }
-
-    var costo_directo = calculaCostoDirectoPdfPresupuestoAdicional(insumos_json);
-    var costo_indirecto = desplegar_indirectos?costo_directo*($('#'+id_indirectosAdicionales).val()*0.01):0;
-    var subtotal=costo_directo+costo_indirecto;
     //________________________________________________________________________________________
 
     var tituloF = "";
@@ -268,7 +264,9 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
       },
     ];
     bod.push(aux);
+    var total = 0;
     for(key in insumos_json){
+        total += insumos_json[key].precio_cliente * insumos_json[key].cantidad;
         aux = [
           {
             text:insumos_json[key].unidad,
@@ -288,20 +286,27 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
           },
           '',
           {
-            text:formatMoney(desplegar_indirectos?insumos_json[key].precio_lista:insumos_json[key].precio_cliente),
+            text:formatMoney(insumos_json[key].precio_cliente),
             alignment:'right',
             fontSize: 9,
           },
           {
-            text: formatMoney(insumos_json[key].cantidad * (desplegar_indirectos?insumos_json[key].precio_lista:insumos_json[key].precio_cliente)),
+            text: formatMoney(insumos_json[key].cantidad * insumos_json[key].precio_cliente),
             alignment:'right',
             fontSize: 9,
           },
         ];
         bod.push(aux);
+        console.log(insumos_json[key].precio_cliente);
+        console.log(insumos_json[key].precio_lista);
     }
+
+    var costo_directo = total;
+    var costo_indirecto = costo_directo*(porcentaje_indirecto*0.01);
+    var subtotal=costo_directo+costo_indirecto;
+
     var bod_tot = [];
-    if(desplegar_indirectos){
+    if(porcentaje_indirecto>0){
       bod_tot = [
           [
               {
@@ -370,7 +375,7 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
         [
             {
                 colSpan:2,
-                border: [false, !desplegar_indirectos, false, false],
+                border: [false, !porcentaje_indirecto>0, false, false],
                 text: '',
                 margin: [0,0],
                 alignment: 'center',
@@ -379,7 +384,7 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
             '',
             {
                 colSpan:2,
-                border: [false, !desplegar_indirectos, true, false],
+                border: [false, !porcentaje_indirecto>0, true, false],
                 text: 'Subtotal',
                 margin: [0,0],
                 alignment: 'right',
@@ -971,17 +976,3 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
     };
     return pdfPresupuesto;
 }
-
-function calculaCostoDirectoPdfPresupuestoAdicional(insumos_json){
-  var total = 0;
-  var suministro={};
-  for (key in insumos_json){
-    suministro = insumos_json[key];
-    if($('#'+id_cb_indirectosAdicionales).prop('checked')){
-        total += suministro.precio_lista * suministro.cantidad;
-    } else {
-        total += suministro.precio_cliente * suministro.cantidad;
-    }
-  }
-  return total;
-};

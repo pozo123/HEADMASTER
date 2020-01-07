@@ -14,10 +14,7 @@ var id_tituloAdicionales = "tituloAdicionales";
 var id_ddl_atencionAdicionales = "ddl_atencionAdicionales";
 var id_indirectosSuministrosAdicionales = "indirectosSuministrosAdicionales";
 var id_boton_suministrosAdicionales = "botonSuministrosAdicionales";
-var id_cb_indirectosAdicionales = "cb_indirectosAdicionales";
-var id_indirectosCopeoAdicionales = "indirectosCopeoAdicionales";
 var id_boton_copeoAdicionales = "botonCopeoAdicionales";
-var id_indirectosGlobalAdicionales = "indirectosGlobalAdicionales";
 var id_boton_calculadoraAdicionales = "botonCalculadoraAdicionales";
 var id_ddl_requisitosAdicionales = "ddl_requisitosAdicionales";
 var id_ddl_exclusionesAdicionales = "ddl_exclusionesAdicionales";
@@ -27,6 +24,7 @@ var id_tiempoEntregaAdicionales = "tiempoEntregaAdicionales";
 var id_cb_bancariosAdicionales = "cb_bancariosAdicionales";
 var id_cb_fiscalesAdicionales = "cb_fiscalesAdicionales";
 var id_cb_ivaAdicionales = "cb_ivaAdicionales";
+var id_cb_indirectosAdicionales = "cb_indirectosAdicionales";
 var id_botonpdfAdicionales = "botonpdfAdicionales";
 var id_botonRegistrarAdicionales = "botonRegistrarAdicionales";
 var id_botonBorrarAdicionales = "botonBorrarAdicionales";
@@ -194,13 +192,17 @@ $('#' + id_boton_calculadoraAdicionales).click(function() {
     json_modalCalculadora["porcentaje_indirectos"] = 10;
     json_modalCalculadora["utilidad"] = 0;
     json_modalCalculadora["precio_venta"] = 0;
+    json_modalCalculadora["utilidad_copeo"] = 0;
+    json_modalCalculadora["utilidad_global"] = 0;
+    json_modalCalculadora["utilidad_proyecto"] = 0;
+    json_modalCalculadora["utilidad_suministros"] = 0;
   }
   // actualizar variables
   var totales = calculaCostoSuministros();
   json_modalCalculadora["costo_suministros"] = totales.costos;
   json_modalCalculadora["precopeo"] = calculaCostoCopeo();
   json_modalCalculadora["porcentaje_impuestos"] = extraeImpuesto();
-  json_modalCalculadora["precio_venta"] = parseFloat(totales.precio_venta + json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01)*(1+$('#'+ id_indirectosSuministrosAdicionales).val()*0.01)).toFixed(2);
+  // json_modalCalculadora["precio_venta"] = parseFloat(totales.precio_venta + json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01)*(1+$('#'+ id_indirectosSuministrosAdicionales).val()*0.01)).toFixed(2);
   //console.log(json_modalCalculadora);
   modalCalculadora(json_modalCalculadora, false, true); // desplegar modal
 });
@@ -208,11 +210,16 @@ $('#' + id_boton_calculadoraAdicionales).click(function() {
 // Función para actualizar el campo porcentaje indirectos y los precios finales
 // cuando se cierra el modal calculadora
 $('#' + id_modalCalculadora).on('hidden.bs.modal', function () {
-    var porcentaje = 100 * (json_modalCalculadora["precio_venta"]-json_modalCalculadora["costo_suministros"]- json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01))/ (json_modalCalculadora["costo_suministros"]+json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01));
-    if(parseFloat(porcentaje).toFixed(2) !== $('#'+ id_indirectosSuministrosAdicionales).val()){
-      $('#'+ id_indirectosSuministrosAdicionales).val(parseFloat(porcentaje).toFixed(2));
-      actualizaPreciosClienteAdicionales();
-    }
+  $('#'+ id_indirectosSuministrosAdicionales).val(json_modalCalculadora["utilidad_suministros"]);
+  actualizaPreciosClienteAdicionales();
+  /* calculo del porcentaje indirecto para suministros
+  var porcentaje = json_modalCalculadora["utilidad_suministros"]==undefined?0:json_modalCalculadora["utilidad_suministros"];
+  // var porcentaje = 100 * (json_modalCalculadora["precio_venta"]-json_modalCalculadora["costo_suministros"]- json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01))/ (json_modalCalculadora["costo_suministros"]+json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01));
+  if(parseFloat(porcentaje).toFixed(2) !== $('#'+ id_indirectosSuministrosAdicionales).val()){
+    $('#'+ id_indirectosSuministrosAdicionales).val(parseFloat(porcentaje).toFixed(2));
+    actualizaPreciosClienteAdicionales();
+  }
+  */
 })
 
 // Función para actualizar el campo estimaciones cuando cambia el campo anticipos
@@ -581,7 +588,7 @@ function resetForm1Adicionales (){
  $('#' + id_nombreAdicionales ).val("");
  $('#' + id_tituloAdicionales ).val("");
  $('#' + id_ddl_atencionAdicionales ).empty();
- $('#' + id_indirectosSuministrosAdicionales).val(10);
+ $('#' + id_indirectosSuministrosAdicionales).val(0);
  $('#' + id_anticiposAdicionales ).val(100);
  $('#' + id_estimacionesAdicionales ).val(0);
  $('#' + id_tiempoEntregaAdicionales ).val("");
@@ -692,7 +699,6 @@ function pdfDocDescriptionAdicionales(vista_previa, images_array){
   var titulo_ppto=$('#'+id_tituloAdicionales).val();
   var nombre_ppto=$('#'+id_nombreAdicionales).val();
   var atencion=$('#'+id_ddl_atencionAdicionales+' option:selected').text();
-  var desplegar_indirectos=$('#'+id_cb_indirectosAdicionales).prop('checked');
   var anticipo=$('#'+id_anticiposAdicionales).val();
   var exc_lista=extraeListaGeneric(select_exclusiones, json_exclusiones);
   var reqs_lista=extraeListaGeneric(select_requisitos, json_requisitos);
@@ -703,9 +709,12 @@ function pdfDocDescriptionAdicionales(vista_previa, images_array){
   var fecha_ppto=new Date();
   var insumos = Object.assign({}, json_modalSuministros);
   insumos["manoDeObra"]=manoDeObraAInsumoAdicionales();
+  if(json_modalCalculadora["score"]["horas_programadas"]>0){
+    insumos["proyecto"]=proyectosInsumoAdicionales();
+  }
   console.log(insumos);
   //console.log(vista_previa, obra_ppto, clave_adic, titulo_ppto, nombre_ppto, atencion, json_modalSuministros, desplegar_indirectos, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, fecha_ppto);
-  var docDescription = generaPresupuestoAdicional(vista_previa, datos_obraAdicionales, clave_adic, titulo_ppto, nombre_ppto, atencion, insumos, desplegar_indirectos, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, iva_bool, fecha_ppto, images_array);
+  var docDescription = generaPresupuestoAdicional(vista_previa, datos_obraAdicionales, clave_adic, titulo_ppto, nombre_ppto, atencion, insumos, json_modalCalculadora["utilidad_global"], anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, iva_bool, fecha_ppto, images_array);
   return docDescription;
 }
 
@@ -786,6 +795,8 @@ function getAllFirebaseStorageGeneric(ruta){
           console.log(result);
           var total = result.items.length;
           var cont = 0;
+          var indice;
+          var aux_array;
           result.items.forEach(function(imageRef) {
             imageRef.getDownloadURL().then(function(url) {
               images_url.push(url);
@@ -874,9 +885,24 @@ function manoDeObraAInsumoAdicionales(){
     cantidad: 1,
     descripcion: "MANO DE OBRA",
     precio_lista: parseFloat(calculaCostoCopeo() * (1+json_modalCopeo.impuestos*0.01)).toFixed(2),
-    precio_cliente: parseFloat(calculaCostoCopeo() * (1+json_modalCopeo.impuestos*0.01) * (1+$('#'+id_indirectosSuministrosAdicionales).val()*0.01) ).toFixed(2),
+    precio_cliente: parseFloat(calculaCostoCopeo() * (1+json_modalCopeo.impuestos*0.01) * (1+json_modalCalculadora["utilidad_copeo"]*0.01) ).toFixed(2),
   };
   return aux;
+}
+
+function proyectosInsumoAdicionales(){
+  var aux = {
+    unidad: "Hrs",
+    cantidad: json_modalCalculadora["score"]["horas_programadas"],
+    descripcion: "PROYECTO",
+    precio_lista: parseFloat(json_modalCalculadora["score"]["costo_hora"]).toFixed(2),
+    precio_cliente: parseFloat(json_modalCalculadora["score"]["costo_hora"]*(1+json_modalCalculadora["utilidad_proyecto"]*0.01)).toFixed(2),
+  };
+  return aux;
+  /*
+  precio_lista: parseFloat(json_modalCalculadora["score"]["horas_programadas"]*json_modalCalculadora["score"]["costo_hora"]).toFixed(2),
+  precio_cliente: parseFloat(json_modalCalculadora["score"]["horas_programadas"]*json_modalCalculadora["score"]["costo_hora"]*(1+json_modalCalculadora["utilidad_proyecto"]*0.01)).toFixed(2),
+  */
 }
 
 //=============================================================================
