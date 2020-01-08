@@ -33,6 +33,7 @@ $('#' + id_tab_definicionesSuministros).click(function() {
       llenaDdlGeneric(id_ddl_categoriaDefincionesSuministros, categorias, "nombre");
       $('#'+id_ddl_categoriaDefincionesSuministros).val(index);
     });
+    $("input[name=tipoDefiniciones]").filter("[value=categoria]").prop('checked', true);
     resetFormDefinicionesSuministros();
     generaCodigoDefincionesSuministros();
     actualizarTablaDefinicionesSuministros();
@@ -120,7 +121,8 @@ $('#' + id_ddl_familiaDefincionesSuministros).change(function(){
 // ----------------------- FUNCIONES NECESARIAS -------------------------------
 function resetFormDefinicionesSuministros(){
   $('#' + id_nombreDefinicionesSuministros).val("");
-  $('#' + id_codigoDefinicionesSuministros).val("");
+  // $('#' + id_codigoDefinicionesSuministros).val("");
+  generaCodigoDefincionesSuministros();
   existeDefinicionSuministros = false;
   uid_existente = "";
 }

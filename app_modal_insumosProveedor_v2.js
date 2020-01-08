@@ -133,6 +133,8 @@ $('#' + id_boton_guardarModalInsumosProveedor).click(function() {
     insumo_update["listas/productos/" + key + "/"+ uid_modalProveedor] = insumos_json[key];
     for(key2 in insumos_json[key]){
       insumo_update["listas/marcas/" + key2 + "/"+ key] = true;
+      insumo_update["historial/productos/" + key + "/" + uid_modalProveedor + "/" + key2 + "/" + insumos_json[key][key2]["fecha_ingreso"]] = insumos_json[key][key2];
+      insumo_update["historial/proveedores/" + uid_modalProveedor + "/" + key + "/" + key2 + "/" + insumos_json[key][key2]["fecha_ingreso"]] = insumos_json[key][key2];
     }
   }
 
@@ -228,7 +230,9 @@ $('#' + id_precioModalInsumosProveedor).focusout(function(){
 $('#' + id_descuentoModalInsumosProveedor ).change(function(){
   if($('#'+id_descuentoModalInsumosProveedor ).val() == ""){
 		$('#' + id_descuentoModalInsumosProveedor ).val(0);
-	}
+	}else{
+    $('#' + id_descuentoModalInsumosProveedor).val(parseFloat($('#' + id_descuentoModalInsumosProveedor).val()).toFixed(2));
+  }
   $('#' + id_precioFinalModalInsumosProveedor ).val(formatMoney(deformatMoney($('#' + id_precioModalInsumosProveedor ).val()) * (1 - $('#' + id_descuentoModalInsumosProveedor ).val()*0.01)));
 });
 

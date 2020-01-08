@@ -8,6 +8,7 @@ var id_ddl_obraAdicionales = "ddl_obraAdicionales";
 var id_ddl_adicionalAdicionales = "ddl_adicionalAdicionales";
 var id_claveAdicionales = "claveAdicionales";
 var id_ddl_solicitudAdicionales = "ddl_solicitudAdicionales";
+var id_convenioAdicionales = "convenioAdicionales";
 var id_notasAdicionales = "notasAdicionales";
 var id_nombreAdicionales = "nombreAdicionales";
 var id_tituloAdicionales = "tituloAdicionales";
@@ -25,6 +26,7 @@ var id_cb_bancariosAdicionales = "cb_bancariosAdicionales";
 var id_cb_fiscalesAdicionales = "cb_fiscalesAdicionales";
 var id_cb_ivaAdicionales = "cb_ivaAdicionales";
 var id_cb_indirectosAdicionales = "cb_indirectosAdicionales";
+var id_observacionesAdicionales = "observacionesAdicionales"
 var id_botonpdfAdicionales = "botonpdfAdicionales";
 var id_botonRegistrarAdicionales = "botonRegistrarAdicionales";
 var id_botonBorrarAdicionales = "botonBorrarAdicionales";
@@ -396,16 +398,18 @@ function llenarFormPropuestaAdicionales(clave_adic){
       option.text = option.value = propuesta.id_solicitud;
       select.appendChild(option);
       $('#'+ id_ddl_solicitudAdicionales).val(propuesta.id_solicitud);
-      $('#'+ id_nombreAdicionales ).val(propuesta.notas);
-      $('#'+ id_nombreAdicionales ).val(propuesta.nombre);
-      $('#'+ id_tituloAdicionales ).val(propuesta.titulo);
-      $('#'+ id_ddl_atencionAdicionales ).val(propuesta.atencion);
-      $('#'+ id_indirectosSuministrosAdicionales ).val(propuesta.cuantificacion.porcentaje_indirecto);
-      $('#'+ id_anticiposAdicionales ).val(propuesta.porcentaje_anticipo);
-      $('#'+ id_estimacionesAdicionales ).val(100-propuesta.porcentaje_anticipo);
-      $('#'+ id_tiempoEntregaAdicionales ).val(propuesta.tiempo_entrega);
-      $('#' + id_cb_bancariosAdicionales ).prop('checked', propuesta.datos_bancarios);
-      $('#' + id_cb_fiscalesAdicionales ).prop('checked', propuesta.datos_fiscales);
+      $('#'+ id_convenioAdicionales).val(propuesta.convenio);
+      $('#'+ id_nombreAdicionales).val(propuesta.notas);
+      $('#'+ id_nombreAdicionales).val(propuesta.nombre);
+      $('#'+ id_tituloAdicionales).val(propuesta.titulo);
+      $('#'+ id_ddl_atencionAdicionales).val(propuesta.atencion);
+      $('#'+ id_indirectosSuministrosAdicionales).val(propuesta.cuantificacion.porcentaje_indirecto);
+      $('#'+ id_anticiposAdicionales).val(propuesta.porcentaje_anticipo);
+      $('#'+ id_estimacionesAdicionales).val(100-propuesta.porcentaje_anticipo);
+      $('#'+ id_tiempoEntregaAdicionales).val(propuesta.tiempo_entrega);
+      $('#' + id_cb_bancariosAdicionales).prop('checked', propuesta.datos_bancarios);
+      $('#' + id_cb_fiscalesAdicionales).prop('checked', propuesta.datos_fiscales);
+      $('#' + id_observacionesAdicionales).val(propuesta.observaciones);
       var aux = [];
       for (key in propuesta.requisitos){
         aux.push(key);
@@ -584,6 +588,7 @@ function resetForm1Adicionales (){
  $('#' + id_ddl_adicionalAdicionales ).empty();
  $('#' + id_claveAdicionales ).val("");
  $('#' + id_ddl_solicitudAdicionales ).empty();
+ $('#' + id_convenioAdicionales ).val("");
  $('#' + id_notasAdicionales ).val("");
  $('#' + id_nombreAdicionales ).val("");
  $('#' + id_tituloAdicionales ).val("");
@@ -596,6 +601,7 @@ function resetForm1Adicionales (){
  $('#' + id_cb_fiscalesAdicionales ).prop('checked', false);
  $('#' + id_cb_ivaAdicionales ).prop('checked', false);
  $('#' + id_cb_indirectosAdicionales ).prop('checked', false);
+ $('#' + id_observacionesAdicionales).val("");
  flagCuantificacionAdicionales = false;
  flagDownloadAdicionales = false;
  json_modalSuministros={};
@@ -764,6 +770,7 @@ function datosInsumosAdicionales(){
 function datosPropuestaAdicionales(url){
   var propuesta = {
     id_solicitud: $('#' + id_ddl_solicitudAdicionales).val(),
+    convenio: $('#' + id_convenioAdicionales).val(),
     nombre: $('#'+id_nombreAdicionales).val(),
     titulo: $('#'+id_tituloAdicionales).val(),
     atencion: $('#'+id_ddl_atencionAdicionales).val(),
@@ -773,6 +780,7 @@ function datosPropuestaAdicionales(url){
     tiempo_entrega: $('#'+id_tiempoEntregaAdicionales).val(),
     datos_bancarios: $('#'+id_cb_bancariosAdicionales).prop('checked'),
     datos_fiscales: $('#'+id_cb_fiscalesAdicionales).prop('checked'),
+    observaciones: $('#'+id_observacionesAdicionales).val(),
     aprobada: false,
     url_evidencia: url,
     cuantificacion: datosInsumosAdicionales(),
@@ -1027,6 +1035,8 @@ $('#' + id_botonTerminarAdicionales).click(function() {
         uploadAllImagesGeneric(storage_path, fotos_seleccionadas).then(function (url_array){
           adicional_update["adicionales/propuestas/" + obra + "/listas/pendientes/"+adicional] = null;
           adicional_update["adicionales/propuestas/" + obra + "/listas/terminadas/"+adicional] = true;
+          adicional_update["adicionales/propuestas/" + obra + "/propuestas/" + adicional + "/aprobada"] = true;
+          adicional_update["adicionales/propuestas/" + obra + "/propuestas/" + adicional + "/precio_venta_aprobado"] = deformatMoney($('#'+id_precioVentaAdicionales).val());
           adicional_update["procesos/" + obra + "/procesos/ADIC/subprocesos/"+adicional] = propuesta.proceso;
           adicional_update["copeo/" + obra + "/ADIC/"+adicional] = propuesta.copeo;
           adicional_update["cuantificacion/" + obra + "/ADIC/"+adicional] = propuesta.cuantificacion;

@@ -284,7 +284,7 @@ function resetFormModalCopeo (){
 
 // Metodo para limpiar los datos del formulario
 function resetFormModalCopeo_entrada(){
-  $('#'+id_carga_socialModalCopeo).val(cargaSocialFlag?"":34); // no se muestra la carga social a los supervisores
+  $('#'+id_carga_socialModalCopeo).val(cargaSocialFlag?"":54); // no se muestra la carga social a los supervisores
   $('#'+id_carga_socialModalCopeo).prop("disabled", true);
   $('#'+id_diasModalCopeo).val("5");
   $('#'+id_multModalCopeo).val("1");

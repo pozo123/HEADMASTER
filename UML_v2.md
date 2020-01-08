@@ -262,6 +262,7 @@ Nota: Todo float se ingresa a 2 decimales.
                     - propuestas
                         - id_subproceso
                             - id_solicitud
+                            - convenio: string
                             - notas: string
                             - nombre: string
                             - titulo: string
@@ -276,6 +277,7 @@ Nota: Todo float se ingresa a 2 decimales.
                             - tiempo_entrega: string
                             - datos_bancarios: boolean
                             - datos_fiscales: boolean
+                            - observaciones: boolean
                             - aprobada: boolean
                             - url_evidencia: string
                             - url_formato: string
@@ -662,6 +664,28 @@ Nota: Todo float se ingresa a 2 decimales.
               - unidades
                   - unidad
                       - id_producto: true
+
+          - historial 
+              - productos
+                  - id_producto
+                      - id_proveedores
+                          - id_marca
+                              - fecha_ingreso
+                                  - precio: float
+                                  - descuento: float
+                                  - fecha_ingreso: timestamp
+                                  - fecha_cotizacion: timestamp
+                                  - catalogoProveedor: string
+              - proveedores
+                  - id_proveedor
+                      - id_producto
+                          - id_marca
+                              - fecha_ingreso
+                                  - precio: float
+                                  - descuento: float
+                                  - fecha_ingreso: timestamp
+                                  - fecha_cotizacion: timestamp
+                                  - catalogoProveedor: string
 
     - matriciales
         - obras

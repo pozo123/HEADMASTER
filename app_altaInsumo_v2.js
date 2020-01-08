@@ -14,6 +14,8 @@ var id_ddl_unidadInsumos = "ddl_unidadInsumos";
 var id_libreInsumos = "libreInsumos";
 var id_catalogoInsumos = "catalogoInsumos";
 var id_satInsumos = "satInsumos";
+var id_cb_editarInsumos = "cb_editarInsumos";
+var id_div_cb_editarInsumos = "div_cb_editarInsumos";
 
 var id_ddl_proveedorInsumos = "ddl_proveedorInsumos";
 var id_precioInsumos = "precioInsumos";
@@ -161,6 +163,8 @@ $('#' + id_boton_AgregarInsumos).click(function() {
                 for (key2 in proveedores_json[key]){
                   insumo_update["listas/proveedores/" + key + "/"+ uid_existente + "/"+ key2 ] = proveedores_json[key][key2];
                   insumo_update["listas/marcas/" + key2 +"/"+ uid_existente] = true;
+                  insumo_update["historial/productos/" + uid_existente + "/" + key + "/" + key2 + "/" + proveedores_json[key][key2]["fecha_ingreso"]] = proveedores_json[key][key2];
+                  insumo_update["historial/proveedores/" + key + "/" + uid_existente + "/" + key2 + "/" + proveedores_json[key][key2]["fecha_ingreso"]] = proveedores_json[key][key2];
                 }
               }
               console.log(insumo_update);
@@ -188,6 +192,8 @@ $('#' + id_boton_AgregarInsumos).click(function() {
                 for (key2 in proveedores_json[key]){
                   insumo_update["listas/proveedores/" + key + "/"+ regKey + "/"+ key2 ] = proveedores_json[key][key2];
                   insumo_update["listas/marcas/" + key2 +"/"+ regKey] = true;
+                  insumo_update["historial/productos/" + regKey + "/" + key + "/" + key2 + "/" + proveedores_json[key][key2]["fecha_ingreso"]] = proveedores_json[key][key2];
+                  insumo_update["historial/proveedores/" + key + "/" + regKey + "/" + key2 + "/" + proveedores_json[key][key2]["fecha_ingreso"]] = proveedores_json[key][key2];
                 }
               }
 
@@ -262,6 +268,14 @@ $('#' + id_satInsumos).keypress(function(e){
     charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ-/0123456789",e)
 });
 
+$('#' + id_cb_editarInsumos).change(function(){
+  if($('#' + id_cb_editarInsumos).prop('checked')){
+    enableAllInsumos();
+  } else {
+    disableAllInsumos();
+  }
+});
+
 // Función para delimitar los caracteres permitidos en el campo precio
 $('#' + id_precioInsumos).keypress(function(e){
     charactersAllowed("0123456789.",e);
@@ -295,7 +309,9 @@ $('#' + id_precioInsumos).focusout(function(){
 $('#' + id_descuentoInsumos).change(function(){
   if($('#'+id_descuentoInsumos).val() == ""){
 		$('#' + id_descuentoInsumos).val(0);
-	}
+	} else {
+    $('#' + id_descuentoInsumos).val(parseFloat($('#' + id_descuentoInsumos).val()).toFixed(2));
+  }
   $('#' + id_precioFinalInsumos).val(formatMoney(deformatMoney($('#' + id_precioInsumos).val()) * (1 - $('#' + id_descuentoInsumos).val()*0.01)));
 });
 
@@ -319,6 +335,9 @@ function resetFormInsumo(){
   existe_insumo=false;
   uid_existente="NOHAY";
   resetProveedorInsumo();
+  $('#' + id_div_cb_editarInsumos).addClass('hidden');
+  $('#' + id_div_cb_editarInsumos).prop('checked', true);
+  enableAllInsumos();
   // actualizarTablaProveedoresInsumo();
 }
 
@@ -510,6 +529,9 @@ $(document).on('click','.editarInsumo', function(){
     $('#' + id_satInsumos ).val(data[11]);
     $('#' + id_libreInsumos ).val(data[1].slice(-2));
     actualizarTablaProveedoresInsumo();
+    $('#' + id_div_cb_editarInsumos).removeClass('hidden');
+    $('#' + id_div_cb_editarInsumos).prop('checked', false);
+    disableAllInsumos();
 });
 
 // Función para actualizar y configurar la tabla de proveedores
@@ -577,8 +599,8 @@ $(document).on('click','.editarProveedoresInsumos', function(){
     $('#' + id_precioFinalInsumos).val(formatMoney(deformatMoney(data[4])*(1- data[5]*0.01)) );
     $('#' + id_ddl_marcaProveedorInsumos).val(data[2]);
     $('#' + id_catalogoProveedorInsumos).val(data[8]);
-    $('#' + id_fecha_cotizacionInsumos).val(data[6]);
-    $('#' + id_fecha_ingresoCotizacionInsumos).val(data[7]);
+    $('#' + id_fecha_ingresoCotizacionInsumos).val(data[6]);
+    $('#' + id_fecha_cotizacionInsumos).val(data[7]);
 });
 
 // Función para eliminar un renglón de tabla al hacer clic en el icono rojo
@@ -604,7 +626,7 @@ function recuperaDatosProveedoresInsumo(){
     var f_cotizacion = data[7].split('.');
     marcaInsumo = { // generar el json con los campos correspondientes
       precio: deformatMoney(data[4]),
-      descuento: data[5],
+      descuento: parseFloat(data[5]),
       fecha_ingreso: new Date(f_ingreso[0], f_ingreso[1] - 1, f_ingreso[2]).getTime(),
       fecha_cotizacion: new Date(f_cotizacion[0], f_cotizacion[1] - 1, f_cotizacion[2]).getTime(),
       catalogo_proveedor: data[8]
@@ -727,4 +749,24 @@ function existeProveedorInsumos(proveedor, marca){
     }
   });
   return respuesta;
+}
+
+function disableAllInsumos(){
+  $('#' + id_descripcionInsumos).prop('disabled',true);
+  $('#' + id_ddl_categoriaInsumos).prop('disabled',true);
+  $('#' + id_ddl_familiaInsumos).prop('disabled',true);
+  $('#' + id_ddl_subfamiliaInsumos).prop('disabled',true);
+  $('#' + id_ddl_unidadInsumos).prop('disabled',true);
+  $('#' + id_libreInsumos).prop('disabled',true);
+  $('#' + id_satInsumos).prop('disabled',true);
+}
+
+function enableAllInsumos(){
+  $('#' + id_descripcionInsumos).prop('disabled', false);
+  $('#' + id_ddl_categoriaInsumos).prop('disabled', false);
+  $('#' + id_ddl_familiaInsumos).prop('disabled', false);
+  $('#' + id_ddl_subfamiliaInsumos).prop('disabled', false);
+  $('#' + id_ddl_unidadInsumos).prop('disabled', false);
+  $('#' + id_libreInsumos).prop('disabled', false);
+  $('#' + id_satInsumos).prop('disabled', false);
 }
