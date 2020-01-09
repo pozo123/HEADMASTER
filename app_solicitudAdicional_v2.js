@@ -148,25 +148,6 @@ function cargarDllAnexosSolicitudAdicional(){
   });
 }
 
-// Metodo para cargar las obras en un ddl generico
-// id_objeto = ddl de la obra
-function ddlObrasActivasGeneric (id_objeto){
-  $('#' + id_objeto).empty();
-  var select = document.getElementById(id_objeto);
-  var option = document.createElement('option');
-  option.style = "display:none";
-  option.text = option.value = "";
-  select.appendChild(option);
-  var obra;
-  firebase.database().ref(rama_bd_obras + "/listas/obras_activas").orderByChild('nombre').on('child_added',function(snapshot){
-      obra = snapshot.val();
-      option = document.createElement('option');
-      option.value = snapshot.key;
-      option.text = obra.nombre;
-      select.appendChild(option);
-  });
-}
-
 // Metodo para cargar las imagenes al ddl despues de ser cargadas a la memoria local
 // id_ddl = ddl de las imagenes
 // id_slim_select = slim_select asociado a ese ddl
@@ -415,28 +396,6 @@ function getContadorSolicitudAdicional(clave_obra){
   });
 }
 
-// Metodo para llenar ddl de atenciones de una obra (depende del cliente registrado)
-// id_objeto = ddl de las atenciones
-function llenaDdlAtnGeneric(id_objeto, obra){
-  firebase.database().ref(rama_bd_obras + "/obras/" + obra +"/id_cliente").on('value',function(snapshot){
-    var cliente_id = snapshot.val();
-    $('#' + id_objeto).empty();
-    var select = document.getElementById(id_objeto);
-    var option = document.createElement('option');
-    option.style = "display:none";
-    option.text = option.value = "";
-    select.appendChild(option);
-    var atencion;
-    firebase.database().ref(rama_bd_clientes + "/contactos/"+ cliente_id).on('child_added',function(snapshot){
-      atencion = snapshot.val();
-      option = document.createElement('option');
-      option.value = snapshot.key;
-      option.text = atencion.prefijo + " " + atencion.nombre_completo;
-      select.appendChild(option);
-    });
-  });
-}
-
 // Metodo para generar el pdf de una solicitud
 // vista_previa = boolean (true: no parece logo, false: aparece logo)
 function generaPDFsolicitudAdicional(vista_previa){
@@ -640,48 +599,6 @@ $('#' + id_boton_terminarSolicitudAdicional).click(function() {
     });
   }
 });
-
-function uploadAllImagesGeneric(ruta, fotos_seleccionadas){
-  var storageRef = firebase.storage().ref(ruta);
-  var images_url = [];
-  var promise = new Promise(function(resolve, reject) {
-    var name_array;
-    var metadata;
-    var cont = 0;
-    var name_foto='';
-    for(var i=0; i<fotos_seleccionadas.length; i++){
-      name_array = fotos_seleccionadas[i].name.split(".");
-      metadata = {contentType: 'image/'+ name_array[name_array.length-1],};
-      name_foto = i<10?'0'+i+'_'+fotos_seleccionadas[i].name: i+'_'+fotos_seleccionadas[i].name;
-      var uploadTask = storageRef.child(name_foto).put(fotos_seleccionadas[i], metadata);
-      uploadTask.on('state_changed', function(snapshot){
-          // Observe state change events such as progress, pause, and resume
-          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-          var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
-          switch (snapshot.state) {
-            case firebase.storage.TaskState.PAUSED: // or 'paused'
-              console.log('Upload is paused');
-              break;
-            case firebase.storage.TaskState.RUNNING: // or 'running'
-              console.log('Upload is running');
-              break;
-          }
-      }, function(error) {
-        // Handle unsuccessful uploads
-        console.log('Error al cargar la imagen');
-        reject(Error("Upload fail"));
-      }, function() {
-        // Handle successful uploads on complete
-        cont+=1;
-        if(cont==fotos_seleccionadas.length){
-          resolve(images_url);
-        }
-      });
-    }
-  });
-  return promise;
-}
 
 //-------------------------FUNCIONES NECESARIAS -------------------------------
 // Metodo para resetear el form 2
