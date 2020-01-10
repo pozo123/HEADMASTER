@@ -32,8 +32,8 @@ function generaPresupuestoAdicional(vista_previa, obra_ppto, clave_adic, titulo_
     var atn_str = atencion;
 
     var logo;
-    if(false){
-    //if(vista_previa){
+
+    if(vista_previa){
         obra = "DOCUMENTO NO VÁLIDO";
         logo ={
             text: "DOCUENTO NO VÁLIDO",

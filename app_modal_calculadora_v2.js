@@ -30,6 +30,7 @@ var id_costo_operacionesModalCalculadora = "costoOperacionesModalCalculadora";
 var id_costos_indirectosModalCalculadora = "costosIndirectosModalCalculadora";
 var id_seccion_subprocesoModalCalculadora = "div_subprocesoModalCalculadora";
 
+var id_reporte_modalCalculadora = "botonpdfModalCalculadora";
 var id_agregar_modalCalculadora = "botonGuardarModalCalculadora";
 var id_borrar_modalCalculadora = "botonBorrarModalCalculadora";
 var id_default_modalCalculadora = "botonDefaultModalCalculadora";
@@ -102,6 +103,14 @@ $('#' + id_default_modalCalculadora).click(function(){
 		actualizaProfitModalCalculadora();
 		actualizaPrecioVentaModalCalculadora();
 	}
+});
+
+$('#' + id_reporte_modalCalculadora).click(function(){
+  var obra ={nombre:"NOMBRE OBRA", proceso:"NOMBRE PROCESO", subproceso: "NOMBRE SUBPROCESO"};
+
+  var docDescription = generaReporteCalculadora(obra);
+  var pdfDocGenerator = pdfMake.createPdf(docDescription);
+  pdfDocGenerator.open();
 });
 
 // ----------------------- FUNCIONES DE LOS CAMPOS REGULARES ------------------------
