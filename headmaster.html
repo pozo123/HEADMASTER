@@ -1198,7 +1198,8 @@
                     <li class="rrhh hidden">
                         <a href="#pageNomina" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Nómina</a>
                         <ul class="collapse list-unstyled" id="pageNomina">
-                            <li class="tab" id="tabDatosNomina"><a href="#" onclick="openTabs('tabDatosNomina','datosNomina')">Asistencias, Horas Extra y Diversos</a></li>
+                            <li class="tab" id="tabDatosNomina"><a href="#" onclick="openTabs('tabDatosNomina','datosNomina')">Asistencias, Horas Extra y Diversos - Trabajador</a></li>
+                            <li class="tab" id="tabAsistenciasDiarias"><a href="#" onclick="openTabs('tabAsistenciasDiarias','asistenciasDiarias')">Asistencias - Día</a></li>
                             <li class="tab" id="tabDiversos"><a href="#" onclick="openTabs('tabDiversos','diversos')">Definición - Diversos</a></li>
                             <li class="tab" id="tabPagosNomina"><a href="#" onclick="openTabs('tabPagosNomina','pagosNomina')">Pagos Nómina</a></li>
                             <li class="tab administracion hidden" id="tabTrabajadores"><a href="#" onclick="openTabs('tabTrabajadores','trabajadoresProduccion')">Trabajadores de obra</a></li>
@@ -1210,7 +1211,6 @@
                             <li class="tab" id="tabCopeo"><a href="#" onclick="openTabs('tabCopeo','copeo')">Copeo</a></li>
                             <li class="tab" id="tabSolicitudAdicional"><a href="#" onclick="openTabs('tabSolicitudAdicional','solicitudAdicional')">Solicitud de Adicionales</a></li>
                             <li class="tab" id="tabAsignacionSupervisores"><a href="#" onclick="openTabs('tabAsignacionSupervisores','asignacionSupervisores')">Asignación de supervisores</a></li>
-                            <li class="tab" id="tabAsistenciasDiarias"><a href="#" onclick="openTabs('tabAsistenciasDiarias','asistenciasDiarias')">Asistencias diarias</a></li>
                         </ul>
                     </li>
                     <li class = "administracion compras hidden">
@@ -2617,9 +2617,27 @@
                                         <br/>
                                     </div>
                                     <div class= "col-lg-2"></div>
-                                    <div class = "tableWrapper">
-                                        <table id="dataTableDatosNomina" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
-                                        </table>
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="card">
+                                                    <div class="card-header text-white" style="background-color: #220005;">
+                                                        <span style ="font-size: 1.2em;">Datos Nómina</span>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="container-fluid">
+                                                            <div class="row fadeInDown">
+                                                                <div class = "col-lg-12 container_reporte_nomina" style = "height: 100%;">
+                                                                    <table id="dataTableDatosNomina" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                            <br/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -4272,7 +4290,7 @@
                                                 <div class="col-3"></div>
                                                 <div class="form-group col-md-6">
                                                     <label for="obraAsistenciasDiarias">Obra:</label>
-                                                    <select id ="obraAsistenciasDiarias" class="form-control"></select>
+                                                    <select id ="obraAsistenciasDiarias" class="form-control ddlAsistenciasDiarias"></select>
                                                 </div>
                                                 <div class="col-3"></div>
                                             </div>
@@ -4280,7 +4298,7 @@
                                                 <div class="col-3"></div>
                                                 <div class="form-group col-md-6">
                                                     <label for="yearAsistenciasDiarias">Año:</label>
-                                                    <select id="yearAsistenciasDiarias" class="form-control"></select>
+                                                    <select id="yearAsistenciasDiarias" class="form-control ddlAsistenciasDiarias"></select>
                                                 </div>
                                                 <div class="col-3"></div>
                                             </div>
@@ -4288,14 +4306,22 @@
                                                 <div class="col-3"></div>
                                                 <div class="form-group col-md-6">
                                                     <label for="weekAsistenciasDiarias">Semana:</label>
-                                                    <select id ="weekAsistenciasDiarias" class="form-control"></select>
+                                                    <select id ="weekAsistenciasDiarias" class="form-control ddlAsistenciasDiarias"></select>
+                                                </div>
+                                                <div class="col-3"></div>
+                                            </div>
+                                            <div class="form-row hidden" id= "divDiaAsistenciasDiarias">
+                                                <div class="col-3"></div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="dayAsistenciasDiarias">Día:</label>
+                                                    <select id ="dayAsistenciasDiarias" class="form-control ddlAsistenciasDiarias"></select>
                                                 </div>
                                                 <div class="col-3"></div>
                                             </div>
                                             <div class="form-row">
                                                 <div class= "col-3"></div>
                                                 <div class= "col-6">
-                                                    <button id="abrirModalAsistenciasDiarias" type="button" class="btn btn-outline-info btn-block">Abrir</button>
+                                                    <button id="aceptarButtonAsistenciasDiarias" type="button" class="btn btn-outline-info btn-block">Abrir</button>
                                                 </div>
                                                 <div class= "col-3"></div>
                                             </div>
@@ -4303,18 +4329,72 @@
                                         <br/>
                                     </div>
                                     <div class="col-lg-2"></div>
-                                    <div class = "container-fluid hidden" id = "containerDataTableAsignacionSupervisor">
-                                            <table id="dataTableAsignacionSupervisor" class="display" style="width:100%">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Obra</th>
-                                                        <th>Supervisor</th>
-                                                        <th>Nickname</th>
-                                                        <th>Email</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
+                                    <div class="container-fluid hidden" id="containerDataTableAsistenciasDiarias">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="card">
+                                                    <div class="card-header text-white" style="background-color: #050033;">
+                                                        <span style ="font-size: 1.2em;">Asistencias diarias</span>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="container-fluid">
+                                                            <div class="row fadeInDown" id= "divContainerButtonActualizarAsistenciasDiarias">
+                                                                <div class="col-lg-3"></div>
+                                                                <div class="col-lg-6">
+                                                                    <button id="actualizarButtonAsistenciasDiarias" type="button" class="btn btn-outline-info btn-block">Actualizar registros</button>
+                                                                </div>
+                                                                <div class="col-lg-3"></div>
+                                                            </div>
+                                                            </br>
+                                                            <div class="row fadeInDown hidden" id="divContainerActualizarDatosAsistenciasDiarias">
+                                                                <div class="col-lg-1"></div>
+                                                                <div class="col-lg-10">
+                                                                    <div class = "col-lg-12">
+                                                                        <div class="card">
+                                                                            <div class="card-header text-white" style="background-color: #28282b;">
+                                                                                <span style ="font-size: 1.2em;">Actualizar datos</span>
+                                                                            </div>
+                                                                            <div class = "card-body">
+                                                                                <div class="container-fluid fadeInDown">
+                                                                                    <div id ="divDatosAsistenciasDiarias"></div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class= "card-footer">
+                                                                                <div class="container-fluid text-center">
+                                                                                    <button id="guardarRegistrosDatosAsistenciasDiarias" type="button" class="btn btn-sm btn-success">Guardar</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-1"></div>
+                                                            </div>
+                                                            </br>
+                                                            <div id="divDataTableAsistenciasDiarias" class="row fadeInDown hidden">
+                                                                <div class = "col-lg-12 container_reporte_nomina" style = "height: 100%;">
+                                                                    <table id="dataTableAsistenciasDiarias" style="margin-left:auto;margin-right:auto;" class="display table-striped table-bordered" style="width:100%">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Reg_ID</th>
+                                                                                <th>ID HEAD</th>
+                                                                                <th>Nombre</th>
+                                                                                <th>Jefe</th>
+                                                                                <th>Sueldo</th>
+                                                                                <th>Proceso</th>
+                                                                                <th>Actividad</th>
+                                                                                <th>Eliminar</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                            <br/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -4407,7 +4487,8 @@
         <script src="app_asignacion_supervisores_v2.js"></script>
         <script src="pdf_presupuestoAdicional_v2.js"></script>
         <script src="pdf_calculadora_v2.js"></script>
-
+        <script src="app_asistencias_diarias_v2.js"></script>
+        
         <!-- Excel to Json-->
         <script src="xlsx.full.min.js"></script>
 

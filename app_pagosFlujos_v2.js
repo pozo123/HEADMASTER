@@ -30,7 +30,7 @@ var id_pago_existente_pagos_cliente = "";
 var file_selected_pagos_cliente = "";
 var optionsPagoCliente =  {year: 'numeric', month: '2-digit', day: '2-digit'};
 
-var procesos = {};
+var procesos_pagos_flujo = {};
 
 $('#' + id_tab_pagos_cliente).click(function() {
     resetFormPagosCliente(false);
@@ -65,11 +65,12 @@ $('#' + id_file_input_pagos_cliente).on("change", function(event){
 
 
 $('#' + id_ddl_obra_pagos_cliente).change(function(){
+    procesos_pagos_flujo = {};
     firebase.database().ref(rama_bd_obras + "/procesos/" + $('#' + id_ddl_obra_pagos_cliente + " option:selected").val() + "/procesos").once('value').then(function(snapshot){
         snapshot.forEach(function(procSnap){
             if(procSnap.key != "PC00"){
                 procSnap.child("subprocesos").forEach(function(subprocSnap){
-                    procesos[subprocSnap.key] = subprocSnap.val().nombre;
+                    procesos_pagos_flujo[subprocSnap.key] = subprocSnap.val().nombre;
                 });
             };
         });  
@@ -289,10 +290,10 @@ function createRowDist(key){
     option.text = option.value = "";
     proceso.appendChild(option);
 
-    for(proc in procesos){
+    for(proc in procesos_pagos_flujo){
         option = document.createElement('option');
         option.value = proc;
-        option.text = "(" + proc + ") " + procesos[proc];
+        option.text = "(" + proc + ") " + procesos_pagos_flujo[proc];
         proceso.appendChild(option);
     };
     

@@ -33,7 +33,7 @@ var options_semanas = { weekday: 'short', year: 'numeric', month: 'numeric', day
 var options_nomina = { weekday: 'short',day: 'numeric'};
 
 
-var starting_year = 2018;
+var starting_year = 2019;
 var actual_week = getWeek(new Date())[0];
 var actual_year = getWeek(new Date())[1];
 
