@@ -448,7 +448,7 @@ Nota: Todo float se ingresa a 2 decimales.
                             - fecha: timestamp
                             - obra: obra_id
                             - subproceso: subproceso_id
-                            - actividad: string (asistencia, falta o vacaciones)
+                            - actividad: string (Asistencia, Falta o Vacaciones)
                     - horas_extra:
                         - registro (firebase_id):
                             - fecha: timestamp
@@ -475,7 +475,6 @@ Nota: Todo float se ingresa a 2 decimales.
                         - week_head
                             - id_trabajador:
                                 - registros_id: true
-
                 - fechas_pago:
                     - year: (para guardar la fecha de pago y no tener que buscarla en 300 trabajadores)
                         - week_head:

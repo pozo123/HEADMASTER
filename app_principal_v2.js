@@ -16,7 +16,7 @@ var json_personal = {};
 
 var id_div_dropdown_areas = "dropdown_areas";
 
-var version = "version2";
+var version = "test";
 
 var rama_bd_personal = version + "/personal";
 var rama_bd_obras = version + "/obras";
@@ -33,7 +33,7 @@ var options_semanas = { weekday: 'short', year: 'numeric', month: 'numeric', day
 var options_nomina = { weekday: 'short',day: 'numeric'};
 
 
-var starting_year = 2018;
+var starting_year = 2019;
 var actual_week = getWeek(new Date())[0];
 var actual_year = getWeek(new Date())[1];
 
