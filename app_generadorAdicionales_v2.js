@@ -208,7 +208,13 @@ $('#' + id_boton_calculadoraAdicionales).click(function() {
   json_modalCalculadora["porcentaje_impuestos"] = extraeImpuesto();
   // json_modalCalculadora["precio_venta"] = parseFloat(totales.precio_venta + json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01)*(1+$('#'+ id_indirectosSuministrosAdicionales).val()*0.01)).toFixed(2);
   //console.log(json_modalCalculadora);
-  modalCalculadora(json_modalCalculadora, false, true); // desplegar modal
+  var info =
+  {
+    nombre: $('#'+id_ddl_obra2Adicionales+' option:selected').text(),
+    proceso: "ADIC",
+    subproceso: $('#'+id_claveAdicionales).val(),
+  };
+  modalCalculadora(json_modalCalculadora, false, true, info); // desplegar modal
 });
 
 // Función para actualizar el campo porcentaje indirectos y los precios finales

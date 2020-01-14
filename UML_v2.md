@@ -180,7 +180,7 @@ Nota: Todo float se ingresa a 2 decimales.
                             - entrada (num)
                                 - nombre: string
                                 - alcance: string
-                                - subtotal: float
+                                - subtotal: float (solo de la cuadrilla)
                                 - cuadrilla:
                                     - id_puesto
                                         - cantidad: int
@@ -188,6 +188,11 @@ Nota: Todo float se ingresa a 2 decimales.
                                 - multiplicadores
                                     - dias: float
                                     - unidades: float
+                                - extras
+                                    - descripcion: string
+                                    - costo: float
+                                    - multiplicador: float
+                                    - semanal: boolean (false = diario)
         - cuantificacion
             - id_obra
                 - id_proceso

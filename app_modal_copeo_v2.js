@@ -268,8 +268,6 @@ function resetFormModalCopeo (){
   if(!adicionalFlag){
     $('#'+id_ddl_procesoModalCopeo).val("");
     $('#'+id_ddl_subprocesoModalCopeo).empty();
-    uid_proceso="";
-    uid_subproceso="";
     $('#'+id_ddl_entradaModalCopeo).empty();
     $('#' + id_seccion_subprocesoModalCopeo).addClass('hidden');
   }
