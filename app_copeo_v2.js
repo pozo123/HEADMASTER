@@ -598,6 +598,18 @@ function cargaCamposCopeo(claveObra, claveProceso, claveSubproceso, claveEntrada
         $('#'+"sueldo_"+key).val(formatMoney(cuadrilla[key]["sueldo_diario"]));
         i++;
       }
+      if(entrada.extras !== undefined){
+        $('#' + id_multExtrasCopeo).val(entrada.extras.multiplicador);
+        $('#' + id_extrasCopeo ).val(entrada.extras.descripcion);
+        $('#' + id_costoExtrasCopeo ).val(entrada.extras.costo);
+        $("input[name=tiempoExtras]").filter("[value=" + (entrada.extras.semanal?"semanal":"diario") + "]").prop('checked', true);
+      } else{
+        $('#' + id_multExtrasCopeo).val(0);
+        $('#' + id_extrasCopeo ).val("");
+        $('#' + id_costoExtrasCopeo ).val("$0.00");
+        $("input[name=tiempoExtras]").filter("[value=semanal]").prop('checked', true);
+      }
+
       selectTrabajadores.set(aux_array);
 			calculaCostoUnitarioCopeo();
       calculaCostoTotalCopeo();
@@ -678,6 +690,13 @@ function datosEntradaCopeo(){
     multiplicadores:{
       dias: parseFloat($('#'+id_diasCopeo).val()),
       unidades: parseFloat($('#'+id_multCopeo).val())
+    },
+    extras:{
+      descripcion: $('#'+id_extrasCopeo).val(),
+      costo: deformatMoney($('#'+id_costoExtrasCopeo).val()),
+      multiplicador: parseFloat($('#'+id_multExtrasCopeo).val()),
+      semanal: $("input[name=tiempoExtras]:checked").val()=="semanal"?true:false,
+      subtotal: deformatMoney($('#'+id_subtotalExtrasCopeo).val()),
     }
   }
   return entradaCopeo;
@@ -733,8 +752,10 @@ function actualizarTablaCopeo(){
 
                     subprocesoCopeo.child("entradas").forEach(function(entradaSnap){
                       var entradaCopeo = entradaSnap.val();
-                      subtotal = entradaCopeo.subtotal;
-                      costoTotal = subtotal*(1+cargaSocial*0.01);
+                      subtotal_cs = entradaCopeo.subtotal;
+                      subtotal_extras = entradaCopeo.extras!==undefined?entradaCopeo.extras.subtotal:0;
+                      subtotal = subtotal_cs + subtotal_extras;
+                      costoTotal = subtotal_cs*(1+cargaSocial*0.01) + subtotal_extras;
                       subtotal_subproceso = subtotal_subproceso+subtotal;
                       costoTotal_subproceso = costoTotal_subproceso+costoTotal;
                       if(clave_proceso !== clave_sub || subtotal !== 0){
