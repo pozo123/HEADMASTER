@@ -40,6 +40,9 @@ $('#' + id_tab_asistencias_diarias).click(function() {
     $('#' + id_ddl_week_asistencias_diarias).empty();
     $('#' + id_ddl_day_asistencias_diarias).empty();
 
+    var select_year = document.getElementById(id_ddl_year_asistencias_diarias);
+    var select_week = document.getElementById(id_ddl_week_asistencias_diarias);
+
     // llenar ddl obra
     // si se autoriza utilizar para supervisores se necesita revisar credenciales.
 
@@ -50,46 +53,105 @@ $('#' + id_tab_asistencias_diarias).click(function() {
     option1.text = "SELECCIONA OBRA";
     option1.value = "";
     obra_select.appendChild(option1);
+    console.log(uid_usuario_global);
+    console.log(areas_usuario_global);
+    console.log(creden_usuario_global);
 
     firebase.database().ref(rama_bd_obras + "/listas/obras_activas").orderByChild('nombre').on('child_added',function(snapshot){
-        obra = snapshot.val();
-        option_asignada = document.createElement('option');
-        option_asignada.value = snapshot.key;
-        option_asignada.text = obra.nombre;
-        obra_select.appendChild(option_asignada);
+        var obra = snapshot.val();
+        if(areas_usuario_global.rrhh || creden_usuario_global < 3){
+            // caso si es rrhh o de produccion con mayores creden
+            option_asignada = document.createElement('option');
+            option_asignada.value = snapshot.key;
+            option_asignada.text = obra.nombre;
+            obra_select.appendChild(option_asignada);
+        } else if(areas_usuario_global.produccion){
+            // caso si es supervisor simple
+            firebase.database().ref(rama_bd_obras + "/supervisores/" + snapshot.key).once("value").then(function(supSnapshot){
+                if(supSnapshot.exists()){
+                    supSnapshot.forEach(function(supervisorSnap){
+                        if(uid_usuario_global == supervisorSnap.key){
+                            option_asignada = document.createElement('option');
+                            option_asignada.value = snapshot.key;
+                            option_asignada.text = obra.nombre;
+                            obra_select.appendChild(option_asignada);
+                        };
+                    });
+                };
+            });
+        };
     });
 
     // llenar año y semana.
-    var select_year = document.getElementById(id_ddl_year_asistencias_diarias);
+    // 2 casos. El primero es el normal, si no eres de prod y eres de rrhh puedes entrar a cualquier semana, si no solo a las últimas 2.
+    
+    if(areas_usuario_global.rrhh || creden_usuario_global < 3){
+        for(i=actual_year;i>=starting_year;i--){
+            var option_year = document.createElement('option');
+            option_year.text = option_year.value = i;
+            select_year.appendChild(option_year);
+        };
+    
+        var option = document.createElement('option');
+        option.style = "display:none";
+        option.text = "SELECCIONA SEMANA";
+        option.value = "";
+        select_week.appendChild(option);
+    
+        for(i=actual_week;i>0;i--){
+            var ju_mi = getDaysWeek(i,actual_year);
+            var jueves = ju_mi[0];
+            var miercoles = ju_mi[1];
+            var week = ("0" + i).slice(-2)
+    
+            jueves = new Date(jueves).toLocaleDateString("es-ES", options_semanas);
+            miercoles = new Date(miercoles).toLocaleDateString("es-ES", options_semanas);
+    
+            var option_week = document.createElement('option');
+            option_week.text = "[SEM " + week + "] - " + jueves + " - " + miercoles;
+            option_week.value = week;
+            select_week.appendChild(option_week);
+        };
+    } else {
 
-    for(i=actual_year;i>=starting_year;i--){
         var option_year = document.createElement('option');
-        option_year.text = option_year.value = i;
+        option_year.text = option_year.value = actual_year;
         select_year.appendChild(option_year);
-    };
 
-    var select_week = document.getElementById(id_ddl_week_asistencias_diarias);
+        var option = document.createElement('option');
+        option.style = "display:none";
+        option.text = "SELECCIONA SEMANA";
+        option.value = "";
+        select_week.appendChild(option);
 
-    var option = document.createElement('option');
-    option.style = "display:none";
-    option.text = "SELECCIONA SEMANA";
-    option.value = "";
-    select_week.appendChild(option);
+        var ju_mi_1 = getDaysWeek(actual_week,actual_year);
+        var jueves_1 = ju_mi_1[0];
+        var miercoles_1 = ju_mi_1[1];
+        var week_1 = ("0" + actual_week).slice(-2)
 
-    for(i=actual_week;i>0;i--){
-        var ju_mi = getDaysWeek(i,actual_year);
-        var jueves = ju_mi[0];
-        var miercoles = ju_mi[1];
-        var week = ("0" + i).slice(-2)
-
-        jueves = new Date(jueves).toLocaleDateString("es-ES", options_semanas);
-        miercoles = new Date(miercoles).toLocaleDateString("es-ES", options_semanas);
+        jueves_1 = new Date(jueves_1).toLocaleDateString("es-ES", options_semanas);
+        miercoles_1 = new Date(miercoles_1).toLocaleDateString("es-ES", options_semanas);
 
         var option_week = document.createElement('option');
-        option_week.text = "[SEM " + week + "] - " + jueves + " - " + miercoles;
-        option_week.value = week;
+        option_week.text = "[SEM " + week_1 + "] - " + jueves_1 + " - " + miercoles_1;
+        option_week.value = week_1;
         select_week.appendChild(option_week);
-    }
+
+        if(actual_week != 1){
+            var ju_mi_2 = getDaysWeek(actual_week - 1,actual_year);
+            var jueves_2 = ju_mi_2[0];
+            var miercoles_2 = ju_mi_2[1];
+            var week_2 = ("0" + (actual_week - 1)).slice(-2)
+    
+            jueves_2 = new Date(jueves_2).toLocaleDateString("es-ES", options_semanas);
+            miercoles_2 = new Date(miercoles_2).toLocaleDateString("es-ES", options_semanas);
+    
+            var option_week = document.createElement('option');
+            option_week.text = "[SEM " + week_2 + "] - " + jueves_2 + " - " + miercoles_2;
+            option_week.value = week_2;
+            select_week.appendChild(option_week);
+        };
+    };
 });
 
 

@@ -1174,35 +1174,34 @@
                             <li class="tab administracion hidden" id="tabDashProd"><a href="#" onclick="openTabs('tabDashProd','dashboardProduccion')">Dash - Producción</a></li>
                         </ul>
                     </li>
-                    <li class="administracion hidden">
+                    <li class="">
                         <a href="#pageAdministracion" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Administración</a>
-                        <ul class="collapse list-unstyled" id="pageAdministracion">
+                        <ul class="collapse list-unstyled administracion hidden" id="pageAdministracion">
                             <a href="#pageAltas" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Altas</a>
-                            <ul class="collapse list-unstyled" id="pageAltas">
-                                <li class="tab administracion hidden" id="tabColaboradorHEAD"><a href="#" onclick="openTabs('tabColaboradorHEAD','colaboradorHEAD')">Alta y Edición - Colaboradores HEAD</a></li>
+                            <ul class="collapse list-unstyled " id="pageAltas">
+                                <li class="tab" id="tabColaboradorHEAD"><a href="#" onclick="openTabs('tabColaboradorHEAD','colaboradorHEAD')">Alta y Edición - Colaboradores HEAD</a></li>
                                 <li class="tab administracion hidden" id="tabAltaCliente"><a href="#" onclick="openTabs('tabAltaCliente','altaCliente')">Alta y Edición - Despachos (Clientes)</a></li>
                                 <li class="tab administracion hidden" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Alta y Edición - Obras</a></li>
                                 <li class="tab administracion hidden" id="tabAltaProcesos"><a href="#" onclick="openTabs('tabAltaProcesos','altaProcesos')">Alta y Edición - Procesos</a></li>
                             </ul>
-                            <a href="#pageDefiniciones" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Definiciones</a>
-                            <ul class="collapse list-unstyled" id="pageDefiniciones">
+                            <a href="#pageDefiniciones" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle administracion hidden">Definiciones</a>
+                            <ul class="collapse list-unstyled administracion hidden" id="pageDefiniciones">
                                 <li class="tab administracion hidden" id="tabEspecialidades"><a href="#" onclick="openTabs('tabEspecialidades','especialidadesHEAD')">Definición - Especialidades</a></li>
                                 <li class="tab administracion hidden" id="tabPuestos"><a href="#" onclick="openTabs('tabPuestos','puestosHEAD')">Definición - Puestos</a></li>
                             </ul>
-                            <li class="tab" id="tabCalculadora"><a href="#" onclick="openTabs('tabCalculadora','calculadora')">Calculadora Kaizen</a></li>
-                            <li class="tab" id="tabGeneradorAdic"><a href="#" onclick="openTabs('tabGeneradorAdic','generadorAdicionales')">Generador de Adicionales</a></li>
+                            <li class="tab administracion hidden" id="tabCalculadora"><a href="#" onclick="openTabs('tabCalculadora','calculadora')">Calculadora Kaizen</a></li>
+                            <li class="tab administracion hidden" id="tabGeneradorAdic"><a href="#" onclick="openTabs('tabGeneradorAdic','generadorAdicionales')">Generador de Adicionales</a></li>
                             <li class="tab administracion hidden" id="tabPagosCliente"><a href="#" onclick="openTabs('tabPagosCliente','pagosCliente')">Pagos por parte Cliente</a></li>
                         </ul>
-
                     </li>
-                    <li class="rrhh hidden">
+                    <li class="rrhh produccion hidden">
                         <a href="#pageNomina" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Nómina</a>
                         <ul class="collapse list-unstyled" id="pageNomina">
-                            <li class="tab" id="tabDatosNomina"><a href="#" onclick="openTabs('tabDatosNomina','datosNomina')">Asistencias, Horas Extra y Diversos - Trabajador</a></li>
-                            <li class="tab" id="tabAsistenciasDiarias"><a href="#" onclick="openTabs('tabAsistenciasDiarias','asistenciasDiarias')">Asistencias - Día</a></li>
-                            <li class="tab" id="tabDiversos"><a href="#" onclick="openTabs('tabDiversos','diversos')">Definición - Diversos</a></li>
-                            <li class="tab" id="tabPagosNomina"><a href="#" onclick="openTabs('tabPagosNomina','pagosNomina')">Pagos Nómina</a></li>
-                            <li class="tab administracion hidden" id="tabTrabajadores"><a href="#" onclick="openTabs('tabTrabajadores','trabajadoresProduccion')">Trabajadores de obra</a></li>
+                            <li class="tab rrhh hidden" id="tabDatosNomina"><a href="#" onclick="openTabs('tabDatosNomina','datosNomina')">Asistencias, Horas Extra y Diversos - Trabajador</a></li>
+                            <li class="tab rrhh produccion hidden" id="tabAsistenciasDiarias"><a href="#" onclick="openTabs('tabAsistenciasDiarias','asistenciasDiarias')">Asistencias - Día</a></li>
+                            <li class="tab rrhh hidden" id="tabDiversos"><a href="#" onclick="openTabs('tabDiversos','diversos')">Definición - Diversos</a></li>
+                            <li class="tab rrhh hidden" id="tabPagosNomina"><a href="#" onclick="openTabs('tabPagosNomina','pagosNomina')">Pagos Nómina</a></li>
+                            <li class="tab rrhh hidden" id="tabTrabajadores"><a href="#" onclick="openTabs('tabTrabajadores','trabajadoresProduccion')">Trabajadores de obra</a></li>
                         </ul>
                     </li>
                     <li class = "produccion hidden">
@@ -1210,7 +1209,7 @@
                         <ul class="collapse list-unstyled" id="pageProduccion">
                             <li class="tab" id="tabCopeo"><a href="#" onclick="openTabs('tabCopeo','copeo')">Copeo</a></li>
                             <li class="tab" id="tabSolicitudAdicional"><a href="#" onclick="openTabs('tabSolicitudAdicional','solicitudAdicional')">Solicitud de Adicionales</a></li>
-                            <li class="tab" id="tabAsignacionSupervisores"><a href="#" onclick="openTabs('tabAsignacionSupervisores','asignacionSupervisores')">Asignación de supervisores</a></li>
+                            <li class="tab creden-2" id="tabAsignacionSupervisores"><a href="#" onclick="openTabs('tabAsignacionSupervisores','asignacionSupervisores')">Asignación de supervisores</a></li>
                         </ul>
                     </li>
                     <li class = "administracion compras hidden">
@@ -1234,10 +1233,11 @@
                             <li class="tab proyectos hidden" id="tabActividadScore"><a href="#" onclick="openTabs('tabActividadScore','actividadScore')">Alta - Actividades Score</a></li>
                         </ul>
                     </li>
+                    <li class="tab"><a href="#" data-toggle="modal" data-target="#contraseñaModal">Cambiar contraseña</a></li>
                 </ul>
 
 
-                <ul class="list-unstyled components">
+                <ul class="administracion hidden list-unstyled components">
                     <div class="text-center">
                         <button type="button" class="btn btn-outline-info btn-lg" id="respaldoBD" onclick="descargaRespaldo()">Descarga Respaldo</button>
                     </div>
