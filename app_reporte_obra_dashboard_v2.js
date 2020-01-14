@@ -501,7 +501,6 @@ $('#' + id_ddl_prod_dash_prod).change(function(){
 
     var canvas_line_total = document.createElement('canvas');
     canvas_line_total.id = "canvasMontoTotal"
-    //canvas_line_total.style = "min-height: 350px; min-width: 350;"
 
     var canvas_container = document.getElementById(id_div_acumulado);
     canvas_container.appendChild(canvas_line_total);

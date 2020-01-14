@@ -51,7 +51,7 @@ function getDaysWeek(week, year){
     }
 
     var jueves_week = ((week - 1)*7 + primer_jueves)*86400000 + 43200000; // sumo 12 horas para que no haya pex
-    var miercoles_week = jueves_week + (6*86400000) + 43200000; // sumo 12 horas para que no haya pex
+    var miercoles_week = jueves_week + (6*86400000); //
     return[jueves_week, miercoles_week];
 }
 // función para revisar si un string es una preposicion o artículo
@@ -168,4 +168,29 @@ function orderDdl(id_select) {
     // $('select').get(0).selectedIndex = 0;
   };
 
-  
+  function isJSONEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
+
+function getTimestampDay(year,sem, day){
+    // day en texto
+    var res = 0;
+
+    if(day == "jueves"){
+        res = getDaysWeek(sem,year)[0];
+    } else if(day == "viernes"){
+        res = getDaysWeek(sem,year)[0] + 86400000*1;
+    } else if(day == "lunes"){
+        res = getDaysWeek(sem,year)[0] + 86400000*4;
+    } else if(day == "martes"){
+        res = getDaysWeek(sem,year)[0] + 86400000*5;
+    } else if (day == "miercoles"){
+        res = getDaysWeek(sem,year)[0] + 86400000*6;
+    }
+    return res;
+}

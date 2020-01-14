@@ -15,6 +15,7 @@ var id_div_semanal_reporte_nomina = "containerSemanalReporteNomina";
 var id_div_obra_reporte_nomina = "containerObraReporteNomina";
 
 $('#' + id_tab_reporte_nomina).click(function(){
+    $('#' + id_ddl_year_reporte_nomina).empty();
     $('#' + id_div_semanal_reporte_nomina).addClass("hidden");
     $('#' + id_div_obra_reporte_nomina).addClass("hidden");
 /*     firebase.database().ref("version2/info_web").set({

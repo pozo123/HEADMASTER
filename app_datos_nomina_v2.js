@@ -34,6 +34,9 @@ var trabajador_json = {};
 var trabajadores_sin_registro = {};
 var dias = ["jueves", "viernes", "lunes", "martes", "miercoles"];
 
+var listaSnap;
+var regSnap;
+
 
 $('#' + id_tab_datos_nomina).click(function(){
     existe_registro = false;
@@ -315,7 +318,6 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
                 
                 resetFormDatosNomina(false);
                 llenarDdlFaltantes();
-                actualizarTablaDatosNomina();
             });
         });
         
@@ -382,7 +384,6 @@ $('#' + id_button_guardar_datos_nomina).click(function(){
             existe_registro = true;
             resetFormDatosNomina(false);
             llenarDdlFaltantes();
-            actualizarTablaDatosNomina();
             
         });
     }
@@ -1186,10 +1187,11 @@ function datosDiversosDatosNomina(){
 
 function actualizarTablaDatosNomina(){
     $('#' + id_dataTable_datos_nomina).html("");
-    firebase.database().ref(rama_bd_nomina + "/listas/fecha_datos/" + $('#' + id_ddl_year_datos_nomina + " option:selected").val() + "/" + $('#' + id_ddl_week_datos_nomina + " option:selected").val()).once("value").then(function(listaSnap){
-        firebase.database().ref(rama_bd_nomina + "/nomina/").once("value").then(function(regSnap){
-            firebase.database().ref(rama_bd_datos_referencia + "/diversos").once("value").then(function(divSnap){
-                
+    firebase.database().ref(rama_bd_nomina + "/listas/fecha_datos/" + $('#' + id_ddl_year_datos_nomina + " option:selected").val() + "/" + $('#' + id_ddl_week_datos_nomina + " option:selected").val()).on("value",function(listaSnapDB){
+        listaSnap = listaSnapDB;
+        firebase.database().ref(rama_bd_nomina + "/nomina/").on("value",function(regSnapDB){
+            regSnap = regSnapDB;
+            firebase.database().ref(rama_bd_datos_referencia + "/diversos").once("value").then(function(divSnap){              
                 var datos_nominas = [];
                 var columns = [];
             
@@ -1199,8 +1201,8 @@ function actualizarTablaDatosNomina(){
                 columns.push({title: "ID_Registro"});
                 columns.push({title: "ID HEAD"});
                 columns.push({title: "ID Pag"});
-                columns.push({title: "Nombre completo"});
-                columns.push({title: "Obra asignada (obra de facturación"});
+                columns.push({title: "Nombre"});
+                columns.push({title: "Obra asignada"});
                 columns.push({title: "Jefe"});
             
                 columns.push({title: "Sueldo neto"});
@@ -1209,9 +1211,9 @@ function actualizarTablaDatosNomina(){
                 columns.push({title: new Date(getDaysWeek(sem,year)[0] + 86400000*4).toLocaleDateString("es-ES", options_nomina)});
                 columns.push({title: new Date(getDaysWeek(sem,year)[0] + 86400000*5).toLocaleDateString("es-ES", options_nomina)});
                 columns.push({title: new Date(getDaysWeek(sem,year)[0] + 86400000*6).toLocaleDateString("es-ES", options_nomina)});
-                columns.push({title: "Sueldo a pagar"});
+                columns.push({title: "A pagar"});
                 columns.push({title: "Horas extra"});
-                columns.push({title: "Importe horas extra"});
+                columns.push({title: "Importe H.E."});
                 // Generar columnas
                 divSnap.forEach(function(snapshot){
                     columns.push({title: snapshot.val()})
@@ -1330,7 +1332,7 @@ function actualizarTablaDatosNomina(){
                     dom: 'Bfrtip',
                     "columnDefs": [
                         { "width": "300px", "targets": 4 },
-                        //{ "visible": false, "targets": 0 },
+                        { "visible": false, "targets": 0 },
                         {
                             targets: [12,14,-2,-1],
                             className: 'bolded'

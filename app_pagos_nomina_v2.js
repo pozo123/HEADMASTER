@@ -270,6 +270,7 @@ $('#' + id_button_guardar_pagos_nomina).click(function(){
     });
 });
 
+
 $(document).on('keypress','.pago', function(e){
     charactersAllowed("$1234567890,.",e);
     if (event.keyCode === 13) { 
