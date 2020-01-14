@@ -41,15 +41,17 @@ var copeoManda;
 var horasActualizadas;
 var json_modalCalculadora;
 var todosDefaultCalculadora;
+var info_calculadora;
 
 
 // --------------------- Método de inicialización -----------------------------
-function modalCalculadora(json_actuales, camposHabilitados, flagPrecioVenta){
+function modalCalculadora(json_actuales, camposHabilitados, flagPrecioVenta, info_obra){
   cantProfitManda = true;
   horasScoreManda = true;
   copeoManda = true
   horasActualizadas = false;
   todosDefaultCalculadora = camposHabilitados;
+  info_calculadora = info_obra;
   // pongo el texto para el on hover
 	var texto_default = "Valores generalmente usados para el calculo de presupuestos como son: precio por hora del área de proyectos, impuestos para la mano de obra y el porcentaje de costos indirectos."
 	$('#' + id_default_modalCalculadora).attr("data-content", texto_default);
@@ -106,9 +108,16 @@ $('#' + id_default_modalCalculadora).click(function(){
 });
 
 $('#' + id_reporte_modalCalculadora).click(function(){
-  var obra ={nombre:"NOMBRE OBRA", proceso:"NOMBRE PROCESO", subproceso: "NOMBRE SUBPROCESO"};
-
-  var docDescription = generaReporteCalculadora(obra);
+  // var obra ={nombre:"NOMBRE OBRA", proceso:"NOMBRE PROCESO", subproceso: "NOMBRE SUBPROCESO"};
+  var score={horas: $('#'+id_horas_proyectoModalCalculadora).val(), precio:$('#'+id_costo_horaScoreModalCalculadora).val(), costo:$('#'+id_costo_proyectoModalCalculadora).val(), utilidad: $('#'+id_utilidad_proyectosModalCalculadora).val(), cliente:formatMoney(deformatMoney($('#'+id_costo_proyectoModalCalculadora).val()) * (1 + $('#'+id_utilidad_proyectosModalCalculadora).val() * 0.01))};
+  var copeo={copeo: $('#'+id_costo_copeoModalCalculadora).val(), cargaSocial:$('#'+id_impuestosModalCalculadora).val(), costo:$('#'+id_costo_copeoCargaModalCalculadora).val(), utilidad: $('#'+id_utilidad_copeoModalCalculadora).val(), cliente:formatMoney(deformatMoney($('#'+id_costo_copeoCargaModalCalculadora).val()) * (1 + $('#'+id_utilidad_copeoModalCalculadora).val() * 0.01))};
+  var suministros={costo:$('#'+id_costo_suministrosModalCalculadora).val(), utilidad: $('#'+id_utilidad_suministrosModalCalculadora).val(), cliente:formatMoney(deformatMoney($('#'+id_costo_copeoCargaModalCalculadora).val()) * (1 + $('#'+id_utilidad_copeoModalCalculadora).val() * 0.01))};
+  var totales={costo:formatMoney(deformatMoney(score.costo) + deformatMoney(copeo.costo) + deformatMoney(suministros.costo)), cliente:formatMoney(deformatMoney(score.cliente) + deformatMoney(copeo.cliente) + deformatMoney(suministros.cliente))};
+  totales["utilidad"] = formatMoney(deformatMoney(totales.cliente)-deformatMoney(totales.costo));
+  var indirectos={porcentaje: $('#'+id_indirectosModalCalculadora).val()+'%', costo:formatMoney(deformatMoney(totales.costo)*$('#'+id_indirectosModalCalculadora).val()*0.01)};
+  var operaciones={utilidad: '$4,000.00', costo:'$55000'};
+  var utilidad={porcentaje:'$10',cantidad: '$6,000.00', cliente:'$60500'};
+  var docDescription = generaReporteCalculadora(info_calculadora, score);
   var pdfDocGenerator = pdfMake.createPdf(docDescription);
   pdfDocGenerator.open();
 });

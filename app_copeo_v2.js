@@ -5,6 +5,7 @@ var id_dataTable_copeo = "dataTableCopeo";
 
 var id_ddl_obraCopeo = "ddl_obraCopeo";
 var id_ddl_procesoCopeo = "ddl_procesoCopeo";
+var id_seccion_subprocesoCopeo = "div_subprocesoCopeo";
 var id_ddl_subprocesoCopeo = "ddl_subprocesoCopeo";
 var id_ddl_entradaCopeo = "ddl_entradaCopeo";
 var id_carga_socialCopeo = "cargaSocialCopeo";
@@ -17,7 +18,11 @@ var id_div_trabajadoresCopeo = "divTrabajadoresCopeo";
 var id_costo_unitarioCopeo = "costoUnitarioCopeo";
 var id_costo_CopeoCopeo = "costoCopeo";
 var id_costo_Copeo_CSCopeo = "costoCSCopeo";
-var id_seccion_subprocesoCopeo = "div_subprocesoCopeo";
+var id_extrasCopeo = "extrasCopeo";
+var id_costoExtrasCopeo = "costoExtrasCopeo";
+var id_multExtrasCopeo = "multExtrasCopeo";
+var id_subtotalExtrasCopeo = "subtotalExtrasCopeo";
+var id_totalExtrasCopeo = "totalExtrasCopeo";
 
 var id_agregar_copeo = "botonAceptarCopeo";
 var id_borrar_copeo = "botonResetCopeo";
@@ -43,20 +48,7 @@ $('#' + id_tab_copeo).click(function() {
   uid_subproceso="";
   puestos_array = [];
   // Llenado del ddl de obra.
-  $('#' + id_ddl_obraCopeo).empty();
-  var select = document.getElementById(id_ddl_obraCopeo);
-  var option = document.createElement('option');
-  option.style = "display:none";
-  option.text = option.value = "";
-  select.appendChild(option);
-  var obra;
-  firebase.database().ref(rama_bd_obras + "/listas/obras_activas").orderByChild('nombre').on('child_added',function(snapshot){
-      obra = snapshot.val();
-      option = document.createElement('option');
-      option.value = snapshot.key;
-      option.text = obra.nombre;
-      select.appendChild(option);
-  });
+  ddlObrasActivasGeneric(id_ddl_obraCopeo);
 
   $('#' + id_lista_trabajadoresCopeo).empty();
   var puesto;
@@ -78,6 +70,7 @@ $('#' + id_tab_copeo).click(function() {
           placeholder: 'Elige los puestos necesarios',
       });
       resetFormCopeo();
+      $('#'+id_carga_socialCopeo).prop("disabled", false);
   });
   //actualizarTablaCopeo();
 });
@@ -141,6 +134,7 @@ $('#' + id_sueldos_copeo).click(function() {
   }
   calculaCostoUnitarioCopeo();
   calculaCostoTotalCopeo();
+  calculacostosExtraCopeo();
 });
 
 // ----------------------- FUNCIONES DE LOS CAMPOS REGULARES ------------------------
@@ -174,18 +168,23 @@ $("#" + id_ddl_obraCopeo).change(function(){
 });
 
 $("#" + id_ddl_procesoCopeo).change(function(){
+  uid_obra = $("#" + id_ddl_obraCopeo + " option:selected").val();
   uid_proceso = $('#' + id_ddl_procesoCopeo + " option:selected").val();
   llenaDdlSubprocesoCopeo(uid_obra, uid_proceso);
 });
 
 $("#" + id_ddl_subprocesoCopeo).change(function(){
+  uid_obra = $("#" + id_ddl_obraCopeo + " option:selected").val();
+  uid_proceso = $('#' + id_ddl_procesoCopeo + " option:selected").val();
   uid_subproceso = $('#'+id_ddl_subprocesoCopeo+" option:selected").val()
   //$('.sueldosCopeo').prop('disabled',true);
   llenaDdlEntradaCopeo(uid_obra, uid_proceso,uid_subproceso);
 });
 
 $("#" + id_ddl_entradaCopeo).change(function(){
-  uid_subproceso = $('#'+id_ddl_subprocesoCopeo+" option:selected").val()
+  uid_obra = $("#" + id_ddl_obraCopeo + " option:selected").val();
+  uid_proceso = $('#' + id_ddl_procesoCopeo + " option:selected").val();
+  uid_subproceso = $('#'+id_ddl_subprocesoCopeo+" option:selected").val();
   resetFormCopeo_entrada();
   cargaCamposCopeo(uid_obra, uid_proceso, uid_subproceso, $("#" + id_ddl_entradaCopeo+" option:selected").val() );
 });
@@ -205,6 +204,7 @@ $('#' + id_lista_trabajadoresCopeo).change(function(){
     }
     calculaCostoUnitarioCopeo();
     calculaCostoTotalCopeo();
+    calculacostosExtraCopeo();
 });
 
 // ----------------------- INFORMACION DE LA ENTRADA ---------------------------
@@ -220,7 +220,7 @@ $('#'+id_nombreCopeo).change(function (){
 });
 
 $('#'+id_alcanceCopeo ).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789_-.()",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789_-.(),",e);
 });
 
 $('#'+id_alcanceCopeo ).change(function (){
@@ -240,6 +240,7 @@ $('#'+id_carga_socialCopeo  ).change(function (){
     $('#'+id_carga_socialCopeo).val(parseFloat($('#'+id_carga_socialCopeo).val()).toFixed(2));
   }
   calculaCostoTotalCopeo();
+  calculacostosExtraCopeo();
 });
 
 $('#'+id_diasCopeo).keypress(function(e){
@@ -253,6 +254,7 @@ $('#'+id_diasCopeo).change(function (){
     $('#'+id_diasCopeo).val(parseFloat($('#'+id_diasCopeo).val()).toFixed(2));
   }
   calculaCostoTotalCopeo();
+  calculacostosExtraCopeo()
 });
 
 $('#'+id_multCopeo).keypress(function(e){
@@ -266,6 +268,67 @@ $('#'+id_multCopeo).change(function (){
     $('#'+id_multCopeo).val(parseFloat($('#'+id_multCopeo).val()).toFixed(2));
   }
   calculaCostoTotalCopeo();
+  calculacostosExtraCopeo();
+});
+
+$('#'+id_extrasCopeo ).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789_-.(),",e);
+});
+
+$('#'+id_costoExtrasCopeo).keypress(function(e){
+    charactersAllowed("0123456789.",e);
+});
+
+$('#'+id_costoExtrasCopeo).change(function (){
+  if($('#'+id_costoExtrasCopeo).val() == ""){
+    $('#'+id_costoExtrasCopeo).val(0);
+  }else{
+    $('#'+id_costoExtrasCopeo).val(parseFloat($('#'+id_costoExtrasCopeo).val()).toFixed(2));
+  }
+  calculacostosExtraCopeo();
+});
+
+// Metodo accionado cuando precio cliente es enfocado
+$('#'+id_costoExtrasCopeo).focus(function (){
+	if($('#'+id_costoExtrasCopeo).val() !== ""){
+		$('#'+id_costoExtrasCopeo).val(deformatMoney($('#'+id_costoExtrasCopeo).val()));
+	}
+});
+
+// Metodo accionado cuando precio cliente pierde enfoque
+$('#'+id_costoExtrasCopeo).focusout(function (){
+	if($('#'+id_costoExtrasCopeo).val() !== ""){
+		$('#'+id_costoExtrasCopeo).val(formatMoney($('#'+id_costoExtrasCopeo).val()));
+	}
+});
+
+$('#'+id_multExtrasCopeo).change(function (){
+  if($('#'+id_multExtrasCopeo).val() == ""){
+    $('#'+id_multExtrasCopeo).val(0);
+  }else{
+    $('#'+id_multExtrasCopeo).val(parseFloat($('#'+id_multExtrasCopeo).val()).toFixed(0));
+  }
+  calculacostosExtraCopeo()
+});
+
+
+
+// Metodo accionado cuando precio cliente es enfocado
+$('#'+id_totalExtrasCopeo).focus(function (){
+	if($('#'+id_totalExtrasCopeo).val() !== ""){
+		$('#'+id_totalExtrasCopeo).val(deformatMoney($('#'+id_totalExtrasCopeo).val()));
+	}
+});
+
+// Metodo accionado cuando precio cliente pierde enfoque
+$('#'+id_totalExtrasCopeo).focusout(function (){
+	if($('#'+id_totalExtrasCopeo).val() !== ""){
+		$('#'+id_totalExtrasCopeo).val(formatMoney($('#'+id_totalExtrasCopeo).val()));
+	}
+});
+
+$("input[name=tiempoExtras]").change(function (){
+  calculacostosExtraCopeo();
 });
 
 // --------------- FUNCIONES PARA CAMPOS CREADOS DINAMICAMENTE -----------------
@@ -279,6 +342,7 @@ $(document).on('change','.puestosCopeo', function(e){
 		}
     calculaCostoUnitarioCopeo();
     calculaCostoTotalCopeo();
+    calculacostosExtraCopeo();
 });
 
 // ------------------------------ VALIDACIONES ---------------------------------
@@ -303,10 +367,10 @@ function validateFormCopeo(){
 			alert("Ingresa el nombre de la entrada");
 			highLightColor(id_nombreCopeo,"#FF0000");
 			return false;
-	} else if ($('#' + id_alcanceCopeo).val() == ""){
-			alert("Ingresa el alcance de la entrada");
-			highLightColor(id_alcanceCopeo,"#FF0000");
-			return false;
+	//} else if ($('#' + id_alcanceCopeo).val() == ""){
+		//	alert("Ingresa el alcance de la entrada");
+	  //  highLightColor(id_alcanceCopeo,"#FF0000");
+		//	return false;
   } else if ($('#' + id_diasCopeo).val() == ""){
 			alert("Ingresa los días que tarda la cuadrilla");
 			highLightColor(id_diasCopeo,"#FF0000");
@@ -345,14 +409,16 @@ function validateFormCopeo(){
 
 function resetFormCopeo (){
   //$('#'+id_ddl_obraCopeo).val("");
-  $('#'+id_ddl_procesoCopeo).val("");
-  $('#'+id_ddl_subprocesoCopeo).empty();
-  $('#'+id_ddl_entradaCopeo).empty();
+  //$('#'+id_ddl_procesoCopeo).val("");
+  //$('#'+id_ddl_subprocesoCopeo).empty();
+  //$('#'+id_ddl_entradaCopeo).empty();
+  // $('#'+id_ddl_subprocesoCopeo).val("");
+  $('#'+id_ddl_entradaCopeo).val("");
   resetFormCopeo_entrada();
-  $('#' + id_seccion_subprocesoCopeo).addClass('hidden');
+  //$('#' + id_seccion_subprocesoCopeo).addClass('hidden');
   registro_antiguo="";
-  uid_proceso="";
-  uid_subproceso="";
+  //uid_proceso="";
+  //uid_subproceso="";
 }
 
 function resetFormCopeo_entrada(){
@@ -370,6 +436,10 @@ function resetFormCopeo_entrada(){
     $('#'+"row-"+puestos_array[i]).removeClass("hidden");
     $('#'+puestos_array[i]).val("");
   }
+  $('#'+id_costoExtrasCopeo).val("$0.00");
+  $('#'+id_multExtrasCopeo).val(0);
+  $('#'+id_subtotalExtrasCopeo).val("$0.00");
+  $('#'+id_totalExtrasCopeo).val("$0.00");
 }
 
 function llenaDdlSubprocesoCopeo(clave_obra, clave_proceso){
@@ -528,9 +598,22 @@ function cargaCamposCopeo(claveObra, claveProceso, claveSubproceso, claveEntrada
         $('#'+"sueldo_"+key).val(formatMoney(cuadrilla[key]["sueldo_diario"]));
         i++;
       }
+      if(entrada.extras !== undefined){
+        $('#' + id_multExtrasCopeo).val(entrada.extras.multiplicador);
+        $('#' + id_extrasCopeo ).val(entrada.extras.descripcion);
+        $('#' + id_costoExtrasCopeo ).val(entrada.extras.costo);
+        $("input[name=tiempoExtras]").filter("[value=" + (entrada.extras.semanal?"semanal":"diario") + "]").prop('checked', true);
+      } else{
+        $('#' + id_multExtrasCopeo).val(0);
+        $('#' + id_extrasCopeo ).val("");
+        $('#' + id_costoExtrasCopeo ).val("$0.00");
+        $("input[name=tiempoExtras]").filter("[value=semanal]").prop('checked', true);
+      }
+
       selectTrabajadores.set(aux_array);
 			calculaCostoUnitarioCopeo();
       calculaCostoTotalCopeo();
+      calculacostosExtraCopeo();
       if(parseFloat(claveEntrada.slice(3)) == 1){
         $('#'+id_carga_socialCopeo).prop("disabled", false);
       } else {
@@ -575,6 +658,16 @@ function calculaCostoTotalCopeo(){
   $('#'+ id_costo_Copeo_CSCopeo).val(formatMoney(totalCS));
 }
 
+function calculacostosExtraCopeo(){
+  var subtotal = deformatMoney($('#'+id_costoExtrasCopeo).val()) * ($('#'+id_multExtrasCopeo).val()==""?0:$('#'+id_multExtrasCopeo).val());
+  subtotal = subtotal * $('#'+id_multCopeo).val() * $('#'+id_diasCopeo).val();
+  if($("input[name=tiempoExtras]:checked").val() == "semanal"){
+    subtotal = subtotal * 0.2;
+  }
+  $('#'+id_subtotalExtrasCopeo).val(formatMoney(subtotal));
+  $('#'+id_totalExtrasCopeo).val(formatMoney(subtotal + deformatMoney($('#'+id_costo_Copeo_CSCopeo).val())));
+}
+
 function datosEntradaCopeo(){
   var entradaCopeo = {};
   var cuadrilla={};
@@ -597,6 +690,13 @@ function datosEntradaCopeo(){
     multiplicadores:{
       dias: parseFloat($('#'+id_diasCopeo).val()),
       unidades: parseFloat($('#'+id_multCopeo).val())
+    },
+    extras:{
+      descripcion: $('#'+id_extrasCopeo).val(),
+      costo: deformatMoney($('#'+id_costoExtrasCopeo).val()),
+      multiplicador: parseFloat($('#'+id_multExtrasCopeo).val()),
+      semanal: $("input[name=tiempoExtras]:checked").val()=="semanal"?true:false,
+      subtotal: deformatMoney($('#'+id_subtotalExtrasCopeo).val()),
     }
   }
   return entradaCopeo;
@@ -652,8 +752,10 @@ function actualizarTablaCopeo(){
 
                     subprocesoCopeo.child("entradas").forEach(function(entradaSnap){
                       var entradaCopeo = entradaSnap.val();
-                      subtotal = entradaCopeo.subtotal;
-                      costoTotal = subtotal*(1+cargaSocial*0.01);
+                      subtotal_cs = entradaCopeo.subtotal;
+                      subtotal_extras = entradaCopeo.extras!==undefined?entradaCopeo.extras.subtotal:0;
+                      subtotal = subtotal_cs + subtotal_extras;
+                      costoTotal = subtotal_cs*(1+cargaSocial*0.01) + subtotal_extras;
                       subtotal_subproceso = subtotal_subproceso+subtotal;
                       costoTotal_subproceso = costoTotal_subproceso+costoTotal;
                       if(clave_proceso !== clave_sub || subtotal !== 0){
@@ -805,4 +907,6 @@ $(document).on('click','.editarCopeo', function(){
   llenaDdlEntradaCopeo(data[0], data[1], data[9]);
   $('#'+id_ddl_entradaCopeo).val(data[3]);
   cargaCamposCopeo(data[0], data[1], data[9], data[3]);
+  uid_proceso = data[1];
+  uid_subproceso = data[9];
 });
