@@ -20,6 +20,11 @@ var id_costo_copeoModalCopeo = "costoModalCopeo";
 var id_costo_copeo_CSModalCopeo = "costoCSModalCopeo";
 var id_div_totalCSModalCopeo = "divTotalCSModalCopeo";
 var id_seccion_subprocesoModalCopeo = "div_subprocesoModalCopeo";
+var id_extrasModalCopeo = "extrasModalCopeo";
+var id_costoExtrasModalCopeo = "costoExtrasModalCopeo";
+var id_multExtrasModalCopeo = "multExtrasModalCopeo";
+var id_subtotalExtrasModalCopeo = "subtotalExtrasModalCopeo";
+var id_totalExtrasModalCopeo = "totalExtrasModalCopeo";
 
 // botones del form
 var id_agregar_modalCopeo = "botonAceptarModalCopeo";
@@ -90,6 +95,7 @@ $('#' + id_sueldos_modalCopeo).click(function() {
   }
   calculaCostoDiarioModalCopeo();
   calculaCostoTotalModalCopeo();
+  calculaCostosExtrasModalCopeo();
 });
 
 //------------------ FUNCIONES DEL FORMULARIO----------------------------------
@@ -114,6 +120,7 @@ $('#' + id_lista_trabajadoresModalCopeo).change(function(){
     }
     calculaCostoDiarioModalCopeo();
     calculaCostoTotalModalCopeo();
+    calculaCostosExtrasModalCopeo();
 });
 
 // Metodo para restringir los caracteres del campo nombre
@@ -153,6 +160,7 @@ $('#'+id_carga_socialModalCopeo  ).change(function (){
     $('#'+id_carga_socialModalCopeo).val(parseFloat($('#'+id_carga_socialModalCopeo).val()).toFixed(2));
   }
   calculaCostoTotalModalCopeo();
+  calculaCostosExtrasModalCopeo();
 });
 
 // Metodo para restringir los caracteres del campo dias
@@ -168,6 +176,7 @@ $('#'+id_diasModalCopeo).change(function (){
     $('#'+id_diasModalCopeo).val(parseFloat($('#'+id_diasModalCopeo).val()).toFixed(2));
   }
   calculaCostoTotalModalCopeo();
+  calculaCostosExtrasModalCopeo();
 });
 
 // Metodo para restringir los caracteres del campo multiplicaador
@@ -183,6 +192,61 @@ $('#'+id_multModalCopeo).change(function (){
     $('#'+id_multModalCopeo).val(parseFloat($('#'+id_multModalCopeo).val()).toFixed(2));
   }
   calculaCostoTotalModalCopeo();
+  calculaCostosExtrasModalCopeo();
+});
+
+$('#'+id_extrasModalCopeo ).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789_-.(),",e);
+});
+
+$('#'+id_costoExtrasModalCopeo).keypress(function(e){
+    charactersAllowed("0123456789.",e);
+});
+
+$('#'+id_costoExtrasModalCopeo).change(function (){
+  if($('#'+id_costoExtrasModalCopeo).val() == ""){
+    $('#'+id_costoExtrasModalCopeo).val(0);
+  }else{
+    $('#'+id_costoExtrasModalCopeo).val(parseFloat($('#'+id_costoExtrasModalCopeo).val()).toFixed(2));
+  }
+  calculaCostosExtrasModalCopeo();
+});
+
+$('#'+id_costoExtrasModalCopeo).focus(function (){
+	if($('#'+id_costoExtrasModalCopeo).val() !== ""){
+		$('#'+id_costoExtrasModalCopeo).val(deformatMoney($('#'+id_costoExtrasModalCopeo).val()));
+	}
+});
+
+$('#'+id_costoExtrasModalCopeo).focusout(function (){
+	if($('#'+id_costoExtrasModalCopeo).val() !== ""){
+		$('#'+id_costoExtrasModalCopeo).val(formatMoney($('#'+id_costoExtrasModalCopeo).val()));
+	}
+});
+
+$('#'+id_multExtrasModalCopeo).change(function (){
+  if($('#'+id_multExtrasModalCopeo).val() == ""){
+    $('#'+id_multExtrasModalCopeo).val(0);
+  }else{
+    $('#'+id_multExtrasModalCopeo).val(parseFloat($('#'+id_multExtrasModalCopeo).val()).toFixed(0));
+  }
+  calculaCostosExtrasModalCopeo()
+});
+
+$('#'+id_totalExtrasModalCopeo).focus(function (){
+	if($('#'+id_totalExtrasModalCopeo).val() !== ""){
+		$('#'+id_totalExtrasModalCopeo).val(deformatMoney($('#'+id_totalExtrasModalCopeo).val()));
+	}
+});
+
+$('#'+id_totalExtrasModalCopeo).focusout(function (){
+	if($('#'+id_totalExtrasModalCopeo).val() !== ""){
+		$('#'+id_totalExtrasModalCopeo).val(formatMoney($('#'+id_totalExtrasModalCopeo).val()));
+	}
+});
+
+$("input[name=tiempoExtrasModalCopeo]").change(function (){
+  calculaCostosExtrasModalCopeo();
 });
 
 // --------------- FUNCIONES PARA CAMPOS CREADOS DINAMICAMENTE -----------------
@@ -198,6 +262,7 @@ $(document).on('change','.puestosModalCopeo', function(e){
 		}
     calculaCostoDiarioModalCopeo();
     calculaCostoTotalModalCopeo();
+    calculaCostosExtrasModalCopeo();
 });
 
 // ------------------------------ VALIDACIONES ---------------------------------
@@ -275,6 +340,12 @@ function resetFormModalCopeo (){
     $('#' + id_div_totalCSModalCopeo).addClass('hidden');
     $('#' + id_carga_socialModalCopeo).addClass('hidden');
     $('#' + id_label_cargaSocialModalCopeo).addClass('hidden');
+    $('#' + id_totalExtrasModalCopeo).addClass('hidden');
+  }else{
+    $('#' + id_div_totalCSModalCopeo).removeClass('hidden');
+    $('#' + id_carga_socialModalCopeo).removeClass('hidden');
+    $('#' + id_label_cargaSocialModalCopeo).removeClass('hidden');
+    $('#' + id_totalExtrasModalCopeo).removeClass('hidden');
   }
   $('#'+id_ddl_entradaModalCopeo).val("");
   resetFormModalCopeo_entrada();
@@ -296,6 +367,10 @@ function resetFormModalCopeo_entrada(){
     $('#'+"row-"+puestos_array[i]).removeClass("hidden");
     $('#'+puestos_array[i]).val("");
   }
+  $('#'+id_costoExtrasModalCopeo).val("$0.00");
+  $('#'+id_multExtrasModalCopeo).val(0);
+  $('#'+id_subtotalExtrasModalCopeo).val("$0.00");
+  $('#'+id_totalExtrasModalCopeo).val("$0.00");
 }
 // Metodo para cargar los trabajadores en el ddl
 function cargaListaTrabajadoresModalCopeo(){
@@ -319,6 +394,7 @@ function cargaListaTrabajadoresModalCopeo(){
           placeholder: 'Elige los puestos necesarios',
       });
       resetFormModalCopeo();
+      $('#'+id_carga_socialModalCopeo).prop("disabled", false);
   });
 }
 
@@ -429,9 +505,22 @@ function cargaCamposModalCopeo(claveEntrada){
       $('#'+"sueldo_"+key).val(formatMoney(cuadrilla[key]["sueldo_diario"]));
       i++;
     }
+    if(entrada.extras !== undefined){
+      $('#' + id_multExtrasModalCopeo).val(entrada.extras.multiplicador);
+      $('#' + id_extrasModalCopeo ).val(entrada.extras.descripcion);
+      $('#' + id_costoExtrasModalCopeo ).val(entrada.extras.costo);
+      $("input[name=tiempoExtrasModalCopeo]").filter("[value=" + (entrada.extras.semanal?"semanal":"diario") + "]").prop('checked', true);
+    } else{
+      $('#' + id_multExtrasModalCopeo).val(0);
+      $('#' + id_extrasModalCopeo ).val("");
+      $('#' + id_costoExtrasModalCopeo ).val("$0.00");
+      $("input[name=tiempoExtrasModalCopeo]").filter("[value=semanal]").prop('checked', true);
+    }
+
     selectTrabajadores.set(aux_array);
 		calculaCostoDiarioModalCopeo();
     calculaCostoTotalModalCopeo();
+    calculaCostosExtrasModalCopeo();
     if(parseFloat(claveEntrada.slice(3)) == 1){
       $('#' + id_carga_socialModalCopeo).prop("disabled", false);
     } else {
@@ -476,6 +565,20 @@ function calculaCostoTotalModalCopeo(){
   $('#'+ id_costo_copeo_CSModalCopeo).val(formatMoney(totalCS));
 }
 
+function calculaCostosExtrasModalCopeo(){
+  var subtotal = deformatMoney($('#'+id_costoExtrasModalCopeo).val()) * ($('#'+id_multExtrasModalCopeo).val()==""?0:$('#'+id_multExtrasModalCopeo).val());
+  console.log(subtotal);
+  subtotal = subtotal * $('#'+id_multModalCopeo).val() * $('#'+id_diasModalCopeo).val();
+  console.log(subtotal);
+  if($("input[name=tiempoExtrasModalCopeo]:checked").val() == "semanal"){
+    subtotal = subtotal * 0.2;
+    console.log(subtotal);
+  }
+  console.log(subtotal);
+  $('#'+id_subtotalExtrasModalCopeo).val(formatMoney(subtotal));
+  $('#'+id_totalExtrasModalCopeo).val(formatMoney(subtotal + deformatMoney($('#'+id_costo_copeo_CSModalCopeo).val())));
+}
+
 // Metodo para construir un json de la entrada con los datos del formulario
 function datosEntradaModalCopeo(){
   var entradaCopeo = {};
@@ -498,6 +601,13 @@ function datosEntradaModalCopeo(){
     multiplicadores:{
       dias: parseFloat($('#'+id_diasModalCopeo).val()),
       unidades: parseFloat($('#'+id_multModalCopeo).val())
+    },
+    extras:{
+      descripcion: $('#'+id_extrasModalCopeo).val(),
+      costo: deformatMoney($('#'+id_costoExtrasModalCopeo).val()),
+      multiplicador: parseFloat($('#'+id_multExtrasModalCopeo).val()),
+      semanal: $("input[name=tiempoExtrasModalCopeo]:checked").val()=="semanal"?true:false,
+      subtotal: deformatMoney($('#'+id_subtotalExtrasModalCopeo).val()),
     }
   }
   return entradaCopeo;

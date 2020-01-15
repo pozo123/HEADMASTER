@@ -16,7 +16,7 @@ var json_personal = {};
 
 var id_div_dropdown_areas = "dropdown_areas";
 
-var version = "test";
+var version = "version2";
 
 var rama_bd_personal = version + "/personal";
 var rama_bd_obras = version + "/obras";

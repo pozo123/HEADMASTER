@@ -702,6 +702,12 @@
                                   <input type="text" id="costoCopeoCargaModalCalculadora" class="form-control" placeholder="Copeo con carga social">
                               </div>
                           </div>
+                          <div class="form-row align-items-center">
+                              <div class="col-lg-4">
+                                  <label for="costoExtraCopeoModalCalculadora">Extras:</label>
+                                  <input type="text" id="costoExtraCopeoModalCalculadora" class="form-control" placeholder="Costos extra">
+                              </div>
+                          </div>
                           <br>
                           <h5 style ="font-weight: bold;">Suministros</h5>
                           <div class="form-row align-items-center">
@@ -820,7 +826,7 @@
                                                <div class="form-group row">
                                                    <div class = "col-sm-12">
                                                        <label for="cargaSocialModalCopeo">Alcance</label>
-                                                       <textarea class="form-control calcModalCopeoClass" id="alcanceModalCopeo" rows="5" placeholder= "Alcance de esta entrada."></textarea>
+                                                       <textarea class="form-control calcModalCopeoClass" id="alcanceModalCopeo" rows="3" placeholder= "Alcance de esta entrada."></textarea>
                                                    </div>
                                                </div>
                                                <small><p><b>Mult.</b> Hace referencia al multiplicador deseado. Ej. número de departamentos.</p></small>
@@ -881,7 +887,51 @@
                                            </div>
                                            <div class= "col-lg-4"></div>
                                        </div>
-                                     </br>
+                                       </br>
+                                       <div class="form-row">
+                                           <div class="col-12">
+                                               <small><p>Costos extras de la entrada sin carga social.</p></small>
+                                               <div class="form-group row">
+                                                   <label for="extrasModalCopeo" class="col-sm-2 col-form-label">Costos extras</label>
+                                                   <div class="col-sm-10">
+                                                       <input type="text" class="form-control calcCopeoClass" id="extrasModalCopeo" placeholder="Descripción">
+                                                   </div>
+                                               </div>
+                                               <div class="form-group text-center">
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="tiempoExtrasModalCopeo" id="rb_semanalModalCopeo" value="semanal">
+                                                        <label class="form-check-label" for="rb_semanalModalCopeo">Semanales</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="tiempoExtrasModalCopeo" id="rb_diarioModalCopeo" value="diario" checked>
+                                                        <label class="form-check-label" for="rb_diarioModalCopeo">Diarios</label>
+                                                    </div>
+                                                </div>
+                                               <div class="form-group row">
+                                                   <label for="costoExtrasModalCopeo" class="col-sm-1 col-form-label">Costo</label>
+                                                   <div class="col-sm-3">
+                                                       <input type="text" class="form-control" id="costoExtrasModalCopeo" placeholder="Precio">
+                                                   </div>
+                                                   <label for="multExtrasModalCopeo" class="col-sm-1 col-form-label">Mult</label>
+                                                   <div class="col-sm-3">
+                                                       <input type="number" class="form-control" id="multExtrasModalCopeo" placeholder="Cantidad">
+                                                   </div>
+                                                   <label for="subtotalExtrasModalCopeo" class="col-sm-1 col-form-label">Total</label>
+                                                   <div class="col-3">
+                                                       <input type="text" id="subtotalExtrasModalCopeo" class="form-control" placeholder="Total" disabled="true">
+                                                   </div>
+                                               </div>
+                                           </div>
+                                       </div>
+                                       <div class="form-group row">
+                                           <div class = "col-lg-3"></div>
+                                           <label for="totalExtrasModalCopeo" class="col-sm-3 col-form-label">Total</label>
+                                           <div class="col-sm-3">
+                                               <input type="text" disabled="true" class="form-control" id="totalExtrasModalCopeo" placeholder="Costo total" disabled="true">
+                                           </div>
+                                       </div>
+                                       </br>
+                                       </br>
                                        <div class="form-row">
                                            <div class= "col-lg-6">
                                                <button id="botonAceptarModalCopeo" type="button" class="btn btn-outline-success btn-block">Guardar</button>
@@ -3074,7 +3124,7 @@
                                                        </div>
                                                        <div class="form-group col-md-3">
                                                            <label for="nombreMarcaSuministros">Codigo:</label>
-                                                           <input type="text" name="" id="codigoDefinicionesSuministros" class="form-control" placeholder="Código" disabled="true">
+                                                           <input type="text" name="" id="codigoDefinicionesSuministros" class="form-control" placeholder="Código">
                                                        </div>
                                                    </div>
                                                    <br/>

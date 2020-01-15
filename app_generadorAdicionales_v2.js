@@ -210,7 +210,7 @@ $('#' + id_boton_calculadoraAdicionales).click(function() {
   //console.log(json_modalCalculadora);
   var info =
   {
-    nombre: $('#'+id_ddl_obra2Adicionales+' option:selected').text(),
+    nombre: $('#'+id_ddl_obraAdicionales+' option:selected').text(),
     proceso: "ADIC",
     subproceso: $('#'+id_claveAdicionales).val(),
   };
@@ -576,7 +576,7 @@ function calculaCostoCopeo(){
   var total = 0;
   if(!jQuery.isEmptyObject(json_modalCopeo)){
     for(key in json_modalCopeo.entradas){
-      total+= json_modalCopeo["entradas"][key]["subtotal"]
+      total+= json_modalCopeo["entradas"][key]["subtotal"];
     }
   }
   return total;

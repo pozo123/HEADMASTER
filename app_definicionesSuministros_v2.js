@@ -64,20 +64,24 @@ $('#' + id_boton_agregarDefinicionesSuministros).click(function(){
               }
           });
       } else {
-        console.log(rama_bd_insumos + definicion_path);
-        console.log(datosDefinicionesSuministros());
-        firebase.database().ref(rama_bd_insumos + definicion_path).push(datosDefinicionesSuministros()).then(function(snapshot){
-            var regKey = snapshot.key
-            // pista de auditoría
-            pda("alta", rama_bd_insumos + definicion_path + "/" + regKey, "");
-            alert("¡Alta exitosa!");
-            resetFormDefinicionesSuministros();
-            generaCodigoDefincionesSuministros();
-            actualizarTablaDefinicionesSuministros();
-            if($("input[name=tipoDefiniciones]:checked").val() == "familia"){
-              llenaDdlGeneric(id_ddl_familiaDefincionesSuministros, categorias.child($('#'+id_ddl_categoriaDefincionesSuministros+' option:selected').val()+'/familias'), "nombre");
-            }
-        });
+        if(!existeCodigoDefinicionSuministros($('#'+id_codigoDefinicionesSuministros).val())){
+          console.log(rama_bd_insumos + definicion_path);
+          console.log(datosDefinicionesSuministros());
+          firebase.database().ref(rama_bd_insumos + definicion_path).push(datosDefinicionesSuministros()).then(function(snapshot){
+              var regKey = snapshot.key
+              // pista de auditoría
+              pda("alta", rama_bd_insumos + definicion_path + "/" + regKey, "");
+              alert("¡Alta exitosa!");
+              resetFormDefinicionesSuministros();
+              generaCodigoDefincionesSuministros();
+              actualizarTablaDefinicionesSuministros();
+              if($("input[name=tipoDefiniciones]:checked").val() == "familia"){
+                llenaDdlGeneric(id_ddl_familiaDefincionesSuministros, categorias.child($('#'+id_ddl_categoriaDefincionesSuministros+' option:selected').val()+'/familias'), "nombre");
+              }
+          });
+        }else{
+          alert("Error, el código ya existe");
+        }
       };
     }
 });
@@ -154,6 +158,17 @@ function validateFormDefinicionesSuministros(){
        return true;
    };
 };
+
+function existeCodigoDefinicionSuministros(codigo){
+  var resp = false;
+  tabla_definiciones.rows().iterator('row', function(context, index){
+    var data = this.row(index).data();
+    if(data[2] == codigo){ //checar si coinciden insumo y marca
+      resp=true;
+    }
+  });
+  return resp;
+}
 
 function datosDefinicionesSuministros(){
   var datos = {
