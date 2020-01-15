@@ -190,12 +190,39 @@ $('#' + id_cambiarpassword_button_perfil).click(function () {
         user.updatePassword(newPassword).then(function(){
             //firebase.database().ref(rama_bd_inges + "/" + username + "/password").set(newPassword);
             $('#contraseñaModal').modal('toggle');
+            $('#' + id_newpassword_perfil).val("");
+            $('#' + id_newpassword_perfil).val("");
             alert("Se realizó el cambio de contraseña de manera satisfactoria.");
         }).catch(function(error){
             alert(error);
         });
-    }
+    };
+});
 
+$("#show_hide_password button").on('click', function(event) {
+    event.preventDefault();
+    if($('#show_hide_password input').attr("type") == "text"){
+        $('#show_hide_password input').attr('type', 'password');
+        $('#show_hide_password i').addClass( "fa-eye-slash" );
+        $('#show_hide_password i').removeClass( "fa-eye" );
+    }else if($('#show_hide_password input').attr("type") == "password"){
+        $('#show_hide_password input').attr('type', 'text');
+        $('#show_hide_password i').removeClass( "fa-eye-slash" );
+        $('#show_hide_password i').addClass( "fa-eye" );
+    }
+});
+
+$("#show_hide_password1 button").on('click', function(event) {
+    event.preventDefault();
+    if($('#show_hide_password1 input').attr("type") == "text"){
+        $('#show_hide_password1 input').attr('type', 'password');
+        $('#show_hide_password1 i').addClass( "fa-eye-slash" );
+        $('#show_hide_password1 i').removeClass( "fa-eye" );
+    }else if($('#show_hide_password1 input').attr("type") == "password"){
+        $('#show_hide_password1 input').attr('type', 'text');
+        $('#show_hide_password1 i').removeClass( "fa-eye-slash" );
+        $('#show_hide_password1 i').addClass( "fa-eye" );
+    }
 });
 
 $("#cerrarSesion").click((function () {

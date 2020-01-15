@@ -354,7 +354,6 @@ $('#' + id_button_generar_reporte_pagos).click(function(){
                     }},
                   ],
                   "paging":false,
-                  "aaSorting": []
             });
         } else {
             console.log(1);
