@@ -30,6 +30,7 @@ var id_ddl_week_dash_prod = "weekDashProd";
 
 var json_procesos = {};
 var json_datos_semana = {};
+
 var json_registros_obra = {};
 
 // voy a necesitar un json de trabajadores.
@@ -319,6 +320,11 @@ $('#' + id_ddl_obra_dash_prod).change(function(){
                             subCopeoSnap.child("entradas").forEach(function(entradaSnap){
                                 json_procesos[proc].copeo +=  (entradaSnap.val().subtotal)*(1+impuestos);
                                 copeo += (entradaSnap.val().subtotal)*(1+impuestos);
+
+                                if(entradaSnap.val().extras !== undefined){
+                                    json_procesos[proc].copeo +=  entradaSnap.val().extras.subtotal;
+                                    copeo += entradaSnap.val().extras.subtotal;
+                                };
                             });
                         })
                     });
@@ -672,8 +678,6 @@ $('#' + id_ddl_week_dash_prod).change(function(){
                     monto:0
                 };
             });
-
-
             snapshot.child("puestos").forEach(function(puestoSnap){
                 puesto_json[puestoSnap.key] = {
                     nombre: puestoSnap.val().puesto,

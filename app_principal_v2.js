@@ -1,7 +1,5 @@
 var version;
-var userPro = ""
 var fotoSeleccionada = ""
-var rama_storage_personal  = "personal"
 var id_newpassword_perfil = "newpass";
 var id_confirmpass_perfil = "confirm";
 var id_cambiarpassword_button_perfil = "button_cambio_contraseña";
@@ -28,6 +26,8 @@ var rama_bd_nomina = version + "/rrhh/nomina"
 var rama_bd_pagos = version + "/administracion/pagos"
 var rama_bd_info_web = "info_web";
 var rama_bd_insumos = version + "/insumos";
+
+var rama_storage_personal = version + "/personal";
 
 var options_semanas = { weekday: 'short', year: 'numeric', month: 'numeric', day: 'numeric'};
 var options_nomina = { weekday: 'short',day: 'numeric'};
@@ -59,7 +59,6 @@ firebase.auth().onAuthStateChanged(user => {
     if(user) {
         $('body').removeClass("hidden");
         uid_usuario_global = user.uid;
-        userUID = user.uid;
         firebase.database().ref(rama_bd_personal + "/colaboradores").on('value', function (snapshot) {
             var user_personal = snapshot.child(user.uid).val();
 
@@ -67,7 +66,6 @@ firebase.auth().onAuthStateChanged(user => {
             creden_usuario_global = user_personal.credenciales;
 
             // activar pestañas
-
             for(key in areas_usuario_global){
                 if(areas_usuario_global[key] == true){
                     $("." + key).removeClass("hidden");
@@ -75,6 +73,28 @@ firebase.auth().onAuthStateChanged(user => {
                     $("." + key).addClass("hidden");
                 }
             };
+
+            if(creden_usuario_global == 3){
+                $(".creden-3").removeClass("hidden");
+                $(".creden-2").addClass("hidden");
+                $(".creden-1").addClass("hidden");
+                $(".creden-0").addClass("hidden");
+            } else if(creden_usuario_global == 2){
+                $(".creden-3").removeClass("hidden");
+                $(".creden-2").removeClass("hidden");
+                $(".creden-1").addClass("hidden");
+                $(".creden-0").addClass("hidden");
+            } else if(creden_usuario_global == 1) {
+                $(".creden-3").removeClass("hidden");
+                $(".creden-2").removeClass("hidden");
+                $(".creden-1").removeClass("hidden");
+                $(".creden-0").addClass("hidden");
+            } else {
+                $(".creden-3").removeClass("hidden");
+                $(".creden-2").removeClass("hidden");
+                $(".creden-1").removeClass("hidden");
+                $(".creden-0").removeClass("hidden");
+            }
 
             if(user_personal.foto_url){
                 var imagen = document.getElementById("img_foto");
@@ -128,7 +148,7 @@ $('#fotoPersonal_input').on("change", function(event){
 
 function subirFotoPersonal(){
     var fileName = fotoSeleccionada.name;
-    var storageRef = firebase.storage().ref(rama_storage_personal + "/" + userUID + "/" + fileName);
+    var storageRef = firebase.storage().ref(rama_storage_personal + "/colaboradores/" + uid_usuario_global + "/" + fileName);
 
     var uploadTask = storageRef.put(fotoSeleccionada);
 
@@ -147,35 +167,30 @@ function subirFotoPersonal(){
         }
     }, function(error) {
         // Handle unsuccessful uploads
+        console.log(error);
     }, function() {
         // Handle successful uploads on complete
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
             console.log('File available at', downloadURL);
             var updates = {}
-            var data = {
-                url: downloadURL,
-            }
-            updates["/" + rama_bd_personal + "/" + userUID + "/foto"] = data;
-            firebase.database().ref().update(updates);
 
-            setTimeout(() => {
-                location.reload();
-            }, 3000);
+            updates[rama_bd_personal + "/colaboradores/" + uid_usuario_global + "/foto_url"] = downloadURL;
+            firebase.database().ref().update(updates);
         });
     });
 }
 
 $('#' + id_cambiarpassword_button_perfil).click(function () {
     if($('#' + id_newpassword_perfil).val() != $('#' + id_confirmpass_perfil).val())
-        alert("Password doesn't match");
+        alert("No coinciden las nuevas contraseñas");
     else{
-        var user = firebase.auth().currentUser;
-        //var username = user.uid;
         var newPassword = $('#' + id_newpassword_perfil).val();
+        var user = firebase.auth().currentUser;
         user.updatePassword(newPassword).then(function(){
             //firebase.database().ref(rama_bd_inges + "/" + username + "/password").set(newPassword);
-            alert("Cambio exitoso");
+            $('#contraseñaModal').modal('toggle');
+            alert("Se realizó el cambio de contraseña de manera satisfactoria.");
         }).catch(function(error){
             alert(error);
         });

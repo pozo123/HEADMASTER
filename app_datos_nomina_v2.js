@@ -1214,15 +1214,21 @@ function actualizarTablaDatosNomina(){
                 columns.push({title: "A pagar"});
                 columns.push({title: "Horas extra"});
                 columns.push({title: "Importe H.E."});
+
+                var diversos_index_json = {}
                 // Generar columnas
                 divSnap.forEach(function(snapshot){
                     columns.push({title: snapshot.val()})
+                    diversos_index_json[snapshot.val()] = 0;
                 })
+
+                console.log(diversos_index_json);
 
                 columns.push({title: "Total Diversos"});
                 columns.push({title: "Pago Total"});
                 // Generar datos
-                // generar tabla          
+                // generar tabla       
+                   
                 var registros = regSnap.val();
                 listaSnap.forEach(function(snapshot){
                     var datos_reg = [];
@@ -1309,6 +1315,8 @@ function actualizarTablaDatosNomina(){
                     if(registro.diversos != undefined){
                         for(key in registro.diversos){
                             diversos[registro.diversos[key].nombre] += registro.diversos[key].cantidad;
+                            // en abs ya que se podría anular dos registros distintos a 0;
+                            diversos_index_json[registro.diversos[key].nombre] += Math.abs(registro.diversos[key].cantidad);
                             total_diversos += registro.diversos[key].cantidad;
                         };
                     };
@@ -1322,6 +1330,19 @@ function actualizarTablaDatosNomina(){
                     datos_nominas.push(datos_reg)
                     
                 })
+
+                //
+                console.log(diversos_index_json);
+                var index_array =[0];
+                var i = 0;
+                for(key in diversos_index_json){
+                    if(diversos_index_json[key] == 0){
+                        index_array.push(15 + i)
+                        i++
+                        console.log(key);
+                    }
+                }
+
                 tabla_datos_nomina = $('#'+ id_dataTable_datos_nomina).DataTable({
                     destroy: true,
                     data: datos_nominas,
@@ -1332,7 +1353,7 @@ function actualizarTablaDatosNomina(){
                     dom: 'Bfrtip',
                     "columnDefs": [
                         { "width": "300px", "targets": 4 },
-                        { "visible": false, "targets": 0 },
+                        { "visible": false, "targets": index_array},
                         {
                             targets: [12,14,-2,-1],
                             className: 'bolded'
