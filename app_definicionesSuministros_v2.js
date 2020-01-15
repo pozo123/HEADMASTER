@@ -21,12 +21,14 @@ var tabla_definiciones;
 var existeDefinicionSuministros;
 var uid_existente;
 
+// Función para incializar esta página
 $('#' + id_tab_definicionesSuministros).click(function() {
+    // Inicialización de variables
     existeDefinicionSuministros = false;
     uid_existente="";
+    // Setup inicial
     $('#' + id_div_ddl_categoriaDefincionesSuministros).addClass('hidden');
     $('#' + id_div_ddl_familiaDefincionesSuministros).addClass('hidden');
-
     firebase.database().ref(rama_bd_insumos + "/categorias").orderByChild('nombre').on('value',function(snapshot){
       var index = $('#'+id_ddl_categoriaDefincionesSuministros+' option:selected').val();
       categorias = snapshot;
@@ -40,59 +42,77 @@ $('#' + id_tab_definicionesSuministros).click(function() {
     actualizarTablaArbolDefinicionesSuministros();
 });
 
+// Funcion para limpiar el formulario
 $('#' + id_boton_borrarDefinicionesSuministros).click(function(){
     resetFormDefinicionesSuministros();
 });
 
+// Funcion para agregar o editar una definición
 $('#' + id_boton_agregarDefinicionesSuministros).click(function(){
-    if(validateFormDefinicionesSuministros()){
-      var definicion_path = getPathDefinicionesSuministros();
-      if (existeDefinicionSuministros == true){
-          firebase.database().ref(rama_bd_insumos + definicion_path +"/" + uid_existente).once("value").then(function(snapshot){
-              var registro_antiguo = snapshot.val();
-              var definicion_update = {};
-              definicion_update["nombre"] = $('#' + id_nombreDefinicionesSuministros).val();
-              firebase.database().ref(rama_bd_insumos + definicion_path +"/" + uid_existente).update(definicion_update);
+    var definicion_path = getPathDefinicionesSuministros(); //obtener la rama de la base de datos
+    if(validateFormDefinicionesSuministros() && definicion_path !== ""){ // Verificar los datos del formulario
+      if(!existeCodigoDefinicionSuministros($('#'+id_codigoDefinicionesSuministros).val())){ //verificar que no se repita el codigo
+        $('#' + id_boton_agregarDefinicionesSuministros).prop("disabled", true); //desactivar boton
+        if (existeDefinicionSuministros == true){ //editar
+            firebase.database().ref(rama_bd_insumos + definicion_path +"/" + uid_existente).once("value").then(function(snapshot){
+                var registro_antiguo = snapshot.val();
+                var definicion_update = {}; //actualizar campos
+                definicion_update["nombre"] = $('#' + id_nombreDefinicionesSuministros).val();
+                definicion_update["codigo"] = $('#' + id_codigoDefinicionesSuministros).val();
+                firebase.database().ref(rama_bd_insumos + definicion_path +"/" + uid_existente).update(definicion_update); //escribir en la base de datos
 
-              // pda
-              pda("modificacion", rama_bd_insumos + definicion_path +"/" + uid_existente, registro_antiguo);
-              alert("¡Edición exitosa!");
-              resetFormDefinicionesSuministros();
-              actualizarTablaDefinicionesSuministros();
-              if($("input[name=tipoDefiniciones]:checked").val() == "familia"){
+                // pista de auditoria
+                pda("modificacion", rama_bd_insumos + definicion_path +"/" + uid_existente, registro_antiguo);
+                alert("¡Edición exitosa!");
+                resetFormDefinicionesSuministros(); //limpiar formulario
+                actualizarTablaDefinicionesSuministros(); //actualizar tabla de ese tipo
+                if($("input[name=tipoDefiniciones]:checked").val() == "familia"){
+                  llenaDdlGeneric(id_ddl_familiaDefincionesSuministros, categorias.child($('#'+id_ddl_categoriaDefincionesSuministros+' option:selected').val()+'/familias'), "nombre");
+                }
+                $('#' + id_boton_agregarDefinicionesSuministros).prop("disabled", false); //activar boton
+            });
+        } else { //dar de alta
+          //console.log(rama_bd_insumos + definicion_path);
+          //console.log(datosDefinicionesSuministros());
+          firebase.database().ref(rama_bd_insumos + definicion_path).push(datosDefinicionesSuministros()).then(function(snapshot){ //agregar a la base de datos
+              var regKey = snapshot.key
+              // pista de auditoría
+              pda("alta", rama_bd_insumos + definicion_path + "/" + regKey, "");
+              alert("¡Alta exitosa!");
+              resetFormDefinicionesSuministros(); //limpiar formulario
+              generaCodigoDefincionesSuministros(); //generar el siguiente codigo
+              actualizarTablaDefinicionesSuministros(); //actualizar tabla de ese tipo
+              if($("input[name=tipoDefiniciones]:checked").val() == "familia"){ //cargar familias si están seleccionadas
                 llenaDdlGeneric(id_ddl_familiaDefincionesSuministros, categorias.child($('#'+id_ddl_categoriaDefincionesSuministros+' option:selected').val()+'/familias'), "nombre");
               }
+              $('#' + id_boton_agregarDefinicionesSuministros).prop("disabled", false); //activar boton
           });
-      } else {
-        console.log(rama_bd_insumos + definicion_path);
-        console.log(datosDefinicionesSuministros());
-        firebase.database().ref(rama_bd_insumos + definicion_path).push(datosDefinicionesSuministros()).then(function(snapshot){
-            var regKey = snapshot.key
-            // pista de auditoría
-            pda("alta", rama_bd_insumos + definicion_path + "/" + regKey, "");
-            alert("¡Alta exitosa!");
-            resetFormDefinicionesSuministros();
-            generaCodigoDefincionesSuministros();
-            actualizarTablaDefinicionesSuministros();
-            if($("input[name=tipoDefiniciones]:checked").val() == "familia"){
-              llenaDdlGeneric(id_ddl_familiaDefincionesSuministros, categorias.child($('#'+id_ddl_categoriaDefincionesSuministros+' option:selected').val()+'/familias'), "nombre");
-            }
-        });
-      };
+        }
+      }else{
+        alert("Error, código repetido");
+      }
     }
 });
 
-// ----------------------- VALIDACIÓN DE FORMULARIO ------------------------
+// ----------------------- VALIDACIÓN DE FORMULARIO ---------------------------
+// Metodo para restringir caracteres en el campo nombre
 $('#' + id_nombreDefinicionesSuministros).keypress(function(e){
-    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789áéíóú-",e);
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyz ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789áéíóú-.,",e);
 });
 
+// Metodo para eliminar espacios extra en el campo nombre
 $('#' + id_nombreDefinicionesSuministros).change(function(){
     $('#' + id_nombreDefinicionesSuministros).val(deleteBlankSpaces(id_nombreDefinicionesSuministros));
 });
 
+// Metodo para restringir varacteres en el campo nombre
+$('#' + id_codigoDefinicionesSuministros).keypress(function(e){
+    charactersAllowed("0123456789",e);
+});
+
+// Método para esconder o mostrar ddls según el tipo de definición
 $("input[name=tipoDefiniciones]").change(function (){
-  console.log($("input[name=tipoDefiniciones]:checked").val());
+  //console.log($("input[name=tipoDefiniciones]:checked").val());
   if($("input[name=tipoDefiniciones]:checked").val() == "familia"){
     $('#' + id_div_ddl_categoriaDefincionesSuministros).removeClass('hidden');
     $('#' + id_div_ddl_familiaDefincionesSuministros).addClass('hidden');
@@ -107,18 +127,21 @@ $("input[name=tipoDefiniciones]").change(function (){
   generaCodigoDefincionesSuministros();
 });
 
+// Función para cargar la información de las familias cuando se elige categoría
 $('#' + id_ddl_categoriaDefincionesSuministros).change(function(){
     llenaDdlGeneric(id_ddl_familiaDefincionesSuministros, categorias.child($('#'+id_ddl_categoriaDefincionesSuministros+' option:selected').val()+'/familias'), "nombre");
     generaCodigoDefincionesSuministros();
     actualizarTablaDefinicionesSuministros();
 });
 
+// Función activada cuando se elige una familia
 $('#' + id_ddl_familiaDefincionesSuministros).change(function(){
     generaCodigoDefincionesSuministros();
     actualizarTablaDefinicionesSuministros();
 });
 
 // ----------------------- FUNCIONES NECESARIAS -------------------------------
+// Función para limpiar el formulario y reiniciar variables
 function resetFormDefinicionesSuministros(){
   $('#' + id_nombreDefinicionesSuministros).val("");
   // $('#' + id_codigoDefinicionesSuministros).val("");
@@ -127,9 +150,13 @@ function resetFormDefinicionesSuministros(){
   uid_existente = "";
 }
 
+//Función para validar los datos del formulario
 function validateFormDefinicionesSuministros(){
    if($('#' + id_nombreDefinicionesSuministros).val() == ""){
        alert("Escribe el nombre del campo que deseas dar de alta en el sistema. Ejemplo: Siemens");
+       return false;
+   } else if($('#' + id_codigoDefinicionesSuministros).val().length !== 2){
+       alert("El código debe tener dos dígitos numéricos");
        return false;
    } else if($('#'+ id_rb_familiaDefinicionesSuministros).prop('checked')){
      // console.log("Familia check");
@@ -155,6 +182,25 @@ function validateFormDefinicionesSuministros(){
    };
 };
 
+// Función para verificar si el código es repetido
+function existeCodigoDefinicionSuministros(codigo){
+  var resp = false;
+  tabla_definiciones.rows().iterator('row', function(context, index){
+    var data = this.row(index).data();
+    if(data[2] == codigo){ //checar hay otro código igual
+      if(existeDefinicionSuministros){ //checar si se está editando
+        if(uid_existente !== data[0]){ //checar si no corresponde al mismo registro que se esta editando
+          resp=true;
+        }
+      }else{
+        resp=true;
+      }
+    }
+  });
+  return resp;
+}
+
+// Función para generar el json de la definición
 function datosDefinicionesSuministros(){
   var datos = {
     nombre: $('#' + id_nombreDefinicionesSuministros).val(),
@@ -163,6 +209,7 @@ function datosDefinicionesSuministros(){
   return datos;
 }
 
+// Función para generar el path de la base de datos de acuerdo al tipo de definición
 function getPathDefinicionesSuministros(){
   var definicion_path="";
   switch($("input[name=tipoDefiniciones]:checked").val()){
@@ -189,11 +236,12 @@ function getPathDefinicionesSuministros(){
   return definicion_path;
 }
 
+// Función para actualizar la tabla del tipo de definición
 function actualizarTablaDefinicionesSuministros(){
    var path = getPathDefinicionesSuministros();
-   console.log(rama_bd_insumos + path);
+   //console.log(rama_bd_insumos + path);
    firebase.database().ref(rama_bd_insumos + path).once("value", function(snapshot){
-       console.log("Actualiza tabla");
+       //console.log("Actualiza tabla");
        var datos = [];
        snapshot.forEach(function(childSnap){
            var definicion = childSnap.val();
@@ -215,14 +263,20 @@ function actualizarTablaDefinicionesSuministros(){
              {title: "id_definicion"},
              {title: "Nombre"},
              {title: "Codigo"},
-             {title: "Editar"}
+             {title: "Editar"},
+             {title: "Eliminar"},
            ],
            "order": [[2,"asc"]],
            "columnDefs": [
                {
-                   "targets": -1,
+                   "targets": -2,
                    "data": null,
                    "defaultContent": "<button type='button' class='editarDefinicionesSuministros btn btn-info'><i class='fas fa-edit'></i></button>"
+               },
+               {
+                   "targets": -1,
+                   "data": null,
+                   "defaultContent": "<button type='button' class='eliminarDefinicionesSuministros btn btn-danger'><i class='fas fa-trash'></i></button>"
                },
                {
                    targets: -1,
@@ -231,33 +285,41 @@ function actualizarTablaDefinicionesSuministros(){
                { "visible": false, "targets": 0},
              ]
        });
-       /*
-       $('#' + id_dataTable_definicionesSuministros + ' tbody').on( 'click', '.editarDefinicionesSuministros', function () {
-           var data = tabla_definiciones.row( $(this).parents('tr') ).data();
-           resetFormDefinicionesSuministros();
-           existeDefinicionSuministros = true;
-           uid_existente = data[0];
-           $('#' + id_nombreDefinicionesSuministros).val(data[1]);
-           $('#' + id_codigoDefinicionesSuministros).val(data[2]);;
-       });
-       */
    });
 };
 
+// Función para editar una definición al dar click en el icono de la tabla
 $(document).on('click','.editarDefinicionesSuministros', function(){
   //console.log("Editar");
-  var data = tabla_definiciones.row( $(this).parents('tr') ).data();
-  resetFormDefinicionesSuministros();
+  var data = tabla_definiciones.row($(this).parents('tr')).data();
+  resetFormDefinicionesSuministros(); //limpiar formulario
   existeDefinicionSuministros = true;
   uid_existente = data[0];
   $('#' + id_nombreDefinicionesSuministros).val(data[1]);
-  $('#' + id_codigoDefinicionesSuministros).val(data[2]);;
+  $('#' + id_codigoDefinicionesSuministros).val(data[2]);
 });
 
-function generaCodigoDefincionesSuministros(){
+// Función para eliminar una definición al dar click en el icono de la tabla
+$(document).on('click','.eliminarDefinicionesSuministros', function(){
+  //console.log("Editar");
+  var data = tabla_definiciones.row($(this).parents('tr')).data();
+  var definicion_update = {}; //actualizar campos
+  definicion_update[data[0]] = null;
+  console.log(definicion_update);
   var path = getPathDefinicionesSuministros();
-  firebase.database().ref(rama_bd_insumos + path).limitToLast(1).once("value", function(snapshot){
-    console.log(rama_bd_insumos + path);
+  if(path !== ""){
+    firebase.database().ref(rama_bd_insumos + path).update(definicion_update);
+    actualizarTablaDefinicionesSuministros();
+  } else {
+    alert("Error");
+  }
+});
+
+// Función para generar un código consecutivo al último
+function generaCodigoDefincionesSuministros(){
+  var path = getPathDefinicionesSuministros(); // obtener el path de la bd
+  firebase.database().ref(rama_bd_insumos + path).orderByChild("codigo").limitToLast(1).once("value", function(snapshot){
+    //console.log(rama_bd_insumos + path);
     var codigo;
     if(snapshot.exists()){
       for(key in snapshot.val()){
@@ -271,15 +333,16 @@ function generaCodigoDefincionesSuministros(){
   });
 }
 
+// Función para actualizar la tabla global de categorías, familias y subfamilias
 function actualizarTablaArbolDefinicionesSuministros(){
    firebase.database().ref(rama_bd_insumos + "/categorias").on("value", function(snapshot){
-       console.log("Actualiza tabla");
+       //console.log("Actualiza tabla");
        var datos = [];
-       var cont = 0;
+       var cont = 0; // sirve para conservar el orden deseado de los renglones
        if(snapshot.exists()){
          var categorias = snapshot.val();
          var codigo1, codigo2;
-         for(key1 in categorias){
+         for(key1 in categorias){ //categorías
            codigo1 = categorias[key1]["codigo"];
            datos.push([
              cont,
@@ -289,7 +352,7 @@ function actualizarTablaArbolDefinicionesSuministros(){
              codigo1,
            ]);
            cont += 1;
-           for(key2 in categorias[key1]["familias"]){
+           for(key2 in categorias[key1]["familias"]){ //familias
              codigo2=categorias[key1]["familias"][key2]["codigo"];
              datos.push([
                cont,
@@ -299,7 +362,7 @@ function actualizarTablaArbolDefinicionesSuministros(){
                codigo1+codigo2,
              ]);
              cont += 1;
-             for (key3 in categorias[key1]["familias"][key2]["subfamilias"]){
+             for (key3 in categorias[key1]["familias"][key2]["subfamilias"]){ //subfamilias
                datos.push([
                  cont,
                  "",
@@ -316,6 +379,14 @@ function actualizarTablaArbolDefinicionesSuministros(){
            destroy: true,
            data: datos,
            language: idioma_espanol,
+           dom: 'Bfrtip',
+           buttons: [
+               {extend: 'excelHtml5',
+               title: "DefinicionesCatalogo",
+               exportOptions: {
+                   columns: [1,2,3,4]
+               }}
+           ],
            columns:[
              {title: "indice"},
              {title: "Categoría"},
@@ -323,7 +394,8 @@ function actualizarTablaArbolDefinicionesSuministros(){
              {title: "Subfamilia"},
              {title: "Código"}
            ],
-           "paging":false,
+           "paging":false, //desplegar tabla completa
+           "ordering":false, //no reordenar
            "order": [[0,"asc"]],
            "columnDefs": [
                { "visible": false, "targets": 0},

@@ -288,14 +288,12 @@ $('#'+id_costoExtrasCopeo).change(function (){
   calculacostosExtraCopeo();
 });
 
-// Metodo accionado cuando precio cliente es enfocado
 $('#'+id_costoExtrasCopeo).focus(function (){
 	if($('#'+id_costoExtrasCopeo).val() !== ""){
 		$('#'+id_costoExtrasCopeo).val(deformatMoney($('#'+id_costoExtrasCopeo).val()));
 	}
 });
 
-// Metodo accionado cuando precio cliente pierde enfoque
 $('#'+id_costoExtrasCopeo).focusout(function (){
 	if($('#'+id_costoExtrasCopeo).val() !== ""){
 		$('#'+id_costoExtrasCopeo).val(formatMoney($('#'+id_costoExtrasCopeo).val()));
@@ -311,16 +309,12 @@ $('#'+id_multExtrasCopeo).change(function (){
   calculacostosExtraCopeo()
 });
 
-
-
-// Metodo accionado cuando precio cliente es enfocado
 $('#'+id_totalExtrasCopeo).focus(function (){
 	if($('#'+id_totalExtrasCopeo).val() !== ""){
 		$('#'+id_totalExtrasCopeo).val(deformatMoney($('#'+id_totalExtrasCopeo).val()));
 	}
 });
 
-// Metodo accionado cuando precio cliente pierde enfoque
 $('#'+id_totalExtrasCopeo).focusout(function (){
 	if($('#'+id_totalExtrasCopeo).val() !== ""){
 		$('#'+id_totalExtrasCopeo).val(formatMoney($('#'+id_totalExtrasCopeo).val()));
@@ -706,6 +700,9 @@ function verificaEntradas(json_subproceso){
   var suma = 0;
   for (key in json_subproceso.entradas){
       suma = suma + json_subproceso.entradas[key]["subtotal"];
+      if(json_subproceso.entradas[key]["extras"] !== undefined){
+        suma = suma + json_subproceso.entradas[key]["extras"]["subtotal"];
+      }
   }
   if (suma !== 0){
     return true;
