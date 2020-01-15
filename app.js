@@ -15,7 +15,7 @@ $(document).ready(function() {
             firebase.database().ref(rama_bd_personal_v2 + "/" + user.uid + "/areas").once('value').then(function(snapshot_v2){
                 if(snapshot_v2.exists()){
                     var areas = snapshot_v2.val();
-                    if(areas.produccion || areas.compras || area.rrhh){
+                    if(areas.produccion || areas.compras || areas.rrhh){
                         window.location.assign("headmaster.html");
                     } else if(areas.proyectos){
                         window.location.assign("proyectos.html");

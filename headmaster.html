@@ -63,20 +63,31 @@
                     <div class="modal-body">
                         <div class="container">
                             <form onsubmit="return false;">
-                                <div class="form-group">
-                                    <label for="">Ingresa la nueva contraseña</label>
-                                    <input type="password" name="" id="newpass" class="form-control" placeholder="" aria-describedby="helpId">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="">Confirma la nueva contraseña</label>
-                                    <input type="password" name="" id="confirm" class="form-control" placeholder="" aria-describedby="helpId">
+                                <div class="form-row">
+                                    <div class="col-2"></div>
+                                    <div class="col-8">
+                                        <div class="form-group">
+                                            <label>Ingresa la nueva contraseña</label>
+                                            <div class="input-group-prepend show_hide_password" id="show_hide_password">
+                                                <button class="btn btn-outline-secondary" type="button"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
+                                                <input type="password" name="" id="newpass" class="form-control" placeholder="" aria-describedby="helpId">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Confirma la nueva contraseña</label>
+                                            <div class="input-group-prepend" id="show_hide_password1">
+                                                <button class="btn btn-outline-secondary" type="button"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
+                                                <input type="password" name="" id="confirm" class="form-control" placeholder="" aria-describedby="helpId">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class= "col-2"></div>
                                 </div>
                                 <div class="form-row align-items-center">
-                                    <div class="col-md-6 col-sm-12">
+                                    <div class="col-6">
                                         <button id="button_cambio_contraseña" type="submit" class="btn btn-outline-success btn-block">Aceptar</button>
                                     </div>
-                                    <div class="col-md-6 col-sm-12">
+                                    <div class="col-6">
                                         <button data-dismiss="modal" type="button" class="btn btn-outline-secondary btn-block">Cerrar</button>
                                     </div>
                                 </div>
@@ -1221,15 +1232,15 @@
                     <li>
                         <a href="#pageDashboard" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Dashboard</a>
                         <ul class="collapse list-unstyled" id="pageDashboard">
-                            <li class="tab administracion hidden" id="tabDashProd"><a href="#" onclick="openTabs('tabDashProd','dashboardProduccion')">Dash - Producción</a></li>
+                            <li class="tab" id="tabDashProd"><a href="#" onclick="openTabs('tabDashProd','dashboardProduccion')">Dash - Producción</a></li>
                         </ul>
                     </li>
                     <li class="">
-                        <a href="#pageAdministracion" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Administración</a>
+                        <a href="#pageAdministracion" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle administracion hidden" >Administración</a>
                         <ul class="collapse list-unstyled administracion hidden" id="pageAdministracion">
                             <a href="#pageAltas" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Altas</a>
                             <ul class="collapse list-unstyled " id="pageAltas">
-                                <li class="tab" id="tabColaboradorHEAD"><a href="#" onclick="openTabs('tabColaboradorHEAD','colaboradorHEAD')">Alta y Edición - Colaboradores HEAD</a></li>
+                                <li class="tab administracion hidden" id="tabColaboradorHEAD"><a href="#" onclick="openTabs('tabColaboradorHEAD','colaboradorHEAD')">Alta y Edición - Colaboradores HEAD</a></li>
                                 <li class="tab administracion hidden" id="tabAltaCliente"><a href="#" onclick="openTabs('tabAltaCliente','altaCliente')">Alta y Edición - Despachos (Clientes)</a></li>
                                 <li class="tab administracion hidden" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Alta y Edición - Obras</a></li>
                                 <li class="tab administracion hidden" id="tabAltaProcesos"><a href="#" onclick="openTabs('tabAltaProcesos','altaProcesos')">Alta y Edición - Procesos</a></li>
@@ -1257,7 +1268,7 @@
                     <li class = "produccion hidden">
                         <a href="#pageProduccion" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Producción</a>
                         <ul class="collapse list-unstyled" id="pageProduccion">
-                            <li class="tab" id="tabCopeo"><a href="#" onclick="openTabs('tabCopeo','copeo')">Copeo</a></li>
+                            <li class="tab creden-2" id="tabCopeo"><a href="#" onclick="openTabs('tabCopeo','copeo')">Copeo</a></li>
                             <li class="tab" id="tabSolicitudAdicional"><a href="#" onclick="openTabs('tabSolicitudAdicional','solicitudAdicional')">Solicitud de Adicionales</a></li>
                             <li class="tab creden-2" id="tabAsignacionSupervisores"><a href="#" onclick="openTabs('tabAsignacionSupervisores','asignacionSupervisores')">Asignación de supervisores</a></li>
                         </ul>
@@ -1273,7 +1284,7 @@
                     <li>
                         <a href="#pageReportes" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Reportes</a>
                         <ul class="collapse list-unstyled" id="pageReportes">
-                            <li class="tab administracion rrhh hidden" id="tabReporteNomina"><a href="#" onclick="openTabs('tabReporteNomina','reporteNomina')">Mano de obra</a></li>
+                            <li class="tab administracion rrhh produccion hidden" id="tabReporteNomina"><a href="#" onclick="openTabs('tabReporteNomina','reporteNomina')">Mano de obra</a></li>
                             <li class="tab administracion hidden" id="tabReportePagos"><a href="#" onclick="openTabs('tabReportePagos','reportePagos')">Pagos recibidos</a></li>
                         </ul>
                     </li>

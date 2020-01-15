@@ -9,7 +9,6 @@ var id_ddl_obra_asignacion_supervisor = "obraAsignacionSupervisor";
 var id_multiple_supervisores_asignacion_supervisor = "supervisoresMultipleAsignacionSupervisor";
 
 // boton para asignar obras
-
 var id_button_asignar_asignacion_supervisor = "aceptarButtonAsignacionSupervisor";
 
 var select_asignacion_supervisor;
