@@ -307,11 +307,14 @@ $(document).on('click','.eliminarDefinicionesSuministros', function(){
   definicion_update[data[0]] = null;
   console.log(definicion_update);
   var path = getPathDefinicionesSuministros();
-  if(path !== ""){
-    firebase.database().ref(rama_bd_insumos + path).update(definicion_update);
-    actualizarTablaDefinicionesSuministros();
-  } else {
-    alert("Error");
+  var r = confirm("¿Seguro que quieres borrar esta rama?");
+  if (r){
+    if(path !== ""){
+      firebase.database().ref(rama_bd_insumos + path).update(definicion_update);
+      actualizarTablaDefinicionesSuministros();
+    } else {
+      alert("Error");
+    }
   }
 });
 
