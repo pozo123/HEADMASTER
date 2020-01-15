@@ -263,14 +263,20 @@ function actualizarTablaDefinicionesSuministros(){
              {title: "id_definicion"},
              {title: "Nombre"},
              {title: "Codigo"},
-             {title: "Editar"}
+             {title: "Editar"},
+             {title: "Eliminar"},
            ],
            "order": [[2,"asc"]],
            "columnDefs": [
                {
-                   "targets": -1,
+                   "targets": -2,
                    "data": null,
                    "defaultContent": "<button type='button' class='editarDefinicionesSuministros btn btn-info'><i class='fas fa-edit'></i></button>"
+               },
+               {
+                   "targets": -1,
+                   "data": null,
+                   "defaultContent": "<button type='button' class='eliminarDefinicionesSuministros btn btn-danger'><i class='fas fa-trash'></i></button>"
                },
                {
                    targets: -1,
@@ -290,13 +296,29 @@ $(document).on('click','.editarDefinicionesSuministros', function(){
   existeDefinicionSuministros = true;
   uid_existente = data[0];
   $('#' + id_nombreDefinicionesSuministros).val(data[1]);
-  $('#' + id_codigoDefinicionesSuministros).val(data[2]);;
+  $('#' + id_codigoDefinicionesSuministros).val(data[2]);
+});
+
+// Función para eliminar una definición al dar click en el icono de la tabla
+$(document).on('click','.eliminarDefinicionesSuministros', function(){
+  //console.log("Editar");
+  var data = tabla_definiciones.row($(this).parents('tr')).data();
+  var definicion_update = {}; //actualizar campos
+  definicion_update[data[0]] = null;
+  console.log(definicion_update);
+  var path = getPathDefinicionesSuministros();
+  if(path !== ""){
+    firebase.database().ref(rama_bd_insumos + path).update(definicion_update);
+    actualizarTablaDefinicionesSuministros();
+  } else {
+    alert("Error");
+  }
 });
 
 // Función para generar un código consecutivo al último
 function generaCodigoDefincionesSuministros(){
   var path = getPathDefinicionesSuministros(); // obtener el path de la bd
-  firebase.database().ref(rama_bd_insumos + path).limitToLast(1).once("value", function(snapshot){
+  firebase.database().ref(rama_bd_insumos + path).orderByChild("codigo").limitToLast(1).once("value", function(snapshot){
     //console.log(rama_bd_insumos + path);
     var codigo;
     if(snapshot.exists()){
