@@ -160,6 +160,7 @@ Nota: Todo float se ingresa a 2 decimales.
                 - monto_autorizado: float
                 - fecha_autorizacion: timestamps
                 - url_file: string
+                - info_adicional: string
         - equipos
             - obra
                 - iva:

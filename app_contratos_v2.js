@@ -10,6 +10,7 @@ var id_dataTable_contratos_obra = "dataTableContratosObra";
 var id_ddl_obra_contratos_obra = "obraContratosObra";
 var id_input_monto_contratos_obra = "montoContratosObra";
 var id_input_fecha_contratos_obra = "fechaAutorizacionContratosObra";
+var id_textarea_info_contratos_obra = "infoAdicionalContratosObra";
 var id_file_label_contratos_obra = "fileLabelContratosObra";
 var id_file_input_contratos_obra = "fileInputContratosObra";
 var id_button_actualizar_contratos_obra = "actualizarButtonContratosObra";
@@ -53,6 +54,7 @@ $('#' + id_ddl_obra_contratos_obra).change(function(){
 
     $('#' + id_input_monto_contratos_obra).val('');
     $('#' + id_input_fecha_contratos_obra).val('');
+    $('#' + id_textarea_info_contratos_obra).val('');
 
     file_selected_contratos_obra = "";
 
@@ -69,7 +71,11 @@ $('#' + id_ddl_obra_contratos_obra).change(function(){
             var fecha_string = new Date(contrato.fecha_autorizacion);
             $('#' + id_input_fecha_contratos_obra).val(fecha_string.getFullYear() + "." + ("0" + (fecha_string.getMonth() + 1)).slice(-2)  + "." + ("0" + fecha_string.getDate()).slice(-2));
 
+            // info_adicional
+            $('#' + id_textarea_info_contratos_obra).val(contrato.info_adicional);
+
             highLight(id_input_monto_contratos_obra);
+            highLight(id_textarea_info_contratos_obra);
         };
     });
 });
@@ -91,10 +97,13 @@ $('#' + id_button_actualizar_contratos_obra).click(function(){
                     var fecha_aux = $('#' + id_input_fecha_contratos_obra).val().split('.');
                     var fecha_selected = new Date(fecha_aux[0], fecha_aux[1] - 1, fecha_aux[2]).getTime();
 
+                    var info_selected = $('#' + id_textarea_info_contratos_obra).val();
+
                     var json_update = {
                         monto_autorizado: monto_selected,
                         fecha_autorizacion: fecha_selected,
-                        url_file: contrato_previo.url_file
+                        url_file: contrato_previo.url_file,
+                        info_adicional:  info_selected
                     };
 
                     // subir a firebase database el pago
@@ -133,11 +142,14 @@ $('#' + id_button_actualizar_contratos_obra).click(function(){
     
                             var fecha_aux = $('#' + id_input_fecha_contratos_obra).val().split('.');
                             var fecha_selected = new Date(fecha_aux[0], fecha_aux[1] - 1, fecha_aux[2]).getTime();
+
+                            var info_selected = $('#' + id_textarea_info_contratos_obra).val();
     
                             var json_update = {
                                 monto_autorizado: monto_selected,
                                 fecha_autorizacion: fecha_selected,
-                                url_file: downloadURL
+                                url_file: downloadURL,
+                                info_adicional:  info_selected
                             };
     
     
@@ -186,12 +198,14 @@ $('#' + id_button_actualizar_contratos_obra).click(function(){
                         var fecha_aux = $('#' + id_input_fecha_contratos_obra).val().split('.');
                         var fecha_selected = new Date(fecha_aux[0], fecha_aux[1] - 1, fecha_aux[2]).getTime();
 
+                        var info_selected = deformatMoney($('#' + id_textarea_info_contratos_obra).val());
+
                         var json_update = {
                             monto_autorizado: monto_selected,
                             fecha_autorizacion: fecha_selected,
-                            url_file: downloadURL
+                            url_file: downloadURL,
+                            info_adicional:  info_selected
                         };
-
 
                         // subir a firebase database el pago
                         firebase.database().ref(rama_bd_obras + "/contratos/" + key).set(json_update);
@@ -227,16 +241,25 @@ $('#' + id_input_monto_contratos_obra).keypress(function(e){
     charactersAllowed("$1234567890,.",e);
 });
 
+
+// método para eliminar espacios blancos
+$('#' + id_textarea_info_contratos_obra).change(function(){
+    var text = deleteBlankSpaces(id_textarea_info_contratos_obra).toUpperCase();
+    $('#' + id_textarea_info_contratos_obra).val(text);
+});
+
 // método que da formato al campo de monto
 $('#' + id_input_monto_contratos_obra).change(function(){
     var deformat_monto = deformatMoney($('#' + id_input_monto_contratos_obra).val());
     $('#' + id_input_monto_contratos_obra).val(formatMoney(deformat_monto));
 });
+
 // método para resetear el formulario
 function resetFormContratosObra(){
     $('#' + id_ddl_obra_contratos_obra).val('');
     $('#' + id_input_monto_contratos_obra).val('');
     $('#' + id_input_fecha_contratos_obra).val('');
+    $('#' + id_textarea_info_contratos_obra).val('');
 
     file_selected_contratos_obra = "";
 
@@ -282,15 +305,17 @@ function dataTableContratosObra(){
                         var nombre_cliente = clienteSnapshot.child(cliente_id).val().clave_cliente;
                         console.log(nombre_cliente);
 
-                        // obtener monto de venta si existe
+                        // obtener monto de venta si existe y calcular descuento
                         // PENDIENTE
                         // --------------
                         
                         datos.push([
                             obra,
+                            contrato.info_adicional,
                             nombre_cliente,
                             "No disponible",
                             formatMoney(contrato.monto_autorizado),
+                            "No disponible",
                             // utilizo el mismo formato que en pagosCliente
                             new Date(contrato.fecha_autorizacion).toLocaleDateString("es-ES", optionsPagoCliente),
                             "<button type='button' class='btn btn-dark' onclick='showFile(" + "\`" + contrato.url_file + "\`" + ")'><i class='fas fa-file'></i></button>",
