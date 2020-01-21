@@ -141,11 +141,15 @@ $('#' + id_boton_agregarModalSuministros).click(function() {
     if(!existeInsumoModalSuministros(uid_existente_insumo)){
       tabla_selectosModalSuministros.row.add(datosModalSuministros()).draw();
       limpiaAgregarModalSuministros();
+      if($('#'+id_cb_sinRegistroModalSuministros ).prop('checked')){
+        cont_nr+=1;
+        $('#'+id_cb_sinRegistroModalSuministros ).prop('checked', false);
+        $('#' + id_unidadModalSuministros).prop('disabled', true);
+        $('#' + id_precioListaModalSuministros).prop('disabled', true);
+        $('#' + id_descripcionModalSuministros).prop('disabled', true);
+      }
     } else {
       alert("El insumo ya ha sido seleccionado antes");
-    }
-    if($('#'+id_cb_sinRegistroModalSuministros ).prop('checked')){
-      cont_nr+=1;
     }
   }
 });
@@ -364,6 +368,7 @@ function datosModalSuministros(){
 
 // Metodo para verificar si un insumo ya ha sido seleccionado
 function existeInsumoModalSuministros(clave){
+  console.log(clave);
   var resp = false;
   tabla_selectosModalSuministros.rows().iterator('row', function(context, index){
     var data = this.row(index).data();
@@ -504,7 +509,7 @@ function creaTablaSelectosModalSuministros(datos){
       "columnDefs": [
           { "width": "100px", "targets": 9 },
           { targets: [-1,-2,-3], className: 'dt-body-center'},
-          { "visible": false, "targets": supervisorFlag?[0,1,2,6,7,8]:[0,1] }, //Campos auxiliares
+          { "visible": false, "targets": supervisorFlag?[0,1,2,6,7,8]:[0,1,2] }, //Campos auxiliares
         ]
   });
 }

@@ -190,22 +190,30 @@ $('#' + id_boton_copeoAdicionales).click(function() {
 // Metodo del boton para abrir el modal de calculadora
 $('#' + id_boton_calculadoraAdicionales).click(function() {
   if(jQuery.isEmptyObject(json_modalCalculadora)){ // crear el json en caso de no existir
-    json_modalCalculadora["score"]={};
-    json_modalCalculadora["score"]["horas_programadas"] = 0;
-    json_modalCalculadora["score"]["costo_hora"] = 1300;
-    json_modalCalculadora["porcentaje_indirectos"] = 10;
-    json_modalCalculadora["utilidad"] = 0;
+    json_modalCalculadora["proyecto"]={};
+    json_modalCalculadora["proyecto"]["horas"] = 0;
+    json_modalCalculadora["proyecto"]["costo_hora"] = 1300;
+    json_modalCalculadora["proyecto"]["utilidad"] = 0;
+    json_modalCalculadora["copeo"]={};
+    json_modalCalculadora["copeo"]["costo"] = 0;
+    json_modalCalculadora["copeo"]["carga_social"] = 34;
+    json_modalCalculadora["copeo"]["extras"] = 0;
+    json_modalCalculadora["copeo"]["utilidad"] = 0;
+    json_modalCalculadora["suministros"]={};
+    json_modalCalculadora["suministros"]["costo"] = 0;
+    json_modalCalculadora["suministros"]["utilidad"] = 0;
+    json_modalCalculadora["costos_indirectos"] = 10;
+    json_modalCalculadora["utilidad_cantidad"] = 0;
     json_modalCalculadora["precio_venta"] = 0;
-    json_modalCalculadora["utilidad_copeo"] = 0;
     json_modalCalculadora["utilidad_global"] = 0;
-    json_modalCalculadora["utilidad_proyecto"] = 0;
-    json_modalCalculadora["utilidad_suministros"] = 0;
   }
   // actualizar variables
   var totales = calculaCostoSuministros();
-  json_modalCalculadora["costo_suministros"] = totales.costos;
-  json_modalCalculadora["precopeo"] = calculaCostoCopeo();
-  json_modalCalculadora["porcentaje_impuestos"] = extraeImpuesto();
+  var totales_copeo = calculaCostoCopeo();
+  json_modalCalculadora["suministros"]["costo"] = totales.costos;
+  json_modalCalculadora["copeo"]["costo"] = totales_copeo.precopeo;
+  json_modalCalculadora["copeo"]["extras"] = totales_copeo.extras;
+  json_modalCalculadora["copeo"]["carga_social"] = extraeImpuesto();
   // json_modalCalculadora["precio_venta"] = parseFloat(totales.precio_venta + json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01)*(1+$('#'+ id_indirectosSuministrosAdicionales).val()*0.01)).toFixed(2);
   //console.log(json_modalCalculadora);
   var info =
@@ -214,13 +222,13 @@ $('#' + id_boton_calculadoraAdicionales).click(function() {
     proceso: "ADIC",
     subproceso: $('#'+id_claveAdicionales).val(),
   };
-  modalCalculadora(json_modalCalculadora, false, true, info); // desplegar modal
+  modalCalculadora(json_modalCalculadora, true, info); // desplegar modal
 });
 
 // Función para actualizar el campo porcentaje indirectos y los precios finales
 // cuando se cierra el modal calculadora
 $('#' + id_modalCalculadora).on('hidden.bs.modal', function () {
-  $('#'+ id_indirectosSuministrosAdicionales).val(json_modalCalculadora["utilidad_suministros"]);
+  $('#'+ id_indirectosSuministrosAdicionales).val(json_modalCalculadora["suministros"]["utilidad"]);
   actualizaPreciosClienteAdicionales();
   /* calculo del porcentaje indirecto para suministros
   var porcentaje = json_modalCalculadora["utilidad_suministros"]==undefined?0:json_modalCalculadora["utilidad_suministros"];
@@ -251,12 +259,13 @@ $('#' + id_estimacionesAdicionales).change(function(){
 // Función para generar una vista previa del pdf al hacer clic en el boton
 // vista previa
 $('#' + id_botonpdfAdicionales).click(function() {
-  if (validateFormAdicionales()){
+  if (true){
+  //if (validateFormAdicionales()){
     var path = rama_bd_obras+"/adicionales/solicitudes/"+$('#' + id_ddl_obraAdicionales+' option:selected').val()+"/solicitudesTerminadas/"+$('#'+id_ddl_solicitudAdicionales+' option:selected').val();
-    // console.log(path);
+    //console.log(path);
     $('#' + id_botonpdfAdicionales).prop('disabled',true);
     getAllFirebaseStorageGeneric(path).then(function(images_array){
-      // console.log(images_array);
+      //console.log(images_array);
       downloadAllImagesGeneric(images_array).then(function(){
         flagDownloadAdicionales = true;
         var docDescription = pdfDocDescriptionAdicionales(true, download_images_url);
@@ -313,7 +322,7 @@ $('#' + id_botonRegistrarAdicionales).click(function() {
               }
             }, function(error) {
               // Handle unsuccessful uploads
-              console.log('Error al cargar el pdf');
+              //console.log('Error al cargar el pdf');
               alert('Error al cargar el pdf');
               $('#' + id_botonRegistrarAdicionales).prop('disabled', false);
             }, function() {
@@ -439,7 +448,7 @@ function llenarFormPropuestaAdicionales(clave_adic){
       for (key in propuesta.cuantificacion.materiales_nr){
         json_modalSuministros[key] = propuesta.cuantificacion.materiales_nr[key];
       }
-      json_modalCalculadora = propuesta.proceso;
+      json_modalCalculadora = propuesta.presupuesto;
       registro_antiguo = propuesta;
       // console.log(propuesta);
     }
@@ -574,12 +583,21 @@ function calculaCostoSuministros(){
 // Función para calcular el costo total del copeo (sin carga social)
 function calculaCostoCopeo(){
   var total = 0;
+  var extras = 0;
+  var aux_json = {};
   if(!jQuery.isEmptyObject(json_modalCopeo)){
     for(key in json_modalCopeo.entradas){
       total+= json_modalCopeo["entradas"][key]["subtotal"];
+      if(json_modalCopeo["entradas"][key]["extras"]!==undefined){
+        extras += json_modalCopeo["entradas"][key]["extras"]["subtotal"];
+      }
     }
   }
-  return total;
+  aux_json={
+    precopeo: total,
+    extras: extras,
+  };
+  return aux_json;
 }
 
 // Función para recuperar el monto de impuestos del json copeo
@@ -711,15 +729,20 @@ function pdfDocDescriptionAdicionales(vista_previa, images_array){
   var fisc_bool=$('#'+id_cb_fiscalesAdicionales).prop('checked');
   var banc_bool=$('#'+id_cb_bancariosAdicionales).prop('checked');
   var iva_bool=$('#'+id_cb_ivaAdicionales).prop('checked');
+  var indirectos_bool=$('#'+id_cb_indirectosAdicionales).prop('checked');
   var fecha_ppto=new Date();
   var insumos = Object.assign({}, json_modalSuministros);
+  insumos = cargaUtilidadEspecificaAdicionales(insumos, json_modalCalculadora["suministros"]["utilidad"]);
   insumos =manoDeObraAInsumoDesglozadaAdicionales(insumos);
-  if(json_modalCalculadora["score"]["horas_programadas"]>0){
+  if(json_modalCalculadora["proyecto"]["horas"]>0){
     insumos["proyecto"]=proyectosInsumoAdicionales();
+  }
+  if(json_modalCalculadora["utilidad_global"]>0 && !($('#'+id_cb_indirectosAdicionales).prop('checked'))){
+    insumos = cargaUtilidadInsumosAdicionales(insumos, json_modalCalculadora["utilidad_global"]);
   }
   //console.log(insumos);
   //console.log(vista_previa, obra_ppto, clave_adic, titulo_ppto, nombre_ppto, atencion, json_modalSuministros, desplegar_indirectos, anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, fecha_ppto);
-  var docDescription = generaPresupuestoAdicional(vista_previa, datos_obraAdicionales, clave_adic, titulo_ppto, nombre_ppto, atencion, insumos, json_modalCalculadora["utilidad_global"], anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, iva_bool, fecha_ppto, images_array);
+  var docDescription = generaPresupuestoAdicional(vista_previa, datos_obraAdicionales, clave_adic, titulo_ppto, nombre_ppto, atencion, insumos, json_modalCalculadora["utilidad_global"], anticipo, exc_lista, reqs_lista, tiempoEntrega, fisc_bool, banc_bool, iva_bool, indirectos_bool, fecha_ppto, images_array);
   return docDescription;
 }
 
@@ -731,14 +754,7 @@ function datosAdicionalAdicionales(){
     alcance: $('#'+id_tituloAdicionales).val(),
     terminado: false,
     categoria: "NA",
-    precio_venta: json_modalCalculadora.precio_venta,
-    costo_suministros:json_modalCalculadora.costo_suministros,
-    utilidad: json_modalCalculadora.utilidad,
-    precopeo: json_modalCalculadora.precopeo,
     porcentaje_anticipo: $('#'+id_anticiposAdicionales).val(),
-    porcentaje_indirectos: json_modalCalculadora.porcentaje_indirectos,
-    porcentaje_impuestos: json_modalCalculadora.porcentaje_impuestos,
-    score: json_modalCalculadora.score
   };
   return adicional;
 }
@@ -784,19 +800,21 @@ function datosPropuestaAdicionales(url){
     url_evidencia: url,
     cuantificacion: datosInsumosAdicionales(),
     copeo: json_modalCopeo,
-    proceso: datosAdicionalAdicionales()
+    presupuesto: json_modalCalculadora,
+    proceso: datosAdicionalAdicionales(),
   };
   return propuesta;
 }
 
 // Función para generar el json de la mano de obra como insumo
 function manoDeObraAInsumoAdicionales(){
+  var totales = calculaCostoCopeo();
   var aux = {
     unidad: "Jor",
     cantidad: 1,
     descripcion: "MANO DE OBRA",
-    precio_lista: parseFloat(calculaCostoCopeo() * (1+json_modalCopeo.impuestos*0.01)).toFixed(2),
-    precio_cliente: parseFloat(calculaCostoCopeo() * (1+json_modalCopeo.impuestos*0.01) * (1+json_modalCalculadora["utilidad_copeo"]*0.01) ).toFixed(2),
+    precio_lista: parseFloat(totales.precopeo * (1+json_modalCopeo.impuestos*0.01) + totales.extras).toFixed(2),
+    precio_cliente: parseFloat(totales.precopeo * (1+json_modalCopeo.impuestos*0.01 + totales.extras) * (1+json_modalCalculadora["copeo"]["utilidad"]*0.01) ).toFixed(2),
   };
   return aux;
 }
@@ -824,10 +842,13 @@ function manoDeObraAInsumoDesglozadaAdicionales(json_input){
         unidad: "Jor",
         cantidad: jornadas,
         descripcion: aux,
-        precio_lista: parseFloat(json_modalCopeo["entradas"][key]["subtotal"] / jornadas * (1+json_modalCopeo.impuestos*0.01)).toFixed(2),
-        precio_cliente: parseFloat(json_modalCopeo["entradas"][key]["subtotal"] / jornadas * (1+json_modalCopeo.impuestos*0.01) * (1+json_modalCalculadora["utilidad_copeo"]*0.01) ).toFixed(2),
+        precio_lista: parseFloat( (json_modalCopeo["entradas"][key]["subtotal"] * (1+json_modalCopeo.impuestos*0.01) + json_modalCopeo["entradas"][key]["extras"]["subtotal"]) / jornadas).toFixed(2),
+        precio_cliente: 0,
       };
-      json_input[key] = aux_json;
+      aux_json["precio_cliente"] = parseFloat(aux_json.precio_lista * (1+json_modalCalculadora["copeo"]["utilidad"]*0.01)).toFixed(2) ;
+      if(aux_json.precio_lista > 0){
+        json_input[key] = aux_json;
+      }
     }
   }
   return json_input;
@@ -836,16 +857,30 @@ function manoDeObraAInsumoDesglozadaAdicionales(json_input){
 function proyectosInsumoAdicionales(){
   var aux = {
     unidad: "Hrs",
-    cantidad: json_modalCalculadora["score"]["horas_programadas"],
+    cantidad: json_modalCalculadora["proyecto"]["horas"],
     descripcion: "PROYECTO",
-    precio_lista: parseFloat(json_modalCalculadora["score"]["costo_hora"]).toFixed(2),
-    precio_cliente: parseFloat(json_modalCalculadora["score"]["costo_hora"]*(1+json_modalCalculadora["utilidad_proyecto"]*0.01)).toFixed(2),
+    precio_lista: parseFloat(json_modalCalculadora["proyecto"]["costo_hora"]).toFixed(2),
+    precio_cliente: parseFloat(json_modalCalculadora["proyecto"]["costo_hora"]*(1+json_modalCalculadora["proyecto"]["utilidad"]*0.01)).toFixed(2),
   };
   return aux;
   /*
   precio_lista: parseFloat(json_modalCalculadora["score"]["horas_programadas"]*json_modalCalculadora["score"]["costo_hora"]).toFixed(2),
   precio_cliente: parseFloat(json_modalCalculadora["score"]["horas_programadas"]*json_modalCalculadora["score"]["costo_hora"]*(1+json_modalCalculadora["utilidad_proyecto"]*0.01)).toFixed(2),
   */
+}
+
+function cargaUtilidadInsumosAdicionales(insumos, porcentaje){
+  for(key in insumos){
+    insumos[key].precio_cliente = insumos[key].precio_cliente * (1 + porcentaje * 0.01);
+  }
+  return insumos;
+}
+
+function cargaUtilidadEspecificaAdicionales(insumos, porcentaje){
+  for(key in insumos){
+    insumos[key].precio_cliente = insumos[key].precio_lista * (1 + porcentaje * 0.01);
+  }
+  return insumos;
 }
 
 //=============================================================================
@@ -974,6 +1009,7 @@ $('#' + id_botonTerminarAdicionales).click(function() {
           adicional_update["adicionales/propuestas/" + obra + "/propuestas/" + adicional + "/precio_venta_aprobado"] = deformatMoney($('#'+id_precioVentaAdicionales).val());
           adicional_update["procesos/" + obra + "/procesos/ADIC/subprocesos/"+adicional] = propuesta.proceso;
           adicional_update["copeo/" + obra + "/ADIC/"+adicional] = propuesta.copeo;
+          adicional_update["presupuesto/" + obra + "/general/adicionales/"+adicional] = propuesta.presupuesto;
           adicional_update["cuantificacion/" + obra + "/ADIC/"+adicional] = propuesta.cuantificacion;
           // console.log(adicional_update);
           firebase.database().ref(rama_bd_obras).update(adicional_update, function(error) {

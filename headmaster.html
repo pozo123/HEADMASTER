@@ -631,7 +631,7 @@
                                           <th>Descripcion</th>
                                           <th>Unidad</th>
                                           <th>Precio</th>
-                                          <th>Indirectos(%)</th>
+                                          <th>Utilidad(%)</th>
                                           <th>Precio cliente</th>
                                           <th>Cantidad</th>
                                           <th>Eliminar</th>
@@ -668,21 +668,8 @@
                     </div>
                     <div class="modal-body">
                         <div class="container-fluid">
-                          <hr class="style2">
-                          <div class = "form-row">
-                              <button type="button" id="botonDefaultModalCalculadora" class="btn btn-secondary" data-toggle="popover" data-trigger="hover">Valores Default</button>
-                          </div>
                           <br>
-                          <div class="form-row align-items-center">
-                              <div class="col-lg-4">
-                                  <label for="indirectosModalCalculadora">Porcentaje Costos Indirectos:</label>
-                                  <input type="text" id="indirectosModalCalculadora" class="form-control" placeholder="Porcentaje de indirectos">
-                              </div>
-                          </div>
-                          <br>
-                          <hr class="style2">
-                          <br>
-                          <h5 style ="font-weight: bold;">SCORE</h5>
+                          <h5 style ="font-weight: bold;">Proyecto</h5>
                           <div class="form-row align-items-center">
                               <div class="col-lg-4">
                                   <label for="costoHoraScoreModalCalculadora">Precio por hora:</label>
@@ -713,6 +700,7 @@
                                   <input type="text" id="costoCopeoCargaModalCalculadora" class="form-control" placeholder="Copeo con carga social">
                               </div>
                           </div>
+                          <br>
                           <div class="form-row align-items-center">
                               <div class="col-lg-4">
                                   <label for="costoExtraCopeoModalCalculadora">Extras:</label>
@@ -726,9 +714,41 @@
                                 <label for="costoSuministrosModalCalculadora">Costo de suministros($):</label>
                                 <input type="text" id="costoSuministrosModalCalculadora" class="form-control" placeholder="Costo de suministros">
                             </div>
+                            <div class="col-lg-4"></div>
+                            <div class="col-lg-4">
+                                <button type="button" id="botonDefaultModalCalculadora" class="btn btn-secondary" data-toggle="popover" data-trigger="hover">Valores Default</button>
+                            </div>
                           </div>
                           <br>
                           <hr class="style2">
+                          <h5 style ="font-weight: bold;">Agregado</h5>
+                          <br>
+                          <div class="form-row align-items-center">
+                              <div class="col-lg-4">
+                                  <label for="costosProduccionModalCalculadora">Costos de producción</label>
+                                  <input type="text" disabled="true" id="costosProduccionModalCalculadora" class="form-control" placeholder="Costos de producción">
+                              </div>
+                              <div class="col-lg-4">
+                                  <label for="costosIndirectosModalCalculadora">Costos indirectos</label>
+                                  <input type="text" id="costosIndirectosModalCalculadora" class="form-control" placeholder="Costos indirectos">
+                              </div>
+                              <div class="col-lg-4">
+                                  <label for="costoOperacionesModalCalculadora">Costo de operaciones</label>
+                                  <input type="text" disabled="true" id="costoOperacionesModalCalculadora" class="form-control" placeholder="Produccion + indirectos">
+                              </div>
+                          </div>
+                          <br>
+                          <div class="form-row align-items-center">
+                              <div class="col-lg-4"></div>
+                              <div class="col-lg-4">
+                                  <label for="indirectosModalCalculadora">Porcentaje Costos Indirectos:</label>
+                                  <input type="number" id="indirectosModalCalculadora" class="form-control" placeholder="Porcentaje de indirectos">
+                              </div>
+                          </div>
+                          <br>
+                          <br>
+                          <hr class="style2">
+                          <h5 style ="font-weight: bold;">Utilidades</h5>
                           <br>
                           <div class="form-row align-items-center">
                               <div class="col-lg-3">
@@ -750,6 +770,28 @@
                           </div>
                           <br>
                           <div class="form-row align-items-center">
+                              <div class="col-lg-3">
+                                  <label for="utilidadCantidadSuministrosModalCalculadora">Utilidad suministros (%):</label>
+                                  <input type="text" id="utilidadCantidadSuministrosModalCalculadora" class="form-control" placeholder="Cantidad">
+                              </div>
+                              <div class="col-lg-3">
+                                  <label for="utilidadCantidadCopeoModalCalculadora">Utilidad MO (%):</label>
+                                  <input type="text" id="utilidadCantidadCopeoModalCalculadora" class="form-control" placeholder="Cantidad">
+                              </div>
+                              <div class="col-lg-3">
+                                  <label for="utilidadCantidadProyectosModalCalculadora">Utilidad proyectos (%):</label>
+                                  <input type="text" id="utilidadCantidadProyectosModalCalculadora" class="form-control" placeholder="Cantidad">
+                              </div>
+                              <div class="col-lg-3">
+                                  <label for="utilidadCantidadDesplegadaModalCalculadora">Utilidad desplegada (%):</label>
+                                  <input type="text" id="utilidadCantidadDesplegadaModalCalculadora" class="form-control" placeholder="Cantidad">
+                              </div>
+                          </div>
+                          <br>
+                          <hr class="style2">
+                          <h5 style ="font-weight: bold;">Resumen</h5>
+                          <br>
+                          <div class="form-row align-items-center">
                               <div class="col-lg-4">
                                   <label for="profitCantidadModalCalculadora">Profit ($):</label>
                                   <input type="text" id="profitCantidadModalCalculadora" class="form-control" placeholder="Profit en cantidad">
@@ -763,18 +805,7 @@
                                   <input type="text" id="precioVentaModalCalculadora" class="form-control" placeholder="Precio de venta">
                               </div>
                           </div>
-                          <br/>
-                          <div class="form-row align-items-center">
-                              <div class="col-lg-4">
-                                  <label for="costosIndirectosModalCalculadora">Costos indirectos</label>
-                                  <input type="text" disabled="true" id="costosIndirectosModalCalculadora" class="form-control" placeholder="Costos indirectos">
-                              </div>
-                              <div class="col-lg-4">
-                                  <label for="costoOperacionesModalCalculadora">Costo de operaciones</label>
-                                  <input type="text" disabled="true" id="costoOperacionesModalCalculadora" class="form-control" placeholder="Score + copeo + suministros">
-                              </div>
-                          </div>
-                          <br/>
+                          <br>
                           <div class="form-row">
                               <div class= "col-4"></div>
                               <div class= "col-4">
@@ -935,7 +966,7 @@
                                            </div>
                                        </div>
                                        <div class="form-group row">
-                                           <div class = "col-lg-3"></div>
+                                           <div class = "col-lg-3" id="div_totalExtrasModalCopeo"></div>
                                            <label for="totalExtrasModalCopeo" class="col-sm-3 col-form-label">Total</label>
                                            <div class="col-sm-3">
                                                <input type="text" disabled="true" class="form-control" id="totalExtrasModalCopeo" placeholder="Costo total" disabled="true">
@@ -2017,7 +2048,7 @@
                         <!-- Calculadora de precios-->
                         <div id="calculadora" class="tabcontent hidden">
                                 <h1>Calculadora Kaizen</h1>
-                                <p>Aplicación para calcular precios de venta y dar de alta en el sistema los costos SCORE, de suministros y de mano de obra.</p>
+                                <p>Aplicación para calcular precios de venta de una obra.</p>
                                 <div class="container-fluid">
                                     <div class="row align-items-center">
                                         <div class="col-lg-1"></div>
@@ -2028,12 +2059,12 @@
                                                         <label for="obraDdlCalculadora">Obra:</label>
                                                         <select id="obraDdlCalculadora" class="form-control"></select>
                                                     </div>
-                                                    <div class="form-group col-md-6">
+                                                    <div class="form-group col-md-6 hidden">
                                                         <label for="procesoDdlCalculadora">Proceso:</label>
                                                         <select id="procesoDdlCalculadora" class="form-control"></select>
                                                     </div>
                                                 </div>
-                                                <div class="form-row">
+                                                <div class="form-row hidden">
                                                     <div class="form-group col-md-6" id="div_subprocesoCalculadora">
                                                         <label for="procesoDdlCalculadora">Subproceso:</label>
                                                         <select id="subprocesoDdlCalculadora" class="form-control"></select>
@@ -2042,20 +2073,7 @@
                                                 <br>
                                                 <hr class="style2">
                                                 <br>
-                                                <div class = "form-row">
-                                                    <button type="button" id="botonDefaultCalculadora" class="btn btn-secondary" data-toggle="popover" data-trigger="hover">Valores Default</button>
-                                                </div>
-                                                <br>
-                                                <div class="form-row align-items-center">
-                                                    <div class="col-lg-4">
-                                                        <label for="indirectosCalculadora">Porcentaje Indirectos:</label>
-                                                        <input type="text" id="indirectosCalculadora" class="form-control" placeholder="Porcentaje de indirectos">
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                <hr class="style2">
-                                                <br>
-                                                <h5 style ="font-weight: bold;">SCORE</h5>
+                                                <h5 style ="font-weight: bold;">Proyecto</h5>
                                                 <div class="form-row align-items-center">
                                                     <div class="col-lg-4">
                                                         <label for="costoHoraScoreCalculadora">Precio por hora:</label>
@@ -2078,12 +2096,19 @@
                                                         <input type="text" id="costoCopeoCalculadora" class="form-control" placeholder="Costo de copeo">
                                                     </div>
                                                     <div class="col-lg-4">
+                                                        <label for="impuestosCalculadora">Carga social:</label>
+                                                        <input type="text" id="impuestosCalculadora" class="form-control" placeholder="Porcentaje CS">
+                                                    </div>
+                                                    <div class="col-lg-4">
                                                         <label for="costoCopeoCalculadora">Precopeo con carga social:</label>
                                                         <input type="text" id="costoCopeoCargaCalculadora" class="form-control" placeholder="Copeo con carga social">
                                                     </div>
+                                                </div>
+                                                <br>
+                                                <div class="form-row align-items-center">
                                                     <div class="col-lg-4">
-                                                        <label for="impuestosCalculadora">Carga social:</label>
-                                                        <input type="text" id="impuestosCalculadora" class="form-control" placeholder="Porcentaje CS">
+                                                        <label for="costoExtraCopeoCalculadora">Extras:</label>
+                                                        <input type="text" id="costoExtraCopeoCalculadora" class="form-control" placeholder="Costos extra">
                                                     </div>
                                                 </div>
                                                 <br>
@@ -2093,10 +2118,80 @@
                                                       <label for="costoSuministrosCalculadora">Costo de suministros($):</label>
                                                       <input type="text" id="costoSuministrosCalculadora" class="form-control" placeholder="Costo de suministros">
                                                   </div>
+                                                  <div class="col-lg-4"></div>
+                                                  <div class="col-lg-4">
+                                                      <button type="button" id="botonDefaultCalculadora" class="btn btn-secondary" data-toggle="popover" data-trigger="hover">Valores Default</button>
+                                                  </div>
                                                 </div>
                                                 <br>
                                                 <hr class="style2">
+                                                <h5 style ="font-weight: bold;">Agregado</h5>
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-lg-4">
+                                                        <label for="costosProduccionCalculadora">Costos directos</label>
+                                                        <input type="text" disabled="true" id="costosProduccionCalculadora" class="form-control" placeholder="Costos directos">
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <label for="costosIndirectosCalculadora">Costos indirectos</label>
+                                                        <input type="text" id="costosIndirectosCalculadora" class="form-control" placeholder="Costos indirectos">
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <label for="costoOperacionesCalculadora">Costo de operaciones</label>
+                                                        <input type="text" disabled="true" id="costoOperacionesCalculadora" class="form-control" placeholder="Score + copeo + suministros">
+                                                    </div>
+                                                </div>
                                                 <br>
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-lg-4"></div>
+                                                    <div class="col-lg-4">
+                                                        <label for="indirectosCalculadora">Porcentaje Indirectos:</label>
+                                                        <input type="text" id="indirectosCalculadora" class="form-control" placeholder="Porcentaje de indirectos">
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <br>
+                                                <hr class="style2">
+                                                <h5 style ="font-weight: bold;">Utilidades</h5>
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-lg-3">
+                                                        <label for="utilidadSuministrosCalculadora">Utilidad suministros (%):</label>
+                                                        <input type="number" id="utilidadSuministrosCalculadora" class="form-control" placeholder="Porcentaje">
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <label for="utilidadCopeoCalculadora">Utilidad MO (%):</label>
+                                                        <input type="number" id="utilidadCopeoCalculadora" class="form-control" placeholder="Porcentaje">
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <label for="utilidadProyectosCalculadora">Utilidad proyectos (%):</label>
+                                                        <input type="number" id="utilidadProyectosCalculadora" class="form-control" placeholder="Porcentaje">
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <label for="utilidadDesplegadaCalculadora">Utilidad desplegada (%):</label>
+                                                        <input type="number" id="utilidadDesplegadaCalculadora" class="form-control" placeholder="Porcentaje">
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-lg-3">
+                                                        <label for="utilidadSuministrosCalculadora">Utilidad suministros ($):</label>
+                                                        <input type="text" id="utilidadCantidadSuministrosCalculadora" class="form-control" placeholder="Cantidad">
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <label for="utilidadCopeoCalculadora">Utilidad MO ($):</label>
+                                                        <input type="text" id="utilidadCantidadCopeoCalculadora" class="form-control" placeholder="Cantidad">
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <label for="utilidadProyectosCalculadora">Utilidad proyectos ($):</label>
+                                                        <input type="text" id="utilidadCantidadProyectosCalculadora" class="form-control" placeholder="Cantidad">
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <label for="utilidadDesplegadaCalculadora">Utilidad desplegada ($):</label>
+                                                        <input type="text" id="utilidadCantidadDesplegadaCalculadora" class="form-control" placeholder="Cantidad">
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <hr class="style2">
+                                                <h5 style ="font-weight: bold;">Resumen</h5>
                                                 <div class="form-row align-items-center">
                                                     <div class="col-lg-4">
                                                         <label for="profitCantidadCalculadora">Profit ($):</label>
@@ -2112,19 +2207,10 @@
                                                     </div>
                                                 </div>
                                                 <br/>
-                                                <div class="form-row align-items-center">
-                                                    <div class="col-lg-4">
-                                                        <label for="precioVentaCalculadora">Costos indirectos</label>
-                                                        <input type="text" disabled="true" id="costosIndirectosCalculadora" class="form-control" placeholder="Costos indirectos">
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <label for="precioVentaCalculadora">Costo de operaciones</label>
-
-                                                        <input type="text" disabled="true" id="costoOperacionesCalculadora" class="form-control" placeholder="Score + copeo + suministros">
-                                                    </div>
-                                                    <div class="col-lg-4" hidden="true">
-                                                        <label id = "labelProfitNetoCalculadora">Profit Neto Estimado</label>
-                                                        <input type="text" disabled="true" id="profitNetoCalculadora" class="form-control" placeholder="Profit neto estimado">
+                                                <div class="form-row">
+                                                    <div class= "col-4"></div>
+                                                    <div class= "col-4">
+                                                        <button type="button" id="botonpdfCalculadora"class="btn btn-outline-info btn-block">Reporte PDF</button>
                                                     </div>
                                                 </div>
                                                 <br/>
@@ -2973,7 +3059,7 @@
                                                 <input type="checkbox" class="custom-control-input" id="cb_ivaAdicionales">
                                                 <label class="custom-control-label" for="cb_ivaAdicionales">Agregar información para IVA exento</label>
                                             </div>
-                                            <div class="custom-control custom-checkbox hidden">
+                                            <div class="custom-control custom-checkbox">
                                                 <input type="checkbox" class="custom-control-input" id="cb_indirectosAdicionales">
                                                 <label class="custom-control-label" for="cb_indirectosAdicionales">Desplegar costos indirectos</label>
                                             </div>

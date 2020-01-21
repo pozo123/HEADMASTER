@@ -1,9 +1,9 @@
 // Reporte de presupuestos
-function generaReporteCalculadora(obra_ppto, score, copeo, suministros, totales, indirectos, operaciones, utilidad){
+function generaReporteCalculadora(obra_ppto, proyecto, copeo, suministros, totales, indirectos, operaciones, utilidad){
     var obra = obra_ppto.nombre;
     var proceso = obra_ppto.proceso;
     var subproceso = obra_ppto.subproceso;
-    // var score={horas: '5', precio:'$1300.00', costo:'$6500.00', utilidad: '10%', cliente:'$7100.00'};
+    // var proyecto={horas: '5', precio:'$1300.00', costo:'$6500.00', utilidad: '10%', cliente:'$7100.00'};
     // var copeo={copeo: '$100,000.00', cargaSocial:'54%', costo:'$154,000.00.00', utilidad: '10%', cliente:'$169,000.00'};
     // var suministros={costo:'$50,000.00', utilidad: '10%', cliente:'$55,000.00'};
     // var totales={costo:'$50000', utilidad: '$5000.00', cliente:'$55000'};
@@ -176,7 +176,7 @@ function generaReporteCalculadora(obra_ppto, score, copeo, suministros, totales,
         {
             colSpan:1,
             border: [false, false, false, false],
-            text: score.precio,
+            text: proyecto.precio,
             margin: [5,5],
             fontSize: 10,
             alignment: 'center',
@@ -184,7 +184,7 @@ function generaReporteCalculadora(obra_ppto, score, copeo, suministros, totales,
         {
             colSpan:1,
             border: [false, false, false, false],
-            text: score.horas,
+            text: proyecto.horas,
             margin: [5,5],
             fontSize: 10,
             alignment: 'center',
@@ -192,7 +192,7 @@ function generaReporteCalculadora(obra_ppto, score, copeo, suministros, totales,
         {
             colSpan:1,
             border: [false, false, false, false],
-            text: score.costo,
+            text: proyecto.costo,
             margin: [5,5],
             fontSize: 10,
             alignment: 'center',
@@ -200,7 +200,7 @@ function generaReporteCalculadora(obra_ppto, score, copeo, suministros, totales,
         {
             colSpan:1,
             border: [false, false, false, false],
-            text: score.utilidad + '%',
+            text: proyecto.utilidad + '%',
             margin: [5,5],
             fontSize: 10,
             alignment: 'center',
@@ -208,7 +208,7 @@ function generaReporteCalculadora(obra_ppto, score, copeo, suministros, totales,
         {
             colSpan:1,
             border: [false, false, false, false],
-            text: score.cliente,
+            text: proyecto.cliente,
             margin: [5,5],
             fontSize: 10,
             alignment: 'center',

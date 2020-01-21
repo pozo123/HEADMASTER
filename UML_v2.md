@@ -141,20 +141,6 @@ Nota: Todo float se ingresa a 2 decimales.
                                 - categoria: string (de db categorias)
                                 - terminado: boolean (definir manera de actualizar este valor. Empieza en false)
 
-                                - precio_venta: float
-                                - costo_suministros:float
-                                - utilidad: float (cantidad)
-                                - precopeo: float
-                                - porcentaje_anticipo: float
-                                - porcentaje_indirectos: float (oficina)
-                                - porcentaje_impuestos: float (precopeo)
-                                - utilidad_suministros: float (escondida) *solo en adicionales
-                                - utilidad_copeo: float (escondida) *solo en adicionales
-                                - utilidad_proyecto: float (escondida) *solo en adicionales
-                                - utilidad_global: float (desplegable) *solo en adicionales
-                                - score
-                                    - horas_programadas: (en horas)
-                                    - costo_hora: float (2 decimales)
         - contratos (no lo llamo pptos porque debe existir otra rama que se llame pptos)
             - id_obra
                 - monto_autorizado: float
@@ -194,28 +180,69 @@ Nota: Todo float se ingresa a 2 decimales.
                                     - costo: float
                                     - multiplicador: float
                                     - semanal: boolean (false = diario)
+                                    - subtotal: float (costo x multiplicador x dias x unidades x semanal?0.2:1 )
         - cuantificacion
             - id_obra
                 - id_proceso
                     - id_subproceso
-                        - porcentaje_indirecto: float
-                        - desplegar_indirectos: boolean
-                        - materiales
-                            - id_material
-                                - descripcion: string
-                                - unidad: string
-                                - precio_lista: float
-                                - precio_cliente: float
-                                - cantidad: integer
-                                - desplegar: boolean
-                        - materiales_nr
-                            - id_consecutivo
-                                - descripcion: string
-                                - unidad: string
-                                - precio_lista: float
-                                - precio_cliente: float
-                                - cantidad: integer
-                                - desplegar: boolean
+                        - num_entradas: int
+                        - entradas
+                            - entrada(num)
+                                - materiales
+                                    - id_material
+                                        - descripcion: string
+                                        - unidad: string
+                                        - precio_lista: float
+                                        - precio_cliente: float
+                                        - cantidad: integer
+                                        - desplegar: boolean
+                                - materiales_nr
+                                    - id_consecutivo
+                                        - descripcion: string
+                                        - unidad: string
+                                        - precio_lista: float
+                                        - precio_cliente: float
+                                        - cantidad: integer
+                                        - desplegar: boolean
+        - presupuesto
+            - id_obra
+                - general
+                    - suministros:
+                        - costo: float
+                        - utilidad: float
+                    - copeo:
+                        - costo: float
+                        - carga_social: float
+                        - extras: float
+                        - utilidad: float
+                    - proyecto:
+                        - horas: float
+                        - costo_hora: float
+                        - utilidad: float
+                    - costos_indirectos: float (cantidad)
+                    - utilidad_global: float (desplegable,  porcentaje)
+                    - utilidad_cantidad: float (cantidad,  porcentaje)
+                    - precio_venta: float
+                    - copeo_desglozado: {same}
+                    - cuantificacion: {same}
+                - adicionales:
+                    - id_subproceso:
+                        - suministros:
+                            - costo: float
+                            - utilidad: float
+                        - copeo:
+                            - costo: float
+                            - carga_social: float
+                            - extras: float
+                            - utilidad: float
+                        - proyecto:
+                            - horas: float
+                            - costo_hora: float
+                            - utilidad: float
+                        - costos_indirectos: float (oficina, porcentaje)
+                        - utilidad_global: float (desplegable,  porcentaje)
+                        - utilidad_cantidad: float (cantidad,  porcentaje)
+                        - precio_venta: float
 
         - adicionales
             - solicitudes
@@ -232,35 +259,14 @@ Nota: Todo float se ingresa a 2 decimales.
                             - url_pdf : string
                             - storage_path: string
                             - notas: string
-                            - copeo:
-                                - impuestos: float (0 a 100)
-                                - num_entradas: int
-                                - entradas
-                                    - entrada (num)
-                                        - nombre: string
-                                        - alcance: string
-                                        - subtotal: float
-                                        - cuadrilla:
-                                            - id_puesto
-                                                - cantidad: int
-                                                - sueldo_diario: float (sin impuestos)
-                                        - multiplicadores
-                                            - dias: float
-                                            - unidades: float
-                            - cuantificacion:
-                                - id_material:
-                                    - descripcion: string
-                                    - unidad: string
-                                    - precio_lista: float
-                                    - precio_cliente: float
-                                    - cantidad: integer
-                                    - desplegar: boolean
+                            - copeo: {same}
+                            - cuantificacion: {same}
                     - listas
-                        - terminadas
+                        - terminadas (Info completa)
                             - id_solicitud: true
-                        - pendientes
+                        - pendientes (Solo primera parte)
                             - id_solicitud: true
-                        - concretadas
+                        - concretadas (Convertidas en propuesta)
                             - id_solicitud: true
 
             - propuestas
@@ -288,59 +294,15 @@ Nota: Todo float se ingresa a 2 decimales.
                             - url_evidencia: string
                             - url_formato: string
                             - precio_venta_aprobado: float
-                            - cuatificacion: (las últimas tres son estructuras listas para jalar cuando se autorice el adicional)
-                                - porcentaje_indirecto: float
-                                - desplegar_indirectos: boolean
-                                - materiales
-                                    - id_material
-                                        - descripcion: string
-                                        - unidad: string
-                                        - precio_lista: float
-                                        - precio_cliente: float
-                                        - cantidad: integer
-                                        - desplegar: boolean
-                                - materiales_nr
-                                    - id_consecutivo
-                                        - descripcion: string
-                                        - unidad: string
-                                        - precio_lista: float
-                                        - precio_cliente: float
-                                        - cantidad: integer
-                                        - desplegar: boolean
-                            - copeo:
-                                - impuestos: float (0 a 100)
-                                - num_entradas: int
-                                - entradas
-                                    - entrada (num)
-                                        - nombre: string
-                                        - alcance: string
-                                        - subtotal: float
-                                        - cuadrilla:
-                                            - id_puesto
-                                                - cantidad: int
-                                                - sueldo_diario: float (sin impuestos)
-                                        - multiplicadores
-                                            - dias: float
-                                            - unidades: float
+                            - cuatificacion:{same}
+                            - copeo: {same}
+                            - presupuesto:{same}
                             - proceso:
                                 - nombre: string
                                 - alcance: string
                                 - categoria: string (de db categorias)
                                 - terminado: boolean (definir manera de actualizar este valor. Empieza en false)
-                                - precio_venta: float
-                                - costo_suministros:float
-                                - utilidad: float (cantidad)
-                                - precopeo: float
                                 - porcentaje_anticipo: float
-                                - porcentaje_indirectos: float (oficina)
-                                - porcentaje_impuestos: float (precopeo)
-                                - utilidad_suministros: float (escondida)
-                                - utilidad_copeo: float (escondida)
-                                - utilidad_proyecto: float (escondida)
-                                - utilidad_global: float (desplegable)
-                                - score
-                                    - horas_programadas: (en horas)
-                                    - costo_hora: float (2 decimales)
                     - listas
                         - pendientes
                             - id_subproceso:
@@ -927,3 +889,20 @@ ANEXO
         - BRUTO -> NADIEEEEE
      - REAL:
         - BRUTO -> NADIEEEEE
+
+ANTIGUO DE SUBPROCESO
+- precio_venta: float
+- costo_suministros:float
+- utilidad: float (cantidad)
+- precopeo: float
+- precopeo_extra: float
+- porcentaje_anticipo: float
+- porcentaje_indirectos: float (oficina)
+- porcentaje_impuestos: float (precopeo)
+- utilidad_suministros: float (escondida) *solo en adicionales
+- utilidad_copeo: float (escondida) *solo en adicionales
+- utilidad_proyecto: float (escondida) *solo en adicionales
+- utilidad_global: float (desplegable) *solo en adicionales
+- score
+    - horas_programadas: (en horas)
+    - costo_hora: float (2 decimales)
