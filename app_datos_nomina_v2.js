@@ -1333,7 +1333,7 @@ function actualizarTablaDatosNomina(){
 
                 //
                 console.log(diversos_index_json);
-                var index_array =[0];
+                var index_array =[];
                 var i = 0;
                 for(key in diversos_index_json){
                     if(diversos_index_json[key] == 0){

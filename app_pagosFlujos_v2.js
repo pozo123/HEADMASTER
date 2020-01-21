@@ -8,6 +8,9 @@ var id_total_resumen_pagos_cliente= "totalResumenPagosCliente";
 var id_est_resumen_pagos_cliente = "estResumenPagosCliente";
 var id_ant_resumen_pagos_cliente = "antResumenPagosCliente";
 
+var id_ppto_resumen_pagos_cliente = "pptoTotalResumenPagosCliente";
+var id_saldo_resumen_pagos_cliente = "saldoTotalResumenPagosCliente";
+
 var id_ddl_obra_pagos_cliente = "obraPagosCliente";
 var id_monto_pagos_cliente = "montoPagosCliente";
 var id_fecha_pagos_cliente = "fechaPagosCliente";
@@ -487,7 +490,6 @@ function getDatosPagosCliente(urlFile){
 };
 
 function tablaYResumenPagosCliente(){
-    
     // necesito generar array con datos de firebase database para luego crear la tabla
     firebase.database().ref(rama_bd_pagos + "/pagos").on("value", function(snapshot){
         var datos = [];
@@ -549,6 +551,9 @@ function tablaYResumenPagosCliente(){
         $('#' + id_ant_resumen_pagos_cliente).text(formatMoney(total_ant))
         $('#' + id_total_resumen_pagos_cliente).text(formatMoney(total_pagado));
 
+        var ppto_instalaciones = deformatMoney($('#' + id_ppto_resumen_pagos_cliente).text());
+        $('#' + id_saldo_resumen_pagos_cliente).text(formatMoney(ppto_instalaciones - total_pagado));
+
 
         // generar tabla
 
@@ -594,6 +599,15 @@ function tablaYResumenPagosCliente(){
               ],
               //"paging":false,
         });
+    });
+
+    firebase.database().ref(rama_bd_obras + "/contratos/" + $('#' + id_ddl_obra_pagos_cliente + " option:selected").val()).on("value", function(snapshot){
+        var ppto = snapshot.val();
+        $('#' + id_ppto_resumen_pagos_cliente).text(formatMoney(ppto.monto_autorizado));
+
+        var total_pagado = deformatMoney($('#' + id_total_resumen_pagos_cliente).text());
+        
+        $('#' + id_saldo_resumen_pagos_cliente).text(formatMoney(ppto.monto_autorizado - total_pagado));
     });
 };
 

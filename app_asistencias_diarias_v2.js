@@ -31,10 +31,10 @@ var id_button_guardar_datos_asistencias_diarias = "guardarRegistrosDatosAsistenc
 // * Llenado de ddls y reset todo al iniciar la tab.
 
 $('#' + id_tab_asistencias_diarias).click(function() {
+
     $('#' + id_div_container_button_actualizar_asistencias_diarias).addClass("hidden");
     $('#' + id_div_container_dataTable_asistencias_diarias).addClass("hidden");
-    // limpiar ddls
-
+    
     $('#' + id_ddl_obra_asistencias_diarias).empty();
     $('#' + id_ddl_year_asistencias_diarias).empty();
     $('#' + id_ddl_week_asistencias_diarias).empty();
@@ -42,22 +42,22 @@ $('#' + id_tab_asistencias_diarias).click(function() {
 
     var select_year = document.getElementById(id_ddl_year_asistencias_diarias);
     var select_week = document.getElementById(id_ddl_week_asistencias_diarias);
-
-    // llenar ddl obra
-    // si se autoriza utilizar para supervisores se necesita revisar credenciales.
-
-    var obra_select = document.getElementById(id_ddl_obra_asistencias_diarias);
-
-    var option1 = document.createElement('option');
-    option1.style = "display:none";
-    option1.text = "SELECCIONA OBRA";
-    option1.value = "";
-    obra_select.appendChild(option1);
-    console.log(uid_usuario_global);
-    console.log(areas_usuario_global);
-    console.log(creden_usuario_global);
-
+    
     firebase.database().ref(rama_bd_obras + "/listas/obras_activas").orderByChild('nombre').on('child_added',function(snapshot){
+        // limpiar ddls
+
+
+        // llenar ddl obra
+        // si se autoriza utilizar para supervisores se necesita revisar credenciales.
+
+        var obra_select = document.getElementById(id_ddl_obra_asistencias_diarias);
+
+        var option1 = document.createElement('option');
+        option1.style = "display:none";
+        option1.text = "SELECCIONA OBRA";
+        option1.value = "";
+        obra_select.appendChild(option1);
+
         var obra = snapshot.val();
         if(areas_usuario_global.rrhh || creden_usuario_global < 3){
             // caso si es rrhh o de produccion con mayores creden
@@ -287,11 +287,11 @@ $('#' + id_ddl_obra_asistencias_diarias).change(function(){
 
 $('#' + id_button_aceptar_asistencias_diarias).click(function(){
     // obtener json de registros. Lo obtengo una vez y cada vez que se haga un on value, actualizo el json.
+    $('#' + id_div_card_actualizar_asistencias_diarias).addClass("hidden");
+    $('#' + id_div_container_button_actualizar_asistencias_diarias).removeClass("hidden");
 
     firebase.database().ref(rama_bd_nomina + "/nomina").on("value", function(snapshot){
         json_registros_asistencias = {};
-        $('#' + id_div_card_actualizar_asistencias_diarias).addClass("hidden");
-        $('#' + id_div_container_button_actualizar_asistencias_diarias).removeClass("hidden");
         var registros = snapshot.val();
         var actual_day = $('#' + id_ddl_day_asistencias_diarias + " option:selected").val();
         var actual_week = $('#' + id_ddl_week_asistencias_diarias + " option:selected").val();
@@ -313,7 +313,6 @@ $('#' + id_button_aceptar_asistencias_diarias).click(function(){
 
         // actualizo tabla.
         actualizarTablaAsistenciasDiarias(json_registros_asistencias, actual_day);
-        $('#' + id_div_container_button_actualizar_asistencias_diarias).removeClass("hidden");
     });
 });
 

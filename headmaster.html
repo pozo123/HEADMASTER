@@ -1276,6 +1276,7 @@
                                 <li class="tab administracion hidden" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Alta y Edición - Obras</a></li>
                                 <li class="tab administracion hidden" id="tabAltaProcesos"><a href="#" onclick="openTabs('tabAltaProcesos','altaProcesos')">Alta y Edición - Procesos</a></li>
                             </ul>
+                            <li class="tab administracion hidden" id="tabContratosObra"><a href="#" onclick="openTabs('tabContratosObra','contratosObra')">Contratos - Montos aprobados</a></li>
                             <a href="#pageDefiniciones" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle administracion hidden">Definiciones</a>
                             <ul class="collapse list-unstyled administracion hidden" id="pageDefiniciones">
                                 <li class="tab administracion hidden" id="tabEspecialidades"><a href="#" onclick="openTabs('tabEspecialidades','especialidadesHEAD')">Definición - Especialidades</a></li>
@@ -1286,21 +1287,21 @@
                             <li class="tab administracion hidden" id="tabPagosCliente"><a href="#" onclick="openTabs('tabPagosCliente','pagosCliente')">Pagos por parte Cliente</a></li>
                         </ul>
                     </li>
-                    <li class="rrhh produccion hidden">
+                    <li class="rrhh produccion creden-2 hidden">
                         <a href="#pageNomina" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Nómina</a>
                         <ul class="collapse list-unstyled" id="pageNomina">
-                            <li class="tab rrhh hidden" id="tabDatosNomina"><a href="#" onclick="openTabs('tabDatosNomina','datosNomina')">Asistencias, Horas Extra y Diversos - Trabajador</a></li>
-                            <li class="tab rrhh produccion hidden" id="tabAsistenciasDiarias"><a href="#" onclick="openTabs('tabAsistenciasDiarias','asistenciasDiarias')">Asistencias - Día</a></li>
-                            <li class="tab rrhh hidden" id="tabDiversos"><a href="#" onclick="openTabs('tabDiversos','diversos')">Definición - Diversos</a></li>
-                            <li class="tab rrhh hidden" id="tabPagosNomina"><a href="#" onclick="openTabs('tabPagosNomina','pagosNomina')">Pagos Nómina</a></li>
-                            <li class="tab rrhh hidden" id="tabTrabajadores"><a href="#" onclick="openTabs('tabTrabajadores','trabajadoresProduccion')">Trabajadores de obra</a></li>
+                            <li class="tab rrhh creden-2 hidden" id="tabDatosNomina"><a href="#" onclick="openTabs('tabDatosNomina','datosNomina')">Asistencias, Horas Extra y Diversos - Trabajador</a></li>
+                            <li class="tab rrhh creden-2 produccion hidden" id="tabAsistenciasDiarias"><a href="#" onclick="openTabs('tabAsistenciasDiarias','asistenciasDiarias')">Asistencias - Día</a></li>
+                            <li class="tab rrhh creden-2 hidden" id="tabDiversos"><a href="#" onclick="openTabs('tabDiversos','diversos')">Definición - Diversos</a></li>
+                            <li class="tab rrhh creden-2 hidden" id="tabPagosNomina"><a href="#" onclick="openTabs('tabPagosNomina','pagosNomina')">Pagos Nómina</a></li>
+                            <li class="tab rrhh creden-2 hidden" id="tabTrabajadores"><a href="#" onclick="openTabs('tabTrabajadores','trabajadoresProduccion')">Trabajadores de obra</a></li>
                         </ul>
                     </li>
-                    <li class = "produccion hidden">
+                    <li class = "produccion creden-2 hidden">
                         <a href="#pageProduccion" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Producción</a>
                         <ul class="collapse list-unstyled" id="pageProduccion">
                             <li class="tab creden-2" id="tabCopeo"><a href="#" onclick="openTabs('tabCopeo','copeo')">Copeo</a></li>
-                            <li class="tab" id="tabSolicitudAdicional"><a href="#" onclick="openTabs('tabSolicitudAdicional','solicitudAdicional')">Solicitud de Adicionales</a></li>
+                            <li class="tab creden-2" id="tabSolicitudAdicional"><a href="#" onclick="openTabs('tabSolicitudAdicional','solicitudAdicional')">Solicitud de Adicionales</a></li>
                             <li class="tab creden-2" id="tabAsignacionSupervisores"><a href="#" onclick="openTabs('tabAsignacionSupervisores','asignacionSupervisores')">Asignación de supervisores</a></li>
                         </ul>
                     </li>
@@ -4394,8 +4395,8 @@
                                             <div class="container-fluid" style="text-align:center">
                                                 <br/>
                                                 <h6>Total pagado:<span id="totalResumenPagosCliente" style="font-weight: bold"></span></h6>
-                                                <h6>Presupuesto de Instalaciones: <span id="" style="font-weight: bold">Aún no disponible</span></h6>
-                                                <h6>Saldo Total: <span id="" style="font-weight: bold">Aún no disponible</span></h6>
+                                                <h6>Presupuesto de Instalaciones: <span id="pptoTotalResumenPagosCliente" style="font-weight: bold"></span></h6>
+                                                <h6>Saldo Total: <span id="saldoTotalResumenPagosCliente" style="font-weight: bold"></span></h6>
                                                 <br/>
                                                 <h6>Total cobrado por concepto de anticipo:<span id="antResumenPagosCliente" style="font-weight: bold"></span></h6>
                                                 <h6>Total cobrado por concepto de estimación:<span id="estResumenPagosCliente" style="font-weight: bold"></span></h6>
@@ -4590,6 +4591,76 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Contratos obra - Montos aprobados -->
+                        <div id="contratosObra" class="tabcontent hidden">
+                            <h1>Contratos - Montos autorizados</h1>
+                            <p>Página para asignar los montos que son aprobados por parte de los clientes a cada uno de los contratos realizados.</p>
+                            <div class="container-fluid">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-1"></div>
+                                    <div class="col-lg-10">
+                                        <form id= "formContratosObra" action="#" onsubmit="return false;">
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6 col-lg-3">
+                                                    <label for="obraContratosObra">Obra</label>
+                                                    <select id ="obraContratosObra" class="form-control"></select>
+                                                </div>
+                                                <div class="form-group col-md-6 col-lg-3">
+                                                    <label for="montoContratosObra">Monto autorizado</label>
+                                                    <input type="text" name="" id="montoContratosObra"class="form-control" placeholder="($) Ingresa monto">
+                                                </div>
+                                                <div class="form-group col-md-6 col-lg-3">
+                                                    <label for="fechaInicioAdicionales">Fecha de autorización</label>
+                                                    <input class="form-control" type="text" id="fechaAutorizacionContratosObra" placeholder="" readonly="readonly">
+                                                </div>
+                                                <div class="form-group col-md-6 col-lg-3">
+                                                    <label for="montoContratosObra">Archivo evidencia</label>
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input" id="fileInputContratosObra" accept="image/*, application/pdf">
+                                                        <label class = "custom-file-label" id="fileLabelContratosObra">Archivo no seleccionado</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class= "col-4"></div>
+                                                <div class="form-group col-lg-4">
+                                                    <label for="infoAdicionalContratosObra">Información adicional</label>
+                                                    <textarea id ="infoAdicionalContratosObra" cols="30" rows="3" class="form-control"></textarea>
+                                                </div>
+                                                <div class= "col-4"></div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class= "col-4"></div>
+                                                <div class= "col-4">
+                                                    <button id="actualizarButtonContratosObra" type="button" class="btn btn-outline-success btn-block">Actualizar</button>
+                                                </div>
+                                                <div class= "col-4"></div>
+                                            </div>
+                                        </form>
+                                        <br/>
+                                    </div>
+                                    <div class="col-lg-1"></div>
+                                    <div class = "col-12 container_reporte_nomina hidden fadeInDown" id = "containerDataTableContratosObra">
+                                        <div class="tableWrapper">
+                                            <table id="dataTableContratosObra" style="margin-left:auto;margin-right:auto; width:100%" class="display table-striped table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Obra</th>
+                                                        <th>Información adicional</th>
+                                                        <th>Cliente</th>
+                                                        <th>Monto original de venta</th>
+                                                        <th>Monto autorizado</th>
+                                                        <th>Descuento</th>
+                                                        <th>Fecha de aut.</th>
+                                                        <th>Evidencia</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>       
+                        </div>
                     </div>
                 </div>
             </div>
@@ -4680,6 +4751,7 @@
         <script src="pdf_presupuestoAdicional_v2.js"></script>
         <script src="pdf_calculadora_v2.js"></script>
         <script src="app_asistencias_diarias_v2.js"></script>
+        <script src="app_contratos_v2.js"></script>
 
         <!-- Excel to Json-->
         <script src="xlsx.full.min.js"></script>

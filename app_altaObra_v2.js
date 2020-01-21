@@ -551,24 +551,27 @@ function actualizarTablaObras(){
 
 // función para actualizar el valor "habilitado:boolean" en la database.
 function  habilitarObra(habilitada, id){
+    var update_json = {};
     var aux = {"habilitada": !habilitada};
 
     firebase.database().ref(rama_bd_obras + "/obras/" + id).once("value").then(function(snapshot){
         var registro_antiguo = snapshot.val();
 
         // actualizar registro
-        firebase.database().ref(rama_bd_obras + "/obras/" + id).update(aux);
+        update_json["obras/" + id + "/habilitada"] = !habilitada;
 
         // actualizar listas
         if(habilitada){
-            firebase.database().ref(rama_bd_obras + "/listas/obras_activas/" + id).remove();
-            firebase.database().ref(rama_bd_obras + "/listas/obras_no_activas/" + id + "/nombre").set(registro_antiguo.nombre);
+            update_json["listas/obras_activas/" + id] = null;
+            update_json["listas/obras_no_activas/" + id + "/nombre"] = registro_antiguo.nombre;
         } else {
-            firebase.database().ref(rama_bd_obras + "/listas/obras_activas/" + id+ "/nombre").set(registro_antiguo.nombre);
-            firebase.database().ref(rama_bd_obras + "/listas/obras_no_activas/" + id).remove();
+            update_json["listas/obras_activas/" + id + "/nombre"] =  registro_antiguo.nombre;
+            update_json["listas/obras_no_activas/" + id] = null;
         }
+
+        firebase.database().ref(rama_bd_obras).update(update_json)
         // pda
-        pda("modificacion", rama_bd_obras + "/obras/" + id, registro_antiguo)
+        //pda("modificacion", rama_bd_obras + "/obras/" + id, registro_antiguo)
     });
 }
 
