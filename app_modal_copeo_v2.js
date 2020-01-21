@@ -25,6 +25,7 @@ var id_costoExtrasModalCopeo = "costoExtrasModalCopeo";
 var id_multExtrasModalCopeo = "multExtrasModalCopeo";
 var id_subtotalExtrasModalCopeo = "subtotalExtrasModalCopeo";
 var id_totalExtrasModalCopeo = "totalExtrasModalCopeo";
+var id_div_totalExtrasModalCopeo = "div_totalExtrasModalCopeo";
 
 // botones del form
 var id_agregar_modalCopeo = "botonAceptarModalCopeo";
@@ -340,12 +341,12 @@ function resetFormModalCopeo (){
     $('#' + id_div_totalCSModalCopeo).addClass('hidden');
     $('#' + id_carga_socialModalCopeo).addClass('hidden');
     $('#' + id_label_cargaSocialModalCopeo).addClass('hidden');
-    $('#' + id_totalExtrasModalCopeo).addClass('hidden');
+    $('#' + id_div_totalExtrasModalCopeo).addClass('hidden');
   }else{
     $('#' + id_div_totalCSModalCopeo).removeClass('hidden');
     $('#' + id_carga_socialModalCopeo).removeClass('hidden');
     $('#' + id_label_cargaSocialModalCopeo).removeClass('hidden');
-    $('#' + id_totalExtrasModalCopeo).removeClass('hidden');
+    $('#' + id_div_totalExtrasModalCopeo).removeClass('hidden');
   }
   $('#'+id_ddl_entradaModalCopeo).val("");
   resetFormModalCopeo_entrada();

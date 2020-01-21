@@ -7,6 +7,8 @@
 */
 
 // Función para obtener los url de todas las imagenes guardadas en una ruta
+// Las reglas de firebase storage deben ser version 2
+// rules_version = "2";
 function getAllFirebaseStorageGeneric(ruta){
   var storageRef = firebase.storage().ref(ruta);
   var images_url = [];
@@ -14,6 +16,7 @@ function getAllFirebaseStorageGeneric(ruta){
     if(flagDownloadAdicionales){
       resolve(images_url);
     } else {
+      //console.log("Entró la funcion");
       // Now we get the references of these images
       storageRef.listAll().then(function(result) {
           //console.log(result);
@@ -29,11 +32,13 @@ function getAllFirebaseStorageGeneric(ruta){
                 resolve(images_url);
               }
             }).catch(function(error) {
+              //console.log("Download fail");
               reject(Error("Download fail"));
             });
             indice+=1;
           });
       }).catch(function(error) {
+        //console.log("Error en list all");
         reject(Error("Folder fail"));
       });
     }
@@ -157,7 +162,7 @@ function uploadAllImagesGeneric(ruta, fotos_seleccionadas){
           }
       }, function(error) {
         // Handle unsuccessful uploads
-        console.log('Error al cargar la imagen');
+        //console.log('Error al cargar la imagen');
         reject(Error("Upload fail"));
       }, function() {
         // Handle successful uploads on complete
