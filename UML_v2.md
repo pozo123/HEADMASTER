@@ -691,6 +691,41 @@ Nota: Todo float se ingresa a 2 decimales.
                                   - fecha_ingreso: timestamp
                                   - fecha_cotizacion: timestamp
                                   - catalogoProveedor: string
+    - indirectos
+        - año
+            - familias
+                - familia (firebase_id)
+                    - id_familia: string
+                    - nombre: string
+                    - descripcion: string
+                    - subfamilias:
+                        - subfamilia
+                            - id_subfamilia: string
+                            - nombre: string
+                            - descripcion: string
+                            - forma_pago: string
+                            - entradas
+                                - entrada (firebase_id)
+                                    - nombre: string
+                                    - descripcion: string
+                                    - subtotal: float
+                                    - multiplicador: float
+            - proy_autorizada: boolean
+            - pagos: (pendiente)
+                - pago (firebase_id)
+                    - tipo: string (factura/recibo)
+                    - fecha: timestamps
+                    - image_url: string
+                    - empresa: string
+                    - folio: string
+                    - distribucion
+                        - familias
+                            - familia (mismo id)
+                                - subfamilia (mismo id)
+                                    - entradas
+                                        - entrada (misma id)
+                                            - monto: float
+                                            - tipo: string (firebase_id)
 
     - matriciales
         - obras

@@ -243,6 +243,7 @@ $('#' + id_ddl_week_asistencias_diarias).change(function (){
     option_jueves.text = new Date(getDaysWeek(sem,year)[0]).toLocaleDateString("es-ES", options_semanas)
     option_viernes.text = new Date(getDaysWeek(sem,year)[0] + 86400000*1).toLocaleDateString("es-ES", options_semanas)
     option_lunes.text = new Date(getDaysWeek(sem,year)[0] + 86400000*4).toLocaleDateString("es-ES", options_semanas)
+    console.log(getDaysWeek(sem,year)[0]);
     option_martes.text = new Date(getDaysWeek(sem,year)[0] + 86400000*5).toLocaleDateString("es-ES", options_semanas)
     option_miercoles.text = new Date(getDaysWeek(sem,year)[0] + 86400000*6).toLocaleDateString("es-ES", options_semanas)
 
@@ -317,7 +318,6 @@ $('#' + id_button_aceptar_asistencias_diarias).click(function(){
 });
 
 $('#' + id_button_actualizar_asistencias_diarias).click(function(){
-
     var actual_day = $('#' + id_ddl_day_asistencias_diarias + " option:selected").val();
 
     $('#' + id_div_actualizar_asistencias_diarias).empty();
@@ -338,7 +338,7 @@ $('#' + id_button_actualizar_asistencias_diarias).click(function(){
         id_head.innerText = "ID: " + json_registros_asistencias[reg].trabajador_id_head
         
         var col_id = document.createElement('div');
-        col_id.className = "form-group col-2";
+        col_id.className = "form-group col-md-2";
         col_id.appendChild(id_head);
 
         var proceso = document.createElement('select');
@@ -352,7 +352,7 @@ $('#' + id_button_actualizar_asistencias_diarias).click(function(){
         };
         
         var col_proc = document.createElement('div');
-        col_proc.className = "form-group col-3";
+        col_proc.className = "form-group col-md-3";
         col_proc.appendChild(proceso);
 
         // nombre:
@@ -363,7 +363,7 @@ $('#' + id_button_actualizar_asistencias_diarias).click(function(){
         nombre.readOnly = "readonly"                             
 
         var col_nombre = document.createElement('div');
-        col_nombre.className = "form-group col-5";
+        col_nombre.className = "form-group col-md-5";
         col_nombre.appendChild(nombre);
         
 
@@ -385,7 +385,7 @@ $('#' + id_button_actualizar_asistencias_diarias).click(function(){
         actividad.appendChild(option_vacaciones);
         
         var col_actividad = document.createElement('div');
-        col_actividad.className = "form-group col-2";
+        col_actividad.className = "form-group col-md-2";
         col_actividad.appendChild(actividad);
         
         var row = document.createElement('div');
@@ -498,7 +498,7 @@ $(document).on('change','.idHeadVacio', function(){
                                     };
                                     
                                     var col_proc = document.createElement('div');
-                                    col_proc.className = "form-group col-3";
+                                    col_proc.className = "form-group col-md-3";
                                     col_proc.appendChild(proceso);
     
                                     // nombre:
@@ -510,7 +510,7 @@ $(document).on('change','.idHeadVacio', function(){
                                     nombre.readOnly = "readonly"                             
     
                                     var col_nombre = document.createElement('div');
-                                    col_nombre.className = "form-group col-5";
+                                    col_nombre.className = "form-group col-md-5";
                                     col_nombre.appendChild(nombre);
                                     
     
@@ -532,7 +532,7 @@ $(document).on('change','.idHeadVacio', function(){
                                     actividad.appendChild(option_vacaciones);
                                     
                                     var col_actividad = document.createElement('div');
-                                    col_actividad.className = "form-group col-2";
+                                    col_actividad.className = "form-group col-md-2";
                                     col_actividad.appendChild(actividad);
     
                                     // --------------------------------------------------------
@@ -612,7 +612,7 @@ $(document).on('change','.idHeadVacio', function(){
                             };
                             
                             var col_proc = document.createElement('div');
-                            col_proc.className = "form-group col-3";
+                            col_proc.className = "form-group col-md-3";
                             col_proc.appendChild(proceso);
     
                             // nombre:
@@ -624,7 +624,7 @@ $(document).on('change','.idHeadVacio', function(){
                             nombre.readOnly = "readonly"                             
     
                             var col_nombre = document.createElement('div');
-                            col_nombre.className = "form-group col-5";
+                            col_nombre.className = "form-group col-md-5";
                             col_nombre.appendChild(nombre);
                             
     
@@ -646,7 +646,7 @@ $(document).on('change','.idHeadVacio', function(){
                             actividad.appendChild(option_vacaciones);
                             
                             var col_actividad = document.createElement('div');
-                            col_actividad.className = "form-group col-2";
+                            col_actividad.className = "form-group col-md-2";
                             col_actividad.appendChild(actividad);
     
                             // --------------------------------------------------------
@@ -1106,7 +1106,7 @@ function createRowAsistenciasDiarias(key){
     id_head.placeholder = "ID HEAD";
     
     var col = document.createElement('div');
-    col.className = "form-group col-2";
+    col.className = "form-group col-md-2";
     col.appendChild(id_head);
     
     var row = document.createElement('div');

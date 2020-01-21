@@ -50,7 +50,7 @@ function getDaysWeek(week, year){
         primer_jueves = yearFirstDay + (7 - offset);
     }
 
-    var jueves_week = ((week - 1)*7 + primer_jueves)*86400000 + 43200000; // sumo 12 horas para que no haya pex
+    var jueves_week = ((week - 1)*7 + primer_jueves)*86400000 + 3600000*9; // sumo 9 horas para que no haya pex
     var miercoles_week = jueves_week + (6*86400000); //
     return[jueves_week, miercoles_week];
 }
