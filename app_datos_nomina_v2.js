@@ -1330,10 +1330,9 @@ function actualizarTablaDatosNomina(){
                     datos_nominas.push(datos_reg)
                     
                 })
-
                 //
                 console.log(diversos_index_json);
-                var index_array =[];
+                var index_array =[0];
                 var i = 0;
                 for(key in diversos_index_json){
                     if(diversos_index_json[key] == 0){

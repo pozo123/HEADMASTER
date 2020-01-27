@@ -1159,6 +1159,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="wrapper">
             <!-- Sidebar -->
             <nav id="sidebar" class = "loader hidden">
@@ -1264,8 +1265,6 @@
                         </div>
                     </div>
                 </ul>
-
-
                 <ul class="list-unstyled components">
                     <li>
                         <a href="#pageDashboard" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Dashboard</a>
@@ -1274,7 +1273,7 @@
                         </ul>
                     </li>
                     <li class="">
-                        <a href="#pageAdministracion" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle administracion hidden" >Administración</a>
+                        <a href="#pageAdministracion" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle" >Administración</a>
                         <ul class="collapse list-unstyled administracion hidden" id="pageAdministracion">
                             <a href="#pageAltas" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Altas</a>
                             <ul class="collapse list-unstyled " id="pageAltas">
@@ -1283,7 +1282,7 @@
                                 <li class="tab administracion hidden" id="tabAltaObra"><a href="#" onclick="openTabs('tabAltaObra','altaObra')">Alta y Edición - Obras</a></li>
                                 <li class="tab administracion hidden" id="tabAltaProcesos"><a href="#" onclick="openTabs('tabAltaProcesos','altaProcesos')">Alta y Edición - Procesos</a></li>
                             </ul>
-                            <li class="tab administracion hidden" id="tabContratosObra"><a href="#" onclick="openTabs('tabContratosObra','contratosObra')">Contratos - Montos aprobados</a></li>
+                            <li class="tab administracion creden-2 hidden" id="tabContratosObra"><a href="#" onclick="openTabs('tabContratosObra','contratosObra')">Contratos - Montos aprobados</a></li>
                             <a href="#pageDefiniciones" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle administracion hidden">Definiciones</a>
                             <ul class="collapse list-unstyled administracion hidden" id="pageDefiniciones">
                                 <li class="tab administracion hidden" id="tabEspecialidades"><a href="#" onclick="openTabs('tabEspecialidades','especialidadesHEAD')">Definición - Especialidades</a></li>
@@ -1291,24 +1290,29 @@
                             </ul>
                             <li class="tab administracion hidden" id="tabCalculadora"><a href="#" onclick="openTabs('tabCalculadora','calculadora')">Calculadora Kaizen</a></li>
                             <li class="tab administracion hidden" id="tabGeneradorAdic"><a href="#" onclick="openTabs('tabGeneradorAdic','generadorAdicionales')">Generador de Adicionales</a></li>
+                            <a href="#pageIndirectos" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle administracion creden-2 hidden">Indirectos</a>
+                            <ul class="collapse list-unstyled administracion hidden" id="pageIndirectos">
+                                <li class="tab administracion hidden" id="tabDatosIndirectos"><a href="#" onclick="openTabs('tabDatosIndirectos','datosIndirectos')">Familias, subfamilias y entradas</a></li>
+                                <li class="tab administracion hidden" id="tabProyeccionIndirectos"><a href="#" onclick="openTabs('tabProyeccionIndirectos','proyeccionIndirectos')">Proyección anual</a></li>
+                            </ul>
                             <li class="tab administracion hidden" id="tabPagosCliente"><a href="#" onclick="openTabs('tabPagosCliente','pagosCliente')">Pagos por parte Cliente</a></li>
                         </ul>
                     </li>
-                    <li class="rrhh produccion creden-2 hidden">
+                    <li class="rrhh produccion hidden">
                         <a href="#pageNomina" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Nómina</a>
                         <ul class="collapse list-unstyled" id="pageNomina">
                             <li class="tab rrhh creden-2 hidden" id="tabDatosNomina"><a href="#" onclick="openTabs('tabDatosNomina','datosNomina')">Asistencias, Horas Extra y Diversos - Trabajador</a></li>
-                            <li class="tab rrhh creden-2 produccion hidden" id="tabAsistenciasDiarias"><a href="#" onclick="openTabs('tabAsistenciasDiarias','asistenciasDiarias')">Asistencias - Día</a></li>
+                            <li class="tab rrhh produccion hidden" id="tabAsistenciasDiarias"><a href="#" onclick="openTabs('tabAsistenciasDiarias','asistenciasDiarias')">Asistencias - Día</a></li>
                             <li class="tab rrhh creden-2 hidden" id="tabDiversos"><a href="#" onclick="openTabs('tabDiversos','diversos')">Definición - Diversos</a></li>
                             <li class="tab rrhh creden-2 hidden" id="tabPagosNomina"><a href="#" onclick="openTabs('tabPagosNomina','pagosNomina')">Pagos Nómina</a></li>
                             <li class="tab rrhh creden-2 hidden" id="tabTrabajadores"><a href="#" onclick="openTabs('tabTrabajadores','trabajadoresProduccion')">Trabajadores de obra</a></li>
                         </ul>
                     </li>
-                    <li class = "produccion creden-2 hidden">
+                    <li class = "produccion hidden">
                         <a href="#pageProduccion" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Producción</a>
                         <ul class="collapse list-unstyled" id="pageProduccion">
                             <li class="tab creden-2" id="tabCopeo"><a href="#" onclick="openTabs('tabCopeo','copeo')">Copeo</a></li>
-                            <li class="tab creden-2" id="tabSolicitudAdicional"><a href="#" onclick="openTabs('tabSolicitudAdicional','solicitudAdicional')">Solicitud de Adicionales</a></li>
+                            <li class="tab" id="tabSolicitudAdicional"><a href="#" onclick="openTabs('tabSolicitudAdicional','solicitudAdicional')">Solicitud de Adicionales</a></li>
                             <li class="tab creden-2" id="tabAsignacionSupervisores"><a href="#" onclick="openTabs('tabAsignacionSupervisores','asignacionSupervisores')">Asignación de supervisores</a></li>
                         </ul>
                     </li>
@@ -4628,22 +4632,24 @@
                                         <br/>
                                     </div>
                                     <div class="col-lg-1"></div>
-                                    <div class = "col-12 container_reporte_nomina hidden fadeInDown" id = "containerDataTableContratosObra">
-                                        <div class="tableWrapper">
-                                            <table id="dataTableContratosObra" style="margin-left:auto;margin-right:auto; width:100%" class="display table-striped table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Obra</th>
-                                                        <th>Información adicional</th>
-                                                        <th>Cliente</th>
-                                                        <th>Monto original de venta</th>
-                                                        <th>Monto autorizado</th>
-                                                        <th>Descuento</th>
-                                                        <th>Fecha de aut.</th>
-                                                        <th>Evidencia</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
+                                    <div class="row">
+                                        <div class = "col-12 hidden fadeInDown" id = "containerDataTableContratosObra">
+                                            <div class="tableWrapper">
+                                                <table id="dataTableContratosObra" style="margin-left:auto;margin-right:auto; width:100%" class="display table-striped table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Obra</th>
+                                                            <th>Información adicional</th>
+                                                            <th>Cliente</th>
+                                                            <th>Monto original de venta</th>
+                                                            <th>Monto autorizado</th>
+                                                            <th>Descuento</th>
+                                                            <th>Fecha de aut.</th>
+                                                            <th>Evidencia</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
