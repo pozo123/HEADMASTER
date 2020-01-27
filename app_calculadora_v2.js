@@ -17,8 +17,10 @@ var id_costo_extraCopeoCalculadora = "costoExtraCopeoCalculadora";
 var id_costo_copeoCalculadora = "costoCopeoCalculadora";
 var id_cargaSocialCalculadora = "impuestosCalculadora";
 var id_costo_copeoCargaCalculadora = "costoCopeoCargaCalculadora";
+var id_boton_copeoCalculadora = "botonCopeoCalculadora";
 
 var id_costo_suministrosCalculadora = "costoSuministrosCalculadora";
+var id_boton_suministrosCalculadora = "botonSuministrosCalculadora";
 
 var id_utilidad_suministrosCalculadora = "utilidadSuministrosCalculadora";
 var id_utilidad_copeoCalculadora = "utilidadCopeoCalculadora";
@@ -49,7 +51,8 @@ var horasProyectoManda;
 var copeoManda;
 var porcentajeIndirectosManda;
 var horasActualizadas;
-var registro_antiguo = '';
+var registro_antiguo;
+var flagCalculadora;
 
 $('#' + id_tab_calculadora).click(function(){
 	cantProfitManda = true;
@@ -57,6 +60,10 @@ $('#' + id_tab_calculadora).click(function(){
   copeoManda = true
 	porcentajeIndirectosManda = true;
   horasActualizadas = false;
+	registro_antiguo = '';
+	json_modalCopeo = {};
+	json_modalSuministros={};
+	flagCalculadora = true;
 	// pongo el texto para el on hover
 	var texto_default = "Valores generalmente usados para el calculo de presupuestos: precio por hora del área de proyectos, impuestos para la mano de obra y el porcentaje de costos indirectos."
 	$('#' + id_default_calculadora).attr("data-content", texto_default);
@@ -76,6 +83,14 @@ $('#' + id_tab_calculadora).click(function(){
 		select.appendChild(option);
   });
   //returnToDefaultCalculadora();
+});
+
+$('#' + id_boton_copeoCalculadora).click(function(){
+	modalCopeo(json_modalCopeo, true);
+});
+
+$('#' + id_boton_suministrosCalculadora).click(function(){
+	modalSuministros(false, json_modalSuministros); // desplegar modal
 });
 
 $('#' + id_borrar_calculadora).click(function(){
@@ -935,6 +950,8 @@ function cargaCamposCalculadora(claveObra){
 		  copeoManda = true
 			porcentajeIndirectosManda = false;
 		  horasActualizadas = false;
+			json_modalCopeo = obra.copeo_desglozado;
+			json_modalSuministros = obra.cuantificacion;
     } else {
 			resetFormCalculadora_subproceso();
 			registro_antiguo = '';
@@ -963,8 +980,24 @@ function datosCalculadora (){
 		utilidad_global: deformatMoney($('#'+id_utilidad_desplegadaCalculadora).val()),
 		utilidad_cantidad: deformatMoney($('#'+id_profit_cantidadCalculadora).val()),
 		precio_venta: deformatMoney($('#'+id_precio_ventaCalculadora).val()),
+		copeo_desglozado: json_modalCopeo,
+		cuantificacion: json_modalSuministros,
 	};
 	return datos;
+}
+
+function setSuministrosCalculadora(){
+  $('#'+id_costo_suministrosCalculadora).val(formatMoney(calculaCostoSuministrosGeneric()));
+	actualizaResultadosCalculadora();
+}
+
+function setCopeoCalculadora(){
+	var totales_copeo = calculaCostoCopeoGeneric();
+  $('#'+id_costo_copeoCalculadora).val(formatMoney(totales_copeo.precopeo));
+	$('#'+id_costo_extraCopeoCalculadora).val(formatMoney(totales_copeo.extras));
+  $('#'+id_cargaSocialCalculadora).val(extraeImpuestoGeneric());
+	actualizaCopeoCargaSocial();
+  actualizaResultadosCalculadora();
 }
 
 /*

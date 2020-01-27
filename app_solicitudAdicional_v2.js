@@ -54,7 +54,8 @@ $('#' + id_tab_solicitudAdicional).click(function() {
     cont_solicitudes = 0;
     colaborador = "";
     registro_antiguo={};
-
+    json_modalSuministros={};
+    json_modalCopeo={};
     // Cargar las 2 acciones
     cargarDdlAccionSolicitudAdicional();
 
@@ -536,10 +537,10 @@ $('#' + id_boton_cuantSolicitudAdicional).click(function() {
       if(snapshot.exists()){
         json_insumosRegistrados = snapshot.val();
       }
-      modalSuministros(0, true, json_insumosRegistrados); // resultado en json_modalSuministros
+      modalSuministros(true, json_insumosRegistrados); // resultado en json_modalSuministros
     });
   }else{
-    modalSuministros(0, true, json_modalSuministros);
+    modalSuministros(true, json_modalSuministros);
   }
 
 });
@@ -553,10 +554,10 @@ $('#' + id_boton_copeoSolicitudAdicional).click(function() {
       if(snapshot.exists()){
         json_copeoRegistrado = snapshot.val();
       }
-      modalCopeo(json_copeoRegistrado, true, false); // resultado en json_modalCopeo
+      modalCopeo(json_copeoRegistrado, true); // resultado en json_modalCopeo
     });
   }else{
-    modalCopeo(json_modalCopeo, true, false); // resultado en json_modalCopeo
+    modalCopeo(json_modalCopeo, true); // resultado en json_modalCopeo
   }
 });
 

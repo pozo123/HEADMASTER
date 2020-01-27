@@ -250,3 +250,20 @@ function extraeListaGeneric(select, json_padre){
   }
   return json_resp;
 }
+
+// Funcion generica para llenar un ddl con un snap y el nombre del campo deseado
+function llenaDdlGeneric(item_id, snap, nombre){
+  // Llenado del ddl de marca
+  $('#' + item_id).empty();
+  var select = document.getElementById(item_id);
+  var option = document.createElement('option');
+  //option.style = "display:none";
+  option.text = option.value = "";
+  select.appendChild(option);
+  snap.forEach(function(snapChild){
+    option = document.createElement('option');
+    option.value = snapChild.key;
+    option.text = snapChild.val()[nombre];
+    select.appendChild(option);
+  });
+}

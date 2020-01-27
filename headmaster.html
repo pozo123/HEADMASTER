@@ -566,12 +566,24 @@
                               </table>
                           </div>
                           </br>
+                          <hr class="style2">
+                          <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="ddl_entradaModalSuministros">Entrada:</label>
+                                <select id="ddl_entradaModalSuministros" class="form-control"></select>
+                            </div>
+                            <div class="form-group col-md-8">
+                                <label for="nombreModalSuministros">Nombre</label>
+                                <input type="text" class="form-control" id="nombreModalSuministros" placeholder="Nombre">
+                            </div>
+                          </div>
+                          </br>
                           <div class="form-row align-items-center">
-                              <div class="col-lg-3">
+                              <div class="col-lg-4">
                                   <label for="catalogoModalSuministros">Catálogo</label>
                                   <input type="text" id="catalogoModalSuministros" class="form-control" placeholder="Catálogo" disabled="true">
                               </div>
-                              <div class="col-lg-9">
+                              <div class="col-lg-8">
                                   <label for="descripcionModalSuministros">Descripción</label>
                                   <input type="text" id="descripcionModalSuministros" class="form-control" placeholder="Descripción" disabled="true">
                               </div>
@@ -579,21 +591,9 @@
                           </br>
                           <div class="form-row align-items-center" id="div_preciosModalSuministros">
                               <div class="col-lg-4">
-                                  <label for="precioListaModalSuministros">Precio de lista</label>
+                                  <label for="precioListaModalSuministros" id="lb_precioListaModalSuministros">Precio de lista</label>
                                   <input type="text" id="precioListaModalSuministros" class="form-control" placeholder="Precio de lista" disabled="true">
                               </div>
-                              <div class="col-lg-4">
-                                  <label for="indirectosModalSuministros">Porcentaje Indirectos</label>
-                                  <input type="text" id="indirectosModalSuministros" class="form-control" placeholder="% indirectos">
-                              </div>
-                              <div class="col-lg-4">
-                                  <label for="precioClienteModalSuministros">Precio cliente</label>
-                                  <input type="text" id="precioClienteModalSuministros" class="form-control" placeholder="Precio cliente">
-                              </div>
-                          </div>
-                          </br>
-                          <div class="form-row align-items-center">
-                              <div class="col-lg-2"></div>
                               <div class="col-lg-4">
                                   <label for="unidadModalSuministros">Unidad</label>
                                   <input type="text" id="unidadModalSuministros" class="form-control" placeholder="Unidad" disabled="true">
@@ -601,6 +601,17 @@
                               <div class="col-lg-4">
                                   <label for="cantidadModalSuministros">Cantidad</label>
                                   <input type="text" id="cantidadModalSuministros" class="form-control" placeholder="Cantidad">
+                              </div>
+                          </div>
+                          <div class="form-row align-items-center hidden">
+                              <div class="col-lg-2"></div>
+                              <div class="col-lg-4">
+                                  <label for="indirectosModalSuministros">Utilidad(%)</label>
+                                  <input type="text" id="indirectosModalSuministros" class="form-control" placeholder="% indirectos">
+                              </div>
+                              <div class="col-lg-4">
+                                  <label for="precioClienteModalSuministros">Precio cliente</label>
+                                  <input type="text" id="precioClienteModalSuministros" class="form-control" placeholder="Precio cliente">
                               </div>
                           </div>
                           </br>
@@ -625,14 +636,10 @@
                                   <thead>
                                       <tr>
                                           <th>Id_producto</th>
-                                          <th>Desplegar</th>
-                                          <th>Desplegar</th>
                                           <th>Catalogo</th>
                                           <th>Descripcion</th>
                                           <th>Unidad</th>
                                           <th>Precio</th>
-                                          <th>Utilidad(%)</th>
-                                          <th>Precio cliente</th>
                                           <th>Cantidad</th>
                                           <th>Eliminar</th>
                                       </tr>
@@ -847,11 +854,11 @@
                                <div class="col-lg-1"></div>
                                <div class="col-lg-10">
                                    <form action="#" onsubmit="return false;" id="formModalCopeo">
-                                        <div class="form-row">
-                                           <div class="form-group col-md-6">
-                                               <label for="ddl_entradaModalCopeo">Entrada:</label>
-                                               <select id="ddl_entradaModalCopeo" class="form-control"></select>
-                                           </div>
+                                       <div class="form-row">
+                                         <div class="form-group col-md-6">
+                                             <label for="ddl_entradaModalCopeo">Entrada:</label>
+                                             <select id="ddl_entradaModalCopeo" class="form-control"></select>
+                                         </div>
                                        </div>
                                        <br/>
                                        <hr class="style2">
@@ -2085,7 +2092,14 @@
                                                     </div>
                                                 </div>
                                                 <br>
-                                                <h5 style ="font-weight: bold;">Mano de obra</h5>
+                                                <div class="form-row align-items-center">
+                                                  <div class="col-lg-3">
+                                                    <h5 style ="font-weight: bold;"><label>Mano de obra </label></h5>
+                                                  </div>
+                                                  <div class="col-lg-3">
+                                                    <button type='button' class='btn btn-info' id='botonCopeoCalculadora'><i class='fas fa-user-plus'></i></button>
+                                                  </div>
+                                                </div>
                                                 <div class="form-row align-items-center">
                                                     <div class="col-lg-4">
                                                         <label for="costoCopeoCalculadora">Precopeo sin carga social:</label>
@@ -2108,7 +2122,15 @@
                                                     </div>
                                                 </div>
                                                 <br>
-                                                <h5 style ="font-weight: bold;">Suministros</h5>
+
+                                                <div class="form-row align-items-center">
+                                                  <div class="col-lg-3">
+                                                    <h5 style ="font-weight: bold;"><label>Suministros </label></h5>
+                                                  </div>
+                                                  <div class="col-lg-3">
+                                                    <button type='button' class='btn btn-info' id='botonSuministrosCalculadora'><i class='fas fa-boxes'></i></button>
+                                                  </div>
+                                                </div>
                                                 <div class="form-row align-items-center">
                                                   <div class="col-lg-4">
                                                       <label for="costoSuministrosCalculadora">Costo de suministros($):</label>
@@ -2222,53 +2244,6 @@
                                                 <br/>
                                             </form>
                                             <br/>
-                                        </div>
-                                        <div class= "col-lg-10"></div>
-                                        <div class = "tableWrapper">
-                                            <table id="dataTableCalculadora" style="margin-left:auto;margin-right:auto;" class="display" style="width:100%">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Id_obra</th>
-                                                        <th>Id_proceso</th>
-                                                        <th>Clave</th>
-                                                        <th>Horas Score</th>
-                                                        <th>Costo x Hora</th>
-                                                        <th>Costo Score</th>
-                                                        <th>Precopeo</th>
-                                                        <th>Precopeo con carga</th>
-                                                        <th>Carga Social</th>
-                                                        <th>Suministros</th>
-                                                        <th>Costos Indirectos</th>
-                                                        <th>Indirectos</th>
-                                                        <th>Costo Operacional</th>
-                                                        <th>Utilidad $</th>
-                                                        <th>Utilidad %</th>
-                                                        <th>Precio de venta</th>
-                                                        <th>Editar</th>
-                                                    </tr>
-                                                </thead>
-                                                <tfoot>
-                                                    <tr>
-                                                        <th>Id_obra</th>
-                                                        <th>Id_proceso</th>
-                                                        <th>Clave</th>
-                                                        <th>Horas Score</th>
-                                                        <th>Costo x Hora</th>
-                                                        <th>Costo Score</th>
-                                                        <th>Precopeo</th>
-                                                        <th>Precopeo con carga</th>
-                                                        <th>Carga Social</th>
-                                                        <th>Suministros</th>
-                                                        <th>Costos Indirectos</th>
-                                                        <th>Indirectos</th>
-                                                        <th>Costo Operacional</th>
-                                                        <th>Utilidad $</th>
-                                                        <th>Utilidad %</th>
-                                                        <th>Precio de venta</th>
-                                                        <th>Editar</th>
-                                                    </tr>
-                                                </tfoot>
-                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -3701,6 +3676,17 @@
                                                  </div>
                                              </div>
                                              </br>
+                                             <div class="form-row">
+                                                 <div class="col-lg-2"></div>
+                                                 <div class= "col-4">
+                                                     <button id="botonAgregarInsumos" type="button" class="btn btn-outline-success btn-block">Registrar/Editar</button>
+                                                 </div>
+                                                 <div class= "col-4">
+                                                     <button id="botonBorrarInsumos" type="reset" class="btn btn-outline-danger btn-block">Borrar Todo</button>
+                                                 </div>
+                                                 <div class="col-lg-2"></div>
+                                             </div>
+                                             </br>
                                              </br>
                                              <h3>Proveedores </h3>
                                              <div class="form-row">
@@ -3941,7 +3927,9 @@
                                                  </div>
                                              </div>
                                          </form>
-                                         <br/>
+                                         <br>
+                                         <br>
+                                         <br>
                                      </div>
                                      <div class= "col-lg-2"></div>
                                      <div class = "tableWrapper">
@@ -4659,7 +4647,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>       
+                            </div>
                         </div>
                     </div>
                 </div>

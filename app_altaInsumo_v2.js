@@ -118,6 +118,7 @@ $('#' + id_botonAgregarProveedorInsumos).click(function() {
 //Funcionalidad del boton 'Registrar/Editar'
 $('#' + id_boton_AgregarInsumos).click(function() {
   if (validateFormInsumo()){ // validar datos ingresados
+    $('#' + id_boton_AgregarInsumos).prop("disabled", true); //desactivar boton
     var datos_insumo = altaProductoInsumo();
     var proveedores_json = recuperaDatosProveedoresInsumo();
     //console.log(datos_insumo);
@@ -173,8 +174,9 @@ $('#' + id_boton_AgregarInsumos).click(function() {
               // PAD
               pda("modificacion", rama_bd_insumos + "/" + path_insumo, registro_antiguo); // crear una pista de auditoria
               alert("¡Edición exitosa!");
-              resetFormInsumo(); // limpiar formulario
+              limpiaInsumo(); // limpiar formulario
               actualizarTablaProveedoresInsumo(); // limpiar tabla de proveedores
+              $('#' + id_boton_AgregarInsumos).prop("disabled", false); //activar boton
           });
         } else { // dar de alta insumo
           firebase.database().ref(rama_bd_insumos + "/productos").push(datos_insumo).then(function(snapshot){ // agregar el insumo a la base de datos
@@ -203,12 +205,14 @@ $('#' + id_boton_AgregarInsumos).click(function() {
               // PAD
               pda("alta", rama_bd_insumos + "/productos/" + regKey, ""); // crear una pista de auditoria
               alert("¡Alta exitosa!");
-              resetFormInsumo(); // limpiar el formulario
+              limpiaInsumo(); // limpiar el formulario
               actualizarTablaProveedoresInsumo(); // limpiar la tabla de proveedores
+              $('#' + id_boton_AgregarInsumos).prop("disabled", false); //activar boton
           });
         };
       } else {
           alert("Ya existe un producto registrado con ese número de catálogo");
+          $('#' + id_boton_AgregarInsumos).prop("disabled", false); //activar boton
       }
     });
   };
@@ -320,7 +324,7 @@ $('#' + id_libreInsumos).keypress(function(e){
     charactersAllowed(" 0123456789",e)
 });
 
-// ----------------------- FUNCIONES NECESARIAS ----------------------------
+// -------------------------- FUNCIONES NECESARIAS -----------------------------
 // Función para borrar la información de los campos del formulario del insumo
 // y reiniciar variables auxiliares
 function resetFormInsumo(){
@@ -355,6 +359,22 @@ function resetProveedorInsumo(){
   existe_proveedor=false;
   existe_proveedor_index = -1;
   uid_existente_proveedor = "";
+}
+
+// Función para borrar la información de los campos del formulario del insumo
+// y reiniciar variables auxiliares
+function limpiaInsumo(){
+  $('#' + id_descripcionInsumos).val("");
+  $('#' + id_libreInsumos).val("");
+  $('#' + id_catalogoInsumos).val(generaCodigoCatalogoInsumos(id_ddl_categoriaInsumos, id_ddl_familiaInsumos, id_ddl_subfamiliaInsumos, id_libreInsumos));
+  $('#' + id_satInsumos).val("");
+  existe_insumo=false;
+  uid_existente="NOHAY";
+  resetProveedorInsumo();
+  $('#' + id_div_cb_editarInsumos).addClass('hidden');
+  $('#' + id_div_cb_editarInsumos).prop('checked', true);
+  enableAllInsumos();
+  // actualizarTablaProveedoresInsumo();
 }
 
 // Función para verificar que la información del insumo está completa
@@ -661,23 +681,6 @@ function highLightProveedorInsumo(){
   highLight(id_precioFinalInsumos);
   highLight(id_ddl_marcaProveedorInsumos);
   highLight(id_catalogoProveedorInsumos);
-}
-
-// Funcion generica para llenar un ddl con un snap y el nombre del campo deseado
-function llenaDdlGeneric(item_id, snap, nombre){
-  // Llenado del ddl de marca
-  $('#' + item_id).empty();
-  var select = document.getElementById(item_id);
-  var option = document.createElement('option');
-  //option.style = "display:none";
-  option.text = option.value = "";
-  select.appendChild(option);
-  snap.forEach(function(snapChild){
-    option = document.createElement('option');
-    option.value = snapChild.key;
-    option.text = snapChild.val()[nombre];
-    select.appendChild(option);
-  });
 }
 
 // Funcion para generar el numero de catalogo con los campos del formulario

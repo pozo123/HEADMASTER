@@ -78,6 +78,11 @@ function modalCalculadora(json_actuales, camposHabilitados, info_obra){
   $('#' + id_modalCalculadora).modal('show');
 }
 
+// Función que se ejecuta cuando se cierra el modal calculadora
+$('#' + id_modalCalculadora).on('hidden.bs.modal', function () {
+
+})
+
 $('#' + id_borrar_modalCalculadora).click(function(){
 	resetFormModalCalculadora();
 });
@@ -862,18 +867,16 @@ function actualizaCopeoCargaSocialModalCalculadora(){
 
 function cargaCamposModalCalculadora(subproceso){
   if (!jQuery.isEmptyObject(subproceso)){
-    var costoProyecto = subproceso.proyecto.horas*subproceso.proyecto.costo_hora;
-    var costoCopeo = subproceso.copeo.costo*(1 + subproceso.copeo.carga_social*0.01) + subproceso.copeo.extras;
-    var costoProduccion = costoProyecto + subproceso.suministros.costo + costoCopeo;
-    var costoOperacion = costoProduccion + subproceso.costos_indirectos;
-    var utilidadPorcentaje = 100 * subproceso.utilidad_cantidad / costoOperacion;
-    var copeoConCarga = subproceso.copeo.costo * (1+subproceso.copeo.carga_social*0.01) + subproceso.copeo.extras;
-    var indirectosPorcentaje = 100 * subproceso.costos_indirectos / costoProduccion;
-    var uProyectos = subproceso.proyecto.utilidad * costoProyecto * 0.01;
-    var uSuministros = subproceso.suministros.costo * subproceso.suministros.utilidad * 0.01;
-    var uCopeo =  costoCopeo * subproceso.copeo.utilidad * 0.01;
-
-    var precio_venta = (costoProduccion + uProyectos + uSuministros + uCopeo)*(1 + subproceso.utilidad_global*0.01);
+    var costoProyecto = parseFloat(subproceso.proyecto.horas)*parseFloat(subproceso.proyecto.costo_hora);
+    var costoCopeo = parseFloat(subproceso.copeo.costo)*(1 + parseFloat(subproceso.copeo.carga_social)*0.01) + parseFloat(subproceso.copeo.extras);
+    var costoProduccion = costoProyecto + parseFloat(subproceso.suministros.costo) + costoCopeo;
+    var costoOperacion = costoProduccion + parseFloat(subproceso.costos_indirectos);
+    var utilidadPorcentaje = 100 * parseFloat(subproceso.utilidad_cantidad) / costoOperacion;
+    var indirectosPorcentaje = 100 * parseFloat(subproceso.costos_indirectos) / costoProduccion;
+    var uProyectos = parseFloat(subproceso.proyecto.utilidad) * costoProyecto * 0.01;
+    var uSuministros = parseFloat(subproceso.suministros.costo) * parseFloat(subproceso.suministros.utilidad) * 0.01;
+    var uCopeo =  costoCopeo * parseFloat(subproceso.copeo.utilidad) * 0.01;
+    var precio_venta = (costoProduccion + uProyectos + uSuministros + uCopeo)*(1 + parseFloat(subproceso.utilidad_global)*0.01);
     var utilidad = precio_venta - costoOperacion;
 
     $('#' + id_horas_proyectoModalCalculadora ).val(subproceso.proyecto.horas);
@@ -883,7 +886,7 @@ function cargaCamposModalCalculadora(subproceso){
     $('#' + id_costo_copeoModalCalculadora).val(formatMoney(subproceso.copeo.costo));
     $('#' + id_cargaSocialModalCalculadora).val(subproceso.copeo.carga_social);
     $('#' + id_costo_extraCopeoModalCalculadora).val(formatMoney(subproceso.copeo.extras));
-		$('#' + id_costo_copeoCargaModalCalculadora).val(formatMoney(copeoConCarga));
+		$('#' + id_costo_copeoCargaModalCalculadora).val(formatMoney(costoCopeo));
     $('#' + id_utilidad_copeoModalCalculadora).val(subproceso.copeo.utilidad);
     $('#' + id_utilidad_proyectosModalCalculadora).val(subproceso.proyecto.utilidad);
     $('#' + id_utilidad_suministrosModalCalculadora).val(subproceso.suministros.utilidad);
