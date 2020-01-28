@@ -46,7 +46,6 @@ function modalInsumosProveedor(clave_proveedor){
   $('#'+id_ddl_buscaFamiliaModalInsumosProveedor).empty();
   $('#'+id_ddl_buscaSubfamiliaModalInsumosProveedor).empty();
   resetModalInsumosProveedor();
-  limpiaFiltrosModalInsumosProveedor();
   uid_modalProveedor = clave_proveedor;
   uid_existente_insumo="";
   existe_insumo = false;
@@ -62,6 +61,8 @@ function modalInsumosProveedor(clave_proveedor){
   jQuery('#' + id_fecha_cotizacionModalInsumosProveedor).datetimepicker(
       {timepicker:false, weeks:true,format:'Y.m.d'}
   );
+  $('#'+id_fecha_ingresoCotizacionModalInsumosProveedor).val("");
+  $('#'+id_fecha_cotizacionModalInsumosProveedor).val("");
 
   firebase.database().ref(rama_bd_insumos + "/marcas").orderByChild('nombre').on('value',function(snapshot){
     marcas = snapshot;
@@ -80,10 +81,14 @@ function modalInsumosProveedor(clave_proveedor){
   firebase.database().ref(rama_bd_insumos + "/productos").orderByChild('catalogo').on('value',function(snapshot){
     base_insumos = snapshot.val();
     actualizarTablaBusquedaModalInsumosProveedor(base_insumos);
+    crearTablaSeleccionadosModalInsumosProveedor(uid_modalProveedor);
+    $('#' + id_modalInsumosProveedor).modal('show');
   });
-  crearTablaSeleccionadosModalInsumosProveedor(uid_modalProveedor);
-  $('#' + id_modalInsumosProveedor).modal('show');
-  // $('#'+ id_dataTable_selectModalInsumosProveedor).DataTable().columns.adjust();
+  // Funcion ejecutada cuando se muestra el modal
+  $('#'+ id_modalInsumosProveedor).on('shown.bs.modal', function () {
+    tabla_BusquedaModalInsumosProveedor.columns.adjust(); // ajustar columnas
+    tabla_SelectModalInsumosProveedor.columns.adjust(); // ajustar columnas
+  })
 }
 
 //----------------------------Botones -----------------------------------------
@@ -144,7 +149,6 @@ $('#' + id_boton_guardarModalInsumosProveedor).click(function() {
   pda("modificacion", rama_bd_insumos + "/listas/proveedores/" + uid_modalProveedor, registro_productos);
   alert("¡Insumos registrados con éxito!");
 
-  resetModalInsumosProveedor();
   limpiaAgregarModalInsumosProveedor();
 });
 
@@ -256,10 +260,10 @@ function limpiaAgregarModalInsumosProveedor(){
   $('#'+id_precioModalInsumosProveedor).val("");
   $('#'+id_descuentoModalInsumosProveedor).val("");
   $('#'+id_precioFinalModalInsumosProveedor).val("");
-  $('#'+id_ddl_marcaModalInsumosProveedor).val("");
+  //$('#'+id_ddl_marcaModalInsumosProveedor).val("");
   $('#'+id_catalogoProveedorModalInsumosProveedor).val("");
-  $('#'+id_fecha_ingresoCotizacionModalInsumosProveedor).val("");
-  $('#'+id_fecha_cotizacionModalInsumosProveedor).val("");
+  //$('#'+id_fecha_ingresoCotizacionModalInsumosProveedor).val("");
+  //$('#'+id_fecha_cotizacionModalInsumosProveedor).val("");
 }
 
 function validateagregarModalInsumosProveedor(){
@@ -348,7 +352,7 @@ function datosInsumoModalInsumosProveedor(){
     $('#'+id_fecha_cotizacionModalInsumosProveedor).val(),
     $('#'+id_catalogoProveedorModalInsumosProveedor).val(),
     "<button type='button' class='editarModalInsumosProveedor btn btn-info'><i class='fas fa-edit'></i></button>",
-    "<button type='button' class='eliminarModalInsumosProveedor btn btn-transparent'><i class='icono_rojo fas fa-times-circle'></i></button>"
+    "<button type='button' class='eliminarModalInsumosProveedor btn btn-danger'><i class='fas fa-trash'></i></button>"
   ]
   return insumo;
 }
@@ -395,14 +399,22 @@ function actualizarTablaBusquedaModalInsumosProveedor(json_info){
         destroy: true,
         data: datos_busqueda,
         language: idioma_espanol,
-        "autoWidth": false,
-        "scrollX":true,
-        "columnDefs": [
-            { "width": "150px", "targets": 2 },
-            { "visible": false, "targets": 0 }, //campos auxiliares
+        //autoWidth: false,
+        order: [[1,"asc"]],
+        columnDefs: [
+            { width: "150px", targets: 2 },
+            { visible: false, targets: 0 }, //campos auxiliares
             { targets: [7,8], className: 'dt-body-center'}
-          ]
+        ],
+        scrollY:        "300px",
+        scrollX:        true,
+        scrollCollapse: true,
+        paging:         false,
+        fixedColumns:   {
+            rightColumns: 1
+        }
     });
+    //tabla_BusquedaModalInsumosProveedor.columns.adjust();
 }
 
 $(document).on('click','.agregarModalInsumosProveedor', function(){
@@ -444,22 +456,30 @@ function crearTablaSeleccionadosModalInsumosProveedor(clave){
             fecha_vencimiento.getFullYear() +"."+ ("0" + (fecha_vencimiento.getMonth() + 1)).slice(-2) +"."+ ("0" + fecha_vencimiento.getDate()).slice(-2),
             insumo[key]["catalogo_proveedor"],
             "<button type='button' class='editarModalInsumosProveedor btn btn-info'><i class='fas fa-edit'></i></button>",
-            "<button type='button' class='eliminarModalInsumosProveedor btn btn-transparent'><i class='icono_rojo fas fa-times-circle'></i></button>"
+            "<button type='button' class='eliminarModalInsumosProveedor btn btn-danger'><i class='fas fa-trash'></i></button>"
         ]);
       };
+      //tabla_SelectModalInsumosProveedor.columns.adjust();
     });
 
     tabla_SelectModalInsumosProveedor = $('#'+ id_dataTable_selectModalInsumosProveedor).DataTable({
         destroy: true,
         data: datos_seleccionados,
         language: idioma_espanol,
-        "autoWidth": false,
-        "scrollX":true,
-        "columnDefs": [
-            { "width": "150px", "targets": 2 },
-            { "visible": false, "targets": [0,3] }, //campos auxiliares
+        //autoWidth: false,
+        order: [[1,"asc"]],
+        columnDefs: [
+            { width: "150px", targets: 2 },
+            { visible: false, targets: [0,3] }, //campos auxiliares
             { targets: [9,10,11], className: 'dt-body-center'}
-          ]
+        ],
+        scrollY:        "300px",
+        scrollX:        true,
+        scrollCollapse: true,
+        paging:         false,
+        fixedColumns:   {
+            rightColumns: 2
+        }
     });
   });
 }

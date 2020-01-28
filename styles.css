@@ -58,7 +58,7 @@ tr.subgroupDesplegarProcesos {
     border-radius: 5px;
     max-width: 90% !important;
     min-width: 90% !important;
-  } 
+  }
 }
 
 .card_graph {
@@ -77,7 +77,7 @@ vertical-align: middle;
   width: 90%;
   margin-left: 50px;
   margin-right: 0px;
-  
+
 }
 
 .cardIndividual {
@@ -290,4 +290,9 @@ hr {
 .container_reporte_nomina {
   overflow-x: auto;
   white-space: nowrap;
+}
+
+th, td {
+  white-space: nowrap;
+  background-color: #ffffff !important;
 }
