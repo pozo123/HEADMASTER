@@ -40,7 +40,7 @@ function getWeek(timestamp) {
 }
 
 function getDaysWeek(week, year){
-    var firstDay = firstDay = new Date().setFullYear(year, 0, 1);
+    var firstDay = firstDay = new Date(year, 0, 1, 0 , 0);
     var yearFirstDay = Math.floor(firstDay / 86400000); // cuantos dias han pasado desde el 1ro de no se cuando de 1970
     var offset = new Date(firstDay).getDay() - 4 // cuantos dias o menos del jueves es el 1ro de enero del año actual.
     var primer_jueves = yearFirstDay;
@@ -50,7 +50,7 @@ function getDaysWeek(week, year){
         primer_jueves = yearFirstDay + (7 - offset);
     }
 
-    var jueves_week = ((week - 1)*7 + primer_jueves)*86400000 + 3600000*9; // sumo 9 horas para que no haya pex
+    var jueves_week = ((week - 1)*7 + primer_jueves)*86400000 + 3600000*6; // sumo 6 horas para que no haya pex
     var miercoles_week = jueves_week + (6*86400000); //
     return[jueves_week, miercoles_week];
 }

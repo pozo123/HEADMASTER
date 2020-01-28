@@ -421,6 +421,8 @@ Nota: Todo float se ingresa a 2 decimales.
                         - sexo: string
                         - domicilio: string
                         - codigo_postal: string
+                        - email: string
+                        - telefono: string
                     - claves:
                         - rfc: string
                         - imss: string

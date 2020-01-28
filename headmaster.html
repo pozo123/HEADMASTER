@@ -251,17 +251,20 @@
                         <form onsubmit="return false;">
                             <div class = "container-fluid">
                                 <div class="form-row">
-                                    <div class="form-group col-sm-2">
-                                        <label for="obraAsignadaNomina" class="form-label">Obra Asignada:</label>
-                                    </div>
-                                    <div class="form-group col-sm-3">
-                                        <select id="obraAsignadaNomina" class="form-control"></select>
-                                    </div>
-                                    <div class="form-group col-sm-1">
+                                    <div class="form-group col-sm-3 col-md-1">
                                         <button id ="infoObraAsisgnadaNomina" type='button' class='btn btn-dark' data-toggle="popover" data-trigger="hover"><i class='fas fa-info'></i></button>
                                     </div>
-
-
+                                    <div class="form-group col-sm-9 col-md-2">
+                                        <label for="obraAsignadaNomina" class="form-label">Obra Asignada:</label>
+                                    </div>
+                                    <div class="form-group col-sm-12 col-md-3">
+                                        <select id="obraAsignadaNomina" class="form-control"></select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-12 col-md-3">
+                                        <button type="button" id ="buttonActualizarSueldoNomina" class="btn btn-block btn-info">Actualizar sueldo</button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="container-fluid border border-info rounded">
@@ -2529,6 +2532,17 @@
                                                 </div>
                                                 <br>
                                                 <div class="form-row">
+                                                    <div class="form-group col-md-7">
+                                                        <label for="emailTrabajador">Email</label>
+                                                        <input class="form-control" type="text" id="emailTrabajador"  placeholder="email">
+                                                    </div>
+                                                    <div class="form-group col-md-5">
+                                                        <label for="telefonoTrabajador">Teléfono:</label>
+                                                        <input type="text" name="" id="telefonoTrabajador" class="form-control" placeholder="Teléfono">
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <div class="form-row">
                                                     <div class="form-group col-md-8">
                                                         <label for="direccionTrabajador">Domicilio:</label>
                                                         <input type="text" name="" id="direccionTrabajador" class="form-control" placeholder="Dirección">
@@ -2670,6 +2684,8 @@
                                                     <th>Fecha de nacimiento</th>
                                                     <th>Estado civil</th>
                                                     <th>Sexo</th>
+                                                    <th>Email</th>
+                                                    <th>Teléfono</th>
                                                     <th>Dirección</th>
                                                     <th>Código postal</th>
                                                     <th>RFC</th>
@@ -2709,6 +2725,8 @@
                                                     <th>Fecha de nacimiento</th>
                                                     <th>Estado civil</th>
                                                     <th>Sexo</th>
+                                                    <th>Email</th>
+                                                    <th>Teléfono</th>
                                                     <th>Dirección</th>
                                                     <th>Código postal</th>
                                                     <th>RFC</th>
@@ -4575,6 +4593,8 @@
                                                                                 <th>Reg_ID</th>
                                                                                 <th>ID HEAD</th>
                                                                                 <th>Nombre</th>
+                                                                                <th>Esp</th>
+                                                                                <th>Puesto</th>
                                                                                 <th>Jefe</th>
                                                                                 <th>Sueldo</th>
                                                                                 <th>Proceso</th>

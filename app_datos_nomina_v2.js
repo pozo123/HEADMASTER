@@ -20,6 +20,7 @@ var class_modal_actividad_datos_nomina = "actividadNomina";
 var id_modal_nombre_nomina = "nombreModalDatosNomina";
 var id_modal_sem_nomina = "semanaModalDatosNomina";
 var id_modal_year_nomina = "yearModalDatosNomina"
+var id_modal_button_actualizar_sueldo_nomina = "buttonActualizarSueldoNomina";
 
 var id_he_div_datos_nomina = "heContainerDatosNomina";
 var id_diversos_div_datos_nomina = "diversosContainerDatosNomina";
@@ -1331,16 +1332,14 @@ function actualizarTablaDatosNomina(){
                     
                 })
                 //
-                console.log(diversos_index_json);
                 var index_array =[0];
                 var i = 0;
                 for(key in diversos_index_json){
                     if(diversos_index_json[key] == 0){
                         index_array.push(15 + i)
                         i++
-                        console.log(key);
-                    }
-                }
+                    };
+                };
 
                 tabla_datos_nomina = $('#'+ id_dataTable_datos_nomina).DataTable({
                     destroy: true,
@@ -1371,3 +1370,25 @@ function actualizarTablaDatosNomina(){
         });
     });
 };
+
+// función para actualizar sueldos
+
+$('#' + id_modal_button_actualizar_sueldo_nomina).click(function(){
+    if(id_registro_existente == ""){
+        alert("No existe registro, no es necesario actualizar sueldos.")
+    } else {
+        firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente).once("value").then(function(regSnapshot){
+            var registro = regSnapshot.val();
+            firebase.database().ref(rama_bd_mano_obra + "/trabajadores/" + registro.trabajador_id + "/sueldo_base").once("value").then(function(snapshot){
+                var sueldo_nuevo = snapshot.val();
+                console.log(snapshot.val());
+                r = confirm("¿Estás seguro de actualizar el sueldo de: " + formatMoney(registro.sueldo_semanal) + " a: " + formatMoney(sueldo_nuevo));
+                if(r == true){
+                    firebase.database().ref(rama_bd_nomina + "/nomina/" + id_registro_existente + "/sueldo_semanal").set(sueldo_nuevo).then(function(){
+                        alert("¡Se actualizó el sueldo con éxito!");
+                    });
+                }
+            });
+        });
+    };
+});

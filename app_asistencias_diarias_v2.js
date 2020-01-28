@@ -338,7 +338,7 @@ $('#' + id_button_actualizar_asistencias_diarias).click(function(){
         id_head.innerText = "ID: " + json_registros_asistencias[reg].trabajador_id_head
         
         var col_id = document.createElement('div');
-        col_id.className = "form-group col-md-2";
+        col_id.className = "form-group col-sm-2";
         col_id.appendChild(id_head);
 
         var proceso = document.createElement('select');
@@ -352,7 +352,7 @@ $('#' + id_button_actualizar_asistencias_diarias).click(function(){
         };
         
         var col_proc = document.createElement('div');
-        col_proc.className = "form-group col-md-3";
+        col_proc.className = "form-group col-sm-3";
         col_proc.appendChild(proceso);
 
         // nombre:
@@ -363,7 +363,7 @@ $('#' + id_button_actualizar_asistencias_diarias).click(function(){
         nombre.readOnly = "readonly"                             
 
         var col_nombre = document.createElement('div');
-        col_nombre.className = "form-group col-md-5";
+        col_nombre.className = "form-group col-sm-5";
         col_nombre.appendChild(nombre);
         
 
@@ -385,7 +385,7 @@ $('#' + id_button_actualizar_asistencias_diarias).click(function(){
         actividad.appendChild(option_vacaciones);
         
         var col_actividad = document.createElement('div');
-        col_actividad.className = "form-group col-md-2";
+        col_actividad.className = "form-group col-sm-2";
         col_actividad.appendChild(actividad);
         
         var row = document.createElement('div');
@@ -439,6 +439,9 @@ $('#' + id_button_guardar_datos_asistencias_diarias).click(function(){
         firebase.database().ref(rama_bd_nomina).update(json_update_asistencias_diarias);
         //pista de auditoría
         pda("alta", rama_bd_nomina, "");
+
+        $('#' + id_div_container_button_actualizar_asistencias_diarias).removeClass("hidden");
+        $('#' + id_div_card_actualizar_asistencias_diarias).addClass("hidden");
         alert("Se ha actualizado la información del día correspondiente.");    
     }
 });
@@ -498,7 +501,7 @@ $(document).on('change','.idHeadVacio', function(){
                                     };
                                     
                                     var col_proc = document.createElement('div');
-                                    col_proc.className = "form-group col-md-3";
+                                    col_proc.className = "form-group col-sm-3";
                                     col_proc.appendChild(proceso);
     
                                     // nombre:
@@ -510,7 +513,7 @@ $(document).on('change','.idHeadVacio', function(){
                                     nombre.readOnly = "readonly"                             
     
                                     var col_nombre = document.createElement('div');
-                                    col_nombre.className = "form-group col-md-5";
+                                    col_nombre.className = "form-group col-sm-5";
                                     col_nombre.appendChild(nombre);
                                     
     
@@ -532,7 +535,7 @@ $(document).on('change','.idHeadVacio', function(){
                                     actividad.appendChild(option_vacaciones);
                                     
                                     var col_actividad = document.createElement('div');
-                                    col_actividad.className = "form-group col-md-2";
+                                    col_actividad.className = "form-group col-sm-2";
                                     col_actividad.appendChild(actividad);
     
                                     // --------------------------------------------------------
@@ -612,7 +615,7 @@ $(document).on('change','.idHeadVacio', function(){
                             };
                             
                             var col_proc = document.createElement('div');
-                            col_proc.className = "form-group col-md-3";
+                            col_proc.className = "form-group col-sm-3";
                             col_proc.appendChild(proceso);
     
                             // nombre:
@@ -624,7 +627,7 @@ $(document).on('change','.idHeadVacio', function(){
                             nombre.readOnly = "readonly"                             
     
                             var col_nombre = document.createElement('div');
-                            col_nombre.className = "form-group col-md-5";
+                            col_nombre.className = "form-group col-sm-5";
                             col_nombre.appendChild(nombre);
                             
     
@@ -646,7 +649,7 @@ $(document).on('change','.idHeadVacio', function(){
                             actividad.appendChild(option_vacaciones);
                             
                             var col_actividad = document.createElement('div');
-                            col_actividad.className = "form-group col-md-2";
+                            col_actividad.className = "form-group col-sm-2";
                             col_actividad.appendChild(actividad);
     
                             // --------------------------------------------------------
@@ -1008,89 +1011,109 @@ function validateModalAsistenciasDiarias(){
 
 function actualizarTablaAsistenciasDiarias(registros, day){
     // si el json_update está vacío, no hacer nada.
-    if(!jQuery.isEmptyObject(json_registros_asistencias)){
-        $('#' + id_div_table_dataTable_asistencias_diarias).removeClass("hidden");
+
+    var obra = $('#' + id_ddl_obra_asistencias_diarias + " option:selected").text();
+    var year = $('#' + id_ddl_year_asistencias_diarias + " option:selected").val();
+    var week = $('#' + id_ddl_week_asistencias_diarias + " option:selected").val();
+    var fecha = getTimestampDay(year, week, day);
+
+    firebase.database().ref(rama_bd_datos_referencia + "/especialidades").once("value").then(function(espSnapshot){
+        firebase.database().ref(rama_bd_datos_referencia + "/puestos").once("value").then(function(snapshot){
+            var puestos = snapshot.val();
+            var especialidades = espSnapshot.val();
+            if(!jQuery.isEmptyObject(json_registros_asistencias)){
+                $('#' + id_div_table_dataTable_asistencias_diarias).removeClass("hidden");   
+                // actualizamos tabla;
+                var datos = [];
+                for(reg in registros){
+                    // obtener nombre;
+                    var nombre = "";
+                    var nombre_array = registros[reg].trabajador_nombre.split("_");
+                    for(var i=0; i<nombre_array.length;i++){
+                        if(i>0){
+                            nombre += " ";
+                        }
+                        nombre += nombre_array[i];
+                    };
         
-        // actualizamos tabla;
-        var datos = [];
-        for(reg in registros){
-            // obtener nombre;
-            var nombre = "";
-            var nombre_array = registros[reg].trabajador_nombre.split("_");
-            for(var i=0; i<nombre_array.length;i++){
-                if(i>0){
-                    nombre += " ";
-                }
-                nombre += nombre_array[i];
-            };
+                    // obtener nombre de jefe;
+                    var jefe = "";
+                    var jefe_array = registros[reg].trabajador_jefe.split("_");
+                    for(var i=0; i<jefe_array.length;i++){
+                        if(i>0){
+                            jefe += " ";
+                        }
+                        jefe += jefe_array[i];
+                    };
+    
+                    // obtener puesto;
+                    var puesto = puestos[registros[reg].trabajador_puesto].puesto
+                    
+                    // obtener esp
+                    var esp = especialidades[registros[reg].trabajador_esp].clave
 
-            // obtener nombre de jefe;
-            var jefe = "";
-            var jefe_array = registros[reg].trabajador_jefe.split("_");
-            for(var i=0; i<jefe_array.length;i++){
-                if(i>0){
-                    jefe += " ";
-                }
-                jefe += jefe_array[i];
-            };
-            // generar array con datos
-            datos.push([
-                reg,
-                registros[reg].trabajador_id_head,
-                nombre,
-                jefe,
-                formatMoney(registros[reg].sueldo_semanal),
-                registros[reg].asistencias[day].subproceso,
-                registros[reg].asistencias[day].actividad,
-                "<button type='button' class='btn btn-danger' onclick='deleteAsistenciaDiaria(" + "\`" + reg + "\`" + ")'><i class='fas fa-trash'></i></button>",
-            ]);
-        };
-
-        // generar tabla
-
-        table_asistencias_diarias = $('#'+ id_dataTable_asistencias_diarias).DataTable({
-            destroy: true,
-            "order": [[ 1, "asc" ]],
-            data: datos,
-            language: idioma_espanol,
-            "columnDefs": [
-                {
-                    targets: 1,
-                    className: 'dt-body-center'
-                },
-                {
-                    targets: 4,
-                    className: 'dt-body-center'
-                },
-                {
-                    targets: 5,
-                    className: 'dt-body-center'
-                },
-                {
-                    targets: 6,
-                    className: 'dt-body-center'
-                },
-                {
-                    targets: 7,
-                    className: 'dt-body-center'
-                },
-                { "visible": false, "targets": 0 },
-              ],
-              dom: 'Bfrtip',
-              buttons: [
-                {extend: 'excelHtml5',
-                title: "asistencias_diarias",
-                exportOptions: {
-                    columns: [1,2,3,4,5,6]
-                }},
-              ],
-              "paging":false,
-              "autoWidth": false,
-        });
-    } else {
-        console.log("2");
-        $('#' + id_div_table_dataTable_asistencias_diarias).addClass("hidden");
-    }
+                    // generar array con datos
+                    datos.push([
+                        reg,
+                        registros[reg].trabajador_id_head,
+                        nombre,
+                        esp,
+                        puesto,
+                        jefe,
+                        formatMoney(registros[reg].sueldo_semanal),
+                        registros[reg].asistencias[day].subproceso,
+                        registros[reg].asistencias[day].actividad,
+                        "<button type='button' class='btn btn-danger' onclick='deleteAsistenciaDiaria(" + "\`" + reg + "\`" + ")'><i class='fas fa-trash'></i></button>",
+                    ]);
+                };
+        
+                // generar tabla
+        
+                table_asistencias_diarias = $('#'+ id_dataTable_asistencias_diarias).DataTable({
+                    destroy: true,
+                    "order": [[ 1, "asc" ]],
+                    data: datos,
+                    language: idioma_espanol,
+                    "columnDefs": [
+                        {
+                            targets: 1,
+                            className: 'dt-body-center'
+                        },
+                        {
+                            targets: 4,
+                            className: 'dt-body-center'
+                        },
+                        {
+                            targets: 5,
+                            className: 'dt-body-center'
+                        },
+                        {
+                            targets: 6,
+                            className: 'dt-body-center'
+                        },
+                        {
+                            targets: 7,
+                            className: 'dt-body-center'
+                        },
+                        { "visible": false, "targets": 0 },
+                      ],
+                      dom: 'Bfrtip',
+                      buttons: [
+                        {extend: 'excelHtml5',
+                        title: "asistencias_diarias_" + obra + "_" + aaaammdd(fecha),
+                        exportOptions: {
+                            columns: [1,2,3,4,5,6,7,8]
+                        }},
+                      ],
+                      "paging":false,
+                      "autoWidth": false,
+                });
+            } else {
+                $('#' + id_div_table_dataTable_asistencias_diarias).addClass("hidden");
+            }
+    
+        })
+    });
 };
 
 // funciones que crea nuevo rengón en la sección de distribución
@@ -1106,7 +1129,7 @@ function createRowAsistenciasDiarias(key){
     id_head.placeholder = "ID HEAD";
     
     var col = document.createElement('div');
-    col.className = "form-group col-md-2";
+    col.className = "form-group col-sm-2";
     col.appendChild(id_head);
     
     var row = document.createElement('div');

@@ -47,6 +47,9 @@ var id_ddl_cintura_trabajador = "cinturaDdlTrabajador";
 var id_ddl_largo_trabajador = "largoDdlTrabajador";
 var id_ddl_zapatos_trabajador = "zapatoDdlTrabajador";
 
+var id_input_telefono_trabajador = "telefonoTrabajador";
+var id_input_email_trabajador = "emailTrabajador";
+
 var id_nacimiento_trabajador = "nacimientoTrabajador";
 var id_estado_civil_trabajador = "edoCivilTrabajador";
 var id_direccion_trabajador = "direccionTrabajador";
@@ -240,7 +243,6 @@ $('#' + id_file_input_formato_excel_trabajador).on("change", function(event){
                         if(validated_data[i][1]["id_jefe"] == validated_data[j][1]["id_head"] || validated_data[i][1]["id_jefe"] == validated_data[j][0]){
                             validated_data[i][1]["id_jefe"] = validated_data[j][0];
                             validated_data[i][1]["jefe"] = validated_data[j][1]["nombre"];
-                            console.log(j);
                             is_id_jefe_correct = true;
                         } else {
                         };
@@ -788,7 +790,9 @@ function validateExcelRow(array){
                 estado_civil: estado_civil,
                 sexo: sexo,
                 domicilio: domicilio,
-                codigo_postal: codigo_postal
+                codigo_postal: codigo_postal,
+                email: "",
+                telefono: "",
             },
             claves: {
                 rfc: rfc,
@@ -930,7 +934,6 @@ $('#' + id_agregar_trabajador).click(function(){
                     snapshot.child("puesto").forEach(function(destSnap){
                         listas_path["listas/puesto/" + destSnap.key + "/" + id_trabajador_existente] = null;
                     });
-                    console.log(trabajador);
                     if(trabajador.activo){
                         console.log(trabajador.nombre)
                         listas_path["listas/activos/" + id_trabajador_existente] = trabajador.nombre;
@@ -1141,6 +1144,27 @@ $('#' + id_codigo_postal_trabajador).change(function(){
     $('#' + id_codigo_postal_trabajador).val("" + $('#' + id_codigo_postal_trabajador).val());
 });
 
+//email
+
+$('#' + id_input_email_trabajador).change(function(){
+    $('#' + id_input_email_trabajador).val($('#' + id_input_email_trabajador).val().toLowerCase());
+});
+
+$('#' + id_input_email_trabajador).keypress(function(e){
+    charactersAllowed("abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ-_.@0123456789",e)
+});
+
+// telefono
+
+$('#' + id_input_telefono_trabajador).keypress(function(e){
+    charactersAllowed("1234567890",e);
+});
+
+$('#' + id_input_telefono_trabajador).change(function(){
+    var tel = deleteBlankSpaces(id_input_telefono_trabajador);
+    $('#' + id_input_telefono_trabajador).val(tel);
+});
+
 // Claves
 
 $('#' + id_rfc_trabajador).keypress(function(e){
@@ -1341,6 +1365,8 @@ function actualizarTablaTrabajador(){
             var sexo = trabajadorSnap.child("info_personal").val().sexo;
             var direccion = trabajadorSnap.child("info_personal").val().domicilio;
             var codigo_postal = trabajadorSnap.child("info_personal").val().codigo_postal ;
+            var telefono = trabajadorSnap.child("info_personal").val().telefono ? trabajadorSnap.child("info_personal").val().telefono : "" // nuevo
+            var email = trabajadorSnap.child("info_personal").val().email ? trabajadorSnap.child("info_personal").val().email : "" // nuevo // nuevo
 
             var rfc = trabajadorSnap.child("claves").val().rfc;
             var imss = trabajadorSnap.child("claves").val().imss;
@@ -1391,17 +1417,19 @@ function actualizarTablaTrabajador(){
                 jefe,
                 id_jefe,
                 fecha_nacimiento, // 16
-                estado_civil,
-                sexo,
-                direccion,
-                codigo_postal,
-                rfc, // 21
+                estado_civil, // 17
+                sexo, // 18
+                email, // 19
+                telefono, // // 20
+                direccion, // 21
+                codigo_postal, // 22
+                rfc, // 23
                 imss,
                 curp,
                 banco,
                 cuenta,
                 clabe,
-                camisa, // 27
+                camisa, // 29
                 pantalon,
                 cintura, //
                 largo, //
@@ -1420,7 +1448,7 @@ function actualizarTablaTrabajador(){
                 {extend: 'excelHtml5',
                 title: "TrabajadoresHEAD",
                 exportOptions: {
-                    columns: [ 0,1,2,4,5,6,7,8,10,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,29,30,31]
+                    columns: [ 0,1,2,4,5,6,7,8,10,12,13,15,16,17,18,,19,20,21,22,23,24,25,26,27,28,29,31,32,3]
                 }}
             ],
             language: idioma_espanol,
@@ -1440,7 +1468,7 @@ function actualizarTablaTrabajador(){
                 { "visible": false, "targets": 11 }, 
                 { "visible": false, "targets": 13 },
                 { "visible": false, "targets": 15 },  
-                { "visible": false, "targets": [16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]},
+                { "visible": false, "targets": [16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33]},
 
                 { targets: 1, className: 'dt-body-center'},
                 { targets: 2, className: 'dt-body-center'},
@@ -1476,26 +1504,28 @@ function actualizarTablaTrabajador(){
                 $('#' + id_ddl_jefe_trabajador + " [value='" + data[15] + "']").prop('selected', true);
             }
             var nacimiento = data[16].split("/")
-            console.log(nacimiento);
             if(nacimiento != ""){
                 $('#' + id_nacimiento_trabajador).val(nacimiento[2] + "." + nacimiento[1] + "." + nacimiento[0]);
             };
             $('#' + id_estado_civil_trabajador).val(data[17]);
             $('#' + id_ddl_sexo_trabajador + " [value='" + data[18] + "']").prop('selected', true);
-            $('#' + id_direccion_trabajador).val(data[19]);
-            $('#' + id_codigo_postal_trabajador).val(data[20]);
-            $('#' + id_rfc_trabajador).val(data[21]);
-            $('#' + id_imss_trabajador).val(data[22]);
-            $('#' + id_curp_trabajador).val(data[23]);
-            $('#' + id_banco_trabajador).val(data[24]);
-            $('#' + id_cuenta_trabajador).val(data[25]);
-            $('#' + id_clabe_trabajador).val(data[26]);
-            $('#' + id_ddl_camisa_trabajador + " [value='" + data[27] + "']").prop('selected', true);
-            $('#' + id_ddl_cintura_trabajador + " [value='" + data[29] + "']").prop('selected', true);
-            $('#' + id_ddl_largo_trabajador + " [value='" + data[30] + "']").prop('selected', true);
-            $('#' + id_ddl_zapatos_trabajador + " [value='" + data[31] + "']").prop('selected', true);
+            $('#' + id_input_email_trabajador).val(data[19]);
+            $('#' + id_input_telefono_trabajador).val(data[20]);
+            $('#' + id_direccion_trabajador).val(data[21]);
+            $('#' + id_codigo_postal_trabajador).val(data[22]);
+            $('#' + id_rfc_trabajador).val(data[23]);
+            $('#' + id_imss_trabajador).val(data[24]);
+            $('#' + id_curp_trabajador).val(data[25]);
+            $('#' + id_banco_trabajador).val(data[26]);
+            $('#' + id_cuenta_trabajador).val(data[27]);
+            $('#' + id_clabe_trabajador).val(data[28]);
+            $('#' + id_ddl_camisa_trabajador + " [value='" + data[29] + "']").prop('selected', true);
+            $('#' + id_ddl_cintura_trabajador + " [value='" + data[31] + "']").prop('selected', true);
+            $('#' + id_ddl_largo_trabajador + " [value='" + data[32] + "']").prop('selected', true);
+            $('#' + id_ddl_zapatos_trabajador + " [value='" + data[33] + "']").prop('selected', true);
         } );
         $('#' + id_dataTable_trabajador + ' tbody').on( 'click', '.opcionales', function () {
+
             $('#' + id_body_modal_trabajadores_trabajador).html('');
             var data = tabla_trabajador.row( $(this).parents('tr') ).data();
 
@@ -1538,9 +1568,31 @@ function actualizarTablaTrabajador(){
             var row = document.createElement('tr');     
             var concepto = document.createElement('th');
             concepto.setAttribute("scope", "row");
+            concepto.textContent = "Email: ";          
+            var email = document.createElement('td');
+            email.textContent = data[19];
+               
+            row.appendChild(concepto);
+            row.appendChild(email);    
+            body.appendChild(row);
+
+            var row = document.createElement('tr');     
+            var concepto = document.createElement('th');
+            concepto.setAttribute("scope", "row");
+            concepto.textContent = "Telefono: ";          
+            var tel = document.createElement('td');
+            tel.textContent = data[20];
+               
+            row.appendChild(concepto);
+            row.appendChild(tel);    
+            body.appendChild(row);
+
+            var row = document.createElement('tr');     
+            var concepto = document.createElement('th');
+            concepto.setAttribute("scope", "row");
             concepto.textContent = "Domicilio: ";          
             var direccion = document.createElement('td');
-            direccion.textContent = data[19];
+            direccion.textContent = data[21];
                
             row.appendChild(concepto);
             row.appendChild(direccion);    
@@ -1551,7 +1603,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "Código postal: ";          
             var codigo_postal = document.createElement('td');
-            codigo_postal.textContent = data[20];
+            codigo_postal.textContent = data[22];
                
             row.appendChild(concepto);
             row.appendChild(codigo_postal);    
@@ -1562,7 +1614,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "RFC: ";          
             var rfc = document.createElement('td');
-            rfc.textContent = data[21];
+            rfc.textContent = data[23];
                
             row.appendChild(concepto);
             row.appendChild(rfc);    
@@ -1573,7 +1625,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "IMSS: ";          
             var imss = document.createElement('td');
-            imss.textContent = data[22];
+            imss.textContent = data[24];
                
             row.appendChild(concepto);
             row.appendChild(imss);    
@@ -1584,7 +1636,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "CURP: ";          
             var curp = document.createElement('td');
-            curp.textContent = data[23];
+            curp.textContent = data[25];
                
             row.appendChild(concepto);
             row.appendChild(curp);    
@@ -1595,7 +1647,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "Banco: ";          
             var banco = document.createElement('td');
-            banco.textContent = data[24];
+            banco.textContent = data[26];
                
             row.appendChild(concepto);
             row.appendChild(banco);    
@@ -1606,7 +1658,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "Cuenta: ";          
             var cuenta = document.createElement('td');
-            cuenta.textContent = data[25];
+            cuenta.textContent = data[27];
                
             row.appendChild(concepto);
             row.appendChild(cuenta);    
@@ -1617,7 +1669,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "CLABE: ";          
             var clabe = document.createElement('td');
-            clabe.textContent = data[26];
+            clabe.textContent = data[28];
                
             row.appendChild(concepto);
             row.appendChild(clabe);    
@@ -1628,7 +1680,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "Talla de camisa: ";          
             var camisa = document.createElement('td');
-            camisa.textContent = data[27];
+            camisa.textContent = data[29];
                
             row.appendChild(concepto);
             row.appendChild(camisa);    
@@ -1639,7 +1691,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "Talla de pantalón: ";          
             var pantalon = document.createElement('td');
-            pantalon.textContent = data[28];
+            pantalon.textContent = data[30];
                
             row.appendChild(concepto);
             row.appendChild(pantalon);    
@@ -1650,7 +1702,7 @@ function actualizarTablaTrabajador(){
             concepto.setAttribute("scope", "row");
             concepto.textContent = "Talla de zapatos: ";          
             var zapatos = document.createElement('td');
-            zapatos.textContent = data[31];
+            zapatos.textContent = data[33];
                
             row.appendChild(concepto);
             row.appendChild(zapatos);    
@@ -1685,6 +1737,8 @@ function highLightAllTrabajador(){
     highLight(id_ddl_cintura_trabajador);
     highLight(id_ddl_largo_trabajador);
     highLight(id_ddl_zapatos_trabajador);
+    highLight(id_input_telefono_trabajador);
+    highLight(id_input_email_trabajador);
 }
 
 // función para actualizar el valor "activo:boolean" en la database. 
@@ -1750,7 +1804,9 @@ function datosTrabajador(activo, is_destajista, id_jefe){
             estado_civil: $('#' + id_estado_civil_trabajador).val(),
             sexo: $('#' + id_ddl_sexo_trabajador + " option:selected").val(),
             domicilio: $('#' + id_direccion_trabajador).val(),
-            codigo_postal: $('#' + id_codigo_postal_trabajador).val()
+            codigo_postal: $('#' + id_codigo_postal_trabajador).val(),
+            telefono: $('#' + id_input_telefono_trabajador).val(),
+            email: $('#' + id_input_email_trabajador).val(),
         },
         claves: {
             rfc: $('#' + id_rfc_trabajador).val(),
