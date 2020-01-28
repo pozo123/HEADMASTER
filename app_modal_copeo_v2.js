@@ -34,20 +34,25 @@ var id_sueldos_modalCopeo = "botonSueldosModalCopeo";
 
 // variables auxiliares
 var adicionalFlag; // determina si el el copeo de un adicional, para desplegar o no algunos elementos
-var cargaSocialFlag;
 var json_modalCopeo;
 
 // --------------------- Método de inicialización -----------------------------
 // Metodo de inicializacion del modal
-function modalCopeo(json_modalCopeoRegistrado, adicional, carga_social){
+function modalCopeo(json_modalCopeoRegistrado, adicional){
   adicionalFlag=adicional;
-  cargaSocialFlag=carga_social;
   puestos_array = [];
   json_modalCopeo = json_modalCopeoRegistrado;
   cargaListaTrabajadoresModalCopeo();
   llenaDdlEntradaModalCopeo();
   $('#' + id_modalCopeo).modal('show');
 }
+
+// Función que se ejecuta cuando se cierra el modal copeo
+$('#' + id_modalCopeo).on('hidden.bs.modal', function () {
+  if(flagCalculadora){
+    setCopeoCalculadora();
+  }
+})
 
 // Funcionalidad del boton 'Guardar'
 $('#' + id_agregar_modalCopeo).click(function() {
@@ -337,24 +342,13 @@ function resetFormModalCopeo (){
     $('#'+id_ddl_entradaModalCopeo).empty();
     $('#' + id_seccion_subprocesoModalCopeo).addClass('hidden');
   }
-  if(!cargaSocialFlag){ // no se muestra la carga social a los supervisores
-    $('#' + id_div_totalCSModalCopeo).addClass('hidden');
-    $('#' + id_carga_socialModalCopeo).addClass('hidden');
-    $('#' + id_label_cargaSocialModalCopeo).addClass('hidden');
-    $('#' + id_div_totalExtrasModalCopeo).addClass('hidden');
-  }else{
-    $('#' + id_div_totalCSModalCopeo).removeClass('hidden');
-    $('#' + id_carga_socialModalCopeo).removeClass('hidden');
-    $('#' + id_label_cargaSocialModalCopeo).removeClass('hidden');
-    $('#' + id_div_totalExtrasModalCopeo).removeClass('hidden');
-  }
   $('#'+id_ddl_entradaModalCopeo).val("");
   resetFormModalCopeo_entrada();
 }
 
 // Metodo para limpiar los datos del formulario
 function resetFormModalCopeo_entrada(){
-  $('#'+id_carga_socialModalCopeo).val(cargaSocialFlag?"":54); // no se muestra la carga social a los supervisores
+  $('#'+id_carga_socialModalCopeo).val(34); // no se muestra la carga social a los supervisores
   $('#'+id_carga_socialModalCopeo).prop("disabled", true);
   $('#'+id_diasModalCopeo).val("5");
   $('#'+id_multModalCopeo).val("1");

@@ -188,14 +188,16 @@ Nota: Todo float se ingresa a 2 decimales.
                         - num_entradas: int
                         - entradas
                             - entrada(num)
+                                - nombre: string
+                                - subtotal: float
                                 - materiales
                                     - id_material
+                                        - catalogo: string
                                         - descripcion: string
                                         - unidad: string
                                         - precio_lista: float
                                         - precio_cliente: float
                                         - cantidad: integer
-                                        - desplegar: boolean
                                 - materiales_nr
                                     - id_consecutivo
                                         - descripcion: string
@@ -203,7 +205,6 @@ Nota: Todo float se ingresa a 2 decimales.
                                         - precio_lista: float
                                         - precio_cliente: float
                                         - cantidad: integer
-                                        - desplegar: boolean
         - presupuesto
             - id_obra
                 - general

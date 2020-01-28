@@ -175,16 +175,18 @@ $('#' + id_indirectosSuministrosAdicionales).on("change", function(event){
 
 // Metodo del boton para abrir el modal de cuantificacion
 $('#' + id_boton_suministrosAdicionales).click(function() {
+  /*
   if($('#' + id_ddl_adicionalAdicionales + ' option:selected').val() && !flagCuantificacionAdicionales){ // actualizar los precios finales con los indirectos
     actualizaPreciosClienteAdicionales();
   }
-  modalSuministros(parseFloat($('#' + id_indirectosSuministrosAdicionales).val()).toFixed(2), false, json_modalSuministros); // desplegar modal
+  */
+  modalSuministros(false, json_modalSuministros); // desplegar modal
   flagCuantificacionAdicionales = true; // actualizar bandera de porcentaje indirectos
 });
 
 // Metodo del boton para abrir el modal de cuantificacion
 $('#' + id_boton_copeoAdicionales).click(function() {
-  modalCopeo(json_modalCopeo, true, true);
+  modalCopeo(json_modalCopeo, true);
 });
 
 // Metodo del boton para abrir el modal de calculadora
@@ -202,18 +204,17 @@ $('#' + id_boton_calculadoraAdicionales).click(function() {
     json_modalCalculadora["suministros"]={};
     json_modalCalculadora["suministros"]["costo"] = 0;
     json_modalCalculadora["suministros"]["utilidad"] = 0;
-    json_modalCalculadora["costos_indirectos"] = 10;
+    json_modalCalculadora["costos_indirectos"] = 0;
     json_modalCalculadora["utilidad_cantidad"] = 0;
     json_modalCalculadora["precio_venta"] = 0;
     json_modalCalculadora["utilidad_global"] = 0;
   }
   // actualizar variables
-  var totales = calculaCostoSuministros();
-  var totales_copeo = calculaCostoCopeo();
-  json_modalCalculadora["suministros"]["costo"] = totales.costos;
+  var totales_copeo = calculaCostoCopeoGeneric();
+  json_modalCalculadora["suministros"]["costo"] = calculaCostoSuministrosGeneric();
   json_modalCalculadora["copeo"]["costo"] = totales_copeo.precopeo;
   json_modalCalculadora["copeo"]["extras"] = totales_copeo.extras;
-  json_modalCalculadora["copeo"]["carga_social"] = extraeImpuesto();
+  json_modalCalculadora["copeo"]["carga_social"] = extraeImpuestoGeneric();
   // json_modalCalculadora["precio_venta"] = parseFloat(totales.precio_venta + json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01)*(1+$('#'+ id_indirectosSuministrosAdicionales).val()*0.01)).toFixed(2);
   //console.log(json_modalCalculadora);
   var info =
@@ -224,21 +225,6 @@ $('#' + id_boton_calculadoraAdicionales).click(function() {
   };
   modalCalculadora(json_modalCalculadora, true, info); // desplegar modal
 });
-
-// Función para actualizar el campo porcentaje indirectos y los precios finales
-// cuando se cierra el modal calculadora
-$('#' + id_modalCalculadora).on('hidden.bs.modal', function () {
-  $('#'+ id_indirectosSuministrosAdicionales).val(json_modalCalculadora["suministros"]["utilidad"]);
-  actualizaPreciosClienteAdicionales();
-  /* calculo del porcentaje indirecto para suministros
-  var porcentaje = json_modalCalculadora["utilidad_suministros"]==undefined?0:json_modalCalculadora["utilidad_suministros"];
-  // var porcentaje = 100 * (json_modalCalculadora["precio_venta"]-json_modalCalculadora["costo_suministros"]- json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01))/ (json_modalCalculadora["costo_suministros"]+json_modalCalculadora["precopeo"]*(1+json_modalCalculadora["porcentaje_impuestos"]*0.01));
-  if(parseFloat(porcentaje).toFixed(2) !== $('#'+ id_indirectosSuministrosAdicionales).val()){
-    $('#'+ id_indirectosSuministrosAdicionales).val(parseFloat(porcentaje).toFixed(2));
-    actualizaPreciosClienteAdicionales();
-  }
-  */
-})
 
 // Función para actualizar el campo estimaciones cuando cambia el campo anticipos
 $('#' + id_anticiposAdicionales).change(function(){
@@ -566,22 +552,17 @@ function actualizaPreciosClienteAdicionales(){
 }
 
 // Funcion para calcular el costo total interno de los suministros
-function calculaCostoSuministros(){
-  var total = {
-    costos: 0,
-    precio_venta: 0,
-  };
-  if(!jQuery.isEmptyObject(json_modalSuministros)){
-    for(key in json_modalSuministros){
-      total.costos = total.costos + json_modalSuministros[key]["precio_lista"] * json_modalSuministros[key]["cantidad"];
-      total.precio_venta = total.precio_venta + json_modalSuministros[key]["precio_cliente"] * json_modalSuministros[key]["cantidad"];
-    }
+function calculaCostoSuministrosGeneric(){
+  var total = 0;
+  for(key in json_modalSuministros["entradas"]){
+    total += parseFloat(json_modalSuministros["entradas"][key]["subtotal"]);
   }
-  return total;
+  console.log(total);
+  return total.toFixed(2);
 }
 
 // Función para calcular el costo total del copeo (sin carga social)
-function calculaCostoCopeo(){
+function calculaCostoCopeoGeneric(){
   var total = 0;
   var extras = 0;
   var aux_json = {};
@@ -601,7 +582,7 @@ function calculaCostoCopeo(){
 }
 
 // Función para recuperar el monto de impuestos del json copeo
-function extraeImpuesto(){
+function extraeImpuestoGeneric(){
   var cargaSocial=0;
   if(!jQuery.isEmptyObject(json_modalCopeo)){
     cargaSocial = json_modalCopeo.impuestos;
@@ -731,8 +712,8 @@ function pdfDocDescriptionAdicionales(vista_previa, images_array){
   var iva_bool=$('#'+id_cb_ivaAdicionales).prop('checked');
   var indirectos_bool=$('#'+id_cb_indirectosAdicionales).prop('checked');
   var fecha_ppto=new Date();
-  var insumos = Object.assign({}, json_modalSuministros);
-  insumos = cargaUtilidadEspecificaAdicionales(insumos, json_modalCalculadora["suministros"]["utilidad"]);
+  //var insumos = Object.assign({}, json_modalSuministros);
+  insumos = cargaUtilidadSuministrosAdicionales();
   insumos =manoDeObraAInsumoDesglozadaAdicionales(insumos);
   if(json_modalCalculadora["proyecto"]["horas"]>0){
     insumos["proyecto"]=proyectosInsumoAdicionales();
@@ -798,7 +779,7 @@ function datosPropuestaAdicionales(url){
     observaciones: $('#'+id_observacionesAdicionales).val(),
     aprobada: false,
     url_evidencia: url,
-    cuantificacion: datosInsumosAdicionales(),
+    cuantificacion: json_modalSuministros,
     copeo: json_modalCopeo,
     presupuesto: json_modalCalculadora,
     proceso: datosAdicionalAdicionales(),
@@ -808,7 +789,7 @@ function datosPropuestaAdicionales(url){
 
 // Función para generar el json de la mano de obra como insumo
 function manoDeObraAInsumoAdicionales(){
-  var totales = calculaCostoCopeo();
+  var totales = calculaCostoCopeoGeneric();
   var aux = {
     unidad: "Jor",
     cantidad: 1,
@@ -876,9 +857,20 @@ function cargaUtilidadInsumosAdicionales(insumos, porcentaje){
   return insumos;
 }
 
-function cargaUtilidadEspecificaAdicionales(insumos, porcentaje){
-  for(key in insumos){
-    insumos[key].precio_cliente = insumos[key].precio_lista * (1 + porcentaje * 0.01);
+function cargaUtilidadSuministrosAdicionales(){
+  var porcentaje = json_modalCalculadora["suministros"]["utilidad"];
+  var insumos = {};
+  var cont = 0;
+  for(key in json_modalSuministros["entradas"]){
+    for(key2 in json_modalSuministros["entradas"][key]["materiales"]){
+      insumos[key2] = json_modalSuministros["entradas"][key]["materiales"][key2];
+      insumos[key2].precio_cliente = insumos[key2].precio_lista * (1 + porcentaje * 0.01);
+    }
+    for(key2 in json_modalSuministros["entradas"][key]["materiales_nr"]){
+      insumos[key2+cont] = json_modalSuministros["entradas"][key]["materiales_nr"][key2];
+      insumos[key2+cont].precio_cliente = insumos[key2].precio_lista * (1 + porcentaje * 0.01);
+      cont +=1 ;
+    }
   }
   return insumos;
 }

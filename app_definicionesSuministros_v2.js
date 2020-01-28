@@ -341,39 +341,42 @@ function actualizarTablaArbolDefinicionesSuministros(){
    firebase.database().ref(rama_bd_insumos + "/categorias").on("value", function(snapshot){
        //console.log("Actualiza tabla");
        var datos = [];
-       var cont = 0; // sirve para conservar el orden deseado de los renglones
+       // var cont = 0; // sirve para conservar el orden deseado de los renglones
+       var rellenado = "";
        if(snapshot.exists()){
          var categorias = snapshot.val();
          var codigo1, codigo2;
          for(key1 in categorias){ //categorías
            codigo1 = categorias[key1]["codigo"];
+           rellenado = codigo1 + "0000";
            datos.push([
-             cont,
+             rellenado,
              categorias[key1]["nombre"],
              "",
              "",
              codigo1,
            ]);
-           cont += 1;
+           // cont += 1;
            for(key2 in categorias[key1]["familias"]){ //familias
              codigo2=categorias[key1]["familias"][key2]["codigo"];
+             rellenado=codigo1+codigo2+"00";
              datos.push([
-               cont,
+               rellenado,
                "",
                categorias[key1]["familias"][key2]["nombre"],
                "",
                codigo1+codigo2,
              ]);
-             cont += 1;
+             // cont += 1;
              for (key3 in categorias[key1]["familias"][key2]["subfamilias"]){ //subfamilias
                datos.push([
-                 cont,
+                 codigo1+codigo2+categorias[key1]["familias"][key2]["subfamilias"][key3]["codigo"],
                  "",
                  "",
                  categorias[key1]["familias"][key2]["subfamilias"][key3]["nombre"],
                  codigo1+codigo2+categorias[key1]["familias"][key2]["subfamilias"][key3]["codigo"],
                ]);
-               cont += 1;
+               // cont += 1;
              }
            }
          }
@@ -397,11 +400,11 @@ function actualizarTablaArbolDefinicionesSuministros(){
              {title: "Subfamilia"},
              {title: "Código"}
            ],
-           "paging":false, //desplegar tabla completa
-           "ordering":false, //no reordenar
-           "order": [[0,"asc"]],
-           "columnDefs": [
-               { "visible": false, "targets": 0},
+           paging:false, //desplegar tabla completa
+           order: [[0,"asc"]],
+           columnDefs: [
+               { visible: false, targets: [0]},
+               { orderable: false, targets: [1,2,3,4]} //no reordenar
              ]
        });
    });
